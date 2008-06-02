@@ -21,3 +21,4 @@ public interface UploadedFile {
     public byte[] getFileData() throws FileNotFoundException, IOException;
 
 }
+
