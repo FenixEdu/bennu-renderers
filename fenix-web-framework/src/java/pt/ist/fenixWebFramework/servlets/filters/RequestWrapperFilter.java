@@ -31,6 +31,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import pt.ist.fenixWebFramework.servlets.commons.CommonsFile;
 import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
 
+
 /**
  * 17/Fev/2003
  * 
@@ -128,7 +129,6 @@ public class RequestWrapperFilter implements Filter {
 
 	public void setMaxInactiveInterval(int arg0) {
 	    session.setMaxInactiveInterval(arg0);
-
 	}
 
     }
@@ -142,7 +142,7 @@ public class RequestWrapperFilter implements Filter {
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
 	    throws IOException, ServletException {
 	final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-	chain.doFilter(new FenixHttpServletRequestWrapper(httpServletRequest), response);
+	chain.doFilter(getFenixHttpServletRequestWrapper(httpServletRequest), response);
 	setSessionTimeout(httpServletRequest);
     }
 
@@ -151,6 +151,10 @@ public class RequestWrapperFilter implements Filter {
 	if (session != null) {
 	    session.setMaxInactiveInterval(7200);
 	}
+    }
+
+    public FenixHttpServletRequestWrapper getFenixHttpServletRequestWrapper(final HttpServletRequest httpServletRequest) {
+	return new FenixHttpServletRequestWrapper(httpServletRequest);
     }
 
     public static class FenixHttpServletRequestWrapper extends HttpServletRequestWrapper {
@@ -195,11 +199,6 @@ public class RequestWrapperFilter implements Filter {
 		    addParameter(item.getFieldName(), uploadedFile.getName());
 		}
 	    }
-	}
-
-	@Override
-	public HttpSession getSession() {
-	    return new FenixSessionWrapper(super.getSession());
 	}
 
 	private void addParameter(final String fieldName, final String value) {
@@ -271,6 +270,10 @@ public class RequestWrapperFilter implements Filter {
 	    return resultMap;
 	}
 
+	@Override
+	public HttpSession getSession() {
+	    return new FenixSessionWrapper(super.getSession());
+	}
     }
 
 }
