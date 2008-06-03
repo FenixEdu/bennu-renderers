@@ -6,7 +6,7 @@ import java.io.InputStream;
 
 /**
  * Represents a file that was uploaded by the user in a form. You can retrieve all uploaded files
- * by calling {@link net.sourceforge.fenixedu.renderers.plugin.RenderersRequestProcessor#getAllUploadedFiles()}.
+ * by calling {@link pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessor#getAllUploadedFiles()}.
  * 
  * @author cfgi
  */
