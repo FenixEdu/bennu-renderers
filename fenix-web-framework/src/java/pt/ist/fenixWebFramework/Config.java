@@ -40,6 +40,24 @@ public class Config extends pt.ist.fenixframework.Config {
     protected String logProfileFilename = null;
 
 
+    // TODO: document this Dspace stuff
+    protected String dspaceClientTransportClass = null;
+    protected String fileManagerFactoryImplementationClass = null;
+    protected String dspaceServerUrl = null;
+    protected String dspaceDownloadUriFormat = null;
+    protected String dspaceUsername = null;
+    protected String dspacePassword = null;
+    protected String dspaceRmiServerName = null;
+    protected String jndiPropertiesFile = null;
+    protected String rmiRegistryPort = null;
+    protected String rmiPort = null;
+    protected String rmiSsl = null;
+    protected String rmiSslTruststore = null;
+    protected String rmiSslTruststorePassword = null;
+    protected String rmiStreamBytesMin = null;
+    protected String rmiStreamBytesMax = null;
+    protected String rmiStreamBytesBlock = null;
+
     // TODO : make method in superclass visible in the hierarchy so we don't need to replicate the code here.
     private static void checkRequired(Object obj, String fieldName) {
         if (obj == null) {
@@ -63,6 +81,78 @@ public class Config extends pt.ist.fenixframework.Config {
 
     public String getDefaultVariant() {
         return defaultVariant;
+    }
+
+    public String getLogProfileDir() {
+        return logProfileDir;
+    }
+
+    public String getLogProfileFilename() {
+        return logProfileFilename;
+    }
+
+    public String getDspaceClientTransportClass() {
+        return dspaceClientTransportClass;
+    }
+
+    public String getFileManagerFactoryImplementationClass() {
+        return fileManagerFactoryImplementationClass;
+    }
+
+    public String getDspaceServerUrl() {
+        return dspaceServerUrl;
+    }
+
+    public String getDspaceDownloadUriFormat() {
+        return dspaceDownloadUriFormat;
+    }
+
+    public String getDspaceUsername() {
+        return dspaceUsername;
+    }
+
+    public String getDspacePassword() {
+        return dspacePassword;
+    }
+
+    public String getDspaceRmiServerName() {
+        return dspaceRmiServerName;
+    }
+
+    public String getJndiPropertiesFile() {
+        return jndiPropertiesFile;
+    }
+
+    public String getRmiRegistryPort() {
+        return rmiRegistryPort;
+    }
+
+    public String getRmiPort() {
+        return rmiPort;
+    }
+
+    public String getRmiSsl() {
+        return rmiSsl;
+    }
+
+    public String getRmiSslTruststore() {
+        return rmiSslTruststore;
+    }
+
+    public String getRmiSslTruststorePassword() {
+        return rmiSslTruststorePassword;
+    }
+
+    public String getRmiStreamBytesMin() {
+        return rmiStreamBytesMin;
+    }
+
+    public String getRmiStreamBytesMax() {
+        return rmiStreamBytesMax;
+    }
+
+    public String getRmiStreamBytesBlock() {
+        return rmiStreamBytesBlock;
     }
 
 }
