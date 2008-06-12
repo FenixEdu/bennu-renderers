@@ -16,6 +16,7 @@ import org.apache.log4j.varia.LevelRangeFilter;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.utl.ist.fenix.tools.file.DSpaceFileManagerFactory;
+import pt.utl.ist.fenix.tools.file.FileManagerFactory;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 import dml.DomainModel;
 
@@ -87,7 +88,10 @@ public class FenixWebFramework extends FenixFramework {
 	properties.put("rmi.stream.bytes.max", config.getRmiStreamBytesMax());
 	properties.put("rmi.stream.bytes.block", config.getRmiStreamBytesBlock());
 
+	FileManagerFactory.init(config.getFileManagerFactoryImplementationClass());
+
 	DSpaceFileManagerFactory.init(properties);
+
     }
 
     public static Config getConfig() {
