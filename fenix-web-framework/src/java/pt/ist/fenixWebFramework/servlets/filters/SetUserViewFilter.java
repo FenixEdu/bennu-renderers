@@ -11,6 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import pt.ist.fenixWebFramework.security.User;
 import pt.ist.fenixWebFramework.security.UserView;
 
 public class SetUserViewFilter implements Filter {
@@ -31,7 +32,7 @@ public class SetUserViewFilter implements Filter {
 	return null;
     }
 
-    protected <T> T getUserView(final ServletRequest servletRequest) {
+    protected <T extends User> T getUserView(final ServletRequest servletRequest) {
 	final HttpSession httpSession = getHttpSession(servletRequest);
 	return (T) (httpSession == null ? null : httpSession.getAttribute(USER_SESSION_ATTRIBUTE));
     }

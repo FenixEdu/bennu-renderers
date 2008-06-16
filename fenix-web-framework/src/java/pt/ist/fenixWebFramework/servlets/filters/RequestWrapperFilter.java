@@ -28,6 +28,8 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileUploadException;
 
+import pt.ist.fenixWebFramework.security.User;
+import pt.ist.fenixWebFramework.security.UserView;
 import pt.ist.fenixWebFramework.servlets.commons.CommonsFile;
 import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
 
@@ -274,6 +276,19 @@ public class RequestWrapperFilter implements Filter {
 	public HttpSession getSession() {
 	    return new FenixSessionWrapper(super.getSession());
 	}
+
+	@Override
+	public boolean isUserInRole(String role) {
+	    final User user = UserView.getUser();
+	    return user == null ? false : user.hasRole(role);
+	}
+
+	@Override
+	public String getRemoteUser() {
+	    final User user = UserView.getUser();
+	    return user == null ? super.getRemoteUser() : user.getUsername();
+	}
+
     }
 
 }
