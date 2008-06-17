@@ -47,7 +47,7 @@ public class MultipartFilter implements Filter {
     public void init(FilterConfig filterConfig) {
 	uploadMaxFileSize = resolveSize(filterConfig.getInitParameter("uploadMaxFileSize"), uploadMaxFileSize);
 	uploadThresholdSize = resolveSize(filterConfig.getInitParameter("uploadThresholdSize"), uploadThresholdSize);
-	uploadRepositoryPath = filterConfig.getInitParameter("uploadRepositoryPath");
+	uploadRepositoryPath = System.getProperties().getProperty("java.io.tmpdir");
     }
 
     private int resolveSize(String param, int defaultValue) {
