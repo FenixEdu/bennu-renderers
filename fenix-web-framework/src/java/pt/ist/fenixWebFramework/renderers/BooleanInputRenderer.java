@@ -5,6 +5,7 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.contexts.InputContext;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
+import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 /**
  * This renderer allows you to do the input of a boolean value. A checkbox is
@@ -18,6 +19,10 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 public class BooleanInputRenderer extends InputRenderer {
     private boolean disabled;
 
+    private String bundle;
+
+    private String bodyText;
+
     @Override
     protected Layout getLayout(Object object, Class type) {
 	return new Layout() {
@@ -26,6 +31,7 @@ public class BooleanInputRenderer extends InputRenderer {
 	    public HtmlComponent createComponent(Object object, Class type) {
 		HtmlCheckBox checkBox = new HtmlCheckBox();
 		checkBox.setChecked(object == null ? false : (Boolean) object);
+		checkBox.setText(RenderUtils.getResourceString(getBundle(), getBodyText()));
 
 		InputContext context = getInputContext();
 		checkBox.setTargetSlot((MetaSlotKey) context.getMetaObject().getKey());
@@ -52,4 +58,19 @@ public class BooleanInputRenderer extends InputRenderer {
 	this.disabled = disabled;
     }
 
+    public String getBundle() {
+	return bundle;
+    }
+
+    public void setBundle(String bundle) {
+	this.bundle = bundle;
+    }
+
+    public String getBodyText() {
+	return bodyText;
+    }
+
+    public void setBodyText(String bodyText) {
+	this.bodyText = bodyText;
+    }
 }
