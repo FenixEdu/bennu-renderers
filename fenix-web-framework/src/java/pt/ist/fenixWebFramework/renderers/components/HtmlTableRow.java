@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.jsp.PageContext;
 
+import pt.ist.fenixWebFramework.renderers.components.HtmlTableCell.CellType;
 import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlTableRow extends HtmlComponent {
@@ -42,6 +43,13 @@ public class HtmlTableRow extends HtmlComponent {
         
         return cell;
     }
+    
+    public HtmlTableCell createCell(CellType cellType) {
+	HtmlTableCell cell = new HtmlTableCell(cellType);
+
+	addCell(cell);
+	return cell;
+    }       
 
     public List<HtmlTableCell> getCells() {
         return cells;
