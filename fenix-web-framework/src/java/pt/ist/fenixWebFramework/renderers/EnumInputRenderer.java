@@ -7,10 +7,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.collections.Predicate;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlHiddenField;
+import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenu;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenuOption;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlTextInput;
+import pt.ist.fenixWebFramework.renderers.contexts.InputContext;
 import pt.ist.fenixWebFramework.renderers.converters.EnumConverter;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
@@ -18,22 +25,15 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.utl.ist.fenix.tools.util.Pair;
 
 /**
- * This renderer presents an html menu with one option for each possible enum value.
- * Each option's label is searched in the bundle <tt>ENUMERATION_RESOURCES</tt> using the
- * enum's name.
+ * This renderer presents an html menu with one option for each possible enum
+ * value. Each option's label is searched in the bundle
+ * <tt>ENUMERATION_RESOURCES</tt> using the enum's name.
  * 
  * <p>
- * Example:<br/>
- * Choose a {@link java.lang.annotation.ElementType element type}:
- * <select>
- *  <option>Type</option>
- *  <option>Field</option>
- *  <option>Parameter</option>
- *  <option>Constructor</option>
- *  <option>Local Variable</option>
- *  <option>Annotation</option>
- *  <option>Package</option>
- * </select>
+ * Example:<br/> Choose a {@link java.lang.annotation.ElementType element type}:
+ * <select> <option>Type</option> <option>Field</option> <option>Parameter</option>
+ * <option>Constructor</option> <option>Local Variable</option>
+ * <option>Annotation</option> <option>Package</option> </select>
  * 
  * @author cfgi
  */
@@ -50,6 +50,8 @@ public class EnumInputRenderer extends InputRenderer {
     private String includedValues;
 
     private boolean sort;
+
+    private boolean readOnly;
 
     private boolean disabled;
 
@@ -111,7 +113,7 @@ public class EnumInputRenderer extends InputRenderer {
 
     /**
      * Indicates the the default text is a key to a resource bundle.
-     *  
+     * 
      * @property
      */
     public void setKey(boolean key) {
@@ -120,6 +122,43 @@ public class EnumInputRenderer extends InputRenderer {
 
     @Override
     protected Layout getLayout(Object object, Class type) {
+	if (getReadOnly()) {
+	    return new Layout() {
+		@Override
+		public HtmlComponent createComponent(Object targetObject, Class type) {
+		    Enum enumerate = (Enum) targetObject;
+
+		    HtmlInlineContainer container = new HtmlInlineContainer();
+		    HtmlHiddenField value = new HtmlHiddenField();
+		    value.setValue(enumerate.name());
+		    value.setConverter(new EnumConverter());
+		    container.addChild(value);
+		    InputContext context = getInputContext();
+		    ((HtmlFormComponent) value).setTargetSlot((MetaSlotKey) context.getMetaObject().getKey());
+
+		    HtmlTextInput component = new HtmlTextInput();
+		    component.setValue(RenderUtils.getEnumString(enumerate));
+		    container.addChild(component);
+
+		    return container;
+		}
+
+		@Override
+		public void applyStyle(HtmlComponent component) {
+		    HtmlInlineContainer block = (HtmlInlineContainer) component;
+		    HtmlTextInput textInput = (HtmlTextInput) block.getChild(new Predicate() {
+			@Override
+			public boolean evaluate(Object elem) {
+			    return !(elem instanceof HtmlHiddenField);
+			}
+		    });
+
+		    super.applyStyle(textInput);
+		    textInput.setReadOnly(true);
+		    textInput.setDisabled(getDisabled());
+		}
+	    };
+	}
 	return new Layout() {
 
 	    @Override
@@ -198,7 +237,8 @@ public class EnumInputRenderer extends InputRenderer {
 	return menu;
     }
 
-    // TODO: refactor this, probably mode to HtmlMenu, duplicate id=menu.getDefaultTitle
+    // TODO: refactor this, probably mode to HtmlMenu, duplicate
+    // id=menu.getDefaultTitle
     private String getDefaultTitle() {
 	if (getDefaultText() == null) {
 	    return RenderUtils.getResourceString("renderers.menu.default.title");
@@ -259,5 +299,13 @@ public class EnumInputRenderer extends InputRenderer {
 
     public void setDisabled(boolean disabled) {
 	this.disabled = disabled;
+    }
+
+    public boolean getReadOnly() {
+	return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+	this.readOnly = readOnly;
     }
 }
