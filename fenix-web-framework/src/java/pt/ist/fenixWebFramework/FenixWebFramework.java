@@ -14,6 +14,7 @@ import org.apache.log4j.Priority;
 import org.apache.log4j.varia.DenyAllFilter;
 import org.apache.log4j.varia.LevelRangeFilter;
 
+import pt.ist.fenixWebFramework.servlets.filters.CASFilter;
 import pt.ist.fenixframework.FenixFramework;
 import pt.utl.ist.fenix.tools.file.DSpaceFileManagerFactory;
 import pt.utl.ist.fenix.tools.file.FileManagerFactory;
@@ -34,9 +35,10 @@ public class FenixWebFramework extends FenixFramework {
 	    initializeLoggingSystem(config);
 
 	    initializeFileManager(config);
+
+	    initializeCas(config);;
 	}
     }
-
 
     private static void initializeLoggingSystem(final Config config) {
 	if (config.logProfileFilename != null) {
@@ -92,6 +94,10 @@ public class FenixWebFramework extends FenixFramework {
 	    
 	    DSpaceFileManagerFactory.init(properties);
 	}
+    }
+
+    private static void initializeCas(Config config) {
+	CASFilter.init(config);
     }
 
     public static Config getConfig() {

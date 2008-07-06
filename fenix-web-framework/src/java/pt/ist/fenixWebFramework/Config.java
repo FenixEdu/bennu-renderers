@@ -58,6 +58,10 @@ public class Config extends pt.ist.fenixframework.Config {
     protected String rmiStreamBytesMax = null;
     protected String rmiStreamBytesBlock = null;
 
+    // TODO : document cas stuff
+    protected boolean casEnabled = false;
+    protected String casLoginUrl = null;
+
     // TODO : make method in superclass visible in the hierarchy so we don't need to replicate the code here.
     private static void checkRequired(Object obj, String fieldName) {
         if (obj == null) {
@@ -153,6 +157,14 @@ public class Config extends pt.ist.fenixframework.Config {
 
     public String getRmiStreamBytesBlock() {
         return rmiStreamBytesBlock;
+    }
+
+    public boolean isCasEnabled() {
+        return casEnabled;
+    }
+
+    public String getCasLoginUrl() {
+        return casLoginUrl;
     }
 
 }
