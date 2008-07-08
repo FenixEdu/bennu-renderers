@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 
 public class ProfilingFilter implements Filter {
 
-    private Logger logger = Logger.getLogger(ProfilingFilter.class);
+    private final Logger logger = Logger.getLogger("pt.ist.fenixWebFramework.servlets.filters.ProfilingFilter");
 
     @Override
     public void init(final FilterConfig arg0) throws ServletException {

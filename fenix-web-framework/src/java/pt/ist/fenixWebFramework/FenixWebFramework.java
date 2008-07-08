@@ -42,7 +42,7 @@ public class FenixWebFramework extends FenixFramework {
 
     private static void initializeLoggingSystem(final Config config) {
 	if (config.logProfileFilename != null) {
-	    final Logger logger = Logger.getLogger("com.atlassian.util.profiling");
+	    final Logger logger = Logger.getLogger("pt.ist.fenixWebFramework.servlets.filters.ProfilingFilter");
 	    logger.setAdditivity(false);
 
 	    final Layout layout = new PatternLayout("%d{HH:mm:ss.SSS} %m%n");
