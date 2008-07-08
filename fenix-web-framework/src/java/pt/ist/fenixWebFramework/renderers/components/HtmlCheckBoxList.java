@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.servlet.jsp.PageContext;
 
+import org.apache.commons.collections.Predicate;
+
 import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
-
-import org.apache.commons.collections.Predicate;
 
 public class HtmlCheckBoxList extends HtmlMultipleValueComponent {
 
@@ -21,299 +21,307 @@ public class HtmlCheckBoxList extends HtmlMultipleValueComponent {
     private boolean selectAllShown;
 
     public HtmlCheckBoxList() {
-        super();
+	super();
 
-        this.list = new HtmlList();
-        this.checkBoxes = new ArrayList<HtmlCheckBox>();
-        this.hiddenFields = new ArrayList<HtmlHiddenField>();
+	this.list = new HtmlList();
+	this.checkBoxes = new ArrayList<HtmlCheckBox>();
+	this.hiddenFields = new ArrayList<HtmlHiddenField>();
     }
 
     public void addClass(String newClass) {
-        this.list.addClass(newClass);
+	this.list.addClass(newClass);
     }
 
     public HtmlListItem createItem() {
-        return this.list.createItem();
+	return this.list.createItem();
     }
 
     public HtmlComponent getChild(Predicate predicate) {
-        return this.list.getChild(predicate);
+	return this.list.getChild(predicate);
     }
 
     public List<HtmlComponent> getChildren() {
-        return this.list.getChildren();
+	return this.list.getChildren();
     }
 
     public List<HtmlComponent> getChildren(Predicate predicate) {
-        return this.list.getChildren(predicate);
+	return this.list.getChildren(predicate);
     }
 
     public HtmlComponent getChildWithId(String id) {
-        return this.list.getChildWithId(id);
+	return this.list.getChildWithId(id);
     }
 
     public String getClasses() {
-        return this.list.getClasses();
+	return this.list.getClasses();
     }
 
     public String getId() {
-        return this.list.getId();
+	return this.list.getId();
     }
 
     public String getOnClick() {
-        return this.list.getOnClick();
+	return this.list.getOnClick();
     }
 
     public String getOnDblClick() {
-        return this.list.getOnDblClick();
+	return this.list.getOnDblClick();
     }
 
     public String getOnKeyDown() {
-        return this.list.getOnKeyDown();
+	return this.list.getOnKeyDown();
     }
 
     public String getOnKeyPress() {
-        return this.list.getOnKeyPress();
+	return this.list.getOnKeyPress();
     }
 
     public String getOnKeyUp() {
-        return this.list.getOnKeyUp();
+	return this.list.getOnKeyUp();
     }
 
     public String getOnMouseDown() {
-        return this.list.getOnMouseDown();
+	return this.list.getOnMouseDown();
     }
 
     public String getOnMouseMove() {
-        return this.list.getOnMouseMove();
+	return this.list.getOnMouseMove();
     }
 
     public String getOnMouseOut() {
-        return this.list.getOnMouseOut();
+	return this.list.getOnMouseOut();
     }
 
     public String getOnMouseOver() {
-        return this.list.getOnMouseOver();
+	return this.list.getOnMouseOver();
     }
 
     public String getOnMouseUp() {
-        return this.list.getOnMouseUp();
+	return this.list.getOnMouseUp();
     }
 
     public String getStyle() {
-        return this.list.getStyle();
+	return this.list.getStyle();
     }
 
     public String getTitle() {
-        return this.list.getTitle();
+	return this.list.getTitle();
     }
 
     public boolean isVisible() {
-        return this.list.isVisible();
+	return this.list.isVisible();
     }
 
     public void setClasses(String classes) {
-        this.list.setClasses(classes);
+	this.list.setClasses(classes);
     }
 
     public void setId(String id) {
-        this.list.setId(id);
+	this.list.setId(id);
     }
 
     public void setOnClick(String onclick) {
-        this.list.setOnClick(onclick);
+	this.list.setOnClick(onclick);
     }
 
     public void setOnDblClick(String ondblclick) {
-        this.list.setOnDblClick(ondblclick);
+	this.list.setOnDblClick(ondblclick);
     }
 
     public void setOnKeyDown(String onkeydown) {
-        this.list.setOnKeyDown(onkeydown);
+	this.list.setOnKeyDown(onkeydown);
     }
 
     public void setOnKeyPress(String onkeypress) {
-        this.list.setOnKeyPress(onkeypress);
+	this.list.setOnKeyPress(onkeypress);
     }
 
     public void setOnKeyUp(String onkeyup) {
-        this.list.setOnKeyUp(onkeyup);
+	this.list.setOnKeyUp(onkeyup);
     }
 
     public void setOnMouseDown(String onmousedown) {
-        this.list.setOnMouseDown(onmousedown);
+	this.list.setOnMouseDown(onmousedown);
     }
 
     public void setOnMouseMove(String onmousemove) {
-        this.list.setOnMouseMove(onmousemove);
+	this.list.setOnMouseMove(onmousemove);
     }
 
     public void setOnMouseOut(String onmouseout) {
-        this.list.setOnMouseOut(onmouseout);
+	this.list.setOnMouseOut(onmouseout);
     }
 
     public void setOnMouseOver(String onmouseover) {
-        this.list.setOnMouseOver(onmouseover);
+	this.list.setOnMouseOver(onmouseover);
     }
 
     public void setOnMouseUp(String onmouseup) {
-        this.list.setOnMouseUp(onmouseup);
+	this.list.setOnMouseUp(onmouseup);
     }
 
     public void setStyle(String style) {
-        this.list.setStyle(style);
+	this.list.setStyle(style);
     }
 
     public void setTitle(String title) {
-        this.list.setTitle(title);
+	this.list.setTitle(title);
     }
 
     public void setVisible(boolean visible) {
-        this.list.setVisible(visible);
+	this.list.setVisible(visible);
     }
 
     public boolean isSelectAllShown() {
-        return this.selectAllShown;
+	return this.selectAllShown;
     }
 
     public void setSelectAllShown(boolean selectAllShown) {
-        this.selectAllShown = selectAllShown;
+	this.selectAllShown = selectAllShown;
     }
 
     public List<HtmlCheckBox> getCheckBoxes() {
-        return this.checkBoxes;
+	return this.checkBoxes;
     }
 
     protected List<HtmlHiddenField> getHiddenFields() {
-        return this.hiddenFields;
+	return this.hiddenFields;
     }
 
     public HtmlList getList() {
-        return this.list;
+	return this.list;
     }
 
     @Override
     public void setValues(String... values) {
-        super.setValues(values);
+	super.setValues(values);
 
-        outter: for (HtmlCheckBox checkBox : getCheckBoxes()) {
-            for (String value : values) {
-                if (value.equals(checkBox.getValue())) {
-                    checkBox.setChecked(true);
-                    continue outter;
-                }
-            }
+	outter: for (HtmlCheckBox checkBox : getCheckBoxes()) {
+	    for (String value : values) {
+		if (value.equals(checkBox.getValue())) {
+		    checkBox.setChecked(true);
+		    continue outter;
+		}
+	    }
 
-            checkBox.setChecked(false);
-        }
+	    checkBox.setChecked(false);
+	}
     }
 
     public HtmlCheckBox addOption(HtmlComponent component, String value) {
-        HtmlCheckBox checkBox = addOption(component);
+	HtmlCheckBox checkBox = addOption(component);
 
-        checkBox.setUserValue(value);
-        return checkBox;
+	checkBox.setUserValue(value);
+	return checkBox;
     }
 
     public HtmlHiddenField addHiddenOption(String value) {
-        HtmlHiddenField hiddenField = new HtmlHiddenField();
+	HtmlHiddenField hiddenField = new HtmlHiddenField();
 
-        getHiddenFields().add(hiddenField);
+	getHiddenFields().add(hiddenField);
 
-        hiddenField.setValue(value);
-        return hiddenField;
+	hiddenField.setValue(value);
+	return hiddenField;
     }
 
     public HtmlCheckBox addOption(HtmlComponent component) {
-        HtmlCheckBox checkBox = new HtmlCheckBox();
-        getCheckBoxes().add(checkBox);
+	HtmlCheckBox checkBox = new HtmlCheckBox();
+	getCheckBoxes().add(checkBox);
 
-        HtmlListItem item = this.list.createItem();
-        item.setBody(component);
+	HtmlListItem item = this.list.createItem();
+	item.setBody(component);
 
-        return checkBox;
+	return checkBox;
     }
 
     protected HtmlCheckBox addOption(HtmlComponent component, int index) {
-        HtmlCheckBox checkBox = new HtmlCheckBox();
-        getCheckBoxes().add(index, checkBox);
+	HtmlCheckBox checkBox = new HtmlCheckBox();
+	getCheckBoxes().add(index, checkBox);
 
-        HtmlListItem item = this.list.createItem(index);
-        item.setBody(component);
+	HtmlListItem item = this.list.createItem(index);
+	item.setBody(component);
 
-        return checkBox;
+	return checkBox;
+    }
+
+    protected HtmlCheckBox addOption(HtmlCheckBox checkBox, int index) {
+	getCheckBoxes().add(index, checkBox);
+
+	HtmlListItem item = this.list.createItem(index);
+	item.setBody(new HtmlLabel(checkBox.getText()));
+	checkBox.setText("");
+
+	return checkBox;
     }
 
     @Override
     public HtmlTag getOwnTag(PageContext context) {
-        int index = 0;
-        for (HtmlCheckBox checkBox : getCheckBoxes()) {
-            checkBox.setName(getName());
+	int index = 0;
+	for (HtmlCheckBox checkBox : getCheckBoxes()) {
+	    checkBox.setName(getName());
 
-            if (getTargetSlot() != null) {
-                checkBox.setTargetSlot(getTargetSlot());
-            }
+	    if (getTargetSlot() != null) {
+		checkBox.setTargetSlot(getTargetSlot());
+	    }
 
-            checkBox.setId(checkBox.getName() + "/" + index++);
-        }
+	    checkBox.setId(checkBox.getName() + "/" + index++);
+	}
 
-        for (HtmlHiddenField hiddenField : getHiddenFields()) {
-            hiddenField.setName(getName());
+	for (HtmlHiddenField hiddenField : getHiddenFields()) {
+	    hiddenField.setName(getName());
 
-            if (getTargetSlot() != null) {
-                hiddenField.setTargetSlot(getTargetSlot());
-            }
-        }
+	    if (getTargetSlot() != null) {
+		hiddenField.setTargetSlot(getTargetSlot());
+	    }
+	}
 
-        if (isSelectAllShown()) {
-            StringBuilder selectAllScript = new StringBuilder();
-            boolean allChecked = true;
+	if (isSelectAllShown()) {
+	    StringBuilder selectAllScript = new StringBuilder();
+	    boolean allChecked = true;
 
-            String allCheckBoxId = getName() + "/all";
+	    String checkAllId = getValidIdOrName(getName() + "/all");
 
-            for (HtmlCheckBox checkBox : getCheckBoxes()) {
-                if (!checkBox.isChecked()) {
-                    allChecked = false;
-                }
+	    for (HtmlCheckBox checkBox : getCheckBoxes()) {
+		if (!checkBox.isChecked()) {
+		    allChecked = false;
+		}
 
-                selectAllScript.append("document.getElementById('" + checkBox.getId()
-                        + "').checked = this.checked; ");
+		selectAllScript.append("document.getElementById('" + checkBox.getId() + "').checked = this.checked; ");
 
-                String eachScript = "if (! this.checked) document.getElementById('" + allCheckBoxId
-                        + "').checked = false;";
-                checkBox.setOnClick(eachScript);
-                checkBox.setOnDblClick(eachScript);
-            }
+		String eachScript = "if (! this.checked) document.getElementById('" + checkAllId + "').checked = false;";
+		checkBox.setOnClick(eachScript);
+		checkBox.setOnDblClick(eachScript);
+	    }
 
-            HtmlCheckBox checkAllBox = addOption(new HtmlText(RenderUtils
-                    .getResourceString("renderers.checkboxlist.selectAll")), 0);
-            checkAllBox.setId(allCheckBoxId);
-            checkAllBox.setChecked(allChecked);
-            checkAllBox.setOnClick(selectAllScript.toString());
-            checkAllBox.setOnDblClick(selectAllScript.toString());
-        }
+	    HtmlCheckBox checkAllBox = addOption(
+		    new HtmlLabel(RenderUtils.getResourceString("renderers.checkboxlist.selectAll")), 0);
+	    checkAllBox.setId(checkAllId);
+	    checkAllBox.setChecked(allChecked);
+	    checkAllBox.setOnClick(selectAllScript.toString());
+	    checkAllBox.setOnDblClick(selectAllScript.toString());
+	}
 
-        for (int i = 0; i < this.list.getItems().size(); i++) {
-            HtmlListItem item = this.list.getItems().get(i);
-            HtmlInlineContainer container = new HtmlInlineContainer();
+	for (int i = 0; i < this.list.getItems().size(); i++) {
+	    HtmlListItem item = this.list.getItems().get(i);
+	    HtmlInlineContainer container = new HtmlInlineContainer();
 
-            container.addChild(getCheckBoxes().get(i));
-            container.addChild(item.getBody());
+	    container.addChild(getCheckBoxes().get(i));
+	    container.addChild(item.getBody());
 
-            item.setBody(container);
-        }
+	    item.setBody(container);
+	}
 
-        if (getHiddenFields().size() > 0) {
-            HtmlContainer container = new HtmlInlineContainer();
+	if (getHiddenFields().size() > 0) {
+	    HtmlContainer container = new HtmlInlineContainer();
 
-            container.addChild(list);
-            for (HtmlHiddenField hiddenField : getHiddenFields()) {
-                container.addChild(hiddenField);
-            }
+	    container.addChild(list);
+	    for (HtmlHiddenField hiddenField : getHiddenFields()) {
+		container.addChild(hiddenField);
+	    }
 
-            return container.getOwnTag(context);
-        } else {
-            return this.list.getOwnTag(context);
-        }
+	    return container.getOwnTag(context);
+	} else {
+	    return this.list.getOwnTag(context);
+	}
     }
 }
