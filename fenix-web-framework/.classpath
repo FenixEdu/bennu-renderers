@@ -18,5 +18,7 @@
 	<classpathentry kind="lib" path="lib/commons-validator-1.3.0.jar"/>
 	<classpathentry kind="lib" path="lib/jdom-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-1.5.2.jar"/>
+	<classpathentry kind="lib" path="/home/marvin/software/java/lib/tools.jar" sourcepath="/home/marvin/software/java"/>
+	<classpathentry kind="lib" path="lib/javassist.jar"/>
 	<classpathentry kind="output" path="output"/>
 </classpath>
