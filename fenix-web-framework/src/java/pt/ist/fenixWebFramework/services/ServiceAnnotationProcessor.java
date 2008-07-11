@@ -20,12 +20,16 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 @SupportedAnnotationTypes( { "pt.ist.fenixWebFramework.services.Service" })
 public class ServiceAnnotationProcessor extends AbstractProcessor {
 
+    static final String LOG_FILENAME = ".serviceAnnotationLog";
+    static final String FIELD_SEPERATOR = " ";
+    static final String ENTRY_SEPERATOR = "\n";
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
 	FileWriter fileWriter = null;
 	try {
-	    fileWriter = new FileWriter(".serviceAnnotationLog", true);
+	    fileWriter = new FileWriter(LOG_FILENAME, true);
 
 	    final Set<MethodSymbol> annotatedElements = (Set<MethodSymbol>) roundEnv.getElementsAnnotatedWith(Service.class);
 
@@ -34,13 +38,9 @@ public class ServiceAnnotationProcessor extends AbstractProcessor {
 		final String className = classSymbol.getQualifiedName().toString();
 
 		fileWriter.write(className);
-		fileWriter.write(" ");
+		fileWriter.write(FIELD_SEPERATOR);
 		fileWriter.write(methodElement.getSimpleName().toString());
-		for (final VarSymbol varSymbol : methodElement.getParameters()) {
-		    fileWriter.write(" ");
-		    fileWriter.write(varSymbol.getSimpleName().toString());
-		}
-		fileWriter.write('\n');
+		fileWriter.write(ENTRY_SEPERATOR);
 	    }
 	} catch (IOException e) {
 	    throw new Error(e);
