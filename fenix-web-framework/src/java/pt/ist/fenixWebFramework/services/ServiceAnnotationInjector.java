@@ -15,7 +15,6 @@ import pt.utl.ist.fenix.tools.util.FileUtils;
 public class ServiceAnnotationInjector {
 
     private static final String SERVICE_MANAGER_PACKAGE = ServiceManager.class.getPackage().getName();
-    private static final String SERVICE_MANAGER_NAME = ServiceManager.class.getSimpleName();
 
 
     public static void main(String[] args) {
@@ -111,16 +110,9 @@ public class ServiceAnnotationInjector {
 	stringBuilder.append("} else {");
 	stringBuilder.append("    ServiceManager.enterService();");
 	stringBuilder.append("    try {");
-
-	stringBuilder.append("final User user = UserView.getUser();");
-	stringBuilder.append("final String username = user == null ? null : user.getUsername();");
-	stringBuilder.append("ServiceInfo.setCurrentServiceInfo(username, \"");
+	stringBuilder.append("        ServiceManager.initServiceInvocation(\"");
 	stringBuilder.append(serviceName);
 	stringBuilder.append("\", $args);");
-
-	stringBuilder.append("Transaction.setDefaultReadOnly(!ServiceManager.KNOWN_WRITE_SERVICES.containsKey(\"");
-	stringBuilder.append(serviceName);
-	stringBuilder.append("\"));");
 
 	stringBuilder.append("boolean keepGoing = true;");
 	stringBuilder.append("int tries = 0;");
@@ -128,8 +120,16 @@ public class ServiceAnnotationInjector {
 	stringBuilder.append("    while (keepGoing) {");
 	stringBuilder.append("	tries++;");
 	stringBuilder.append("	try {");
+	stringBuilder.append("	    try {");
+	stringBuilder.append("          ServiceManager.beginTransaction();");
 	appendSeriveInvocation(stringBuilder, isVoid, returnType, ctMethod);
-	stringBuilder.append("	    keepGoing = false;");
+	stringBuilder.append("          ServiceManager.commitTransaction();");
+	stringBuilder.append("	        keepGoing = false;");
+	stringBuilder.append("	    } finally {");
+	stringBuilder.append("          if (keepGoing) {");
+	stringBuilder.append("          ServiceManager.abortTransaction();");
+	stringBuilder.append("          }");
+	stringBuilder.append("	    }");
 	stringBuilder.append("	} catch (jvstm.CommitException commitException) {");
 //	stringBuilder.append("	    logTransactionRestart(commitException, tries);");
 	stringBuilder.append("	} catch (IllegalWriteException illegalWriteException) {");
