@@ -20,5 +20,7 @@
 	<classpathentry kind="lib" path="lib/joda-time-1.5.2.jar"/>
 	<classpathentry kind="lib" path="/home/marvin/software/java/lib/tools.jar" sourcepath="/home/marvin/software/java"/>
 	<classpathentry kind="lib" path="lib/javassist.jar"/>
+	<classpathentry kind="lib" path="lib/db-ojb-1.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.5-bin.jar"/>
 	<classpathentry kind="output" path="output"/>
 </classpath>

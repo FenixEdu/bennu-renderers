@@ -2,6 +2,13 @@ package pt.ist.fenixWebFramework;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -14,10 +21,12 @@ import org.apache.log4j.Priority;
 import org.apache.log4j.varia.DenyAllFilter;
 import org.apache.log4j.varia.LevelRangeFilter;
 
+import pt.ist.fenixWebFramework.repository.SQLUpdateGenerator;
 import pt.ist.fenixWebFramework.servlets.filters.CASFilter;
 import pt.ist.fenixframework.FenixFramework;
 import pt.utl.ist.fenix.tools.file.DSpaceFileManagerFactory;
 import pt.utl.ist.fenix.tools.file.FileManagerFactory;
+import pt.utl.ist.fenix.tools.util.FileUtils;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 import dml.DomainModel;
 
@@ -29,6 +38,8 @@ public class FenixWebFramework extends FenixFramework {
 	synchronized (INIT_LOCK) {
 	    FenixFramework.initialize(config);
 
+	    updateDataRepositoryStructure(config);
+
 	    final Locale locale = new Locale(config.getDefaultLanguage(), config.getDefaultLocation(), config.getDefaultVariant());
 	    Language.setDefaultLocale(locale);
 
@@ -37,6 +48,120 @@ public class FenixWebFramework extends FenixFramework {
 	    initializeFileManager(config);
 
 	    initializeCas(config);;
+	}
+    }
+
+    private static void updateDataRepositoryStructure(final Config config) {
+	if (config.updateDataRepositoryStructure) {
+	    Connection connection = null;
+	    try {
+		connection = getConnection(config);
+
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+		    statement = connection.createStatement();
+		    resultSet = statement.executeQuery("SELECT GET_LOCK('FenixFrameworkInit', 100)");
+		    if (!resultSet.next() || (resultSet.getInt(1) != 1)) {
+			return;
+		    }
+		} finally {
+		    if (resultSet != null) {
+			resultSet.close();
+		    }
+		    if (statement != null) {
+			statement.close();
+		    }
+		}
+
+		try {
+		    createInfraestructure(connection, config);
+		    final String updates = SQLUpdateGenerator.generateInMem(connection);
+		    executeSqlInstructions(connection, updates);		    
+		} finally {
+		    Statement statementUnlock = null;
+		    try {
+			statementUnlock = connection.createStatement();
+			statementUnlock.executeUpdate("DO RELEASE_LOCK('FenixFrameworkInit')");
+		    } finally {
+			if (statementUnlock != null) {
+			    statementUnlock.close();
+			}
+		    }
+		}
+
+		connection.commit();
+	    } catch (Exception ex) {
+		ex.printStackTrace();
+	    } finally {
+		if (connection != null) {
+		    try {
+			connection.close();
+		    } catch (SQLException e) {
+			// nothing can be done.
+		    }
+		}
+	    }
+	}
+    }
+
+    private static boolean infraestructureExists(final Connection connection, final Config config) throws SQLException {
+	final DatabaseMetaData databaseMetaData = connection.getMetaData();
+	ResultSet resultSet = null;
+	try {
+	    final String dbName = connection.getCatalog();
+	    resultSet = databaseMetaData.getTables(dbName, "", "TX_CHANGE_LOGS", new String[] {"TABLE"});
+	    
+	    while (resultSet.next()) {
+		final String tableName = resultSet.getString(3);
+		if (tableName.equals("TX_CHANGE_LOGS")) {
+		    return true;
+		}
+	    }
+	    return false;
+	} finally {
+	    if (resultSet != null) {
+		resultSet.close();
+	    }
+	}
+    }
+
+    private static void executeSqlInstructions(final Connection connection, final String sqlInstructions) throws IOException, SQLException {
+	for (final String instruction : sqlInstructions.split(";")) {
+	    final String trimmed = instruction.trim();
+	    if (trimmed.length() > 0) {
+		Statement statement = null;
+		try {
+		    statement = connection.createStatement();
+		    statement.execute(instruction);
+		} finally {
+		    if (statement != null) {
+			statement.close();
+		    }
+		}
+	    }
+	}
+    }
+
+    private static void executeSqlStream(final Connection connection, final String streamName) throws IOException, SQLException {
+	final InputStream inputStream = FenixWebFramework.class.getResourceAsStream(streamName);
+	final String sqlInstructions = FileUtils.readFile(inputStream);
+	executeSqlInstructions(connection, sqlInstructions);
+    }
+
+    private static Connection getConnection(final Config config) throws ClassNotFoundException, SQLException {
+	final String driverName = "com.mysql.jdbc.Driver";
+	Class.forName(driverName);
+	final String url = "jdbc:mysql:" + config.getDbAlias();
+	final Connection connection = DriverManager.getConnection(url, config.getDbUsername(), config.getDbPassword());
+	connection.setAutoCommit(false);
+	return connection;
+    }
+
+    private static void createInfraestructure(final Connection connection, final Config config) throws SQLException, IOException {
+	if (!infraestructureExists(connection, config)) {
+	    executeSqlStream(connection, "/pt/ist/fenixWebFramework/dml.sql");
+	    executeSqlStream(connection, "/pt/ist/fenixWebFramework/ojb.sql");
 	}
     }
 

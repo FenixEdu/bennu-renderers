@@ -27,6 +27,9 @@
 	<target name="prepare" description="Create necessary dirs">
 		<mkdir dir="${build.home}"/>
 		<mkdir dir="${deploy.home}"/>
+		<copy todir="${build.home}">
+			<fileset dir="${src}/etc"/>
+		</copy>
 	</target>
 
 	<target name="compile" description="Compiles code" depends="prepare">
