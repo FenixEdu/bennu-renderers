@@ -70,6 +70,9 @@ public class Config extends pt.ist.fenixframework.Config {
     protected boolean casEnabled = false;
     protected String casLoginUrl = null;
 
+    // TODO : document this
+    protected String exceptionHandlerClassname = null;
+
     // TODO : make method in superclass visible in the hierarchy so we don't need to replicate the code here.
     private static void checkRequired(Object obj, String fieldName) {
         if (obj == null) {
@@ -173,6 +176,10 @@ public class Config extends pt.ist.fenixframework.Config {
 
     public String getCasLoginUrl() {
         return casLoginUrl;
+    }
+
+    public String getExceptionHandlerClassname() {
+        return exceptionHandlerClassname;
     }
 
 }
