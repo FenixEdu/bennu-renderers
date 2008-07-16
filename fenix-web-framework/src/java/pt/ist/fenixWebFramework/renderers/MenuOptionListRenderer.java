@@ -284,6 +284,8 @@ public class MenuOptionListRenderer extends InputRenderer {
                     option.setValue(key.toString());
                 }
 
+                //FIXME enum rendering does not use resource bundle when no layout is defined
+                //turnaround: use a non existing layout to force the rendering with the RenderKit
                 if (getEachLayout() == null) {
                     option.setText(getObjectLabel(obj));
                 }
