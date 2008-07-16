@@ -11,7 +11,7 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import org.apache.log4j.Logger;
 
 public abstract class TabularLayout extends Layout {
-    private static Logger logger = Logger.getLogger(TabularLayout.class);
+    protected static Logger logger = Logger.getLogger(TabularLayout.class);
 
     private String caption;
     private String summary;

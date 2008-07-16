@@ -161,7 +161,7 @@ public class StandardInputRenderer extends InputRenderer {
 
 	protected Map<Integer, Validatable> inputComponents;
 
-	private MetaObject object;
+	protected MetaObject object;
 
 	public ObjectInputTabularLayout(MetaObject object) {
 	    this.object = object;
