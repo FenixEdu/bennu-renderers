@@ -28,6 +28,8 @@ import pt.utl.ist.fenix.tools.util.i18n.Language;
  */
 public class I18NFilter implements Filter {
 
+    private static final String LOCALE_KEY = I18NFilter.class.getName() + "_LOCAL_KEY";
+
     ServletContext servletContext;
 
     FilterConfig filterConfig;
@@ -56,7 +58,7 @@ public class I18NFilter implements Filter {
             httpSession = getOrCreateSession(request);
         } else {
             httpSession = request.getSession(true);
-            final Locale localeFromSession = (Locale) httpSession.getAttribute(Globals.LOCALE_KEY);
+            final Locale localeFromSession = (Locale) httpSession.getAttribute(LOCALE_KEY);
             locale = localeFromSession == null ? Language.getDefaultLocale() : localeFromSession;
         }
 
@@ -74,6 +76,8 @@ public class I18NFilter implements Filter {
     }
 
     public static void setLocale(final HttpServletRequest httpServletRequest, final HttpSession httpSession, final Locale locale) {
+	httpSession.removeAttribute(LOCALE_KEY);
+	httpSession.setAttribute(LOCALE_KEY, locale);
 	httpSession.removeAttribute(Globals.LOCALE_KEY);
         httpSession.setAttribute(Globals.LOCALE_KEY, locale);
         httpServletRequest.removeAttribute(Globals.LOCALE_KEY);
