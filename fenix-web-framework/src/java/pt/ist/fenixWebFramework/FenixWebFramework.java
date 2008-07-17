@@ -149,7 +149,7 @@ public class FenixWebFramework extends FenixFramework {
 	executeSqlInstructions(connection, sqlInstructions);
     }
 
-    private static Connection getConnection(final Config config) throws ClassNotFoundException, SQLException {
+    public static Connection getConnection(final Config config) throws ClassNotFoundException, SQLException {
 	final String driverName = "com.mysql.jdbc.Driver";
 	Class.forName(driverName);
 	final String url = "jdbc:mysql:" + config.getDbAlias();
