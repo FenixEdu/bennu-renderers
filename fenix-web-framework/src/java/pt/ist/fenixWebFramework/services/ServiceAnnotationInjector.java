@@ -101,7 +101,7 @@ public class ServiceAnnotationInjector {
 		
 	if (!isVoid) {
 	    stringBuilder.append("\t");
-	    stringBuilder.append(returnType.getSimpleName());
+	    stringBuilder.append(returnType.getName());
 	    stringBuilder.append(" _result_ = null;\n");
 	}
 
