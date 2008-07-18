@@ -13,9 +13,9 @@ import java.io.Serializable;
 public class MetaObjectKey implements Serializable {
 
     private Class type;
-    private int code;
+    private long code;
 
-    public MetaObjectKey(Class type, int code) {
+    public MetaObjectKey(Class type, long code) {
         if (type == null) {
             throw new NullPointerException("type cannot be null");
         }
@@ -33,7 +33,7 @@ public class MetaObjectKey implements Serializable {
         return this.type;
     }
 
-    protected int getCode() {
+    protected long getCode() {
         return this.code;
     }
 
@@ -49,12 +49,9 @@ public class MetaObjectKey implements Serializable {
 
     @Override
     public int hashCode() {
-        return this.code + this.type.hashCode();
+        return (int) (this.code + this.type.hashCode());
     }
 
-    /**
-     * @return the string id that is unique to the meta object.
-     */
     @Override
     public String toString() {
         return this.type.getName() + ":" + this.code;

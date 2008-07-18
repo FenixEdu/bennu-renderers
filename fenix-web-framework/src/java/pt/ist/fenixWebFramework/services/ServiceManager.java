@@ -3,8 +3,10 @@ package pt.ist.fenixWebFramework.services;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.security.User;
 import pt.ist.fenixWebFramework.security.UserView;
+import pt.ist.fenixframework.pstm.IllegalWriteException;
 import pt.ist.fenixframework.pstm.ServiceInfo;
 import pt.ist.fenixframework.pstm.Transaction;
 
@@ -51,6 +53,51 @@ public class ServiceManager {
         Transaction.abort();
         Transaction.begin();
         Transaction.currentFenixTransaction().setReadOnly();
+    }
+
+    public static void execute(final ServicePredicate servicePredicate) {
+	if (isInsideService()) {
+	    servicePredicate.execute();
+	} else {
+	    final String serviceName = servicePredicate.getClass().getName();
+	    enterService();
+	    try {
+	        ServiceManager.initServiceInvocation(serviceName, new Object[] { servicePredicate });
+
+	        boolean keepGoing = true;
+	        int tries = 0;
+	        try {
+	            while (keepGoing) {
+	        	tries++;
+	        	try {
+	        	    try {
+	        		beginTransaction();
+	        		servicePredicate.execute();
+	        		ServiceManager.commitTransaction();
+	        		keepGoing = false;
+	        	    } finally {
+	        		if (keepGoing) {
+	        		    ServiceManager.abortTransaction();
+	        		}
+	        	    }
+	        	} catch (jvstm.CommitException commitException) {
+	        	} catch (IllegalWriteException illegalWriteException) {
+	        	    ServiceManager.KNOWN_WRITE_SERVICES.put(servicePredicate.getClass().getName(), servicePredicate.getClass().getName());
+	        	    Transaction.setDefaultReadOnly(false);
+	        	}
+	            }
+	        } finally {
+	            Transaction.setDefaultReadOnly(false);
+	            if (LogLevel.INFO) {
+	        	if (tries > 1) {
+	        	    System.out.println("Service " + serviceName + "took " + tries + " tries.");
+	        	}
+	            }
+	        }
+	    } finally {
+		ServiceManager.exitService();
+	    }
+	}
     }
 
 }
