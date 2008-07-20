@@ -15,6 +15,7 @@ import pt.ist.fenixWebFramework.renderers.model.CompositeSlotSetter;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectKey;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.SimpleMetaObject;
+import pt.ist.fenixWebFramework.services.ServiceManager;
 import pt.ist.fenixWebFramework.services.ServicePredicate;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
@@ -75,7 +76,7 @@ public class DomainMetaObject extends SimpleMetaObject {
     @Override
     public void commit() {
         List<ObjectChange> changes = new ArrayList<ObjectChange>();
-        
+
         ObjectKey key = new ObjectKey(getOid());
 
         for (MetaSlot slot : getAllSlots()) {
@@ -261,7 +262,7 @@ public class DomainMetaObject extends SimpleMetaObject {
 
     protected Object callService(final List<ObjectChange> changes) {
 	final ServicePredicateWithResult servicePredicate = new ServicePredicateWithResult(changes);
-	servicePredicate.execute();
+	ServiceManager.execute(servicePredicate);
 	final Object result = servicePredicate.getResult();;
 	return result;
     }

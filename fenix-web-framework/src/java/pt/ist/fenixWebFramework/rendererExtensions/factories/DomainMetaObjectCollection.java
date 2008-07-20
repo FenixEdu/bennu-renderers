@@ -4,6 +4,7 @@ import java.util.List;
 
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectCollection;
+import pt.ist.fenixWebFramework.services.ServiceManager;
 import pt.ist.fenixWebFramework.services.ServicePredicate;
 
 public class DomainMetaObjectCollection extends MetaObjectCollection {
@@ -19,6 +20,7 @@ public class DomainMetaObjectCollection extends MetaObjectCollection {
 		}
 	    }
 	};
+	ServiceManager.execute(servicePredicate);
     }
 
 }

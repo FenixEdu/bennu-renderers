@@ -5,9 +5,6 @@ import pt.ist.fenixWebFramework.security.User;
 
 public class FenixUserIdentity implements UserIdentity {
     
-    /**
-     * Serial version id. 
-     */
     private static final long serialVersionUID = 1L;
     
     private User user;
@@ -23,18 +20,12 @@ public class FenixUserIdentity implements UserIdentity {
     
     @Override
     public boolean equals(Object obj) {
-        if (! (obj instanceof FenixUserIdentity)) {
+        if (!(obj instanceof FenixUserIdentity)) {
             return false;
         }
-        
-        FenixUserIdentity other = (FenixUserIdentity) obj;
-        
-        if (this.user == null) {
-            return other.user == null;
-        }
-        else {
-            return this.user.equals(other.user);
-        }
+
+        final FenixUserIdentity other = (FenixUserIdentity) obj;
+        return user == other.user || (user != null && user.equals(other.user));
     }
     
     @Override
