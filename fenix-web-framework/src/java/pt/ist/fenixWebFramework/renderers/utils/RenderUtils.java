@@ -226,7 +226,7 @@ public class RenderUtils {
 
         if (resources == null) {
             // TODO: make a more specific exception
-            throw new RuntimeException("could not find message resources");
+            throw new RuntimeException("could not find message resources: " + bundle);
         }
         
         return resources;
