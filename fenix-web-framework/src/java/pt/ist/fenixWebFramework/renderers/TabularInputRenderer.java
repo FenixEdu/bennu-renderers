@@ -2,11 +2,15 @@ package pt.ist.fenixWebFramework.renderers;
 
 import pt.ist.fenixWebFramework.renderers.CollectionRenderer.CollectionTabularLayout;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
+import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInputComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.Validatable;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.layouts.TabularLayout;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
+import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 
 /**
  * This renderer allows to edit all objects of a collection at the same time.
@@ -46,127 +50,131 @@ public class TabularInputRenderer extends InputRenderer {
 
     private CollectionRenderer collectionRenderer;
 
+    private String validatorClasses;
+
+    private boolean hideValidators = true;
+
     public TabularInputRenderer() {
-        this.collectionRenderer = new CollectionRenderer() {
+	this.collectionRenderer = new CollectionRenderer() {
 
-            @Override
-            protected HtmlComponent renderSlot(MetaSlot slot) {
-                return TabularInputRenderer.this.renderSlot(slot);
-            }
+	    @Override
+	    protected HtmlComponent renderSlot(MetaSlot slot) {
+		return TabularInputRenderer.this.renderSlot(slot);
+	    }
 
-        };
+	};
     }
 
     public String getClasses() {
-        return this.collectionRenderer.getClasses();
+	return this.collectionRenderer.getClasses();
     }
 
     public String getStyle() {
-        return this.collectionRenderer.getStyle();
+	return this.collectionRenderer.getStyle();
     }
 
     public String getTitle() {
-        return this.collectionRenderer.getTitle();
+	return this.collectionRenderer.getTitle();
     }
 
     public String getCaption() {
-        return this.collectionRenderer.getCaption();
+	return this.collectionRenderer.getCaption();
     }
 
     public String getSummary() {
-        return collectionRenderer.getSummary();
+	return collectionRenderer.getSummary();
     }
 
     public String getHeaderClasses() {
-        return this.collectionRenderer.getHeaderClasses();
+	return this.collectionRenderer.getHeaderClasses();
     }
 
     public String getColumnClasses() {
-        return this.collectionRenderer.getColumnClasses();
+	return this.collectionRenderer.getColumnClasses();
     }
 
     public String getRowClasses() {
-        return this.collectionRenderer.getRowClasses();
+	return this.collectionRenderer.getRowClasses();
     }
 
     public String getPrefixes() {
-        return this.collectionRenderer.getPrefixes();
+	return this.collectionRenderer.getPrefixes();
     }
 
     public String getSuffixes() {
-        return this.collectionRenderer.getSuffixes();
+	return this.collectionRenderer.getSuffixes();
     }
 
     public String getBundle(String name) {
-        return this.collectionRenderer.getBundle(name);
+	return this.collectionRenderer.getBundle(name);
     }
 
     public String getKey(String name) {
-        return this.collectionRenderer.getKey(name);
+	return this.collectionRenderer.getKey(name);
     }
 
     public String getLink(String name) {
-        return this.collectionRenderer.getLink(name);
+	return this.collectionRenderer.getLink(name);
     }
 
     public String getModule(String name) {
-        return this.collectionRenderer.getModule(name);
+	return this.collectionRenderer.getModule(name);
     }
 
     public String getOrder(String name) {
-        return this.collectionRenderer.getOrder(name);
+	return this.collectionRenderer.getOrder(name);
     }
 
     public String getParam(String name) {
-        return this.collectionRenderer.getParam(name);
+	return this.collectionRenderer.getParam(name);
     }
 
     public String getText(String name) {
-        return this.collectionRenderer.getText(name);
+	return this.collectionRenderer.getText(name);
     }
 
     public boolean isExcludedFromFirst(String name) {
-        return this.collectionRenderer.isExcludedFromFirst(name);
+	return this.collectionRenderer.isExcludedFromFirst(name);
     }
 
     public boolean isExcludedFromLast(String name) {
-        return this.collectionRenderer.isExcludedFromLast(name);
+	return this.collectionRenderer.isExcludedFromLast(name);
     }
 
     public String getVisibleIf(String name) {
-        return this.collectionRenderer.getVisibleIf(name);
+	return this.collectionRenderer.getVisibleIf(name);
     }
-    
+
     public String getVisibleIfNot(String name) {
 	return this.collectionRenderer.getVisibleIfNot(name);
     }
 
     public String getLinkFormat(String name) {
-        return this.collectionRenderer.getLinkFormat(name);
+	return this.collectionRenderer.getLinkFormat(name);
     }
 
     public String getContextRelative(String name) {
-        return this.collectionRenderer.getContextRelative(name);
+	return this.collectionRenderer.getContextRelative(name);
     }
 
     public String getCustomLink(String name) {
-        return this.collectionRenderer.getCustomLink(name);
+	return this.collectionRenderer.getCustomLink(name);
     }
 
     public boolean getDisplayHeaders() {
-        return this.collectionRenderer.getDisplayHeaders();
+	return this.collectionRenderer.getDisplayHeaders();
     }
 
     public String getLinkGroupSeparator() {
-        return this.collectionRenderer.getLinkGroupSeparator();
+	return this.collectionRenderer.getLinkGroupSeparator();
     }
 
     public boolean isGroupLinks() {
-        return this.collectionRenderer.isGroupLinks();
+	return this.collectionRenderer.isGroupLinks();
     }
 
     public boolean isRowForLinks() {
-        return this.collectionRenderer.isRowForLinks();
+	return this.collectionRenderer.isRowForLinks();
     }
 
     /**
@@ -175,7 +183,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setCaption(String caption) {
-        this.collectionRenderer.setCaption(caption);
+	this.collectionRenderer.setCaption(caption);
     }
 
     /**
@@ -184,7 +192,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setSummary(String summary) {
-        collectionRenderer.setSummary(summary);
+	collectionRenderer.setSummary(summary);
     }
 
     /**
@@ -193,7 +201,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setClasses(String classes) {
-        this.collectionRenderer.setClasses(classes);
+	this.collectionRenderer.setClasses(classes);
     }
 
     /**
@@ -202,7 +210,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setStyle(String style) {
-        this.collectionRenderer.setStyle(style);
+	this.collectionRenderer.setStyle(style);
     }
 
     /**
@@ -211,7 +219,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setTitle(String title) {
-        this.collectionRenderer.setTitle(title);
+	this.collectionRenderer.setTitle(title);
     }
 
     /**
@@ -221,7 +229,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setHeaderClasses(String headerClasses) {
-        this.collectionRenderer.setHeaderClasses(headerClasses);
+	this.collectionRenderer.setHeaderClasses(headerClasses);
     }
 
     /**
@@ -231,7 +239,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setColumnClasses(String columnClasses) {
-        this.collectionRenderer.setColumnClasses(columnClasses);
+	this.collectionRenderer.setColumnClasses(columnClasses);
     }
 
     /**
@@ -241,7 +249,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setRowClasses(String rowClasses) {
-        this.collectionRenderer.setRowClasses(rowClasses);
+	this.collectionRenderer.setRowClasses(rowClasses);
     }
 
     /**
@@ -250,7 +258,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setPrefixes(String prefixes) {
-        this.collectionRenderer.setPrefixes(prefixes);
+	this.collectionRenderer.setPrefixes(prefixes);
     }
 
     /**
@@ -259,7 +267,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setSuffixes(String suffixes) {
-        this.collectionRenderer.setSuffixes(suffixes);
+	this.collectionRenderer.setSuffixes(suffixes);
     }
 
     /**
@@ -269,7 +277,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setSortBy(String sortBy) {
-        this.collectionRenderer.setSortBy(sortBy);
+	this.collectionRenderer.setSortBy(sortBy);
     }
 
     /**
@@ -278,7 +286,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setBundle(String name, String value) {
-        this.collectionRenderer.setBundle(name, value);
+	this.collectionRenderer.setBundle(name, value);
     }
 
     /**
@@ -287,7 +295,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setKey(String name, String value) {
-        this.collectionRenderer.setKey(name, value);
+	this.collectionRenderer.setKey(name, value);
     }
 
     /**
@@ -296,7 +304,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setLink(String name, String value) {
-        this.collectionRenderer.setLink(name, value);
+	this.collectionRenderer.setLink(name, value);
     }
 
     /**
@@ -305,7 +313,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setModule(String name, String value) {
-        this.collectionRenderer.setModule(name, value);
+	this.collectionRenderer.setModule(name, value);
     }
 
     /**
@@ -314,7 +322,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setOrder(String name, String value) {
-        this.collectionRenderer.setOrder(name, value);
+	this.collectionRenderer.setOrder(name, value);
     }
 
     /**
@@ -323,7 +331,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setParam(String name, String value) {
-        this.collectionRenderer.setParam(name, value);
+	this.collectionRenderer.setParam(name, value);
     }
 
     /**
@@ -332,7 +340,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setText(String name, String value) {
-        this.collectionRenderer.setText(name, value);
+	this.collectionRenderer.setText(name, value);
     }
 
     /**
@@ -341,7 +349,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setExcludedFromFirst(String name, String value) {
-        this.collectionRenderer.setExcludedFromFirst(name, value);
+	this.collectionRenderer.setExcludedFromFirst(name, value);
     }
 
     /**
@@ -350,7 +358,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setExcludedFromLast(String name, String value) {
-        this.collectionRenderer.setExcludedFromLast(name, value);
+	this.collectionRenderer.setExcludedFromLast(name, value);
     }
 
     /**
@@ -359,9 +367,9 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setVisibleIf(String name, String value) {
-        this.collectionRenderer.setVisibleIf(name, value);
+	this.collectionRenderer.setVisibleIf(name, value);
     }
-    
+
     /**
      * See {@link CollectionRenderer#setVisibleIfNot(String, String)}.
      * 
@@ -377,7 +385,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setLinkFormat(String name, String value) {
-        this.collectionRenderer.setLinkFormat(name, value);
+	this.collectionRenderer.setLinkFormat(name, value);
     }
 
     /**
@@ -386,7 +394,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setContextRelative(String name, String value) {
-        this.collectionRenderer.setContextRelative(name, value);
+	this.collectionRenderer.setContextRelative(name, value);
     }
 
     /**
@@ -395,7 +403,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setCustomLink(String name, String value) {
-        this.collectionRenderer.setCustomLink(name, value);
+	this.collectionRenderer.setCustomLink(name, value);
     }
 
     /**
@@ -404,7 +412,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setDisplayHeaders(boolean displayHeaders) {
-        this.collectionRenderer.setDisplayHeaders(displayHeaders);
+	this.collectionRenderer.setDisplayHeaders(displayHeaders);
     }
 
     /**
@@ -413,7 +421,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setGroupLinks(boolean groupLinks) {
-        this.collectionRenderer.setGroupLinks(groupLinks);
+	this.collectionRenderer.setGroupLinks(groupLinks);
     }
 
     /**
@@ -422,7 +430,7 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setLinkGroupSeparator(String linkGroupSeparator) {
-        this.collectionRenderer.setLinkGroupSeparator(linkGroupSeparator);
+	this.collectionRenderer.setLinkGroupSeparator(linkGroupSeparator);
     }
 
     /**
@@ -431,57 +439,86 @@ public class TabularInputRenderer extends InputRenderer {
      * @property
      */
     public void setRowForLinks(boolean rowForLinks) {
-        this.collectionRenderer.setRowForLinks(rowForLinks);
+	this.collectionRenderer.setRowForLinks(rowForLinks);
     }
 
+    public String getValidatorClasses() {
+	return validatorClasses;
+    }
+
+    public void setValidatorClasses(String validatorClasses) {
+	this.validatorClasses = validatorClasses;
+    }
+
+    public boolean isHideValidators() {
+	return hideValidators;
+    }
+
+    public void setHideValidators(boolean hideValidators) {
+	this.hideValidators = hideValidators;
+    }
 
     @Override
     protected Layout getLayout(Object object, Class type) {
-        this.collectionRenderer.setContext(getContext());
+	this.collectionRenderer.setContext(getContext());
 
-        final CollectionTabularLayout layout = (CollectionTabularLayout) this.collectionRenderer
-                .getLayout(object, type);
-        return new TabularLayout() {
+	final CollectionTabularLayout layout = (CollectionTabularLayout) this.collectionRenderer.getLayout(object, type);
+	return new TabularLayout() {
 
-            @Override
-            protected boolean hasHeader() {
-                return layout.hasHeader();
-            }
+	    @Override
+	    protected boolean hasHeader() {
+		return layout.hasHeader();
+	    }
 
-            @Override
-            protected int getNumberOfColumns() {
-                return layout.getNumberOfColumns();
-            }
+	    @Override
+	    protected int getNumberOfColumns() {
+		return layout.getNumberOfColumns();
+	    }
 
-            @Override
-            protected int getNumberOfRows() {
-                return layout.getNumberOfRows();
-            }
+	    @Override
+	    protected int getNumberOfRows() {
+		return layout.getNumberOfRows();
+	    }
 
-            @Override
-            protected HtmlComponent getHeaderComponent(int columnIndex) {
-                return layout.getHeaderComponent(columnIndex);
-            }
+	    @Override
+	    protected HtmlComponent getHeaderComponent(int columnIndex) {
+		return layout.getHeaderComponent(columnIndex);
+	    }
 
-            @Override
-            protected HtmlComponent getComponent(int rowIndex, int columnIndex) {
-                HtmlComponent component = layout.getComponent(rowIndex, columnIndex);
+	    @Override
+	    protected HtmlComponent getComponent(int rowIndex, int columnIndex) {
+		HtmlComponent component = layout.getComponent(rowIndex, columnIndex);
 
-                Validatable validatable = findValidatableComponent(component);
-                if (validatable instanceof HtmlInputComponent) {
-                    HtmlInputComponent input = (HtmlInputComponent) validatable;
+		Validatable validatable = findValidatableComponent(component);
+		if (validatable instanceof HtmlInputComponent) {
+		    HtmlInputComponent input = (HtmlInputComponent) validatable;
 
-                    String label = layout.getLabel(columnIndex);
+		    String label = layout.getLabel(columnIndex);
 
-                    if (label != null && label.length() > 0) {
-                        input.setAlternateText(label);
-                    }
-                }
+		    if (label != null && label.length() > 0) {
+			input.setAlternateText(label);
+		    }
 
-                return component;
-            }
+		    MetaSlot metaSlot = getContext().getMetaObject().getSlots().get(columnIndex);
+		    HtmlChainValidator chainValidator = getChainValidator(input, metaSlot);
+		    if (chainValidator != null && !chainValidator.isEmpty() && !isHideValidators()) {
+			chainValidator.setClasses(getValidatorClasses());
+			if (component instanceof HtmlContainer) {
+			    HtmlContainer container = (HtmlContainer) component;
+			    container.addChild(chainValidator);
+			} else {
+			    HtmlContainer container = new HtmlInlineContainer();
+			    container.addChild(component);
+			    container.addChild(chainValidator);
+			    return container;
+			}
+		    }
+		}
 
-        };
+		return component;
+	    }
+
+	};
     }
 
 }
