@@ -169,17 +169,18 @@ public class FenixWebFramework extends FenixFramework {
 	if (config.logProfileFilename != null) {
 	    final Logger logger = Logger.getLogger("pt.ist.fenixWebFramework.servlets.filters.ProfilingFilter");
 	    logger.setAdditivity(false);
+	    logger.setLevel(Level.DEBUG);
 
 	    final Layout layout = new PatternLayout("%d{HH:mm:ss.SSS} %m%n");
 	    final String filename = config.logProfileDir == null ? config.logProfileFilename : config.logProfileDir
 		    + File.separatorChar + config.logProfileFilename;
 	    try {
 		final FileAppender fileAppender = new FileAppender(layout, filename, true);
-		fileAppender.setName("com.atlassian.util.profiling");
-		fileAppender.setThreshold(Priority.INFO);
+		fileAppender.setName("pt.ist.fenixWebFramework.servlets.filters");
+		fileAppender.setThreshold(Priority.DEBUG);
 
 		final LevelRangeFilter levelRangeFilter = new LevelRangeFilter();
-		levelRangeFilter.setLevelMin(Level.INFO);
+		levelRangeFilter.setLevelMin(Level.DEBUG);
 		levelRangeFilter.setLevelMax(Level.WARN);
 		levelRangeFilter.setAcceptOnMatch(true);
 		fileAppender.addFilter(levelRangeFilter);
