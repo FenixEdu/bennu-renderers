@@ -920,7 +920,7 @@ public class CollectionRenderer extends OutputRenderer {
 	    MetaSlot metaSlot = this.metaObjects.get(0).getSlots().get(columnIndex - (isCheckable() ? 1 : 0));
 	    String headerToolTip = metaSlot.getProperties().getProperty("headerToolTip");
 	    if (!StringUtils.isEmpty(headerToolTip)) {
-		return "<a href=\"#\" class=\"help\"> [?] <span>"
+		return "<a href=\"#\" class=\"help\">[?]<span>"
 			+ RenderUtils.getResourceString(metaSlot.getBundle(), headerToolTip) + "</span></a>";
 	    }
 	    return StringUtils.EMPTY;
