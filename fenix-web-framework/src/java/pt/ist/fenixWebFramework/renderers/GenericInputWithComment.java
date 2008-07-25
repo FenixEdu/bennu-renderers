@@ -23,11 +23,20 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 public class GenericInputWithComment extends InputRenderer {
 
+    private static final String LOCATION_BOTTOM = "bottom";
+    private static final String LOCATION_TOP = "top";
+    
     private String bundle;
     private String comment;
     private String commentClasses;
+    private String commentLocation;
     private String subLayout;
     private Map<String,String> properties = new HashMap<String,String>();;
+    
+    public GenericInputWithComment() {
+	super();
+	this.commentLocation = LOCATION_BOTTOM;
+    }
     
     private Map<String,String> getPropertiesMap() {
 	return properties;
@@ -73,6 +82,20 @@ public class GenericInputWithComment extends InputRenderer {
         this.subLayout = subLayout;
     }
     
+
+    public String getCommentLocation() {
+	return this.commentLocation;
+    }
+
+    public void setCommentLocation(String commentLocation) {
+	this.commentLocation = commentLocation;
+
+	if (this.commentLocation != null) {
+	    this.commentLocation = this.commentLocation.toLowerCase();
+	}
+    }
+
+    
     @Override
     protected Layout getLayout(Object object, Class type) {
 	return new Layout() {
@@ -100,9 +123,16 @@ public class GenericInputWithComment extends InputRenderer {
 
 		text.setClasses(getCommentClasses());
 		HtmlContainer container = new HtmlBlockContainer();
-		container.addChild(component);
-		container.addChild(new HtmlText("<br/>", false));
-		container.addChild(text);
+		
+		if (String.valueOf(getCommentLocation()).contains(LOCATION_TOP)) {
+		    container.addChild(text);
+		    container.addChild(new HtmlText("<br/>", false));
+		    container.addChild(component);
+		} else {
+		    container.addChild(component);
+		    container.addChild(new HtmlText("<br/>", false));
+		    container.addChild(text);
+		}
 		
 		return container;
 	        
