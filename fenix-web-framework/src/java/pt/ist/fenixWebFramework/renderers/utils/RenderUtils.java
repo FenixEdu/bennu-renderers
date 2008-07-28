@@ -463,16 +463,19 @@ public class RenderUtils {
             }
 
             private int compareSlots(Object o1, Object o2, String slot) {
-                try {
-                    if (String.class.isAssignableFrom(PropertyUtils.getPropertyType(o1, slot))) {
-                        return new BeanComparator(slot, Collator.getInstance()).compare(o1, o2);
-                    }
-                    else {
-                        return new BeanComparator(slot).compare(o1, o2);
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                } 
+        	try {
+        	    if (PropertyUtils.getProperty(o1, slot) == null) {
+        		return 1;
+        	    } else if (PropertyUtils.getProperty(o2, slot) == null) {
+        		return -1;
+        	    } else if (String.class.isAssignableFrom(PropertyUtils.getPropertyType(o1, slot))) {
+        		return new BeanComparator(slot, Collator.getInstance()).compare(o1, o2);
+        	    } else {
+        		return new BeanComparator(slot).compare(o1, o2);
+        	    }
+        	} catch (Exception e) {
+        	    throw new RuntimeException(e);
+        	} 
             }
             
         };
