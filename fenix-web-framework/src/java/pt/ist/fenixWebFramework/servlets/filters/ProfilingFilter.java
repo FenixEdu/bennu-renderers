@@ -26,7 +26,7 @@ public class ProfilingFilter implements Filter {
 
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
-    		throws IOException, ServletException {
+	    throws IOException, ServletException {
 	final HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 	final String uri = httpServletRequest.getRequestURI();
 
@@ -45,7 +45,7 @@ public class ProfilingFilter implements Filter {
 	final StringBuilder stringBuilder = new StringBuilder();
 	stringBuilder.append("[");
 	stringBuilder.append(time);
-	stringBuilder.append("mn] - ");
+	stringBuilder.append("ms] - ");
 	stringBuilder.append(uri);
 	logger.info(stringBuilder.toString());
     }
