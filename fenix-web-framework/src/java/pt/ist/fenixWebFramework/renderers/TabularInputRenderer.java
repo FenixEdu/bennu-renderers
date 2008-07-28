@@ -496,7 +496,7 @@ public class TabularInputRenderer extends InputRenderer {
 		    String label = layout.getLabel(columnIndex);
 
 		    if (label != null && label.length() > 0) {
-			input.setAlternateText(label);
+			input.setAlternateText(HtmlText.escape(label));
 		    }
 
 		    MetaSlot metaSlot = getContext().getMetaObject().getSlots().get(columnIndex);
