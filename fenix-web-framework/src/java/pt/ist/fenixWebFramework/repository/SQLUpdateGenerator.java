@@ -216,37 +216,6 @@ public class SQLUpdateGenerator {
 	}
     }
 
-//    public static void main(String[] args) {
-//	Connection connection = null;
-//	try {
-//	    Config config = PropertiesManager.getFenixFrameworkConfig("build/WEB-INF/classes/domain_model.dml");
-//	    FenixFramework.initialize(config);
-//
-//	    final PersistenceBroker persistenceBroker = PersistenceBrokerFactory.defaultPersistenceBroker();
-//	    connection = persistenceBroker.serviceConnectionManager().getConnection();
-//	    generate(connection);
-//	} catch (Exception ex) {
-//	    ex.printStackTrace();
-//	} finally {
-//	    if (connection != null) {
-//		try {
-//		    connection.close();
-//		} catch (SQLException e) {
-//		    // nothing can be done.
-//		}
-//	    }
-//	}
-//
-//	System.out.println("Generation Complete.");
-//	System.exit(0);
-//    }
-//
-//    private static void generate(final Connection connection) throws Exception {
-//	final String destinationFilename = "etc/database_operations/updates.sql";
-//	final String result = generateInMem(connection);
-//	writeFile(destinationFilename, result);
-//    }
-
     public static String generateInMem(final Connection connection) throws Exception {
 	final StringBuilder stringBuilderForSingleLineInstructions = new StringBuilder();
 	final StringBuilder stringBuilderForMultiLineInstructions = new StringBuilder();
