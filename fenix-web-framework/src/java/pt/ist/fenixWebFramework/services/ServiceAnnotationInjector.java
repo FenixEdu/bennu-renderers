@@ -58,20 +58,22 @@ public class ServiceAnnotationInjector {
     private static void process(final String outputFolder, final ClassPool classPool, final String className, final String methodName) {
 	try {
 	    CtClass classToInject = classPool.get(className);
+	    if (!hasInjectedMethod(classToInject, methodName)) {
 
-	    for (final CtMethod ctMethod : classToInject.getDeclaredMethods()) {
-		if (ctMethod.getName().equals(methodName)) {
-		    ctMethod.setName("_" + methodName + "_");
+		for (final CtMethod ctMethod : classToInject.getDeclaredMethods()) {
+		    if (ctMethod.getName().equals(methodName)) {
+			ctMethod.setName("_" + methodName + "_");
 
-		    final CtMethod newCtMethod = new CtMethod(ctMethod.getReturnType(), methodName, ctMethod.getParameterTypes(), ctMethod.getDeclaringClass());
-		    newCtMethod.setModifiers(ctMethod.getModifiers());
-		    final String body = getWrapperMethod(ctMethod, className, methodName);
-		    newCtMethod.setBody(body);
-		    classToInject.addMethod(newCtMethod);
+			final CtMethod newCtMethod = new CtMethod(ctMethod.getReturnType(), methodName, ctMethod.getParameterTypes(), ctMethod.getDeclaringClass());
+			newCtMethod.setModifiers(ctMethod.getModifiers());
+			final String body = getWrapperMethod(ctMethod, className, methodName);
+			newCtMethod.setBody(body);
+			classToInject.addMethod(newCtMethod);
+		    }
 		}
+		classToInject.writeFile(outputFolder);
+		classToInject.detach();
 	    }
-	    classToInject.writeFile(outputFolder);
-	    classToInject.detach();
 	} catch (NotFoundException e) {
 	    throw new Error(e);
 	} catch (CannotCompileException e) {
@@ -79,6 +81,19 @@ public class ServiceAnnotationInjector {
 	} catch (IOException e) {
 	    throw new Error(e);
 	}
+    }
+
+    private static boolean hasInjectedMethod(final CtClass ctClass, final String methodName) {
+	return hasMethod(ctClass, "_" + methodName + "_");
+    }
+
+    private static boolean hasMethod(final CtClass ctClass, final String methodName) {
+	for (final CtMethod ctMethod : ctClass.getDeclaredMethods()) {
+	    if (ctMethod.getName().equals(methodName)) {
+		return true;
+	    }
+	}
+	return false;
     }
 
     private static CtMethod findCtMethid(final CtClass ctClass, final String methodName) {
