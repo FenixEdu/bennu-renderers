@@ -13,7 +13,9 @@ public class DomainObjectKeyConverter extends Converter {
             return null;
         }
         
-        final String key = (String) value;
+        int index = ((String)value).indexOf(":");
+        
+        final String key = index > 0 ? ((String)value).substring(index+1) : (String) value;
         try {
             final long oid = Long.parseLong(key);
             return Transaction.getObjectForOID(oid);
