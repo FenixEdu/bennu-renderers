@@ -15,9 +15,9 @@ public class HtmlChainValidator extends AbstractHtmlValidator {
 
     public HtmlChainValidator(Validatable component) {
 	super();
-	component.setChainValidator(this);
 	this.component = component;
 	this.validators = new ArrayList<HtmlValidator>();
+	component.setChainValidator(this);
     }
 
     public HtmlChainValidator(Validatable component, List<HtmlValidator> validators) {
@@ -47,6 +47,14 @@ public class HtmlChainValidator extends AbstractHtmlValidator {
     public void addValidator(HtmlValidator htmlValidator) {
 	this.validators.add(htmlValidator);
 	htmlValidator.setHtmlChainValidator(this);
+    }
+
+    public void addValidator(HtmlChainValidator htmlChainValidator) {
+	if (htmlChainValidator != null) {
+	    for (HtmlValidator htmlValidator : htmlChainValidator.validators) {
+		this.addValidator(htmlValidator);
+	    }
+	}
     }
 
     public boolean isEmpty() {
