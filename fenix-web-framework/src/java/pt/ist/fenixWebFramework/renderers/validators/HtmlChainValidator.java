@@ -50,7 +50,7 @@ public class HtmlChainValidator extends AbstractHtmlValidator {
     }
 
     public void addValidator(HtmlChainValidator htmlChainValidator) {
-	if (htmlChainValidator != null) {
+	if (htmlChainValidator != null && htmlChainValidator != this) {
 	    for (HtmlValidator htmlValidator : htmlChainValidator.validators) {
 		this.addValidator(htmlValidator);
 	    }
