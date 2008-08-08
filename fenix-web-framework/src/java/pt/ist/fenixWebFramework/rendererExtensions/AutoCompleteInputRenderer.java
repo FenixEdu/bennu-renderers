@@ -52,15 +52,12 @@ public class AutoCompleteInputRenderer extends InputRenderer {
     public static final String TYPING_VALUE = "custom";
 
     private String rawSlotName;
+    private String valueField;
 
     private String labelField;
     private String format;
 
     private String args;
-    // private String className;
-    // private String serviceName;
-    // private String serviceArgs;
-    //
     private Integer maxCount;
 
     private String size;
@@ -82,6 +79,14 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 
     public String getRawSlotName() {
 	return this.rawSlotName;
+    }
+
+    public void setValueField(String valueField) {
+	this.valueField = valueField;
+    }
+
+    public String getValueField() {
+	return valueField;
     }
 
     public void setArgs(String args) {
@@ -274,7 +279,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		container.addChild(valueField);
 
 		if (object != null) {
-		    Object oid = RendererPropertyUtils.getProperty(object, "OID", false);
+		    Object oid = RendererPropertyUtils.getProperty(object, getValueField(), false);
 		    valueField.setValue(oid == null ? null : oid.toString());
 		}
 
@@ -377,7 +382,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		link.setUrl(SERVLET_URI);
 		link.setParameter("args", getFormatedArgs());
 		link.setParameter("labelField", getLabelField());
-		link.setParameter("valueField", "OID"); // TODO: allow
+		link.setParameter("valueField", getValueField()); // TODO: allow
 		// configuration,1
 		// needs also
 		// converter
