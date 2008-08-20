@@ -21,6 +21,8 @@ public @interface Forward {
     String path();
 
     boolean redirect() default false;
+    
+    boolean contextRelative() default false;
 
     boolean useTile() default true;
 

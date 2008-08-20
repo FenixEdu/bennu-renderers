@@ -95,7 +95,8 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	    Forwards forwards = (Forwards) actionClass.getAnnotation(Forwards.class);
 	    if (forwards != null) {
 		for (final Forward forward : forwards.value()) {
-		    actionMapping.addForwardConfig(new ActionForward(forward.name(), forward.path(), forward.redirect()));
+		    actionMapping.addForwardConfig(new ActionForward(forward.name(), forward.path(), forward.redirect(), forward
+			    .contextRelative()));
 		    if (forward.useTile() && forward.path().endsWith(".jsp")) {
 			FenixDefinitionsFactory.addDefinitionName(forward.path());
 		    }
@@ -107,8 +108,8 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 		for (Class<? extends Exception> exClass : exceptions.value()) {
 		    final ExceptionConfig exceptionConfig = new ExceptionConfig();
 		    final Config appConfig = FenixWebFramework.getConfig();
-		    final String exceptionHandler = appConfig.getExceptionHandlerClassname() == null ?
-			    ExceptionHandler.class.getName() : appConfig.getExceptionHandlerClassname();
+		    final String exceptionHandler = appConfig.getExceptionHandlerClassname() == null ? ExceptionHandler.class
+			    .getName() : appConfig.getExceptionHandlerClassname();
 		    exceptionConfig.setHandler(exceptionHandler);
 		    exceptionConfig.setType(exClass.getName());
 		    exceptionConfig.setKey(EXCEPTION_KEY_DEFAULT_PREFIX + exClass.getSimpleName());
