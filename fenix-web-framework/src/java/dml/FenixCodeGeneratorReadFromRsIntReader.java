@@ -1,19 +1,52 @@
 package dml;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.Properties;
 
+public class FenixCodeGeneratorReadFromRsIntReader extends FenixCodeGeneratorReadFromRs {
 
-public class FenixCodeGeneratorReadFromRsWithConverterClassParam extends FenixCodeGeneratorReadFromRs {
-
+    private static final String CONVERTERS_CLASS = "net.sourceforge.fenixedu.persistenceTier.SQL2JavaConverters";
     private static final String RESULT_SET_READER_CLASS = "pt.ist.fenixframework.pstm.ResultSetReader";
     private static final String GET_ENUM_METHOD = "pt.ist.fenixframework.pstm.Enum2SqlConversion.getEnum";
 
-    static String convertersClass;
-    static String convertersPackagePrefixWithDot;
+    protected Properties slotTypeToSQLType = new Properties();
+    protected Properties slotTypeConverters = new Properties();
 
-    public FenixCodeGeneratorReadFromRsWithConverterClassParam(final CompilerArgs compilerArgs, final DomainModel domainModel) {
-	super(compilerArgs, domainModel);
+    public FenixCodeGeneratorReadFromRsIntReader(CompilerArgs compArgs, DomainModel domainModel) {
+        super(compArgs, domainModel);
+
+        loadProperties("dml.fenix.sqltypes", slotTypeToSQLType);
+        loadProperties("dml.fenix.typeconverters", slotTypeConverters);
+    }
+
+    private void loadProperties(String propName, Properties props) {
+        String propsFilename = System.getProperty(propName);
+        if (propsFilename == null) {
+            throw new Error("FenixCodeGeneratorReadFromRs: missing property " + propName);
+        }
+
+        InputStream in = null;
+        try {
+            in = new FileInputStream(propsFilename);
+            props.load(in);
+            in.close();
+            in = null;
+        } catch (IOException ioe) {
+            System.err.println("FenixCodeGeneratorReadFromRs: IO error during loading of properties files");
+            throw new Error(ioe);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ioe) {
+                    // nop
+                }
+            }
+        }
     }
 
     @Override
@@ -33,7 +66,7 @@ public class FenixCodeGeneratorReadFromRsWithConverterClassParam extends FenixCo
         int columnCount = 0;
         while (slotsIter.hasNext()) {
             Slot slot = (Slot)slotsIter.next();
-            
+
             onNewline(out);
             print(out, "this.");
             print(out, slot.getName());
@@ -79,10 +112,10 @@ public class FenixCodeGeneratorReadFromRsWithConverterClassParam extends FenixCo
             expression.append(".class, ");
         } else {
             if (converter != null) {
-                expression.append(convertersClass);
+                expression.append(CONVERTERS_CLASS);
                 expression.append(".");
                 // strip package prefix to make code more readable (or less unreadable...)
-                converter = converter.replace(convertersPackagePrefixWithDot, "");
+                converter = converter.replace("net.sourceforge.fenixedu.persistenceTier.Conversores.", "");
                 // transform all remaining dots into $
                 converter = converter.replace('.', '$');
                 expression.append(converter);
