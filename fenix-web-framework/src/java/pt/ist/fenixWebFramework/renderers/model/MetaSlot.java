@@ -103,9 +103,7 @@ public class MetaSlot extends MetaObject {
 	    type = getMetaObject().getType();
 	}
 
-	StringBuffer label = new StringBuffer(RenderUtils.getSlotLabel(type, getName(), getBundle(), getLabelKey()));
-
-	return label.toString();
+	return RenderUtils.getSlotLabel(type, getName(), getBundle(), getLabelKey());
     }
 
     public void setLabelKey(String key) {

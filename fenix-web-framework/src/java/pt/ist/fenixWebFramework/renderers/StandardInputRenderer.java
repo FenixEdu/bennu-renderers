@@ -202,7 +202,7 @@ public class StandardInputRenderer extends InputRenderer {
 		    } else {
 			HtmlLabel label = new HtmlLabel();
 			label.setFor(slot.getKey().toString());
-			StringBuffer buffer = new StringBuffer("");
+			StringBuilder buffer = new StringBuilder();
 
 			if (slot.isRequired()) {
 			    if (isRequiredMarkShown()) {

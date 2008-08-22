@@ -21,7 +21,7 @@ public class EnumSetRenderer extends OutputRenderer {
     protected String getEnumSetDescription(EnumSet enumset) {
 
         Object[] enumSetArray = enumset.toArray();
-        StringBuffer description = new StringBuffer();
+        StringBuilder description = new StringBuilder();
 
         for (Object enumSetObject : enumSetArray) {
 
