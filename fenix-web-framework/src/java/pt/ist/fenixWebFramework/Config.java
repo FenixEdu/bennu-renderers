@@ -47,7 +47,30 @@ public class Config extends pt.ist.fenixframework.Config {
      */
     protected String logProfileFilename = null;
 
-
+    /**
+     * This <strong>optional</strong> parameter specifies the
+     * context path of   requests used by the application 
+     * The default value for this parameter is <code>null</code>.
+     */
+    protected String appContext = null;
+    
+    
+    /**
+     * This <strong>optional</strong> parameter specifies if
+     * the fenix-web-framework should generate checksum
+     * hashing for each url in order to avoid url tampering
+     * 
+     */
+    protected Boolean filterRequestWithDigest = false; 
+    
+    /**
+     * This is <strong>required when defining filterRequestWithDigest</strong> 
+     * parameter and specifies the link to where a URL tampering user shall be
+     * sent
+     */
+    protected String tamperingRedirect = "";
+    
+    
     // TODO: document this Dspace stuff
     protected String dspaceClientTransportClass = null;
     protected String fileManagerFactoryImplementationClass = null;
@@ -180,6 +203,18 @@ public class Config extends pt.ist.fenixframework.Config {
 
     public String getExceptionHandlerClassname() {
         return exceptionHandlerClassname;
+    }
+    
+    public String getAppContext() {
+        return appContext;
+    }
+
+    public Boolean getFilterRequestWithDigest() {
+        return filterRequestWithDigest;
+    }
+
+    public String getTamperingRedirect() {
+	return tamperingRedirect;
     }
 
 }
