@@ -11,9 +11,12 @@ public abstract class HtmlValidator extends AbstractHtmlValidator {
 
     private boolean isKey;
 
+    private String bundle;
+    
     private HtmlValidator() {
 	super();
 	setKey(true);
+	setBundle("RENDERER_RESOURCES");
     }
 
     public HtmlValidator(HtmlChainValidator htmlChainValidator) {
@@ -49,7 +52,7 @@ public abstract class HtmlValidator extends AbstractHtmlValidator {
     }
 
     protected String getResourceMessage(String message) {
-	return RenderUtils.getResourceString(message);
+	return RenderUtils.getResourceString(getBundle(),message);
     }
 
     protected void setHtmlChainValidator(HtmlChainValidator htmlChainValidator) {
@@ -62,6 +65,14 @@ public abstract class HtmlValidator extends AbstractHtmlValidator {
 
     public void setKey(boolean isKey) {
 	this.isKey = isKey;
+    }
+
+    public String getBundle() {
+        return bundle;
+    }
+
+    public void setBundle(String bundle) {
+        this.bundle = bundle;
     }
 
 }
