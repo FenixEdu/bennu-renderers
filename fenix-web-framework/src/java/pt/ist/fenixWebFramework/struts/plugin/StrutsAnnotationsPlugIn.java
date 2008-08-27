@@ -45,28 +45,22 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
     private static final String EXCEPTION_KEY_DEFAULT_PREFIX = "resources.Action.exceptions.";
 
-    private static Set<Class> actionClasses = new HashSet<Class>();
-
     private static boolean initialized = false;
 
-    public Set<Class> getActionClasses() {
-	return actionClasses;
-    }
-
     public void destroy() {
-	actionClasses = new HashSet<Class>();
     }
 
     public void init(ActionServlet servlet, ModuleConfig config) throws ServletException {
 
+	final Set<Class> actionClasses = new HashSet<Class>();
 	if (!initialized) {
-	    loadActionsFromFile();
+	    loadActionsFromFile(actionClasses);
 	    initialized = true;
 	}
 
 	final String modulePrefix = config.getPrefix().startsWith("/") ? config.getPrefix().substring(1) : config.getPrefix();
 
-	for (Class actionClass : getActionClasses()) {
+	for (Class actionClass : actionClasses) {
 	    Mapping mapping = (Mapping) actionClass.getAnnotation(Mapping.class);
 	    if (mapping == null || !modulePrefix.equals(mapping.module())) {
 		continue;
@@ -143,7 +137,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	return mapping.path() + INPUT_DEFAULT_PAGE_AND_METHOD;
     }
 
-    private void loadActionsFromFile() {
+    private void loadActionsFromFile(final Set<Class> actionClasses) {
 	final InputStream inputStream = getClass().getResourceAsStream("/.actionAnnotationLog");
 	try {
 	    final String contents = FileUtils.readFile(inputStream);
