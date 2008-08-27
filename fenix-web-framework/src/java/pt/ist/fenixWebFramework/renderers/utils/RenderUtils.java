@@ -330,13 +330,13 @@ public class RenderUtils {
                     try {
                         PropertyUtils.setProperty(target, propertyName, properties.getProperty(propertyName));
                     } catch (Exception e) {
-                        if (LogLevel.WARN) {
+                        if (LogLevel.DEBUG) {
                             logger.warn("The object " + target + " does not support property '" + propertyName + "': Not writeable!");
                         }
                     }
                 }
             } catch (Exception e) {
-                if (LogLevel.WARN) {
+                if (LogLevel.DEBUG) {
                     logger.warn("The object " + target + " does not support property '" + propertyName + "': " + e);
                 }
             } // IllegalAccessException, InvocationTargetException, NoSuchMethodException
