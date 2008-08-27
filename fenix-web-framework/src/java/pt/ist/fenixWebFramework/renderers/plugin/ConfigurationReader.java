@@ -12,6 +12,15 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.apache.log4j.Logger;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.exceptions.NoRendererException;
 import pt.ist.fenixWebFramework.renderers.exceptions.NoSuchSchemaException;
@@ -23,16 +32,6 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
-
-import org.apache.log4j.Logger;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import pt.utl.ist.fenix.tools.util.Pair;
 
 public class ConfigurationReader {
@@ -72,8 +71,12 @@ public class ConfigurationReader {
     public void readAll(ServletContext context) throws ServletException {
 	RenderKit.reset();
 
+	RendererPropertyUtils.initCache();
+
 	readConfiguration(context);
 	readSchemas(context);
+
+	RendererPropertyUtils.destroyCache();
 
 	if (LogLevel.INFO) {
 	    logger.info("configuration read");
