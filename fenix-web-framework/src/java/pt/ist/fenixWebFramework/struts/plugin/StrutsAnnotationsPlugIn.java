@@ -3,15 +3,15 @@
  */
 package pt.ist.fenixWebFramework.struts.plugin;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -24,12 +24,14 @@ import org.apache.struts.config.ModuleConfig;
 
 import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.FenixWebFramework;
+import pt.ist.fenixWebFramework.struts.annotations.ActionAnnotationProcessor;
 import pt.ist.fenixWebFramework.struts.annotations.Exceptions;
 import pt.ist.fenixWebFramework.struts.annotations.Forward;
 import pt.ist.fenixWebFramework.struts.annotations.Forwards;
 import pt.ist.fenixWebFramework.struts.annotations.Input;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixWebFramework.struts.tiles.FenixDefinitionsFactory;
+import pt.utl.ist.fenix.tools.util.FileUtils;
 
 /**
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
@@ -38,8 +40,6 @@ import pt.ist.fenixWebFramework.struts.tiles.FenixDefinitionsFactory;
 public class StrutsAnnotationsPlugIn implements PlugIn {
 
     private static final String INPUT_PAGE_AND_METHOD = ".do?page=0&method=";
-
-    private static final String ROOT_CLASSES_PATH = "/WEB-INF/classes/";
 
     private static final String INPUT_DEFAULT_PAGE_AND_METHOD = ".do?page=0&method=prepare";
 
@@ -60,7 +60,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
     public void init(ActionServlet servlet, ModuleConfig config) throws ServletException {
 
 	if (!initialized) {
-	    loadActionsFromServletContext(ROOT_CLASSES_PATH, servlet.getServletContext());
+	    loadActionsFromFile();
 	    initialized = true;
 	}
 
@@ -143,30 +143,23 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	return mapping.path() + INPUT_DEFAULT_PAGE_AND_METHOD;
     }
 
-    private void loadActionsFromServletContext(String path, ServletContext servletContext) {
-	Set<String> resourcePaths = servletContext.getResourcePaths(path);
-	if (resourcePaths != null) {
-	    for (String subPath : resourcePaths) {
-		if (subPath.endsWith("/")) {
-		    loadActionsFromServletContext(subPath, servletContext);
-		} else if (subPath.endsWith(".class")) {
-		    addIfAssignableToAction(subPath.replace(ROOT_CLASSES_PATH, ""));
+    private void loadActionsFromFile() {
+	final InputStream inputStream = getClass().getResourceAsStream("/.actionAnnotationLog");
+	try {
+	    final String contents = FileUtils.readFile(inputStream);
+	    for (final String classname : contents.split(ActionAnnotationProcessor.ENTRY_SEPERATOR)) {
+		try {
+		    ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		    Class type = loader.loadClass(classname);
+		    actionClasses.add(type);
+		} catch (final ClassNotFoundException e) {
+		    e.printStackTrace();
 		}
 	    }
+	} catch (final IOException e) {
+	    e.printStackTrace();
 	}
-    }
 
-    private void addIfAssignableToAction(String classPath) {
-	try {
-	    ClassLoader loader = Thread.currentThread().getContextClassLoader();
-	    String externalName = classPath.substring(0, classPath.indexOf('.')).replace('/', '.');
-
-	    Class type = loader.loadClass(externalName);
-	    if (Action.class.isAssignableFrom(type)) {
-		actionClasses.add(type);
-	    }
-	} catch (Throwable t) {
-	}
     }
 
 }
