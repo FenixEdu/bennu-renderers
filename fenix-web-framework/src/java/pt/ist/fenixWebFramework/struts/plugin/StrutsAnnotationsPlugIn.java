@@ -47,12 +47,13 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
     private static boolean initialized = false;
 
+    private static final Set<Class> actionClasses = new HashSet<Class>();
+
     public void destroy() {
     }
 
     public void init(ActionServlet servlet, ModuleConfig config) throws ServletException {
 
-	final Set<Class> actionClasses = new HashSet<Class>();
 	if (!initialized) {
 	    loadActionsFromFile(actionClasses);
 	    initialized = true;
