@@ -135,6 +135,8 @@ public class CollectionRenderer extends OutputRenderer {
 
     private Map<String, TableLink> links;
 
+    private Map<String, ColumnCss> columnCss;
+    
     private List<TableLink> sortedLinks;
 
     private String sortBy;
@@ -150,6 +152,7 @@ public class CollectionRenderer extends OutputRenderer {
 
 	this.links = new Hashtable<String, TableLink>();
 	this.sortedLinks = new ArrayList<TableLink>();
+	this.columnCss = new Hashtable<String, ColumnCss>();
 	this.selectAllLocation = LOCATION_BOTTOM;
     }
 
@@ -780,6 +783,58 @@ public class CollectionRenderer extends OutputRenderer {
 	return this.links.size();
     }
 
+    
+    public ColumnCss getColumnCss(String name) {
+	ColumnCss columnCss = this.columnCss.get(name);
+	if (columnCss == null) {
+	    columnCss = new ColumnCss();
+	    this.columnCss.put(name, columnCss);
+	}
+	return columnCss;
+    }
+    
+    public void setUseCssIf(String name, String property) {
+	getColumnCss(name).setUseIf(property);
+    }
+    
+    public String getUseCssIf(String name) {
+	return getColumnCss(name).getUseIf();
+    }
+    
+    public void setUseCssIfNot(String name, String property) {
+	getColumnCss(name).setUseIfNot(property);
+    }
+    
+    public String getUseCssIfNot(String name) {
+	return getColumnCss(name).getUseIfNot();
+    }
+    
+    public void setColumn(String name, int column) {
+	getColumnCss(name).setColumnNumber(column);
+    }
+    
+    public int getColumn(String name) {
+	return getColumnCss(name).getColumnNumber();
+    }
+    
+    public void setConditionalColumnClass(String name, String cssClasses) {
+	getColumnCss(name).setStyleClass(cssClasses);
+    }
+    
+    public String getConditionalColumnClass(String name) {
+	return getColumnCss(name).getStyleClass();
+    }
+
+    public List<ColumnCss> getColumnCssFor(int columnIndex) {
+	List<ColumnCss> csses = new ArrayList<ColumnCss>();
+	for (ColumnCss columnCss : this.columnCss.values()) {
+	    if (columnCss.getColumnNumber() == columnIndex) {
+		csses.add(columnCss);
+	    }
+	}
+	return csses;
+    }
+    
     @Override
     protected Layout getLayout(Object object, Class type) {
 	Collection sortedCollection = RenderUtils.sortCollectionWithCriteria((Collection) object, getSortBy());
@@ -1004,9 +1059,20 @@ public class CollectionRenderer extends OutputRenderer {
 	    }
 
 	    HtmlComponent component = renderSlot(slot);
+	    for (ColumnCss columnCss : getColumnCssFor(columnIndex)) {
+		applyConditionalClasses(object, component, columnCss);
+	    }
 	    component = wrapPrefixAndSuffix(component, columnIndex);
 
 	    return component;
+	}
+
+	private void applyConditionalClasses(MetaObject metaObject, HtmlComponent component, ColumnCss columnCss) {
+	    Boolean useIf =  ((columnCss.getUseIf() != null) && (Boolean)RendererPropertyUtils.getProperty(metaObject.getObject(), columnCss.getUseIf(), false));
+	    Boolean useIfNot = ( (columnCss.getUseIfNot() != null) &&(Boolean) RendererPropertyUtils.getProperty(metaObject.getObject(), columnCss.getUseIfNot(), false));
+	    if (useIf || !useIfNot) {
+		component.setClasses(columnCss.getStyleClass());
+	    }
 	}
 
 	/**
@@ -1103,6 +1169,39 @@ public class CollectionRenderer extends OutputRenderer {
 
     }
 
+    public static class ColumnCss {
+	private int columnNumber;
+	private String useIf;
+	private String useIfNot;
+	private String styleClass;
+	
+	public int getColumnNumber() {
+	    return columnNumber;
+	}
+	public void setColumnNumber(int columnNumber) {
+	    this.columnNumber = columnNumber;
+	}
+	public String getUseIf() {
+	    return useIf;
+	}
+	public void setUseIf(String useIf) {
+	    this.useIf = useIf;
+	}
+	public String getStyleClass() {
+	    return styleClass;
+	}
+	public void setStyleClass(String styleClass) {
+	    this.styleClass = styleClass;
+	}
+	public String getUseIfNot() {
+	    return useIfNot;
+	}
+	public void setUseIfNot(String useIfNot) {
+	    this.useIfNot = useIfNot;
+	}
+	
+	
+    }
     public static class TableLink implements Comparable<TableLink> {
 
 	private String name;
