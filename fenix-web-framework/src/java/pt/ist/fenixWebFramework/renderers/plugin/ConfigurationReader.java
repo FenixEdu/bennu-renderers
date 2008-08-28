@@ -1,6 +1,7 @@
 package pt.ist.fenixWebFramework.renderers.plugin;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -520,6 +521,8 @@ public class ConfigurationReader {
 		throw new ServletException("Could not load " + name + ": " + configFile);
 	    }
 
+	    final boolean isNixSystem = !System.getProperty("os.name").toLowerCase().contains("win");
+
 	    try {
 		SAXBuilder build = new SAXBuilder();
 		build.setExpandEntities(true);
@@ -530,16 +533,45 @@ public class ConfigurationReader {
 			    return null;
 			}
 
-			final URL url = new URL(systemId);
-			final InputStream inputStream = url.openStream();
-			return new InputSource(inputStream);
+			if (isNixSystem) {
+			    final URL url = new URL(systemId);
+			    final InputStream inputStream = url.openStream();
+			    return new InputSource(inputStream);			    
+			} else {
+			    String entityPath = systemId.substring("file://".length());
+
+			    // relative to configuration file
+			    File file = new File(context.getRealPath(configFile));
+
+			    // remove home path automatically appended 
+			    String currentPath = new File(System.getProperty("user.dir")).getCanonicalPath();
+			    currentPath = currentPath.replace(" ", "%20");
+
+			    if (File.separatorChar != '/') {
+				currentPath = "/" + currentPath.replace(File.separatorChar, '/');
+			    }
+
+			    if (currentPath != null && entityPath.startsWith(currentPath + "/")) {
+				entityPath = entityPath.substring(currentPath.length() + 1);
+			    }
+
+			    File entityFile = new File(file.getParentFile(), entityPath);
+			    FileInputStream fileInputStream = new FileInputStream(entityFile);
+
+			    return new InputSource(fileInputStream);
+			}
 		    }
 
 		});
-
-		final File file = new File(realPath);
-		final URL url = file.toURI().toURL();
-		final Document document = build.build(url);
+		final Document document;
+		if (isNixSystem) {
+		    final File file = new File(realPath);
+		    final URL url = file.toURI().toURL();
+		    document = build.build(url);
+		} else {
+		    final InputStream input = context.getResourceAsStream(configFile);
+		    document = build.build(input);
+		}
 
 		return document.getRootElement();
 	    } catch (JDOMException e) {
