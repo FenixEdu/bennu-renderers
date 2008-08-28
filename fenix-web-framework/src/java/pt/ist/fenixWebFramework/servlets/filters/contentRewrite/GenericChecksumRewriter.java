@@ -69,6 +69,18 @@ public class GenericChecksumRewriter extends RequestRewriter {
 	super(httpServletRequest);
     }
 
+    private static final char[] OPEN_A = "<a ".toCharArray();
+    private static final char[] OPEN_FORM = "<form ".toCharArray();
+    private static final char[] OPEN_IMG = "<img ".toCharArray();
+    private static final char[] OPEN_AREA = "<area ".toCharArray();
+    private static final char[] CLOSE = ">".toCharArray();
+    private static final char[] PREFIX_JAVASCRIPT = "javascript:".toCharArray();
+    private static final char[] PREFIX_MAILTO = "mailto:".toCharArray();
+    private static final char[] PREFIX_HTTP = "http://".toCharArray();
+    private static final char[] PREFIX_HTTPS = "https://".toCharArray();
+    private static final char[] CARDINAL = "#".toCharArray();
+    private static final char[] QUESTION_MARK = "?".toCharArray();
+
     @Override
     public StringBuilder rewrite(StringBuilder source) {
 	if (isRedirectRequest(httpServletRequest)) {
@@ -80,15 +92,15 @@ public class GenericChecksumRewriter extends RequestRewriter {
 
 	while (true) {
 
-	    final int indexOfAopen = source.indexOf("<a ", iOffset);
-	    final int indexOfFormOpen = source.indexOf("<form ", iOffset);
-	    final int indexOfImgOpen = source.indexOf("<img ", iOffset);
-	    final int indexOfAreaOpen = source.indexOf("<area ", iOffset);
+	    final int indexOfAopen = indexOf(source, OPEN_A, iOffset);
+	    final int indexOfFormOpen = indexOf(source, OPEN_FORM, iOffset);
+	    final int indexOfImgOpen = indexOf(source, OPEN_IMG, iOffset);
+	    final int indexOfAreaOpen = indexOf(source, OPEN_AREA, iOffset);
 	    if (indexOfAopen >= 0 && (indexOfFormOpen < 0 || indexOfAopen < indexOfFormOpen)
 		    && (indexOfImgOpen < 0 || indexOfAopen < indexOfImgOpen)
 		    && (indexOfAreaOpen < 0 || indexOfAopen < indexOfAreaOpen)) {
 		if (!isPrefixed(source, indexOfAopen)) {
-		    final int indexOfAclose = source.indexOf(">", indexOfAopen);
+		    final int indexOfAclose = indexOf(source, CLOSE, indexOfAopen);
 		    if (indexOfAclose >= 0) {
 			final int indexOfHrefBodyStart = findHrefBodyStart(source, indexOfAopen, indexOfAclose);
 			if (indexOfHrefBodyStart >= 0) {
@@ -96,16 +108,16 @@ public class GenericChecksumRewriter extends RequestRewriter {
 			    final int indexOfHrefBodyEnd = findHrefBodyEnd(source, indexOfHrefBodyStart, hrefBodyStartChar);
 			    if (indexOfHrefBodyEnd >= 0) {
 
-				int indexOfJavaScript = source.indexOf("javascript:", indexOfHrefBodyStart);
-				int indexOfMailto = source.indexOf("mailto:", indexOfHrefBodyStart);
-				int indexOfHttp = source.indexOf("http://", indexOfHrefBodyStart);
-				int indexOfHttps = source.indexOf("https://", indexOfHrefBodyStart);
+				int indexOfJavaScript = indexOf(source, PREFIX_JAVASCRIPT, indexOfHrefBodyStart);
+				int indexOfMailto = indexOf(source, PREFIX_MAILTO, indexOfHrefBodyStart);
+				int indexOfHttp = indexOf(source, PREFIX_HTTP, indexOfHrefBodyStart);
+				int indexOfHttps = indexOf(source, PREFIX_HTTPS, indexOfHrefBodyStart);
 				if ((indexOfJavaScript < 0 || indexOfJavaScript > indexOfHrefBodyEnd)
 					&& (indexOfMailto < 0 || indexOfMailto > indexOfHrefBodyEnd)
 					&& (indexOfHttp < 0 || indexOfHttp > indexOfHrefBodyEnd)
 					&& (indexOfHttps < 0 || indexOfHttps > indexOfHrefBodyEnd)) {
 
-				    final int indexOfCardinal = source.indexOf("#", indexOfHrefBodyStart);
+				    final int indexOfCardinal = indexOf(source, CARDINAL, indexOfHrefBodyStart);
 				    boolean hasCardinal = indexOfCardinal > indexOfHrefBodyStart
 					    && indexOfCardinal < indexOfHrefBodyEnd;
 				    if (hasCardinal) {
@@ -115,7 +127,7 @@ public class GenericChecksumRewriter extends RequestRewriter {
 				    }
 
 				    final String checksum = calculateChecksum(source, indexOfHrefBodyStart, indexOfHrefBodyEnd);
-				    final int indexOfQmark = source.indexOf("?", indexOfHrefBodyStart);
+				    final int indexOfQmark = indexOf(source, QUESTION_MARK, indexOfHrefBodyStart);
 				    if (indexOfQmark == -1 || indexOfQmark > indexOfHrefBodyEnd) {
 					response.append('?');
 				    } else {
@@ -170,7 +182,7 @@ public class GenericChecksumRewriter extends RequestRewriter {
 	    } else if (indexOfFormOpen >= 0 && (indexOfImgOpen < 0 || indexOfFormOpen < indexOfImgOpen)
 		    && (indexOfAreaOpen < 0 || indexOfFormOpen < indexOfAreaOpen)) {
 		if (!isPrefixed(source, indexOfFormOpen)) {
-		    final int indexOfFormClose = source.indexOf(">", indexOfFormOpen);
+		    final int indexOfFormClose = indexOf(source, CLOSE, indexOfFormOpen);
 		    if (indexOfFormClose >= 0) {
 			final int indexOfFormActionBodyStart = findFormActionBodyStart(source, indexOfFormOpen, indexOfFormClose);
 			if (indexOfFormActionBodyStart >= 0) {
@@ -198,7 +210,7 @@ public class GenericChecksumRewriter extends RequestRewriter {
 		}
 	    } else if (indexOfImgOpen >= 0 && (indexOfAreaOpen < 0 || indexOfImgOpen < indexOfAreaOpen)) {
 		if (!isPrefixed(source, indexOfImgOpen)) {
-		    final int indexOfImgClose = source.indexOf(">", indexOfImgOpen);
+		    final int indexOfImgClose = indexOf(source, CLOSE, indexOfImgOpen);
 		    if (indexOfImgClose >= 0) {
 			final int indexOfSrcBodyStart = findSrcBodyStart(source, indexOfImgOpen, indexOfImgClose);
 			if (indexOfSrcBodyStart >= 0) {
@@ -207,7 +219,7 @@ public class GenericChecksumRewriter extends RequestRewriter {
 				response.append(source, iOffset, indexOfSrcBodyEnd);
 
 				final String checksum = calculateChecksum(source, indexOfSrcBodyStart, indexOfSrcBodyEnd);
-				final int indexOfQmark = source.indexOf("?", indexOfSrcBodyStart);
+				final int indexOfQmark = indexOf(source, QUESTION_MARK, indexOfSrcBodyStart);
 				if (indexOfQmark == -1 || indexOfQmark > indexOfSrcBodyEnd) {
 				    response.append('?');
 				} else {
@@ -232,14 +244,14 @@ public class GenericChecksumRewriter extends RequestRewriter {
 		}
 	    } else if (indexOfAreaOpen >= 0) {
 		if (!isPrefixed(source, indexOfAreaOpen)) {
-		    final int indexOfAreaClose = source.indexOf(">", indexOfAreaOpen);
+		    final int indexOfAreaClose = indexOf(source, CLOSE, indexOfAreaOpen);
 		    if (indexOfAreaClose >= 0) {
 			final int indexOfHrefBodyStart = findHrefBodyStart(source, indexOfAreaOpen, indexOfAreaClose);
 			if (indexOfHrefBodyStart >= 0) {
 			    final char hrefBodyStartChar = source.charAt(indexOfHrefBodyStart - 1);
 			    final int indexOfHrefBodyEnd = findHrefBodyEnd(source, indexOfHrefBodyStart, hrefBodyStartChar);
 			    if (indexOfHrefBodyEnd >= 0) {
-				final int indexOfCardinal = source.indexOf("#", indexOfHrefBodyStart);
+				final int indexOfCardinal = indexOf(source, CARDINAL, indexOfHrefBodyStart);
 				boolean hasCardinal = indexOfCardinal > indexOfHrefBodyStart
 					&& indexOfCardinal < indexOfHrefBodyEnd;
 				if (hasCardinal) {
@@ -249,7 +261,7 @@ public class GenericChecksumRewriter extends RequestRewriter {
 				}
 
 				final String checksum = calculateChecksum(source, indexOfHrefBodyStart, indexOfHrefBodyEnd);
-				final int indexOfQmark = source.indexOf("?", indexOfHrefBodyStart);
+				final int indexOfQmark = indexOf(source, QUESTION_MARK, indexOfHrefBodyStart);
 				if (indexOfQmark == -1 || indexOfQmark > indexOfHrefBodyEnd) {
 				    response.append('?');
 				} else {
@@ -293,8 +305,9 @@ public class GenericChecksumRewriter extends RequestRewriter {
     }
 
     private boolean isRedirectRequest(final HttpServletRequest httpServletRequest) {
-	final String uri = httpServletRequest.getRequestURI().substring(FenixWebFramework.getConfig().getAppContext().length() + 1);
-	return uri.indexOf("redirect.do") >= 0;
+	final String uri = httpServletRequest.getRequestURI();
+	final int offset = FenixWebFramework.getConfig().getAppContext().length() + 1;
+	return uri.indexOf("redirect.do", offset) >= 0;
     }
 
     protected boolean isPrefixed(final StringBuilder source, final int indexOfTagOpen) {

@@ -97,6 +97,53 @@ public class RequestRewriterFilter implements Filter {
 	    final int nextChar = indexOfHref + 7;
 	    return source.charAt(nextChar) == '"' || source.charAt(nextChar) == '\'' ? nextChar + 1 : nextChar;
 	}
+
+	protected static int indexOf(final StringBuilder source, final char[] target) {
+	    //return source.indexOf(target);
+	    return indexOf(source, target, 0);
+	}
+
+	protected static int indexOf(final StringBuilder source, final char[] target, final int fromIndex) {
+	    //return source.indexOf(target, fromIndex);
+	    return indexOf(source, 0, source.length(), target, 0, target.length, fromIndex);
+	}
+
+	private static int indexOf(final StringBuilder source, final int sourceOffset, final int sourceCount, final char[] target, final int targetOffset, final int targetCount, int fromIndex) {
+	    if (fromIndex >= sourceCount) {
+		return (targetCount == 0 ? sourceCount : -1);
+	    }
+	    if (fromIndex < 0) {
+		fromIndex = 0;
+	    }
+	    if (targetCount == 0) {
+		return fromIndex;
+	    }
+
+	    char first = target[targetOffset];
+	    int max = sourceOffset + (sourceCount - targetCount);
+
+	    for (int i = sourceOffset + fromIndex; i <= max; i++) {
+		/* Look for first character. */
+		if (source.charAt(i) != first) {
+		    while (++i <= max && source.charAt(i) != first)
+			;
+		}
+
+		/* Found first character, now look at the rest of v2 */
+		if (i <= max) {
+		    int j = i + 1;
+		    int end = j + targetCount - 1;
+		    for (int k = targetOffset + 1; j < end && source.charAt(j) == target[k]; j++, k++)
+			;
+
+		    if (j == end) {
+			/* Found whole string. */
+			return i - sourceOffset;
+		    }
+		}
+	    }
+	    return -1;
+	}
     }
 
     public void init(FilterConfig config) {
