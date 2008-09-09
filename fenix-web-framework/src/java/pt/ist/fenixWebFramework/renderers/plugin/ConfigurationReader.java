@@ -513,15 +513,9 @@ public class ConfigurationReader {
 
     private Element readConfigRootElement(final ServletContext context, String name, final String configFile)
 	    throws ServletException {
+	final boolean isNixSystem = !System.getProperty("os.name").toLowerCase().contains("win");
 
 	if (configFile != null) {
-	    final String realPath = context.getRealPath(configFile);
-
-	    if (realPath == null) {
-		throw new ServletException("Could not load " + name + ": " + configFile);
-	    }
-
-	    final boolean isNixSystem = !System.getProperty("os.name").toLowerCase().contains("win");
 
 	    try {
 		SAXBuilder build = new SAXBuilder();
@@ -565,6 +559,10 @@ public class ConfigurationReader {
 		});
 		final Document document;
 		if (isNixSystem) {
+		    final String realPath = context.getRealPath(configFile);
+		    if (realPath == null) {
+			throw new ServletException("Could not load " + name + ": " + configFile);
+		    }
 		    final File file = new File(realPath);
 		    final URL url = file.toURI().toURL();
 		    document = build.build(url);
