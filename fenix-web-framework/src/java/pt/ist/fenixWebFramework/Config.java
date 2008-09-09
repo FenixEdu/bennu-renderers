@@ -92,6 +92,8 @@ public class Config extends pt.ist.fenixframework.Config {
     // TODO : document cas stuff
     protected boolean casEnabled = false;
     protected String casLoginUrl = null;
+    protected String casLogoutUrl = null;
+    protected String casValidateUrl = null;
 
     // TODO : document this
     protected String exceptionHandlerClassname = null;
@@ -215,6 +217,14 @@ public class Config extends pt.ist.fenixframework.Config {
 
     public String getTamperingRedirect() {
 	return tamperingRedirect;
+    }
+
+    public String getCasLogoutUrl() {
+        return casLogoutUrl;
+    }
+
+    public String getCasValidateUrl() {
+        return casValidateUrl;
     }
 
 }
