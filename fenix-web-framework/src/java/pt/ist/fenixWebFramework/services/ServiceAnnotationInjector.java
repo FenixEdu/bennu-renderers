@@ -16,7 +16,6 @@ public class ServiceAnnotationInjector {
 
     private static final String SERVICE_MANAGER_PACKAGE = ServiceManager.class.getPackage().getName();
 
-
     public static void main(String[] args) {
 	final ClassPool classPool = ClassPool.getDefault();
 	classPool.appendSystemPath();
@@ -55,7 +54,8 @@ public class ServiceAnnotationInjector {
 	}
     }
 
-    private static void process(final String outputFolder, final ClassPool classPool, final String className, final String methodName) {
+    private static void process(final String outputFolder, final ClassPool classPool, final String className,
+	    final String methodName) {
 	try {
 	    CtClass classToInject = classPool.get(className);
 	    if (!hasInjectedMethod(classToInject, methodName)) {
@@ -64,7 +64,8 @@ public class ServiceAnnotationInjector {
 		    if (ctMethod.getName().equals(methodName)) {
 			ctMethod.setName("_" + methodName + "_");
 
-			final CtMethod newCtMethod = new CtMethod(ctMethod.getReturnType(), methodName, ctMethod.getParameterTypes(), ctMethod.getDeclaringClass());
+			final CtMethod newCtMethod = new CtMethod(ctMethod.getReturnType(), methodName, ctMethod
+				.getParameterTypes(), ctMethod.getDeclaringClass());
 			newCtMethod.setModifiers(ctMethod.getModifiers());
 			final String body = getWrapperMethod(ctMethod, className, methodName);
 			newCtMethod.setBody(body);
@@ -105,7 +106,8 @@ public class ServiceAnnotationInjector {
 	return null;
     }
 
-    private static String getWrapperMethod(final CtMethod ctMethod, final String className, final String methodName) throws NotFoundException {
+    private static String getWrapperMethod(final CtMethod ctMethod, final String className, final String methodName)
+	    throws NotFoundException {
 	final CtClass returnType = ctMethod.getReturnType();
 	final boolean isPrimitive = returnType.isPrimitive();
 	final boolean isVoid = isPrimitive && returnType.getSimpleName().equals("void");
@@ -113,7 +115,7 @@ public class ServiceAnnotationInjector {
 
 	final StringBuilder stringBuilder = new StringBuilder();
 	stringBuilder.append("{\n");
-		
+
 	if (!isVoid) {
 	    stringBuilder.append("\t");
 	    stringBuilder.append(returnType.getName());
@@ -123,7 +125,7 @@ public class ServiceAnnotationInjector {
 	stringBuilder.append("if (ServiceManager.isInsideService()) {");
 	appendSeriveInvocation(stringBuilder, isVoid, returnType, ctMethod);
 	stringBuilder.append("} else {");
-	stringBuilder.append("    ServiceManager.enterService();");
+	stringBuilder.append("    ServiceManager.enterAnnotationService();");
 	stringBuilder.append("    try {");
 	stringBuilder.append("        ServiceManager.initServiceInvocation(\"");
 	stringBuilder.append(serviceName);
@@ -146,7 +148,13 @@ public class ServiceAnnotationInjector {
 	stringBuilder.append("          }");
 	stringBuilder.append("	    }");
 	stringBuilder.append("	} catch (jvstm.CommitException commitException) {");
-//	stringBuilder.append("	    logTransactionRestart(commitException, tries);");
+	stringBuilder.append("      if (tries > 3) {");
+	stringBuilder.append("	        ServiceManager.logTransactionRestart(\"" + serviceName + "\", commitException, tries);");
+	stringBuilder.append("      }");
+	stringBuilder.append("	} catch (pt.ist.fenixframework.pstm.AbstractDomainObject.UnableToDetermineIdException ex) {");
+	stringBuilder.append("      if (tries > 3) {");
+	stringBuilder.append("	        ServiceManager.logTransactionRestart(\"" + serviceName + "\", ex, tries);");
+	stringBuilder.append("      }");
 	stringBuilder.append("	} catch (IllegalWriteException illegalWriteException) {");
 	stringBuilder.append("	    ServiceManager.KNOWN_WRITE_SERVICES.put(\"");
 	stringBuilder.append(serviceName);
@@ -154,7 +162,10 @@ public class ServiceAnnotationInjector {
 	stringBuilder.append(serviceName);
 	stringBuilder.append("\");");
 	stringBuilder.append("	    Transaction.setDefaultReadOnly(false);");
-//	stringBuilder.append("	    logTransactionRestart(illegalWriteException, tries);");
+	stringBuilder.append("      if (tries > 3) {");
+	stringBuilder.append("	        ServiceManager.logTransactionRestart(\"" + serviceName
+		+ "\", illegalWriteException, tries);");
+	stringBuilder.append("      }");
 	stringBuilder.append("	}");
 	stringBuilder.append("    }");
 	stringBuilder.append("} finally {");
@@ -169,7 +180,7 @@ public class ServiceAnnotationInjector {
 	stringBuilder.append("}");
 
 	stringBuilder.append("    } finally {");
-	stringBuilder.append("	ServiceManager.exitService();");
+	stringBuilder.append("        ServiceManager.exitAnnotationService();");
 	stringBuilder.append("    }");
 	stringBuilder.append("}");
 
@@ -180,7 +191,8 @@ public class ServiceAnnotationInjector {
 	return stringBuilder.toString();
     }
 
-    private static void appendSeriveInvocation(final StringBuilder stringBuilder, final boolean isVoid, final CtClass returnType, final CtMethod ctMethod) {
+    private static void appendSeriveInvocation(final StringBuilder stringBuilder, final boolean isVoid, final CtClass returnType,
+	    final CtMethod ctMethod) {
 	if (!isVoid) {
 	    stringBuilder.append("_result_ = ");
 	}
