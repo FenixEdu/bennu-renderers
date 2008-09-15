@@ -52,11 +52,12 @@ public class FenixWebFramework extends FenixFramework {
     }
 
     private static void updateDataRepositoryStructure(final Config config) {
-	if (config.updateDataRepositoryStructure) {
-	    Connection connection = null;
-	    try {
-		connection = getConnection(config);
+	Connection connection = null;
+	try {
+	    connection = getConnection(config);
+	    final boolean infraestructureExists = infraestructureExists(connection, config);
 
+	    if (config.updateDataRepositoryStructure || !infraestructureExists) {
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -89,17 +90,16 @@ public class FenixWebFramework extends FenixFramework {
 			}
 		    }
 		}
-
-		connection.commit();
-	    } catch (Exception ex) {
-		ex.printStackTrace();
-	    } finally {
-		if (connection != null) {
-		    try {
-			connection.close();
-		    } catch (SQLException e) {
-			// nothing can be done.
-		    }
+	    }
+	    connection.commit();
+	} catch (Exception ex) {
+	    ex.printStackTrace();
+	} finally {
+	    if (connection != null) {
+		try {
+		    connection.close();
+		} catch (SQLException e) {
+		    // nothing can be done.
 		}
 	    }
 	}

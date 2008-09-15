@@ -17,6 +17,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.ojb.broker.PersistenceBroker;
+import org.apache.ojb.broker.PersistenceBrokerFactory;
 import org.apache.ojb.broker.metadata.ClassDescriptor;
 import org.apache.ojb.broker.metadata.CollectionDescriptor;
 import org.apache.ojb.broker.metadata.FieldDescriptor;
@@ -25,6 +27,8 @@ import org.joda.time.DateTime;
 
 import pt.ist.fenixWebFramework.repository.database.DatabaseDescriptorFactory;
 import pt.ist.fenixWebFramework.repository.database.SqlTable;
+import pt.ist.fenixframework.Config;
+import pt.ist.fenixframework.FenixFramework;
 
 import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
 
@@ -363,6 +367,46 @@ public class SQLUpdateGenerator {
 	fileWriter.write(fileContents);
 	fileWriter.flush();
 	fileWriter.close();
+    }
+
+    public static void main(String[] args) {
+	Connection connection = null;
+	try {
+	    final String domainModelArg = args[0];
+	    final String dbAliasArg = args[1];
+	    final String dbUserArg = args[2];
+	    final String dbPassArg = args[3];
+
+	    FenixFramework.initialize(new Config() {{
+		domainModelPath = domainModelArg;
+		dbAlias = dbAliasArg;
+		dbUsername = dbUserArg;
+		dbPassword = dbPassArg;
+	    }});
+
+	    final PersistenceBroker persistenceBroker = PersistenceBrokerFactory.defaultPersistenceBroker();
+	    connection = persistenceBroker.serviceConnectionManager().getConnection();
+	    generate(connection);
+	} catch (Exception ex) {
+	    ex.printStackTrace();
+	} finally {
+	    if (connection != null) {
+		try {
+		    connection.close();
+		} catch (SQLException e) {
+		    // nothing can be done.
+		}
+	    }
+	}
+
+	System.out.println("Generation Complete.");
+	System.exit(0);
+    }
+
+    private static void generate(final Connection connection) throws Exception {
+	final String destinationFilename = "etc/database_operations/updates.sql";
+	final String result = pt.ist.fenixWebFramework.repository.SQLUpdateGenerator.generateInMem(connection);
+	pt.ist.fenixWebFramework.repository.SQLUpdateGenerator.writeFile(destinationFilename, result);
     }
 
 }
