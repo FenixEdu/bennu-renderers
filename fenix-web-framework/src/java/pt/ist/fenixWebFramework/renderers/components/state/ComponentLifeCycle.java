@@ -144,24 +144,30 @@ public class ComponentLifeCycle {
 
 	EditRequest editRequest = new EditRequest(request);
 	List<IViewState> viewStates = editRequest.getAllViewStates();
-
+	List<ViewStateHolder> viewStateHolders = new ArrayList<ViewStateHolder>();
+	
 	boolean allValid = true;
 	boolean anySkip = false;
 	boolean anyCanceled = false;
+	boolean skipValidation = false;
+	
+	for(IViewState viewState : viewStates) {
+	    ViewStateHolder holder = new ViewStateHolder(viewState); 
+	    viewStateHolders.add(holder);
 
-	for (IViewState viewState : viewStates) {
+	    if (cancelRequested(editRequest)) {
+		doCancel(viewState);
+		anyCanceled = true;
+		holder.setCanceled(true);
+		continue;
+	    }
+    
 	    HtmlComponent component = restoreComponent(viewState);
 
 	    viewState.setValid(true);
 	    viewState.setSkipUpdate(false);
 	    viewState.setSkipValidation(false);
 	    viewState.setCurrentDestination((ViewDestination) null);
-
-	    if (cancelRequested(editRequest)) {
-		doCancel(viewState);
-		anyCanceled = true;
-		continue;
-	    }
 
 	    ComponentCollector collector = null;
 
@@ -176,16 +182,24 @@ public class ComponentLifeCycle {
 		component = viewState.getComponent();
 	    }
 
+	    holder.setComponent(component);
+	    holder.setCollector(collector);
+	    skipValidation = skipValidation || viewState.skipValidation();
+	}
+	
+	for (ViewStateHolder holder : viewStateHolders) {
+	    IViewState viewState = holder.getViewState();
+	   
 	    if (viewState.isVisible() && !viewState.skipUpdate()) {
-		if (!viewState.skipValidation()) {
-		    viewState.setValid(validateComponent(viewState, component, viewState.getMetaObject()));
+		if (!skipValidation) {
+		    viewState.setValid(validateComponent(viewState, holder.getComponent(), viewState.getMetaObject()));
 		}
 	    }
 
 	    if (viewState.isVisible() || isHiddenSlot(viewState)) {
 		if (viewState.isValid()) {
 		    // updateMetaObject can get conversion errors
-		    viewState.setValid(updateMetaObject(collector, editRequest, viewState));
+		    viewState.setValid(updateMetaObject(holder.getCollector(), editRequest, viewState));
 		}
 	    }
 
@@ -519,4 +533,48 @@ public class ComponentLifeCycle {
 	return destination.getActionForward();
     }
 
+    
+    private static class ViewStateHolder {
+	private IViewState viewState;
+	private HtmlComponent component;
+	private ComponentCollector collector;
+	private boolean canceled;
+	
+	public ViewStateHolder(IViewState viewState) {
+	    this.viewState = viewState;
+	}
+
+	public boolean isCanceled() {
+	    return canceled;
+	}
+
+	public void setCanceled(boolean canceled) {
+	    this.canceled = canceled;
+	}
+
+	public HtmlComponent getComponent() {
+	    return component;
+	}
+
+	public ComponentCollector getCollector() {
+	    return collector;
+	}
+
+	public IViewState getViewState() {
+	    return viewState;
+	}
+
+	public void setViewState(IViewState viewState) {
+	    this.viewState = viewState;
+	}
+
+	public void setComponent(HtmlComponent component) {
+	    this.component = component;
+	}
+
+	public void setCollector(ComponentCollector collector) {
+	    this.collector = collector;
+	}
+	
+    }
 }
