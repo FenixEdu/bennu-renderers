@@ -41,6 +41,8 @@ public class EnumInputRenderer extends InputRenderer {
 
     private String defaultText;
 
+    private String defaultTextBundle;
+    
     private String bundle;
 
     private boolean key;
@@ -244,7 +246,7 @@ public class EnumInputRenderer extends InputRenderer {
 	    return RenderUtils.getResourceString("renderers.menu.default.title");
 	} else {
 	    if (isKey()) {
-		return RenderUtils.getResourceString(getBundle(), getDefaultText());
+		return RenderUtils.getResourceString(getDefaultTextBundle(), getDefaultText());
 	    } else {
 		return getDefaultText();
 	    }
@@ -307,5 +309,13 @@ public class EnumInputRenderer extends InputRenderer {
 
     public void setReadOnly(boolean readOnly) {
 	this.readOnly = readOnly;
+    }
+
+    public String getDefaultTextBundle() {
+        return defaultTextBundle;
+    }
+
+    public void setDefaultTextBundle(String defaultTextBundle) {
+        this.defaultTextBundle = defaultTextBundle;
     }
 }
