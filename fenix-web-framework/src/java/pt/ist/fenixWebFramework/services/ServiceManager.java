@@ -1,5 +1,7 @@
 package pt.ist.fenixWebFramework.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,10 +19,29 @@ public class ServiceManager {
 
     private static InheritableThreadLocal<String> isInServiceVar = new InheritableThreadLocal<String>();
 
+    private static InheritableThreadLocal<List<Command>> afterCommitCommands = new InheritableThreadLocal<List<Command>>();
+    
     public static final String BERSERK_SERVICE = "berserk";
 
     public static final String ANNOTATION_SERVICE = "annotation";
 
+    public static void resetAfterCommitCommands() {
+	afterCommitCommands.set(null);
+    }
+    
+    public static List<Command> getAfterCommitCommands() {
+	return afterCommitCommands.get();
+    }
+    
+    public static void registerAfterCommitCommand(Command command) {
+	List<Command> commands = getAfterCommitCommands();
+	if (commands == null) {
+	    commands = new ArrayList<Command> ();
+	    afterCommitCommands.set(commands);
+	}
+	commands.add(command);
+    }
+    
     public static boolean isInsideBerserkService() {
 	String currentManager = isInServiceVar.get();
 	return currentManager != null && currentManager.equals(BERSERK_SERVICE);
@@ -110,11 +131,18 @@ public class ServiceManager {
 				beginTransaction();
 				servicePredicate.execute();
 				ServiceManager.commitTransaction();
+				List<Command> commands = getAfterCommitCommands();
+				    if (commands != null) {
+					for (Command command : commands) {
+					    command.execute();
+					}
+				}
 				keepGoing = false;
 			    } finally {
 				if (keepGoing) {
 				    ServiceManager.abortTransaction();
-				}
+				} 
+				resetAfterCommitCommands();
 			    }
 			} catch (jvstm.CommitException commitException) {
 			    if (tries > 3) {

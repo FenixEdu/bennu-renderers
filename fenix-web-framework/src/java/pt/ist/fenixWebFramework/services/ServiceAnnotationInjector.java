@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -141,11 +142,21 @@ public class ServiceAnnotationInjector {
 	stringBuilder.append("          ServiceManager.beginTransaction();");
 	appendSeriveInvocation(stringBuilder, isVoid, returnType, ctMethod);
 	stringBuilder.append("          ServiceManager.commitTransaction();");
+	stringBuilder.append("          java.util.List commands = ServiceManager.getAfterCommitCommands();");
+	stringBuilder.append("          if (commands != null) {");
+	stringBuilder.append("          java.util.Iterator iterator = commands.iterator();");
+	stringBuilder.append("          while(iterator.hasNext()) {");
+	stringBuilder.append("          Command command = (Command) iterator.next();");
+	stringBuilder.append("          command.execute();");
+	stringBuilder.append("          }");
+	stringBuilder.append("          }");
+	
 	stringBuilder.append("	        keepGoing = false;");
 	stringBuilder.append("	    } finally {");
 	stringBuilder.append("          if (keepGoing) {");
 	stringBuilder.append("          ServiceManager.abortTransaction();");
 	stringBuilder.append("          }");
+	stringBuilder.append("          ServiceManager.resetAfterCommitCommands();");
 	stringBuilder.append("	    }");
 	stringBuilder.append("	} catch (jvstm.CommitException commitException) {");
 	stringBuilder.append("      if (tries > 3) {");
