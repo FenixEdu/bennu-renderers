@@ -110,7 +110,7 @@ public class DateInputRendererWithPicker extends DateInputRenderer {
     protected String getScriptText(HtmlImage image, MetaSlotKey key) {
         return String.format(
                 "Calendar.setup({inputField: '%s', ifFormat: '%s', button: '%s'});",
-                key.toString(),
+                HtmlComponent.getValidIdOrName(key.toString()),
                 getInputFormatForCalendar(),
                 image.getId()
         );

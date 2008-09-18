@@ -357,7 +357,7 @@ public abstract class HtmlComponent implements Serializable {
     private static Pattern ACCEPTABLE_ID_START_CHAR = Pattern.compile("[A-Za-z]");
     private static Pattern ACCEPTABLE_ID_CHAR = Pattern.compile("[A-Za-z0-9_:.-]");
     
-    protected static String getValidIdOrName(String desired) {
+    public static String getValidIdOrName(String desired) {
         if (desired == null) {
             return null;
         }
