@@ -145,14 +145,14 @@ public class ComponentLifeCycle {
 	EditRequest editRequest = new EditRequest(request);
 	List<IViewState> viewStates = editRequest.getAllViewStates();
 	List<ViewStateHolder> viewStateHolders = new ArrayList<ViewStateHolder>();
-	
+
 	boolean allValid = true;
 	boolean anySkip = false;
 	boolean anyCanceled = false;
 	boolean skipValidation = false;
-	
-	for(IViewState viewState : viewStates) {
-	    ViewStateHolder holder = new ViewStateHolder(viewState); 
+
+	for (IViewState viewState : viewStates) {
+	    ViewStateHolder holder = new ViewStateHolder(viewState);
 	    viewStateHolders.add(holder);
 
 	    if (cancelRequested(editRequest)) {
@@ -161,7 +161,7 @@ public class ComponentLifeCycle {
 		holder.setCanceled(true);
 		continue;
 	    }
-    
+
 	    HtmlComponent component = restoreComponent(viewState);
 
 	    viewState.setValid(true);
@@ -186,25 +186,27 @@ public class ComponentLifeCycle {
 	    holder.setCollector(collector);
 	    skipValidation = skipValidation || viewState.skipValidation();
 	}
-	
+
 	for (ViewStateHolder holder : viewStateHolders) {
-	    IViewState viewState = holder.getViewState();
-	   
-	    if (viewState.isVisible() && !viewState.skipUpdate()) {
-		if (!skipValidation) {
-		    viewState.setValid(validateComponent(viewState, holder.getComponent(), viewState.getMetaObject()));
-		}
-	    }
+	    if (!holder.isCanceled()) {
+		IViewState viewState = holder.getViewState();
 
-	    if (viewState.isVisible() || isHiddenSlot(viewState)) {
-		if (viewState.isValid()) {
-		    // updateMetaObject can get conversion errors
-		    viewState.setValid(updateMetaObject(holder.getCollector(), editRequest, viewState));
+		if (viewState.isVisible() && !viewState.skipUpdate()) {
+		    if (!skipValidation) {
+			viewState.setValid(validateComponent(viewState, holder.getComponent(), viewState.getMetaObject()));
+		    }
 		}
-	    }
 
-	    allValid = allValid && viewState.isValid();
-	    anySkip = anySkip || viewState.skipUpdate();
+		if (viewState.isVisible() || isHiddenSlot(viewState)) {
+		    if (viewState.isValid()) {
+			// updateMetaObject can get conversion errors
+			viewState.setValid(updateMetaObject(holder.getCollector(), editRequest, viewState));
+		    }
+		}
+
+		allValid = allValid && viewState.isValid();
+		anySkip = anySkip || viewState.skipUpdate();
+	    }
 	}
 
 	ViewDestination destination;
@@ -533,13 +535,12 @@ public class ComponentLifeCycle {
 	return destination.getActionForward();
     }
 
-    
     private static class ViewStateHolder {
 	private IViewState viewState;
 	private HtmlComponent component;
 	private ComponentCollector collector;
 	private boolean canceled;
-	
+
 	public ViewStateHolder(IViewState viewState) {
 	    this.viewState = viewState;
 	}
@@ -575,6 +576,6 @@ public class ComponentLifeCycle {
 	public void setCollector(ComponentCollector collector) {
 	    this.collector = collector;
 	}
-	
+
     }
 }
