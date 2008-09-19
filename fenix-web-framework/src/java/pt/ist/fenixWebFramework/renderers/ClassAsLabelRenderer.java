@@ -66,17 +66,24 @@ public class ClassAsLabelRenderer extends OutputRenderer {
 
             @Override
             public HtmlComponent createComponent(Object object, Class type) {
-                Class targetClass = (Class) object;
+        	if (type == null) {
+        	    return new HtmlText();
+        	}
 
-                if (type == null) {
-                    return new HtmlText();
-                }
-                
-                String label = RenderUtils.getResourceString(getBundle(), getLabelName(targetClass));
+        	final String labelName;
+        	if (object instanceof Class) {
+        	    labelName = getLabelName((Class) object);
+        	} else if (object instanceof String) {
+        	    labelName = getLabelName((String) object);
+        	} else {
+        	    return new HtmlText();
+        	}
+
+                final String label = RenderUtils.getResourceString(getBundle(), labelName);
                 return new HtmlText(label);
             }
 
-            protected String getLabelName(Class targetClass) {
+	    protected String getLabelName(Class targetClass) {
                 if (getLabelFormat() == null) {
                     return "label." + targetClass.getName();
                 }
@@ -84,7 +91,15 @@ public class ClassAsLabelRenderer extends OutputRenderer {
                     return RenderUtils.getFormattedProperties(getLabelFormat(), targetClass);
                 }
             }
-            
+
+            protected String getLabelName(final String className) {
+        	return getLabelFormat() == null ? "label." + className : getFormattedProperties(className);
+            }
+
+            protected String getFormattedProperties(final Object object) {
+        	return RenderUtils.getFormattedProperties(getLabelFormat(), object);
+            }
+
         };
     }
 
