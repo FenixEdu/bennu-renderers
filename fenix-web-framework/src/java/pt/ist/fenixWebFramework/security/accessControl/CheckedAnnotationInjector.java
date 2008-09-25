@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,12 +22,13 @@ public class CheckedAnnotationInjector {
 
     public static void main(String[] args) {
 	final String methodCallPrefix = args[0];
-	final String methodCallSuffix = args[1];
+	final String methodCallStaticPrefix = args[1];
+	final String methodCallSuffix = args[2];
 
 	final ClassPool classPool = ClassPool.getDefault();
 	classPool.appendSystemPath();
 	try {
-	    for (int i = 2; i < args.length; i++) {
+	    for (int i = 3; i < args.length; i++) {
 		final String arg = args[i];
 		classPool.appendClassPath(arg);
 	    }
@@ -34,9 +36,9 @@ public class CheckedAnnotationInjector {
 	    throw new Error(e);
 	}
 
-//	classPool.importPackage("pt.ist.fenixWebFramework.security");
-//	classPool.importPackage("pt.ist.fenixframework.pstm");
-//	classPool.importPackage("pt.ist.fenixWebFramework._development");
+	// classPool.importPackage("pt.ist.fenixWebFramework.security");
+	// classPool.importPackage("pt.ist.fenixframework.pstm");
+	// classPool.importPackage("pt.ist.fenixWebFramework._development");
 
 	File file = null;
 	try {
@@ -55,8 +57,7 @@ public class CheckedAnnotationInjector {
 		    methods.add(strings);
 		}
 
-		
-		process(methodCallPrefix, methodCallSuffix, args[2], classPool, linesByClass);
+		process(methodCallPrefix, methodCallStaticPrefix, methodCallSuffix, args[3], classPool, linesByClass);
 	    }
 	} catch (FileNotFoundException e) {
 	    throw new Error(e);
@@ -69,17 +70,23 @@ public class CheckedAnnotationInjector {
 	}
     }
 
-    private static void process(final String methodCallPrefix, final String methodCallSuffix, final String outputFolder, final ClassPool classPool, final Map<String, Set<String[]>> linesByClass) {
+    private static void process(final String methodCallPrefix, final String methodCallStaticPrefix,
+	    final String methodCallSuffix, final String outputFolder, final ClassPool classPool,
+	    final Map<String, Set<String[]>> linesByClass) {
 	for (final Entry<String, Set<String[]>> entry : linesByClass.entrySet()) {
-	    process(methodCallPrefix, methodCallSuffix, outputFolder, classPool, entry.getKey(), entry.getValue());
+	    process(methodCallPrefix, methodCallStaticPrefix, methodCallSuffix, outputFolder, classPool, entry.getKey(), entry
+		    .getValue());
 	}
     }
 
-    private static void process(final String methodCallPrefix, final String methodCallSuffix, final String outputFolder, final ClassPool classPool, final String className, final Set<String[]> value) {
+    private static void process(final String methodCallPrefix, final String methodCallStaticPrefix,
+	    final String methodCallSuffix, final String outputFolder, final ClassPool classPool, final String className,
+	    final Set<String[]> value) {
 	try {
 	    final CtClass classToInject = classPool.get(className);
 	    for (final String[] strings : value) {
-		process(methodCallPrefix, methodCallSuffix, outputFolder, classPool, classToInject, strings);
+		process(methodCallPrefix, methodCallStaticPrefix, methodCallSuffix, outputFolder, classPool, classToInject,
+			strings);
 	    }
 	    classToInject.writeFile(outputFolder);
 	    classToInject.detach();
@@ -92,19 +99,22 @@ public class CheckedAnnotationInjector {
 	}
     }
 
-    private static void process(final String methodCallPrefix, final String methodCallSuffix, final String outputFolder, final ClassPool classPool, final CtClass classToInject, final String[] strings) throws CannotCompileException {
+    private static void process(final String methodCallPrefix, final String methodCallStaticPrefix,
+	    final String methodCallSuffix, final String outputFolder, final ClassPool classPool, final CtClass classToInject,
+	    final String[] strings) throws CannotCompileException {
 	final String methodName = strings[1];
 	final String annParamValue = strings[2];
 	for (final CtMethod ctMethod : classToInject.getDeclaredMethods()) {
 	    if (ctMethod.getName().equals(methodName)) {
-		inject(methodCallPrefix, methodCallSuffix, classToInject, ctMethod, annParamValue);
+		inject(methodCallPrefix, methodCallStaticPrefix, methodCallSuffix, ctMethod, annParamValue);
 	    }
 	}
     }
 
-    private static void inject(final String methodCallPrefix, final String methodCallSuffix, final CtClass classToInject, final CtMethod ctMethod, final String annParamValue) throws CannotCompileException {
-	final String codeToInject = getCodeToInject(methodCallPrefix, methodCallSuffix, annParamValue);
-	ctMethod.insertBefore(codeToInject);
+    private static void inject(final String methodCallPrefix, final String methodCallStaticPrefix, final String methodCallSuffix,
+	    final CtMethod ctMethod, final String annParamValue) throws CannotCompileException {
+	ctMethod.insertBefore(getCodeToInject(Modifier.isAbstract(ctMethod.getModifiers()) ? methodCallStaticPrefix
+		: methodCallPrefix, methodCallSuffix, annParamValue));
     }
 
     private static String getCodeToInject(final String methodCallPrefix, final String methodCallSuffix, final String annParamValue) {
