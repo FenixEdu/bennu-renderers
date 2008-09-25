@@ -113,7 +113,7 @@ public class CheckedAnnotationInjector {
 
     private static void inject(final String methodCallPrefix, final String methodCallStaticPrefix, final String methodCallSuffix,
 	    final CtMethod ctMethod, final String annParamValue) throws CannotCompileException {
-	ctMethod.insertBefore(getCodeToInject(Modifier.isAbstract(ctMethod.getModifiers()) ? methodCallStaticPrefix
+	ctMethod.insertBefore(getCodeToInject(Modifier.isStatic(ctMethod.getModifiers()) ? methodCallStaticPrefix
 		: methodCallPrefix, methodCallSuffix, annParamValue));
     }
 
