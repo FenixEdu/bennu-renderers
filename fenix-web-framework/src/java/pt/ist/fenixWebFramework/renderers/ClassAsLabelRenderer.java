@@ -26,6 +26,7 @@ public class ClassAsLabelRenderer extends OutputRenderer {
 
     private String bundle;
     private String labelFormat;
+    private boolean escape = true;
     
     public String getBundle() {
         return this.bundle;
@@ -80,7 +81,7 @@ public class ClassAsLabelRenderer extends OutputRenderer {
         	}
 
                 final String label = RenderUtils.getResourceString(getBundle(), labelName);
-                return new HtmlText(label);
+                return new HtmlText(label,isEscape());
             }
 
 	    protected String getLabelName(Class targetClass) {
@@ -101,6 +102,14 @@ public class ClassAsLabelRenderer extends OutputRenderer {
             }
 
         };
+    }
+
+    public boolean isEscape() {
+        return escape;
+    }
+
+    public void setEscape(boolean escape) {
+        this.escape = escape;
     }
 
 }
