@@ -140,21 +140,22 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
     private void loadActionsFromFile(final Set<Class> actionClasses) {
 	final InputStream inputStream = getClass().getResourceAsStream("/.actionAnnotationLog");
-	try {
-	    final String contents = FileUtils.readFile(inputStream);
-	    for (final String classname : contents.split(ActionAnnotationProcessor.ENTRY_SEPERATOR)) {
-		try {
-		    ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		    Class type = loader.loadClass(classname);
-		    actionClasses.add(type);
-		} catch (final ClassNotFoundException e) {
-		    e.printStackTrace();
+	if (inputStream != null) {
+	    try {
+		final String contents = FileUtils.readFile(inputStream);
+		for (final String classname : contents.split(ActionAnnotationProcessor.ENTRY_SEPERATOR)) {
+		    try {
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();
+			Class type = loader.loadClass(classname);
+			actionClasses.add(type);
+		    } catch (final ClassNotFoundException e) {
+			e.printStackTrace();
+		    }
 		}
+	    } catch (final IOException e) {
+		e.printStackTrace();
 	    }
-	} catch (final IOException e) {
-	    e.printStackTrace();
 	}
-
     }
 
 }
