@@ -2,6 +2,7 @@ package pt.ist.fenixWebFramework.servlets.filters;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -27,7 +28,6 @@ import org.apache.commons.fileupload.DefaultFileItemFactory;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.struts.Globals;
 
 import pt.ist.fenixWebFramework.security.User;
 import pt.ist.fenixWebFramework.security.UserView;
@@ -160,6 +160,37 @@ public class RequestWrapperFilter implements Filter {
 	return new FenixHttpServletRequestWrapper(httpServletRequest);
     }
 
+    public static class FenixPrincipal implements Principal {
+
+	@Override
+	public String getName() {
+	    final User user = UserView.getUser();
+	    return user == null ? null : user.getUsername();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+	    if (obj instanceof Principal) {
+		final Principal principal = (Principal) obj;
+		final String name = getName();
+		return name != null && name.equals(principal.getName());
+	    }
+	    return false;
+	}
+
+	@Override
+	public int hashCode() {
+	    final String name = getName();
+	    return name == null ? 0 : name.hashCode();
+	}
+
+	@Override
+	public String toString() {
+	    return getName();
+	}
+
+    }
+
     public static class FenixHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
 	public static final String ITEM_MAP_ATTRIBUTE = "FenixHttpServletRequestWrapper_itemsMap";
@@ -288,6 +319,12 @@ public class RequestWrapperFilter implements Filter {
 	public String getRemoteUser() {
 	    final User user = UserView.getUser();
 	    return user == null ? super.getRemoteUser() : user.getUsername();
+	}
+
+
+	@Override
+	public Principal getUserPrincipal() {
+	    return new FenixPrincipal();
 	}
 
     }
