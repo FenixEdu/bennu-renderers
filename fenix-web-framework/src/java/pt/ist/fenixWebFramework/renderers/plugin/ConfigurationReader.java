@@ -208,8 +208,8 @@ public class ConfigurationReader {
 		    String converterName = slotElement.getAttributeValue("converter");
 		    String readOnlyValue = slotElement.getAttributeValue("read-only");
 		    String hiddenValue = slotElement.getAttributeValue("hidden");
-		    String alwaysSetValue = slotElement.getAttributeValue("always-set");
-
+		    String helpLabelValue = slotElement.getAttributeValue("help");
+		    
 		    Properties properties = getPropertiesFromElement(slotElement);
 
 		    // Validators
@@ -285,7 +285,8 @@ public class ConfigurationReader {
 		    slotDescription.setDefaultValue(defaultValue);
 		    slotDescription.setReadOnly(readOnly);
 		    slotDescription.setHidden(hidden);
-
+		    slotDescription.setHelpLabel(helpLabelValue);
+		    
 		    schema.addSlotDescription(slotDescription);
 		}
 

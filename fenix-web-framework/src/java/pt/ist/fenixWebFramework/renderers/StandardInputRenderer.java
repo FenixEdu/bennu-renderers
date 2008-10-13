@@ -3,9 +3,13 @@ package pt.ist.fenixWebFramework.renderers;
 import java.util.HashMap;
 import java.util.Map;
 
+import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlImage;
+import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
+import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTableCell;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.Validatable;
@@ -229,10 +233,10 @@ public class StandardInputRenderer extends InputRenderer {
 	    case 1:
 		slot = this.object.getSlots().get(rowIndex);
 
-		component = renderSlot(slot);
+		HtmlComponent renderedSlot = renderSlot(slot);
 
 		if (!slot.isReadOnly()) {
-		    Validatable validatable = findValidatableComponent(component);
+		    Validatable validatable = findValidatableComponent(renderedSlot);
 
 		    if (validatable != null) {
 			HtmlFormComponent formComponent = (HtmlFormComponent) validatable;
@@ -243,6 +247,9 @@ public class StandardInputRenderer extends InputRenderer {
 			inputComponents.put(rowIndex, validatable);
 		    }
 		}
+
+		component = slot.hasHelp() ? renderHelpOnComponent(renderedSlot, slot.getBundle(), slot.getHelpLabel())
+			: renderedSlot;
 
 		break;
 	    case 2:
@@ -299,6 +306,32 @@ public class StandardInputRenderer extends InputRenderer {
 	    }
 
 	    return label + getLabelTerminator();
+	}
+
+	protected HtmlComponent renderHelpOnComponent(HtmlComponent renderedSlot, String bundle, String helpLabel) {
+	    HtmlBlockContainer container = new HtmlBlockContainer();
+	    container.setClasses("chelpcontainer");
+
+	    container.addChild(renderedSlot);
+
+	    HtmlInlineContainer inlineContainer = new HtmlInlineContainer();
+	    HtmlImage htmlImage = new HtmlImage();
+	    htmlImage.setSource("images/icon_help.gif");
+	    inlineContainer.addChild(htmlImage);
+
+	    HtmlInlineContainer secondLevelInlineContainer = new HtmlInlineContainer();
+	    secondLevelInlineContainer.addChild(new HtmlText(RenderUtils.getResourceString(bundle, helpLabel), false));
+	    secondLevelInlineContainer.setClasses("chelptext");
+	    inlineContainer.addChild(secondLevelInlineContainer);
+
+	    HtmlLink link = new HtmlLink();
+	    link.setClasses("chelp");
+	    link.setTarget("#");
+	    link.setBody(inlineContainer);
+
+	    container.addChild(link);
+	    return container;
+
 	}
     }
 

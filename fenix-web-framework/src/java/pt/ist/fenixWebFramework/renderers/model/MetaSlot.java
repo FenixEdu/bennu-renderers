@@ -42,6 +42,8 @@ public class MetaSlot extends MetaObject {
     private boolean readOnly;
     private boolean setterIgnored;
 
+    private String helpLabel;
+    
     private boolean isCached;
     private MetaObject valueMetaObject;
 
@@ -323,5 +325,17 @@ public class MetaSlot extends MetaObject {
 	    }
 	}
 	return false;
+    }
+
+    public String getHelpLabel() {
+        return helpLabel;
+    }
+
+    public void setHelpLabel(String helpLabel) {
+        this.helpLabel = helpLabel;
+    }
+    
+    public boolean hasHelp() {
+	return getHelpLabel() != null;
     }
 }

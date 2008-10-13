@@ -29,6 +29,8 @@ public class SchemaSlotDescription {
     private boolean hidden;
     private boolean setterIgnored;
 
+    private String helpLabel;
+
     public SchemaSlotDescription(String slotName) {
 	this.slotName = slotName;
     }
@@ -127,6 +129,14 @@ public class SchemaSlotDescription {
 
     public void setValidators(List<Pair<Class<HtmlValidator>, Properties>> validators) {
 	this.validators = validators;
+    }
+
+    public String getHelpLabel() {
+	return helpLabel;
+    }
+
+    public void setHelpLabel(String helpLabel) {
+	this.helpLabel = helpLabel;
     }
 
 }
