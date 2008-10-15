@@ -1,6 +1,10 @@
 package pt.ist.fenixWebFramework.services;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,28 +24,108 @@ public class ServiceManager {
     private static InheritableThreadLocal<String> isInServiceVar = new InheritableThreadLocal<String>();
 
     private static InheritableThreadLocal<List<Command>> afterCommitCommands = new InheritableThreadLocal<List<Command>>();
-    
+
     public static final String BERSERK_SERVICE = "berserk";
 
     public static final String ANNOTATION_SERVICE = "annotation";
 
+    public static final String CRON_JOB = "cron";
+
+    /**
+     * Invoker for services implemented in static methods.
+     * 
+     * @param classname
+     *            The full name of the class where the method is.
+     * @param methodname
+     *            The method name. A static method with this named must exist in
+     *            the specified class.
+     * @param arguments
+     *            an array to be passed onto the service.
+     * @return returns whatever the service invocation returns.
+     * @throws ServiceManagerException
+     *             Thrown if the reflection mechanism fails to find and invoke
+     *             the desired service.
+     */
+     // UNTESTED
+    public static Object invokeServiceByName(String classname, String methodname, Object[] arguments)
+	    throws ServiceManagerException {
+	try {
+	    Class<?> clazz = Class.forName(classname);
+	    Method[] methods = clazz.getDeclaredMethods();
+	    List<Method> matchingMethods = new LinkedList<Method>();
+	    for (Method method : methods) {
+		Class<?>[] types = method.getParameterTypes();
+		if (method.getName().equals(methodname) && types.length == arguments.length
+			&& Modifier.isStatic(method.getModifiers())) {
+		    boolean isGood = true;
+		    for (int i = 0; i < types.length; i++) {
+			if (arguments[i] != null && !types[i].getClass().isAssignableFrom(arguments[i].getClass())) {
+			    isGood = false;
+			}
+		    }
+		    if (isGood) {
+			matchingMethods.add(method);
+		    }
+		}
+	    }
+	    if (matchingMethods.size() == 1) {
+		Method method = matchingMethods.get(0);
+		return method.invoke(null, arguments);
+	    } else if (matchingMethods.isEmpty()) {
+		throw new ServiceManagerException("Could not find a method compatible with: "
+			+ constructMethodPrint(classname, methodname, arguments));
+	    } else {
+		throw new ServiceManagerException("Found more than one matching method for: "
+			+ constructMethodPrint(classname, methodname, arguments));
+	    }
+	} catch (ClassNotFoundException e) {
+	    throw new ServiceManagerException("Inexisting Service Class on this call: "
+		    + constructMethodPrint(classname, methodname, arguments), e);
+	} catch (IllegalArgumentException e) {
+	    throw new ServiceManagerException("Unable to invoke method for this call: "
+		    + constructMethodPrint(classname, methodname, arguments), e);
+	} catch (IllegalAccessException e) {
+	    throw new ServiceManagerException("Unable to invoke method for this call:"
+		    + constructMethodPrint(classname, methodname, arguments), e);
+	} catch (InvocationTargetException e) {
+	    throw new ServiceManagerException("Unable to invoke method for this call:"
+		    + constructMethodPrint(classname, methodname, arguments), e);
+	}
+    }
+
+    private static String constructMethodPrint(String classname, String methodname, Object[] arguments) {
+	StringBuilder print = new StringBuilder();
+	print.append(classname);
+	print.append(methodname);
+	print.append("(");
+	for (int i = 0; i < arguments.length; i++) {
+	    print.append(arguments[i] != null ? arguments[i].getClass() : "<NULL>");
+	    print.append(", ");
+	}
+	if (print.toString().endsWith(", ")) {
+	    print.delete(print.length() - 2, print.length());
+	}
+	print.append(")");
+	return print.toString();
+    }
+
     public static void resetAfterCommitCommands() {
 	afterCommitCommands.set(null);
     }
-    
+
     public static List<Command> getAfterCommitCommands() {
 	return afterCommitCommands.get();
     }
-    
+
     public static void registerAfterCommitCommand(Command command) {
 	List<Command> commands = getAfterCommitCommands();
 	if (commands == null) {
-	    commands = new ArrayList<Command> ();
+	    commands = new ArrayList<Command>();
 	    afterCommitCommands.set(commands);
 	}
 	commands.add(command);
     }
-    
+
     public static boolean isInsideBerserkService() {
 	String currentManager = isInServiceVar.get();
 	return currentManager != null && currentManager.equals(BERSERK_SERVICE);
@@ -59,6 +143,10 @@ public class ServiceManager {
 	enterService(ANNOTATION_SERVICE);
     }
 
+    public static void enterCronJob() {
+	enterService(CRON_JOB);
+    }
+
     private static void enterService(String manager) {
 	String currentManager = isInServiceVar.get();
 	if (currentManager == null) {
@@ -72,6 +160,10 @@ public class ServiceManager {
 
     public static void exitAnnotationService() {
 	exitService(ANNOTATION_SERVICE);
+    }
+
+    public static void exitCronJob() {
+	exitService(CRON_JOB);
     }
 
     private static void exitService(String manager) {
@@ -132,16 +224,16 @@ public class ServiceManager {
 				servicePredicate.execute();
 				ServiceManager.commitTransaction();
 				List<Command> commands = getAfterCommitCommands();
-				    if (commands != null) {
-					for (Command command : commands) {
-					    command.execute();
-					}
+				if (commands != null) {
+				    for (Command command : commands) {
+					command.execute();
+				    }
 				}
 				keepGoing = false;
 			    } finally {
 				if (keepGoing) {
 				    ServiceManager.abortTransaction();
-				} 
+				}
 				resetAfterCommitCommands();
 			    }
 			} catch (jvstm.CommitException commitException) {
