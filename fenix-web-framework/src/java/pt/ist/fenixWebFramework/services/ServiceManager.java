@@ -46,7 +46,6 @@ public class ServiceManager {
      *             Thrown if the reflection mechanism fails to find and invoke
      *             the desired service.
      */
-     // UNTESTED
     public static Object invokeServiceByName(String classname, String methodname, Object[] arguments)
 	    throws ServiceManagerException {
 	try {
