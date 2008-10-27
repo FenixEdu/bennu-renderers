@@ -10,6 +10,7 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlImage;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
+import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTable;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTableCell;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTableRow;
@@ -70,14 +71,16 @@ public class StandardInputRenderer extends InputRenderer {
 
     private boolean optionalMarkShown = false;
 
-    private String helpContainerClass;
-    
-    private String helpLinkClass;
-    
-    private String helpSpanClass;
-    
+    private String helpNoJavascriptClasses;
+
+    private String helpClosedClasses;
+
+    private String helpOpenClasses;
+
+    private String helpTextClasses;
+
     private String helpImageIcon;
-    
+
     public boolean isDisplayLabel() {
 	return displayLabel;
     }
@@ -319,34 +322,37 @@ public class StandardInputRenderer extends InputRenderer {
 	}
 
 	protected HtmlComponent renderHelpOnComponent(HtmlComponent renderedSlot, String bundle, String helpLabel) {
-	    HtmlBlockContainer container = new HtmlBlockContainer();
-	    container.setClasses(getHelpContainerClass());
+	    String id = renderedSlot.getClass().getSimpleName() + ":" + String.valueOf(System.currentTimeMillis());
 
-	    HtmlInlineContainer inlineContainer = new HtmlInlineContainer();
+	    HtmlBlockContainer container = new HtmlBlockContainer();
+	    container.addChild(renderedSlot);
+
+	    HtmlBlockContainer helpContainer = new HtmlBlockContainer();
+	    helpContainer.setId(id);
+	    helpContainer.setClasses(getHelpNoJavascriptClasses());
+
 	    HtmlImage htmlImage = new HtmlImage();
 	    htmlImage.setSource(getHelpImageIcon());
-	    inlineContainer.addChild(htmlImage);
+	    htmlImage.setOnMouseOver(getScript(id, getHelpOpenClasses()));
+	    htmlImage.setOnMouseOut(getScript(id, getHelpClosedClasses()));
+	    helpContainer.addChild(htmlImage);
 
-	    HtmlInlineContainer secondLevelInlineContainer = new HtmlInlineContainer();
-	    secondLevelInlineContainer.addChild(new HtmlText(RenderUtils.getResourceString(bundle, helpLabel), false));
-	    secondLevelInlineContainer.setClasses(getHelpSpanClass());
-	    inlineContainer.addChild(secondLevelInlineContainer);
+	    HtmlBlockContainer textContainer = new HtmlBlockContainer();
+	    textContainer.setClasses(getHelpTextClasses());
+	    textContainer.addChild(new HtmlText(RenderUtils.getResourceString(bundle, helpLabel), false));
+	    helpContainer.addChild(textContainer);
 
-	    HtmlLink link = new HtmlLink();
-	    link.setClasses(getHelpLinkClass());
-	    link.setUrl("#");
-	    link.setBody(inlineContainer);
+	    container.addChild(helpContainer);
+	    HtmlScript script = new HtmlScript();
+	    script.setContentType("text/javascript");
+	    script.setScript(getScript(id, getHelpClosedClasses()));
+	    container.addChild(script);
 
-	    HtmlTable table = new HtmlTable();
-	    HtmlTableRow row = table.createRow();
-	    HtmlTableCell inputCell = row.createCell();
-	    inputCell.setBody(renderedSlot);
-	    
-	    HtmlTableCell helpCell = row.createCell();
-	    helpCell.setBody(link);
-	    
-	    container.addChild(table);
 	    return container;
+	}
+
+	protected String getScript(String id, String classes) {
+	    return String.format("document.getElementById('%s').className='%s';", id, classes);
 	}
     }
 
@@ -366,36 +372,44 @@ public class StandardInputRenderer extends InputRenderer {
 	this.requiredMarkShown = requiredMarkShown;
     }
 
-    public String getHelpContainerClass() {
-        return helpContainerClass;
-    }
-
-    public void setHelpContainerClass(String helpContainerClass) {
-        this.helpContainerClass = helpContainerClass;
-    }
-
-    public String getHelpLinkClass() {
-        return helpLinkClass;
-    }
-
-    public void setHelpLinkClass(String helpLinkClass) {
-        this.helpLinkClass = helpLinkClass;
-    }
-
-    public String getHelpSpanClass() {
-        return helpSpanClass;
-    }
-
-    public void setHelpSpanClass(String helpSpanClass) {
-        this.helpSpanClass = helpSpanClass;
-    }
-
     public String getHelpImageIcon() {
-        return helpImageIcon;
+	return helpImageIcon;
     }
 
     public void setHelpImageIcon(String helpImageIcon) {
-        this.helpImageIcon = helpImageIcon;
+	this.helpImageIcon = helpImageIcon;
+    }
+
+    public String getHelpNoJavascriptClasses() {
+	return helpNoJavascriptClasses;
+    }
+
+    public void setHelpNoJavascriptClasses(String helpNoJavascript) {
+	this.helpNoJavascriptClasses = helpNoJavascript;
+    }
+
+    public String getHelpClosedClasses() {
+	return helpClosedClasses;
+    }
+
+    public void setHelpClosedClasses(String helpClosed) {
+	this.helpClosedClasses = helpClosed;
+    }
+
+    public String getHelpOpenClasses() {
+	return helpOpenClasses;
+    }
+
+    public void setHelpOpenClasses(String helpOpen) {
+	this.helpOpenClasses = helpOpen;
+    }
+
+    public String getHelpTextClasses() {
+	return helpTextClasses;
+    }
+
+    public void setHelpTextClasses(String helpTextClasses) {
+	this.helpTextClasses = helpTextClasses;
     }
 
 }
