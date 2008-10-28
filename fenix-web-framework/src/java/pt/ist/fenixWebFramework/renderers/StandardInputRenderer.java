@@ -3,17 +3,15 @@ package pt.ist.fenixWebFramework.renderers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlImage;
-import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
-import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
-import pt.ist.fenixWebFramework.renderers.components.HtmlTable;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTableCell;
-import pt.ist.fenixWebFramework.renderers.components.HtmlTableRow;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.Validatable;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
@@ -22,8 +20,6 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
-
-import org.apache.log4j.Logger;
 
 /**
  * This renderer provides a simple way of editing objects. A table is used to
@@ -261,8 +257,8 @@ public class StandardInputRenderer extends InputRenderer {
 		    }
 		}
 
-		component = slot.hasHelp() ? renderHelpOnComponent(renderedSlot, slot.getBundle(), slot.getHelpLabel())
-			: renderedSlot;
+		component = slot.hasHelp() ? renderHelpOnComponent(renderedSlot, slot.getBundle(), slot.getHelpLabel(), slot
+			.getName()) : renderedSlot;
 
 		break;
 	    case 2:
@@ -321,8 +317,9 @@ public class StandardInputRenderer extends InputRenderer {
 	    return label + getLabelTerminator();
 	}
 
-	protected HtmlComponent renderHelpOnComponent(HtmlComponent renderedSlot, String bundle, String helpLabel) {
-	    String id = renderedSlot.getClass().getSimpleName() + ":" + String.valueOf(System.currentTimeMillis());
+	protected HtmlComponent renderHelpOnComponent(HtmlComponent renderedSlot, String bundle, String helpLabel, String slotName) {
+
+	    String id = slotName + ":" +System.currentTimeMillis();
 
 	    HtmlBlockContainer container = new HtmlBlockContainer();
 	    container.addChild(renderedSlot);
@@ -330,11 +327,12 @@ public class StandardInputRenderer extends InputRenderer {
 	    HtmlBlockContainer helpContainer = new HtmlBlockContainer();
 	    helpContainer.setId(id);
 	    helpContainer.setClasses(getHelpNoJavascriptClasses());
+	    helpContainer.setOnMouseOver(getScript(id, getHelpOpenClasses()));
+	    helpContainer.setOnMouseOut(getScript(id, getHelpClosedClasses()));
 
 	    HtmlImage htmlImage = new HtmlImage();
 	    htmlImage.setSource(getHelpImageIcon());
-	    htmlImage.setOnMouseOver(getScript(id, getHelpOpenClasses()));
-	    htmlImage.setOnMouseOut(getScript(id, getHelpClosedClasses()));
+
 	    helpContainer.addChild(htmlImage);
 
 	    HtmlBlockContainer textContainer = new HtmlBlockContainer();
