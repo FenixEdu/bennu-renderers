@@ -11,7 +11,9 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlImage;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
+import pt.ist.fenixWebFramework.renderers.components.HtmlTable;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTableCell;
+import pt.ist.fenixWebFramework.renderers.components.HtmlTableRow;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.Validatable;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
@@ -319,10 +321,9 @@ public class StandardInputRenderer extends InputRenderer {
 
 	protected HtmlComponent renderHelpOnComponent(HtmlComponent renderedSlot, String bundle, String helpLabel, String slotName) {
 
-	    String id = slotName + ":" +System.currentTimeMillis();
+	    String id = slotName + ":" + System.currentTimeMillis();
 
 	    HtmlBlockContainer container = new HtmlBlockContainer();
-	    container.addChild(renderedSlot);
 
 	    HtmlBlockContainer helpContainer = new HtmlBlockContainer();
 	    helpContainer.setId(id);
@@ -332,6 +333,7 @@ public class StandardInputRenderer extends InputRenderer {
 
 	    HtmlImage htmlImage = new HtmlImage();
 	    htmlImage.setSource(getHelpImageIcon());
+	    htmlImage.setDescription("help icon");
 
 	    helpContainer.addChild(htmlImage);
 
@@ -346,7 +348,13 @@ public class StandardInputRenderer extends InputRenderer {
 	    script.setScript(getScript(id, getHelpClosedClasses()));
 	    container.addChild(script);
 
-	    return container;
+	    HtmlTable table = new HtmlTable();
+	    HtmlTableRow row = table.createRow();
+	    HtmlTableCell cell = row.createCell();
+	    cell.setBody(renderedSlot);
+	    HtmlTableCell anotherCell = row.createCell();
+	    anotherCell.setBody(container);
+	    return table;
 	}
 
 	protected String getScript(String id, String classes) {
