@@ -1,5 +1,6 @@
 package pt.ist.fenixWebFramework.renderers.model;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -7,6 +8,7 @@ import java.util.Properties;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
+import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 import pt.ist.fenixWebFramework.renderers.validators.RequiredValidator;
 
@@ -43,7 +45,7 @@ public class MetaSlot extends MetaObject {
     private boolean setterIgnored;
 
     private String helpLabel;
-    
+
     private boolean isCached;
     private MetaObject valueMetaObject;
 
@@ -312,6 +314,26 @@ public class MetaSlot extends MetaObject {
 	return validators;
     }
 
+    public List<HtmlValidator> getValidatorsList() {
+	List<HtmlValidator> validators = new ArrayList<HtmlValidator>();
+	for (Pair<Class<HtmlValidator>, Properties> validatorPair : this.validators) {
+	    Constructor<HtmlValidator> constructor;
+	    try {
+		constructor = validatorPair.getKey().getConstructor(new Class[] {});
+
+		HtmlValidator validator = constructor.newInstance();
+		RenderUtils.setProperties(validator, validatorPair.getValue());
+
+		validators.add(validator);
+	    } catch (Exception e) {
+		throw new RuntimeException("could not create validator '" + validatorPair.getKey().getName() + "' for slot '"
+			+ getName() + "': ", e);
+	    }
+	}
+
+	return validators;
+    }
+
     public void setValidators(List<Pair<Class<HtmlValidator>, Properties>> validators) {
 	if (validators != null) {
 	    this.validators = validators;
@@ -328,13 +350,13 @@ public class MetaSlot extends MetaObject {
     }
 
     public String getHelpLabel() {
-        return helpLabel;
+	return helpLabel;
     }
 
     public void setHelpLabel(String helpLabel) {
-        this.helpLabel = helpLabel;
+	this.helpLabel = helpLabel;
     }
-    
+
     public boolean hasHelp() {
 	return getHelpLabel() != null;
     }

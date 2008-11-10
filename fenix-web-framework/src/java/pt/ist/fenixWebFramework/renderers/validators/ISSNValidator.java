@@ -4,6 +4,13 @@ public class ISSNValidator extends RegexpValidator {
 
     private boolean required;
 
+    public ISSNValidator() {
+	super("[0-9]{4}-[0-9]{3}[0-9X]");
+	setMessage("renderers.validator.issn");
+	setKey(true);
+	setRequired(false);
+    }
+    
     public ISSNValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator, "[0-9]{4}-[0-9]{3}[0-9X]");
 	setMessage("renderers.validator.issn");

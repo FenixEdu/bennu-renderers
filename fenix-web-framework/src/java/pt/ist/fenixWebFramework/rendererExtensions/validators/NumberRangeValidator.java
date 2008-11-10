@@ -14,6 +14,13 @@ public class NumberRangeValidator extends HtmlValidator {
 
     private Integer lowerBound;
 
+    public NumberRangeValidator() {
+	super();
+
+	upperBound = null;
+	lowerBound = null;
+    }
+
     public NumberRangeValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator);
 

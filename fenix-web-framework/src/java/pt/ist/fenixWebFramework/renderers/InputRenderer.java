@@ -11,6 +11,7 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
+import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 
 import org.apache.commons.collections.Predicate;
 import org.apache.log4j.Logger;
@@ -61,8 +62,11 @@ public abstract class InputRenderer extends Renderer {
 	    return null;
 	}
 
-	inputComponent.setChainValidator(slot);
-	return inputComponent.getChainValidator();
+	HtmlChainValidator chainValidator = new HtmlChainValidator(inputComponent);
+	for (HtmlValidator validator : slot.getValidatorsList()) {
+	    chainValidator.addValidator(validator);
+	}
+	return chainValidator;
     }
 
     @Override

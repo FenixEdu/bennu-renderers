@@ -6,6 +6,10 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 public class DoubleValidator extends HtmlValidator {
 
+    public DoubleValidator() {
+	super();
+    }
+
     public DoubleValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator);
     }

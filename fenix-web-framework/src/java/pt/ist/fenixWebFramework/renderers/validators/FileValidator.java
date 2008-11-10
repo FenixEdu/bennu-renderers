@@ -27,6 +27,13 @@ public class FileValidator extends HtmlValidator {
 
     private Object[] arguments;
 
+    public FileValidator() {
+	super();
+	setTypeMessage("renderers.validator.file.type");
+	setExtensionMessage("renderers.validator.file.extension");
+	setSizeMessage("renderers.validator.file.size");
+    }
+
     public FileValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator);
 

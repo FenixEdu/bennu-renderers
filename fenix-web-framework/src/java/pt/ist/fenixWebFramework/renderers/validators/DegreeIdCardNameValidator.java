@@ -5,6 +5,11 @@ import pt.ist.fenixWebFramework.renderers.components.Validatable;
 
 public class DegreeIdCardNameValidator extends HtmlValidator {
 
+    public DegreeIdCardNameValidator() {
+	super();
+	setMessage("renderers.validator.degree.id.card.name");
+    }
+
     public DegreeIdCardNameValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator);
 	setMessage("renderers.validator.degree.id.card.name");

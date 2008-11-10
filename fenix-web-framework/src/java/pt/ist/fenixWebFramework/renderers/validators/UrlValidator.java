@@ -11,6 +11,13 @@ public class UrlValidator extends HtmlValidator {
     /**
      * Required constructor.
      */
+    public UrlValidator() {
+	super();
+	setKey(true);
+	setMessage("renderers.validator.url");
+	setRequired(true);
+    }
+
     public UrlValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator);
 	// default messsage

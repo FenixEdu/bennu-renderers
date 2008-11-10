@@ -8,6 +8,11 @@ public class NumberValidator extends HtmlValidator {
 
     private int base;
 
+    public NumberValidator() {
+	super();
+	setBase(10);
+    }
+
     public NumberValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator);
 	setBase(10);
@@ -36,7 +41,7 @@ public class NumberValidator extends HtmlValidator {
     public void performValidation() {
 
 	String numberText = getComponent().getValue();
-	
+
 	if (!StringUtils.isEmpty(numberText)) {
 	    try {
 		Integer.parseInt(numberText.trim(), getBase());

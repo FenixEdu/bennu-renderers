@@ -317,32 +317,18 @@ public class ComponentLifeCycle {
 		for (HtmlComponent boundComponent : formComponents) {
 		    HtmlFormComponent formComponent = (HtmlFormComponent) boundComponent;
 		    HtmlChainValidator chainValidator = formComponent.getChainValidator();
+		    if (chainValidator == null) {
+			chainValidator = new HtmlChainValidator(formComponent);
+		    }
 
 		    MetaSlotKey key = formComponent.getTargetSlot();
 		    MetaSlot slot = getMetaSlot(metaObject, key);
 
-		    if (chainValidator == null || chainValidator.isEmpty()) {
-			formComponent.setChainValidator(slot);
-			chainValidator = formComponent.getChainValidator();
+		    for (HtmlValidator validator : slot.getValidatorsList()) {
+			chainValidator.addValidator(validator);
 		    }
 
-		    if (chainValidator != null) {
-			validators.add(chainValidator);
-
-			for (Pair<Class<HtmlValidator>, Properties> validatorPair : slot.getValidators()) {
-			    Constructor<HtmlValidator> constructor;
-			    try {
-				constructor = validatorPair.getKey().getConstructor(new Class[] { HtmlChainValidator.class });
-
-				HtmlValidator validator = constructor.newInstance(chainValidator);
-				RenderUtils.setProperties(validator, validatorPair.getValue());
-
-			    } catch (Exception e) {
-				throw new RuntimeException("could not create validator '" + validatorPair.getKey().getName()
-					+ "' for slot '" + slot.getName() + "': ", e);
-			    }
-			}
-		    }
+		    validators.add(chainValidator);
 		}
 	    }
 	}

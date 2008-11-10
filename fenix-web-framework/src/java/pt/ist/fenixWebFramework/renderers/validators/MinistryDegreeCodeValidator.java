@@ -5,6 +5,11 @@ import pt.ist.fenixWebFramework.renderers.components.Validatable;
 
 public class MinistryDegreeCodeValidator extends HtmlValidator {
 
+    public MinistryDegreeCodeValidator() {
+	super();
+	setMessage("renderers.validator.ministry.code");
+    }
+
     public MinistryDegreeCodeValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator);
 	setMessage("renderers.validator.ministry.code");

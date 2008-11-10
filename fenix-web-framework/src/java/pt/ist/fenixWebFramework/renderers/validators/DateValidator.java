@@ -9,6 +9,12 @@ public class DateValidator extends HtmlValidator {
     /**
      * Required constructor.
      */
+    public DateValidator() {
+	super();
+	setDateFormat("dd/MM/yyyy");
+	setKey(true);
+    }
+
     public DateValidator(HtmlChainValidator htmlChainValidator) {
 	this(htmlChainValidator, "dd/MM/yyyy");
     }
@@ -33,7 +39,7 @@ public class DateValidator extends HtmlValidator {
     public void performValidation() {
 
 	String text = getComponent().getValue();
-	
+
 	if (!StringUtils.isEmpty(text)) {
 	    setValid(org.apache.commons.validator.DateValidator.getInstance().isValid(text, getDateFormat(), true));
 	}

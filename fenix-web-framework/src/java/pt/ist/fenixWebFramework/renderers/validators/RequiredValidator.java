@@ -5,6 +5,11 @@ import pt.ist.fenixWebFramework.renderers.components.Validatable;
 
 public class RequiredValidator extends HtmlValidator {
 
+    public RequiredValidator() {
+	super();
+	setMessage("renderers.validator.required");
+    }
+
     public RequiredValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator);
 

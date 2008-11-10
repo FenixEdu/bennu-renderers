@@ -1,6 +1,5 @@
 package pt.ist.fenixWebFramework.renderers.components;
 
-import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 
@@ -10,8 +9,6 @@ public interface Validatable {
     public String[] getValues();
 
     public void setChainValidator(HtmlChainValidator htmlChainValidator);
-
-    public void setChainValidator(MetaSlot slot);
 
     public void addValidator(HtmlValidator htmlValidator);
 

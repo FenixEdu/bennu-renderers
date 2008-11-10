@@ -9,6 +9,15 @@ public class RegexpValidator extends HtmlValidator {
     /**
      * Required constructor.
      */
+
+    public RegexpValidator() {
+	this(".*");
+    }
+
+    public RegexpValidator(String regex) {
+	setRegexp(regex);
+    }
+
     public RegexpValidator(HtmlChainValidator htmlChainValidator) {
 	this(htmlChainValidator, ".*");
     }

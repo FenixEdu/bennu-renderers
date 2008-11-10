@@ -12,6 +12,12 @@ public class LongRangeValidator extends HtmlValidator {
 
     private Long lowerBound;
 
+    public LongRangeValidator() {
+	super();
+	upperBound = null;
+	lowerBound = null;
+    }
+
     public LongRangeValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator);
 

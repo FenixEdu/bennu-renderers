@@ -1,10 +1,5 @@
 package pt.ist.fenixWebFramework.renderers.components;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
 import javax.servlet.jsp.PageContext;
 
 import pt.ist.fenixWebFramework.renderers.components.controllers.Controllable;
@@ -15,10 +10,8 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
-import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
-import pt.utl.ist.fenix.tools.util.Pair;
 
 public abstract class HtmlFormComponent extends HtmlComponent implements Convertible, Controllable, SlotChanger, Validatable {
 
@@ -54,7 +47,7 @@ public abstract class HtmlFormComponent extends HtmlComponent implements Convert
      * in this method.
      * 
      * @param name
-     *            the desired name
+     *                the desired name
      */
     public void setName(String name) {
 	this.name = getValidIdOrName(name);
@@ -99,27 +92,6 @@ public abstract class HtmlFormComponent extends HtmlComponent implements Convert
 	    this.chainValidator = validator;
 	}
 
-    }
-
-    public void setChainValidator(MetaSlot slot) {
-	HtmlChainValidator htmlChainValidator = new HtmlChainValidator(this);
-
-	List<HtmlValidator> validators = new ArrayList<HtmlValidator>();
-	for (Pair<Class<HtmlValidator>, Properties> validatorPair : slot.getValidators()) {
-	    Constructor<HtmlValidator> constructor;
-	    try {
-		constructor = validatorPair.getKey().getConstructor(new Class[] { HtmlChainValidator.class });
-
-		HtmlValidator validator = constructor.newInstance(htmlChainValidator);
-		RenderUtils.setProperties(validator, validatorPair.getValue());
-
-		validators.add(validator);
-	    } catch (Exception e) {
-		throw new RuntimeException("could not create validator '" + validatorPair.getKey().getName() + "' for slot '"
-			+ slot.getName() + "': ", e);
-	    }
-	}
-	setChainValidator(htmlChainValidator);
     }
 
     public void addValidator(HtmlValidator htmlValidator) {

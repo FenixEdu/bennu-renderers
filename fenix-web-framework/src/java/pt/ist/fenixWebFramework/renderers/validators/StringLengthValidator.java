@@ -6,6 +6,11 @@ public class StringLengthValidator extends HtmlValidator {
     private Integer min;
     private Integer max;
 
+    public StringLengthValidator() {
+	super();
+	setMessage("renderers.validator.invalid.length");
+    }
+
     public StringLengthValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator);
 

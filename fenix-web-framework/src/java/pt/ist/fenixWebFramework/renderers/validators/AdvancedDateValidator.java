@@ -19,6 +19,10 @@ public class AdvancedDateValidator extends DateValidator {
 
     private String validationPeriod;
 
+    public AdvancedDateValidator() {
+	super();
+    }
+
     public AdvancedDateValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator);
     }
