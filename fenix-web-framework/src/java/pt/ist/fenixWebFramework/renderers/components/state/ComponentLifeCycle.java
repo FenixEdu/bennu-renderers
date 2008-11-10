@@ -1,6 +1,7 @@
 package pt.ist.fenixWebFramework.renderers.components.state;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -24,7 +25,10 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
+import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
+import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
+import pt.utl.ist.fenix.tools.util.Pair;
 
 import org.apache.commons.collections.Predicate;
 import org.apache.log4j.Logger;
@@ -314,16 +318,30 @@ public class ComponentLifeCycle {
 		    HtmlFormComponent formComponent = (HtmlFormComponent) boundComponent;
 		    HtmlChainValidator chainValidator = formComponent.getChainValidator();
 
-		    if (chainValidator == null || chainValidator.isEmpty()) {
-			MetaSlotKey key = formComponent.getTargetSlot();
-			MetaSlot slot = getMetaSlot(metaObject, key);
+		    MetaSlotKey key = formComponent.getTargetSlot();
+		    MetaSlot slot = getMetaSlot(metaObject, key);
 
+		    if (chainValidator == null || chainValidator.isEmpty()) {
 			formComponent.setChainValidator(slot);
 			chainValidator = formComponent.getChainValidator();
 		    }
 
 		    if (chainValidator != null) {
 			validators.add(chainValidator);
+
+			for (Pair<Class<HtmlValidator>, Properties> validatorPair : slot.getValidators()) {
+			    Constructor<HtmlValidator> constructor;
+			    try {
+				constructor = validatorPair.getKey().getConstructor(new Class[] { HtmlChainValidator.class });
+
+				HtmlValidator validator = constructor.newInstance(chainValidator);
+				RenderUtils.setProperties(validator, validatorPair.getValue());
+
+			    } catch (Exception e) {
+				throw new RuntimeException("could not create validator '" + validatorPair.getKey().getName()
+					+ "' for slot '" + slot.getName() + "': ", e);
+			    }
+			}
 		    }
 		}
 	    }
