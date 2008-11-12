@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -378,25 +377,8 @@ public class SQLUpdateGenerator {
 	    final String dbUserArg = args[2];
 	    final String dbPassArg = args[3];
 
-	    final File dir = new File(domainModelArg);
-	    final List<String> urls = new ArrayList<String>();
-	    for (final File file : dir.listFiles()) {
-		if (file.isFile() && file.getName().endsWith(".dml")) {
-		    try {
-			urls.add(file.getCanonicalPath());
-		    } catch (IOException e) {
-			throw new Error(e);
-		    }
-		}
-	    }
-	    Collections.sort(urls);
-	    final String[] paths = new String[urls.size()];
-	    for (int i = 0; i < urls.size(); i++) {
-		paths[i] = urls.get(i);
-	    }
-
 	    FenixFramework.initialize(new Config() {{
-		domainModelPaths = paths;
+		domainModelPath = domainModelArg;
 		dbAlias = dbAliasArg;
 		dbUsername = dbUserArg;
 		dbPassword = dbPassArg;
