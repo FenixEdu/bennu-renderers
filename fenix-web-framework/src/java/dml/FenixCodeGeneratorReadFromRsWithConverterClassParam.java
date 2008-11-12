@@ -1,7 +1,15 @@
 package dml;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
+import pt.utl.ist.fenix.tools.util.FileUtils;
 
 
 public class FenixCodeGeneratorReadFromRsWithConverterClassParam extends FenixCodeGeneratorReadFromRs {
@@ -9,11 +17,30 @@ public class FenixCodeGeneratorReadFromRsWithConverterClassParam extends FenixCo
     private static final String RESULT_SET_READER_CLASS = "pt.ist.fenixframework.pstm.ResultSetReader";
     private static final String GET_ENUM_METHOD = "pt.ist.fenixframework.pstm.Enum2SqlConversion.getEnum";
 
+    private static final Map<String, File> packageMapper = new HashMap<String, File>();
+
     static String convertersClass;
     static String convertersPackagePrefixWithDot;
 
     public FenixCodeGeneratorReadFromRsWithConverterClassParam(final CompilerArgs compilerArgs, final DomainModel domainModel) {
 	super(compilerArgs, domainModel);
+	InputStream inputStream;
+	try {
+	    // TODO : Find a non-hackish way of reading this file...
+	    inputStream = new FileInputStream("build/WEB-INF/classes/.dmlProjectPackageMapper");
+//	final InputStream inputStream = getClass().getResourceAsStream(".dmlProjectPackageMapper");
+	    final String contents = FileUtils.readFile(inputStream);
+	    for (final String line : contents.split("\n")) {
+		final int sindex = line.indexOf(' ');
+		final String packageName = line.substring(0, sindex);
+		final String packageDir = packageName.replace('.', File.separatorChar);
+		final String srcDir = line.substring(sindex + 1);
+		final String domainSrcDir = srcDir + File.separatorChar + packageDir;
+		final File file = new File(domainSrcDir);
+		packageMapper.put(packageName, file);
+	    }
+	} catch (IOException e) {
+	}
     }
 
     @Override
@@ -125,6 +152,12 @@ public class FenixCodeGeneratorReadFromRsWithConverterClassParam extends FenixCo
 
     private static String convertToDBStyle(String string) {
         return splitCamelCaseString(string).replace(' ', '_').toUpperCase();
+    }
+
+    @Override
+    protected File getDirectoryFor(String packageName) {
+	final File dir = packageMapper.get(packageName);
+	return dir == null ? super.getDirectoryFor(packageName) : dir;
     }
 
 }
