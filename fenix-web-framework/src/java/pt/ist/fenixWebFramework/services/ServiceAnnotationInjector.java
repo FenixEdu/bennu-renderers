@@ -70,6 +70,7 @@ public class ServiceAnnotationInjector {
 			newCtMethod.setModifiers(ctMethod.getModifiers());
 			final String body = getWrapperMethod(ctMethod, className, methodName);
 			newCtMethod.setBody(body);
+			newCtMethod.setExceptionTypes(ctMethod.getExceptionTypes());
 			classToInject.addMethod(newCtMethod);
 		    }
 		}
