@@ -39,7 +39,10 @@ public class SetUserViewFilter implements Filter {
 
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
     		throws IOException, ServletException {
-	UserView.setUser(getUserView(servletRequest));
+	final User user = getUserView(servletRequest);
+	if (user != null && user.getUserCreationDateTime().isAfter(user.getLastLogoutDateTime())) {
+	    UserView.setUser(user);
+	}
 	filterChain.doFilter(servletRequest, servletResponse);
     }
 
