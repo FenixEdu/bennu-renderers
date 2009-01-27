@@ -11,6 +11,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.joda.time.DateTime;
+
 import pt.ist.fenixWebFramework.security.User;
 import pt.ist.fenixWebFramework.security.UserView;
 
@@ -40,7 +42,8 @@ public class SetUserViewFilter implements Filter {
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
     		throws IOException, ServletException {
 	final User user = getUserView(servletRequest);
-	if (user != null && user.getUserCreationDateTime().isAfter(user.getLastLogoutDateTime())) {
+	final DateTime lastLogoutDateTime = user.getLastLogoutDateTime();
+	if (user != null && (lastLogoutDateTime == null || user.getUserCreationDateTime().isAfter(lastLogoutDateTime))) {
 	    UserView.setUser(user);
 	}
 	filterChain.doFilter(servletRequest, servletResponse);
