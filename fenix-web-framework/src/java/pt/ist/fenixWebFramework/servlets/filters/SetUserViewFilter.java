@@ -46,7 +46,11 @@ public class SetUserViewFilter implements Filter {
 	    final DateTime lastLogoutDateTime = user.getLastLogoutDateTime();
 	    if (lastLogoutDateTime == null || user.getUserCreationDateTime().isAfter(lastLogoutDateTime)) {
 		UserView.setUser(user);
+	    } else {
+		UserView.setUser(null);
 	    }
+	} else {
+	    UserView.setUser(null);
 	}
 	filterChain.doFilter(servletRequest, servletResponse);
     }
