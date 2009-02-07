@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -114,7 +113,6 @@ public class ServiceAnnotationInjector {
 	final boolean isPrimitive = returnType.isPrimitive();
 	final boolean isVoid = isPrimitive && returnType.getSimpleName().equals("void");
 	final String serviceName = className + "." + methodName;
-
 	final StringBuilder stringBuilder = new StringBuilder();
 	stringBuilder.append("{\n");
 
@@ -167,7 +165,7 @@ public class ServiceAnnotationInjector {
 	stringBuilder.append("      if (tries > 3) {");
 	stringBuilder.append("	        ServiceManager.logTransactionRestart(\"" + serviceName + "\", ex, tries);");
 	stringBuilder.append("      }");
-	stringBuilder.append("	} catch (IllegalWriteException illegalWriteException) {");
+	stringBuilder.append("	} catch (pt.ist.fenixframework.pstm.IllegalWriteException illegalWriteException) {");
 	stringBuilder.append("	    ServiceManager.KNOWN_WRITE_SERVICES.put(\"");
 	stringBuilder.append(serviceName);
 	stringBuilder.append("\", \"");
