@@ -5,15 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.beanutils.PropertyUtils;
+
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
-import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 import pt.ist.fenixWebFramework.renderers.validators.RequiredValidator;
-
-import org.apache.commons.beanutils.PropertyUtils;
-
 import pt.utl.ist.fenix.tools.util.Pair;
 
 /**
@@ -77,6 +75,7 @@ public class MetaSlot extends MetaObject {
     /**
      * @return the key that allows to identify this slot
      */
+    @Override
     public MetaSlotKey getKey() {
 	return new MetaSlotKey(getMetaObject(), getName());
     }
@@ -162,11 +161,15 @@ public class MetaSlot extends MetaObject {
     /**
      * @return this slot's value
      */
+    @Override
     public Object getObject() {
 	if (isCached()) {
 	    return getValueMetaObject().getObject();
 	} else {
 	    try {
+		if (getName().equals("this")) {
+		    return getMetaObject().getObject();
+		}
 		return PropertyUtils.getProperty(getMetaObject().getObject(), getName());
 	    } catch (Exception e) {
 		throw new RuntimeException("could not read property '" + getName() + "' from object "
@@ -178,6 +181,7 @@ public class MetaSlot extends MetaObject {
     /**
      * @return this slot's type
      */
+    @Override
     public Class getType() {
 	if (getObject() != null) {
 	    return getObject().getClass();
@@ -222,6 +226,7 @@ public class MetaSlot extends MetaObject {
 	return this.valueMetaObject;
     }
 
+    @Override
     public void setUser(UserIdentity user) {
 	// When we are using a slot directly instead of accessing it though the
 	// base meta object
@@ -248,27 +253,32 @@ public class MetaSlot extends MetaObject {
 	}
     }
 
+    @Override
     public List<MetaSlot> getSlots() {
 	MetaObject valueMetaObject = getValueMetaObject();
 
 	return valueMetaObject.getSlots();
     }
 
+    @Override
     public void addSlot(MetaSlot slot) {
 	// ignore
     }
 
+    @Override
     public boolean removeSlot(MetaSlot slot) {
 	// ignored
 	return false;
     }
 
+    @Override
     public List<MetaSlot> getHiddenSlots() {
 	MetaObject valueMetaObject = getValueMetaObject();
 
 	return valueMetaObject.getHiddenSlots();
     }
 
+    @Override
     public void addHiddenSlot(MetaSlot slot) {
 	// ignore
     }
@@ -305,6 +315,7 @@ public class MetaSlot extends MetaObject {
 	this.setterIgnored = setterIgnored;
     }
 
+    @Override
     public void commit() {
 	// delegate to parent meta object
 	getMetaObject().commit();
