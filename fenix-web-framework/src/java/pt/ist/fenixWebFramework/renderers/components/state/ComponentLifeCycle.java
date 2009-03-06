@@ -247,7 +247,7 @@ public class ComponentLifeCycle {
 	    // Invisible viewstates have no influence in the destination
 	    // because they were not validated and no controller was run
 	    // for them
-	    if (!viewState.isVisible()) {
+	    if (!viewState.isVisible() && viewStates.size() > 1) {
 		continue;
 	    }
 

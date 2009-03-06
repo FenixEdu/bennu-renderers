@@ -1,8 +1,10 @@
 package pt.ist.fenixWebFramework.servlets.ajax;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -14,6 +16,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+import pt.ist.fenixWebFramework.servlets.json.JsonObject;
 
 public abstract class AutoCompleteServlet extends HttpServlet {
 
@@ -77,35 +80,27 @@ public abstract class AutoCompleteServlet extends HttpServlet {
 
     private String getResponseHtml(Collection result, String labelField, String format, String valueField, String styleClass,
 	    int maxCount) {
-	StringBuilder responseHtml = new StringBuilder();
-	responseHtml.append("<ul ").append("class=\"").append(styleClass).append("\">");
-
+	List<JsonObject> jsonObjects = new ArrayList<JsonObject>();
 	try {
-
 	    int count = 0;
 	    for (final Object element : result) {
 		if (count++ >= maxCount) {
 		    break;
 		}
+
 		final String labelProperty = BeanUtils.getProperty(element, labelField);
-		responseHtml.append("<li id=\"").append(BeanUtils.getProperty(element, valueField)).append("\" name=\"").append(
-			labelProperty).append("\">");
-
 		if (format == null) {
-		    responseHtml.append(labelProperty);
+		    jsonObjects.add(new JsonObject(BeanUtils.getProperty(element, valueField), labelProperty));
 		} else {
-		    responseHtml.append(RenderUtils.getFormattedProperties(format, element));
+		    jsonObjects.add(new JsonObject(BeanUtils.getProperty(element, valueField), RenderUtils
+			    .getFormattedProperties(format, element)));
 		}
-
-		responseHtml.append("</li>");
 	    }
 	} catch (Exception ex) {
 	    throw new RuntimeException("Error getting field property (see label and value fields)", ex);
 
 	}
 
-	responseHtml.append("</ul>");
-
-	return responseHtml.toString();
+	return JsonObject.getJsonArrayString(jsonObjects);
     }
 }

@@ -1,7 +1,45 @@
 package pt.ist.fenixWebFramework;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 
 public class Config extends pt.ist.fenixframework.Config {
+
+    public static class CasConfig {
+
+	protected boolean casEnabled = false;
+	protected String casLoginUrl = null;
+	protected String casLogoutUrl = null;
+	protected String casValidateUrl = null;
+	protected String serviceUrl = null;
+
+	public CasConfig(final String casLoginUrl, final String casLogoutUrl,
+		final String casValidateUrl, final String serviceUrl) {
+	    this.casEnabled = true;
+	    this.casLoginUrl = casLoginUrl;
+	    this.casLogoutUrl = casLogoutUrl;
+	    this.casValidateUrl = casValidateUrl;
+	    this.serviceUrl = serviceUrl;
+	}
+
+	public String getServiceUrl() {
+	    return serviceUrl;
+	}
+	public boolean isCasEnabled() {
+	    return casEnabled;
+	}
+	public String getCasLoginUrl() {
+	    return casLoginUrl;
+	}
+	public String getCasLogoutUrl() {
+	    return casLogoutUrl;
+	}
+	public String getCasValidateUrl() {
+	    return casValidateUrl;
+	}
+
+    }
 
     /**
      * This <strong>required</strong> parameter specifies the default
@@ -82,10 +120,7 @@ public class Config extends pt.ist.fenixframework.Config {
     protected String rmiStreamBytesBlock = null;
 
     // TODO : document cas stuff
-    protected boolean casEnabled = false;
-    protected String casLoginUrl = null;
-    protected String casLogoutUrl = null;
-    protected String casValidateUrl = null;
+    protected Map<String, CasConfig> casConfigByHost;
 
     // TODO : document this
     protected String exceptionHandlerClassname = null;
@@ -187,14 +222,6 @@ public class Config extends pt.ist.fenixframework.Config {
         return rmiStreamBytesBlock;
     }
 
-    public boolean isCasEnabled() {
-        return casEnabled;
-    }
-
-    public String getCasLoginUrl() {
-        return casLoginUrl;
-    }
-
     public String getExceptionHandlerClassname() {
         return exceptionHandlerClassname;
     }
@@ -211,12 +238,13 @@ public class Config extends pt.ist.fenixframework.Config {
 	return tamperingRedirect;
     }
 
-    public String getCasLogoutUrl() {
-        return casLogoutUrl;
-    }
-
-    public String getCasValidateUrl() {
-        return casValidateUrl;
+    public CasConfig getCasConfig(final String hostname) {
+	for (final Entry<String, CasConfig> entry : casConfigByHost.entrySet()) {
+	    if (entry.getKey().startsWith(hostname)) {
+		return entry.getValue();
+	    }
+	}
+	return null;
     }
 
 }

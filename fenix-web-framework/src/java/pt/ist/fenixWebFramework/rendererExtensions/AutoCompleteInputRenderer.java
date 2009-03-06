@@ -34,7 +34,8 @@ import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
  * service is created for most cases so that it's as efficient as possible.
  * 
  * <p>
- * Example: <br/> <input type="text" value="po" style="width: 20em;"/> <div
+ * Example: <br/>
+ * <input type="text" value="po" style="width: 20em;"/> <div
  * style="margin-top: -10px; border: 1px solid #eee; width: 20em;">
  * <ul>
  * <li>French Polynesia</li>
@@ -273,6 +274,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		MetaSlotKey key = (MetaSlotKey) getContext().getMetaObject().getKey();
 
 		HtmlHiddenField valueField = new HtmlHiddenField();
+
 		valueField.setTargetSlot(key);
 		valueField.setId(key.toString() + "_AutoComplete");
 		valueField.setName(valueField.getId());
@@ -295,9 +297,6 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		textField.setName(textField.getId());
 		textField.setClasses(getTextFieldStyleClass());
 		textField.setSize(getSize());
-		textField.setOnKeyDown("javascript:autoCompleteKeyDownHandler(event, '" + textField.getId() + "');");
-		textField.setOnKeyUp("javascript:autoCompleteKeyUpHandler(event, '" + textField.getId() + "', '" + TYPING_VALUE
-			+ "');");
 		container.addChild(textField);
 
 		if (object != null && getLabelField() != null) {
@@ -320,37 +319,13 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		    textField.setController(new UpdateRawNameController(getRawSlotName()));
 		}
 
-		HtmlInlineContainer loadingContainer = new HtmlInlineContainer();
-		loadingContainer.setId(key.toString() + "_Indicator");
-		loadingContainer.setStyle("display: none;");
-
-		HtmlText loadingText = new HtmlText(RenderUtils.getResourceString("fenix.renderers.autocomplete.loading"));
-		loadingContainer.addChild(loadingText);
-
-		HtmlLink link = new HtmlLink();
-		link.setModuleRelative(false);
-		link.setUrl("/images/autocomplete/spinner.gif");
-
-		HtmlImage indicatorImage = new HtmlImage();
-		indicatorImage.setSource(link.calculateUrl());
-		loadingContainer.addChild(indicatorImage);
-
-		if (isIndicatorShown()) {
-		    container.addChild(loadingContainer);
-		}
-
 		HtmlText errorMessage = new HtmlText(RenderUtils.getResourceString("fenix.renderers.autocomplete.error"));
 		errorMessage.setId(key.toString() + "_Error");
 		errorMessage.setClasses(getErrorStyleClass());
 		errorMessage.setStyle("display: none;");
 		container.addChild(errorMessage);
 
-		HtmlBlockContainer resultsContainer = new HtmlBlockContainer();
-		resultsContainer.setId(key.toString() + "_div");
-		resultsContainer.setClasses(getAutoCompleteStyleClass());
-		container.addChild(resultsContainer);
-
-		addFinalScript(container, textField.getId(), resultsContainer.getId(), loadingContainer.getId());
+		addFinalScript(container, textField.getId());
 
 		return container;
 	    }
@@ -360,9 +335,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		link.setModuleRelative(false);
 		link.setContextRelative(true);
 
-		String[] scriptNames = new String[] { "prototype.js", "effects.js", "dragdrop.js", "controls.js",
-			"fenixScript.js" };
-
+		String[] scriptNames = new String[] { "autoComplete.js", "autoCompleteHandlers.js" };
 		for (String script : scriptNames) {
 		    addSingleScript(container, link, script);
 		}
@@ -374,7 +347,8 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		container.addChild(script);
 	    }
 
-	    private void addFinalScript(HtmlInlineContainer container, String textFieldId, String divId, String indicatorId) {
+	    private void addFinalScript(HtmlInlineContainer container, String textFieldId) {
+
 		HtmlLink link = new HtmlLink();
 		link.setModuleRelative(false);
 		link.setContextRelative(true);
@@ -398,16 +372,19 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		}
 
 		String finalUri = link.calculateUrl();
-		String scriptText = "new Ajax.Autocompleter('" + textFieldId + "','" + divId + "','" + finalUri
-			+ "', {paramName: 'value', afterUpdateElement: autoCompleteUpdate, minChars: " + getMinChars()
-			+ (isIndicatorShown() ? ", indicator: '" + indicatorId + "'" : "")
-			+ ", onFailure: function (transport) { showAutoCompleteError('" + textFieldId + "'); }});";
+		String scriptText = "$(\"input#" + escapeId(textFieldId) + "\").autocomplete(\"" + finalUri + "\", { minChars: "
+			+ getMinChars() + ", validSelection: false"
+			+ ", cleanSelection: clearAutoComplete, select: selectElement, after: updateCustomValue});";
 
 		HtmlScript script = new HtmlScript();
 		script.setContentType("text/javascript");
 		script.setScript(scriptText);
 
 		container.addChild(script);
+	    }
+
+	    private String escapeId(String textFieldId) {
+		return textFieldId.replace(".", "\\\\.").replaceAll(":", "\\\\\\\\:");
 	    }
 
 	    private String getFormatedArgs() {

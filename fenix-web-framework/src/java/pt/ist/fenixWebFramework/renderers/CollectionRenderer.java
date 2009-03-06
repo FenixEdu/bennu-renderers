@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlCheckBox;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
@@ -44,7 +45,9 @@ import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
  * be extended with control links in each row. That allows you to start an
  * action configured with data from the object in the row.
  * 
- * Example: <table border="1"> <thead>
+ * Example:
+ * <table border="1">
+ * <thead>
  * <th>Name</th>
  * <th>Age</th>
  * <th>Gender</th>
@@ -93,8 +96,8 @@ import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
  * property of the Edit control link, and the <code>key</code> property of the
  * Delete control link. That's why each property as the format
  * <em>&lt;property&gt;(String, String)</em>. It means that you can separate
- * properties by name and use <code>key(a)</code> and <code>bundle(a)</code>
- * to refer to the key and bundle properties of the link you named "a".
+ * properties by name and use <code>key(a)</code> and <code>bundle(a)</code> to
+ * refer to the key and bundle properties of the link you named "a".
  * 
  * @author cfgi
  */
@@ -136,7 +139,7 @@ public class CollectionRenderer extends OutputRenderer {
     private Map<String, TableLink> links;
 
     private Map<String, ColumnCss> columnCss;
-    
+
     private List<TableLink> sortedLinks;
 
     private String sortBy;
@@ -209,9 +212,8 @@ public class CollectionRenderer extends OutputRenderer {
 
     /**
      * The value of the class attribute of each cell in the table's header.
-     * There is repetition as in
-     * {@linkplain #setColumnClasses(String) columnClasses} or
-     * {@linkplain #setRowClasses(String) rowClasses}.
+     * There is repetition as in {@linkplain #setColumnClasses(String)
+     * columnClasses} or {@linkplain #setRowClasses(String) rowClasses}.
      * 
      * @property
      */
@@ -352,8 +354,8 @@ public class CollectionRenderer extends OutputRenderer {
     }
 
     /**
-     * The <code>param</code> property allows you to indicate will values of
-     * the object shown in a given row should be used to configure the link
+     * The <code>param</code> property allows you to indicate will values of the
+     * object shown in a given row should be used to configure the link
      * specified.
      * 
      * <p>
@@ -372,8 +374,8 @@ public class CollectionRenderer extends OutputRenderer {
      * param will be different for each object shown in the table.
      * 
      * <p>
-     * The <code>param</code> property supports two more features. It allows
-     * you to choose the name of the link parameter and explicitly give new
+     * The <code>param</code> property supports two more features. It allows you
+     * to choose the name of the link parameter and explicitly give new
      * parameters. You can specify several parameters by separating the with a
      * comma. The full syntax of the <code>param</code> property is:
      * 
@@ -383,7 +385,7 @@ public class CollectionRenderer extends OutputRenderer {
      * 
      * <dl>
      * <dt><code>slot</code></dt>
-     * <dd> specifies the name of the object's slot from were the value will be
+     * <dd>specifies the name of the object's slot from were the value will be
      * retrieved. In the example above each object needed to have a
      * <code>getId()</code> method.</dd>
      * 
@@ -663,11 +665,12 @@ public class CollectionRenderer extends OutputRenderer {
 
     /**
      * Chooses where the link should be placed. You can indicate the locations
-     * as text and the options are <code>top</code>, <code>bottom</code>,
-     * or <code>both</code>.
+     * as text and the options are <code>top</code>, <code>bottom</code>, or
+     * <code>both</code>.
      * 
      * <p>
-     * Example: <br/> <code>selectAllLocation=both</code> <br/>
+     * Example: <br/>
+     * <code>selectAllLocation=both</code> <br/>
      * <code>selectAllLocation=top, bottom</code> <br/>
      * <code>selectAllLocation=bottom</code> (the default)<br/>
      * 
@@ -783,7 +786,6 @@ public class CollectionRenderer extends OutputRenderer {
 	return this.links.size();
     }
 
-    
     public ColumnCss getColumnCss(String name) {
 	ColumnCss columnCss = this.columnCss.get(name);
 	if (columnCss == null) {
@@ -792,35 +794,35 @@ public class CollectionRenderer extends OutputRenderer {
 	}
 	return columnCss;
     }
-    
+
     public void setUseCssIf(String name, String property) {
 	getColumnCss(name).setUseIf(property);
     }
-    
+
     public String getUseCssIf(String name) {
 	return getColumnCss(name).getUseIf();
     }
-    
+
     public void setUseCssIfNot(String name, String property) {
 	getColumnCss(name).setUseIfNot(property);
     }
-    
+
     public String getUseCssIfNot(String name) {
 	return getColumnCss(name).getUseIfNot();
     }
-    
+
     public void setColumn(String name, int column) {
 	getColumnCss(name).setColumnNumber(column);
     }
-    
+
     public int getColumn(String name) {
 	return getColumnCss(name).getColumnNumber();
     }
-    
+
     public void setConditionalColumnClass(String name, String cssClasses) {
 	getColumnCss(name).setStyleClass(cssClasses);
     }
-    
+
     public String getConditionalColumnClass(String name) {
 	return getColumnCss(name).getStyleClass();
     }
@@ -834,7 +836,16 @@ public class CollectionRenderer extends OutputRenderer {
 	}
 	return csses;
     }
-    
+
+    public boolean isConfirmationUsed() {
+	for (TableLink link : links.values()) {
+	    if (link.getConfirmationKey() != null) {
+		return true;
+	    }
+	}
+	return false;
+    }
+
     @Override
     protected Layout getLayout(Object object, Class type) {
 	Collection sortedCollection = RenderUtils.sortCollectionWithCriteria((Collection) object, getSortBy());
@@ -880,6 +891,13 @@ public class CollectionRenderer extends OutputRenderer {
 	public HtmlComponent createLayout(Object object, Class type) {
 	    HtmlComponent component = super.createLayout(object, type);
 
+	    if (isConfirmationUsed()) {
+		HtmlBlockContainer container = new HtmlBlockContainer();
+		addScripts(container);
+		container.addChild(component);
+		component = container;
+	    }
+
 	    if (isCheckable() && isSelectAllShown()) {
 		HtmlBlockContainer container = new HtmlBlockContainer();
 
@@ -901,6 +919,23 @@ public class CollectionRenderer extends OutputRenderer {
 	    } else {
 		return component;
 	    }
+	}
+
+	private void addScripts(HtmlContainer container) {
+	    HtmlLink link = new HtmlLink();
+	    link.setModuleRelative(false);
+	    link.setContextRelative(true);
+
+	    String[] scriptNames = new String[] { "jquery.ui.draggable.js", "jquery.alerts.js", "alertHandlers.js" };
+	    for (String script : scriptNames) {
+		addSingleScript(container, link, script);
+	    }
+	}
+
+	private void addSingleScript(HtmlContainer container, HtmlLink link, String scriptName) {
+	    link.setUrl("/javaScript/" + scriptName);
+	    HtmlScript script = new HtmlScript("text/javascript", link.calculateUrl(), true);
+	    container.addChild(script);
 	}
 
 	private HtmlComponent createInvertSelectionLink() {
@@ -973,7 +1008,8 @@ public class CollectionRenderer extends OutputRenderer {
 
 	private String getHeaderToolTip(final int columnIndex) {
 	    MetaSlot metaSlot = this.metaObjects.get(0).getSlots().get(columnIndex - (isCheckable() ? 1 : 0));
-	    String headerToolTip = metaSlot.getProperties() == null ? StringUtils.EMPTY : metaSlot.getProperties().getProperty("headerToolTip");
+	    String headerToolTip = metaSlot.getProperties() == null ? StringUtils.EMPTY : metaSlot.getProperties().getProperty(
+		    "headerToolTip");
 	    if (!StringUtils.isEmpty(headerToolTip)) {
 		return " <a href=\"#\" class=\"help\">[?]<span>"
 			+ RenderUtils.getResourceString(metaSlot.getBundle(), headerToolTip) + "</span></a>";
@@ -1068,8 +1104,10 @@ public class CollectionRenderer extends OutputRenderer {
 	}
 
 	private void applyConditionalClasses(MetaObject metaObject, HtmlComponent component, ColumnCss columnCss) {
-	    Boolean useIf =  ((columnCss.getUseIf() != null) && (Boolean)RendererPropertyUtils.getProperty(metaObject.getObject(), columnCss.getUseIf(), false));
-	    Boolean useIfNot = ( (columnCss.getUseIfNot() != null) &&(Boolean) RendererPropertyUtils.getProperty(metaObject.getObject(), columnCss.getUseIfNot(), false));
+	    Boolean useIf = ((columnCss.getUseIf() != null) && (Boolean) RendererPropertyUtils.getProperty(
+		    metaObject.getObject(), columnCss.getUseIf(), false));
+	    Boolean useIfNot = ((columnCss.getUseIfNot() != null) && (Boolean) RendererPropertyUtils.getProperty(metaObject
+		    .getObject(), columnCss.getUseIfNot(), false));
 	    if (useIf || !useIfNot) {
 		component.setClasses(columnCss.getStyleClass());
 	    }
@@ -1174,34 +1212,41 @@ public class CollectionRenderer extends OutputRenderer {
 	private String useIf;
 	private String useIfNot;
 	private String styleClass;
-	
+
 	public int getColumnNumber() {
 	    return columnNumber;
 	}
+
 	public void setColumnNumber(int columnNumber) {
 	    this.columnNumber = columnNumber;
 	}
+
 	public String getUseIf() {
 	    return useIf;
 	}
+
 	public void setUseIf(String useIf) {
 	    this.useIf = useIf;
 	}
+
 	public String getStyleClass() {
 	    return styleClass;
 	}
+
 	public void setStyleClass(String styleClass) {
 	    this.styleClass = styleClass;
 	}
+
 	public String getUseIfNot() {
 	    return useIfNot;
 	}
+
 	public void setUseIfNot(String useIfNot) {
 	    this.useIfNot = useIfNot;
 	}
-	
-	
+
     }
+
     public static class TableLink implements Comparable<TableLink> {
 
 	private String name;
@@ -1235,6 +1280,16 @@ public class CollectionRenderer extends OutputRenderer {
 	private String visibleIfNot;
 
 	private String confirmationKey;
+
+	private String confirmationTitleKey;
+
+	public String getConfirmationTitleKey() {
+	    return confirmationTitleKey;
+	}
+
+	public void setConfirmationTitleKey(String confirmationTitle) {
+	    this.confirmationTitleKey = confirmationTitle;
+	}
 
 	private String confirmationBundle;
 
@@ -1446,9 +1501,28 @@ public class CollectionRenderer extends OutputRenderer {
 		}
 
 		if (getConfirmationKey() != null) {
+		    if (link.getId() == null) {
+			link.setId(getName() + "-" + object.hashCode());
+		    }
 		    final String confirmationMessage = getConfirmationBundle() != null ? RenderUtils.getResourceString(
 			    getConfirmationBundle(), getConfirmationKey()) : RenderUtils.getResourceString(getConfirmationKey());
-		    link.setOnClick("return confirm('" + confirmationMessage + "');");
+
+		    final String confirmationTitle = getConfirmationBundle() != null ? RenderUtils.getResourceString(
+			    getConfirmationBundle(), getConfirmationTitleKey()) : RenderUtils
+			    .getResourceString(getConfirmationTitleKey());
+
+		    HtmlInlineContainer container = new HtmlInlineContainer();
+		    container.addChild(link);
+		    String scriptText = "linkConfirmationHook('" + link.getId() + "','"
+			    + (confirmationMessage != null ? confirmationMessage : "") + "', '"
+			    + (confirmationTitle != null ? confirmationMessage : "") + "');";
+
+		    HtmlScript script = new HtmlScript();
+		    script.setContentType("text/javascript");
+		    script.setScript(scriptText);
+
+		    container.addChild(script);
+		    return container;
 		}
 
 		return link;

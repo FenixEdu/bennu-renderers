@@ -18,7 +18,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.w3c.tidy.Tidy;
 
-import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessor;
+import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessorImpl;
 
 public class SafeHtmlConverter extends TidyConverter {
 
@@ -149,7 +149,7 @@ public class SafeHtmlConverter extends TidyConverter {
     }
 
     private boolean isRelative(URL url) {
-        HttpServletRequest currentRequest = RenderersRequestProcessor.getCurrentRequest();
+        HttpServletRequest currentRequest = RenderersRequestProcessorImpl.getCurrentRequest();
         String serverName = currentRequest.getServerName();
 
         return serverName.equals(url.getHost()) && url.getPath().startsWith(currentRequest.getContextPath());
@@ -231,7 +231,7 @@ public class SafeHtmlConverter extends TidyConverter {
         
         String path = url.getPath();
 
-        HttpServletRequest currentRequest = RenderersRequestProcessor.getCurrentRequest();
+        HttpServletRequest currentRequest = RenderersRequestProcessorImpl.getCurrentRequest();
         String contextPath = currentRequest.getContextPath();
         
         if (path.startsWith(contextPath)) {

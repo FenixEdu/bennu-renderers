@@ -52,10 +52,10 @@ public class LocalDateInputRendererWithPicker extends DateInputRendererWithPicke
         c.set(Calendar.DAY_OF_MONTH, 24);
         
         String dateStringFormatted = format.format(c.getTime());
-        dateStringFormatted = dateStringFormatted.replace("1999", "%Y");
-        dateStringFormatted = dateStringFormatted.replace("99", "%y");
-        dateStringFormatted = dateStringFormatted.replace("12", "%m");
-        dateStringFormatted = dateStringFormatted.replace("24", "%d");
+        dateStringFormatted = dateStringFormatted.replace("1999", "yy");
+        dateStringFormatted = dateStringFormatted.replace("99", "y");
+        dateStringFormatted = dateStringFormatted.replace("12", "mm");
+        dateStringFormatted = dateStringFormatted.replace("24", "dd");
         
         return dateStringFormatted;
     }

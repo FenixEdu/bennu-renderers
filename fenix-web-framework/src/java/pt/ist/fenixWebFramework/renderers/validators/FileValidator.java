@@ -1,9 +1,9 @@
 package pt.ist.fenixWebFramework.renderers.validators;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlInputFile;
-import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessor;
-import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
+import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessorImpl;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
 
 /**
  * This validator can be used to validate uploaded files. It allows you to
@@ -163,7 +163,7 @@ public class FileValidator extends HtmlValidator {
     public void performValidation() {
 	HtmlInputFile fileField = (HtmlInputFile) getComponent();
 
-	UploadedFile file = RenderersRequestProcessor.getUploadedFile(fileField.getName());
+	UploadedFile file = RenderersRequestProcessorImpl.getUploadedFile(fileField.getName());
 	if (file == null && isRequired()) {
 	    setInvalid("renderers.validator.required");
 	    return;

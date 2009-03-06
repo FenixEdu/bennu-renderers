@@ -16,7 +16,7 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
-import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessor;
+import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessorImpl;
 import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
 
 /**
@@ -141,7 +141,7 @@ public class FileInputRenderer extends InputRenderer {
             HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getControlledComponent();
             String name = component.getName();
             
-            UploadedFile file = RenderersRequestProcessor.getUploadedFile(name);
+            UploadedFile file = RenderersRequestProcessorImpl.getUploadedFile(name);
             if (file != null) { // if has file
                 Object object = this.object.getObject();
                 
@@ -175,7 +175,7 @@ public class FileInputRenderer extends InputRenderer {
         @Override
         public Object convert(Class type, Object value) {
             String name = this.component.getName();
-            UploadedFile file = RenderersRequestProcessor.getUploadedFile(name);
+            UploadedFile file = RenderersRequestProcessorImpl.getUploadedFile(name);
             
             if (file == null) {
                 return null;

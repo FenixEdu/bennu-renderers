@@ -13,8 +13,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
+import org.apache.struts.action.RequestProcessor;
 import org.apache.struts.config.ModuleConfig;
-import org.apache.struts.tiles.TilesRequestProcessor;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.components.state.ComponentLifeCycle;
@@ -43,11 +43,11 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  * 
  * @author cfgi
  */
-public class RenderersRequestProcessor extends TilesRequestProcessor {
+public class SimpleRenderersRequestProcessor extends RequestProcessor {
 
     @Override
     public void init(final ActionServlet servlet, final ModuleConfig moduleConfig) throws ServletException {
-	RenderersRequestProcessorImpl.implementationClass = RenderersRequestProcessor.class;
+	RenderersRequestProcessorImpl.implementationClass = SimpleRenderersRequestProcessor.class;
 	super.init(servlet, moduleConfig);
     }
 
@@ -128,3 +128,4 @@ public class RenderersRequestProcessor extends TilesRequestProcessor {
     }
 
 }
+

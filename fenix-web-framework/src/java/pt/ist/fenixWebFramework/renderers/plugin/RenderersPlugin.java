@@ -2,12 +2,6 @@ package pt.ist.fenixWebFramework.renderers.plugin;
 
 import javax.servlet.ServletException;
 
-import pt.ist.fenixWebFramework._development.LogLevel;
-import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
-import pt.ist.fenixWebFramework.renderers.model.SchemaFactory;
-import pt.ist.fenixWebFramework.renderers.model.UserIdentityFactory;
-import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
-
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.action.PlugIn;
@@ -15,6 +9,12 @@ import org.apache.struts.action.RequestProcessor;
 import org.apache.struts.config.ControllerConfig;
 import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.util.RequestUtils;
+
+import pt.ist.fenixWebFramework._development.LogLevel;
+import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
+import pt.ist.fenixWebFramework.renderers.model.SchemaFactory;
+import pt.ist.fenixWebFramework.renderers.model.UserIdentityFactory;
+import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 
 public class RenderersPlugin implements PlugIn {
     private static Logger logger = Logger.getLogger(RenderersPlugin.class);
@@ -105,7 +105,7 @@ public class RenderersPlugin implements PlugIn {
     }
 
     private void initProcessor(ActionServlet servlet, ModuleConfig config) throws ServletException {
-        String ourProcessorClassname = RenderersRequestProcessor.class.getName();
+        String ourProcessorClassname = RenderersRequestProcessorImpl.implementationClass.getName();
         ControllerConfig controllerConfig = config.getControllerConfig();
         String configProcessorClassname = controllerConfig.getProcessorClass();
 
@@ -130,7 +130,7 @@ public class RenderersPlugin implements PlugIn {
         }
 
         // Check if specified request processor is compatible with ours.
-        Class ourProcessorClass = RenderersRequestProcessor.class;
+        Class ourProcessorClass = RenderersRequestProcessorImpl.implementationClass;
         if (!ourProcessorClass.isAssignableFrom(configProcessorClass)) {
             if (LogLevel.FATAL) {
                 logger.fatal("Specified processor is incopatible with " + RequestProcessor.class.getName());
