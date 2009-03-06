@@ -42,6 +42,13 @@ public class Config extends pt.ist.fenixframework.Config {
     }
 
     /**
+     * This <strong>optional</strong> parameter that indicates if the database 
+     * structure should be automatically updated with missing structure entries
+     * when the framework is initialized. Defaults to false;
+     */
+    protected boolean updateDataRepositoryStructure = false;
+
+    /**
      * This <strong>required</strong> parameter specifies the default
      * language that will be used to construct the default <code>java.util.Locale<code>
      * used by the frameworks localization tools.
@@ -245,6 +252,10 @@ public class Config extends pt.ist.fenixframework.Config {
 	    }
 	}
 	return null;
+    }
+
+    public boolean isUpdateDataRepositoryStructure() {
+        return updateDataRepositoryStructure;
     }
 
 }
