@@ -76,8 +76,8 @@ public class RequestChecksumFilter implements Filter {
 	if (!isValidChecksum(httpServletRequest, checksum)) {
 	    if (LogLevel.ERROR) {
 		final User user = UserView.getUser();
-		final String userString = ((user == null) ? "<no user logged in>" : user.getUsername()) + " digest in current user view: "
-			+ UserView.getUser().getPrivateConstantForDigestCalculation();
+		final String userString = ((user == null) ? "<no user logged in>" : user.getUsername())
+			+ " digest in current user view: " + UserView.getUser().getPrivateConstantForDigestCalculation();
 		final String url = httpServletRequest.getRequestURI() + '?' + httpServletRequest.getQueryString();
 		final StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("Detected url tampering by user: ");
@@ -101,6 +101,19 @@ public class RequestChecksumFilter implements Filter {
 		    stringBuilder.append(httpServletRequest.getHeader(name));
 		}
 
+		HttpSession session = httpServletRequest.getSession(false);
+		if (session != null) {
+		    stringBuilder.append("\nSession creation: ");
+		    stringBuilder.append(session.getCreationTime());
+		    stringBuilder.append(" Session Id: ");
+		    stringBuilder.append(session.getId());
+		    stringBuilder.append(" Max inactive time: ");
+		    stringBuilder.append(session.getMaxInactiveInterval());
+		    stringBuilder.append(" Last time access: ");
+		    stringBuilder.append(session.getLastAccessedTime());
+		    stringBuilder.append(" Current time: ");
+		    stringBuilder.append(System.currentTimeMillis());
+		}
 		System.out.println(stringBuilder.toString());
 	    }
 	    throw new UrlTamperingException();
