@@ -77,7 +77,8 @@ public class RequestChecksumFilter implements Filter {
 	    if (LogLevel.ERROR) {
 		final User user = UserView.getUser();
 		final String userString = ((user == null) ? "<no user logged in>" : user.getUsername())
-			+ " digest in current user view: " + UserView.getUser().getPrivateConstantForDigestCalculation();
+			+ " key for user: "
+			+ ((user == null) ? user.getPrivateConstantForDigestCalculation() : "No user");
 		final String url = httpServletRequest.getRequestURI() + '?' + httpServletRequest.getQueryString();
 		final StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("Detected url tampering by user: ");
