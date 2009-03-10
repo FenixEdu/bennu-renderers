@@ -31,6 +31,7 @@ public class CASFilter implements Filter {
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
     		throws ServletException, IOException {
 	final String serverName = servletRequest.getServerName();
+	System.out.println("Server name: " + serverName);
 	final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
 	if (casConfig != null && !casConfig.isCasEnabled()) {
 	    if (!isHttpResource(servletRequest, servletResponse)) {
