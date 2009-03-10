@@ -33,7 +33,7 @@ public class CASFilter implements Filter {
 	final String serverName = servletRequest.getServerName();
 	System.out.println("Server name: " + serverName);
 	final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
-	if (casConfig != null && !casConfig.isCasEnabled()) {
+	if (casConfig != null && casConfig.isCasEnabled()) {
 	    if (!isHttpResource(servletRequest, servletResponse)) {
 		throw new ServletException("CASFilter only applies to HTTP resources");
 	    }
