@@ -15,7 +15,7 @@ public class EditRequest extends HttpServletRequestWrapper {
     private List<IViewState> viewStates;
 
     private String publicModuleName = "publico";
-    
+
     public EditRequest(HttpServletRequest request) {
 	super(request);
     }
@@ -32,15 +32,14 @@ public class EditRequest extends HttpServletRequestWrapper {
 		    IViewState viewState = ViewState.decodeFromBase64(encodedSingleViewState);
 		    this.viewStates.add(viewState);
 		}
-	    }
-	    else {
+	    } else {
 		this.viewStates = ViewState.decodeListFromBase64(getParameter(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME));
 	    }
 	}
-	
-	String contextPath = ((HttpServletRequest)getRequest()).getContextPath();
-	String requestURI = ((HttpServletRequest)getRequest()).getRequestURI().toString();	
-	
+
+	String contextPath = ((HttpServletRequest) getRequest()).getContextPath();
+	String requestURI = ((HttpServletRequest) getRequest()).getRequestURI().toString();
+
 	UserIdentity userIdentity = UserIdentityFactory.create(this);
 	for (IViewState viewState : this.viewStates) {
 	    viewState.setRequest(this);
@@ -51,10 +50,16 @@ public class EditRequest extends HttpServletRequestWrapper {
 	return this.viewStates;
     }
 
-    private void checkUserIdentity(IViewState viewState, UserIdentity userIdentity, String requestURI, String contextPath) {	
-	if(!requestURI.startsWith(contextPath + "/" + publicModuleName + "/")
-		&& !viewState.getUser().equals(userIdentity)) {
-	    throw new RuntimeException("viewstate.user.changed");
+    private void checkUserIdentity(IViewState viewState, UserIdentity userIdentity, String requestURI, String contextPath) {
+	if (!requestURI.startsWith(contextPath + "/" + publicModuleName + "/") && !viewState.getUser().equals(userIdentity)) {
+	    throw new ViewStateUserChangedException();
 	}
-    }        
+    }
+
+    public static class ViewStateUserChangedException extends RuntimeException {
+
+	public ViewStateUserChangedException() {
+	    super("viewstate.user.changed");
+	}
+    }
 }
