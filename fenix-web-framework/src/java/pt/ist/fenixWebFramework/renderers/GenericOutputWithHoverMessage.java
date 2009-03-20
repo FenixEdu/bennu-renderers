@@ -36,6 +36,8 @@ public class GenericOutputWithHoverMessage extends OutputRenderer {
 
     private boolean useParent;
 
+    private boolean escape = true;
+
     public boolean isUseParent() {
 	return useParent;
     }
@@ -130,6 +132,14 @@ public class GenericOutputWithHoverMessage extends OutputRenderer {
 	return properties.get(property);
     }
 
+    public boolean isEscape() {
+	return escape;
+    }
+
+    public void setEscape(boolean escape) {
+	this.escape = escape;
+    }
+
     @Override
     protected Layout getLayout(Object object, Class type) {
 	return new Layout() {
@@ -162,14 +172,15 @@ public class GenericOutputWithHoverMessage extends OutputRenderer {
 		    }
 		}
 
-		return wrapUpCompletion(component, HtmlText.escape(hoverMessage));
+		return wrapUpCompletion(component, isEscape() ? HtmlText.escape(hoverMessage) : hoverMessage);
 	    }
 
-	    private HtmlContainer wrapUpCompletion(HtmlComponent component, String escape) {
+	    private HtmlContainer wrapUpCompletion(HtmlComponent component, String hoverMessage) {
 
 		HtmlContainer container = new HtmlBlockContainer();
 		container.addChild(component);
-		String id = HtmlComponent.getValidIdOrName(String.valueOf(escape.hashCode())) + ":" + System.currentTimeMillis();
+		String id = HtmlComponent.getValidIdOrName(String.valueOf(hoverMessage.hashCode())) + ":"
+			+ System.currentTimeMillis();
 
 		HtmlBlockContainer helpContainer = new HtmlBlockContainer();
 		helpContainer.setClasses(getNoJavascriptClasses());
@@ -179,7 +190,7 @@ public class GenericOutputWithHoverMessage extends OutputRenderer {
 
 		HtmlBlockContainer textContainer = new HtmlBlockContainer();
 		textContainer.setClasses(getTextClasses());
-		textContainer.addChild(new HtmlText(escape));
+		textContainer.addChild(new HtmlText(hoverMessage,false));
 		helpContainer.addChild(textContainer);
 
 		container.addChild(helpContainer);
@@ -208,4 +219,5 @@ public class GenericOutputWithHoverMessage extends OutputRenderer {
 	    }
 	};
     }
+
 }
