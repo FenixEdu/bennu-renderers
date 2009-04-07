@@ -2,7 +2,7 @@ package pt.ist.fenixWebFramework.security;
 
 public class UserView {
 
-    private static InheritableThreadLocal<User> user = new InheritableThreadLocal<User>();
+    private static ThreadLocal<User> user = new ThreadLocal<User>();
 
     public static <T extends User> T getUser() {
 	return (T) user.get();
