@@ -74,7 +74,7 @@ public class FenixWebFramework extends FenixFramework {
 
 		try {
 		    createInfraestructure(connection, config);
-		    final String updates = SQLUpdateGenerator.generateInMem(connection, "UTF-8");
+		    final String updates = SQLUpdateGenerator.generateInMem(connection, "utf8");
 		    executeSqlInstructions(connection, updates);		    
 		} finally {
 		    Statement statementUnlock = null;
