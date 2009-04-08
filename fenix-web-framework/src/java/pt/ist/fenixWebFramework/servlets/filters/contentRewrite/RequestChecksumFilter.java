@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -22,6 +24,16 @@ import pt.ist.fenixWebFramework.security.UserView;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 
 public class RequestChecksumFilter implements Filter {
+
+    public static interface ChecksumPredicate {
+	public boolean shouldFilter(HttpServletRequest request);
+    }
+
+    public static Set<ChecksumPredicate> predicates = new HashSet<ChecksumPredicate>();
+
+    public static void registerFilterRule(ChecksumPredicate predicate) {
+	predicates.add(predicate);
+    }
 
     public void init(FilterConfig config) {
     }
@@ -59,6 +71,11 @@ public class RequestChecksumFilter implements Filter {
     }
 
     protected boolean shoudFilterReques(final HttpServletRequest httpServletRequest) {
+	for (ChecksumPredicate predicate : predicates) {
+	    if (!predicate.shouldFilter(httpServletRequest)) {
+		return false;
+	    }
+	}
 	return true;
     }
 
@@ -76,9 +93,8 @@ public class RequestChecksumFilter implements Filter {
 	if (!isValidChecksum(httpServletRequest, checksum)) {
 	    if (LogLevel.ERROR) {
 		final User user = UserView.getUser();
-		final String userString = ((user == null) ? "<no user logged in>" : user.getUsername())
-			+ " key : "
-			+ ((user == null) ? "No user" : user.getPrivateConstantForDigestCalculation() );
+		final String userString = ((user == null) ? "<no user logged in>" : user.getUsername()) + " key : "
+			+ ((user == null) ? "No user" : user.getPrivateConstantForDigestCalculation());
 		final String url = httpServletRequest.getRequestURI() + '?' + httpServletRequest.getQueryString();
 		final StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("Detected url tampering by user: ");
