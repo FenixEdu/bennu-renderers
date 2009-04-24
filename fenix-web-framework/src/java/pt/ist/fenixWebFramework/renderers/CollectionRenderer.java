@@ -745,6 +745,20 @@ public class CollectionRenderer extends OutputRenderer {
     }
 
     /**
+     * The confirmationTitleKey property indicates the key of the confirmation
+     * title to show
+     * 
+     * @property
+     */
+    public void setConfirmationTitleKey(String name, String value) {
+	getTableLink(name).setConfirmationTitleKey(value);
+    }
+
+    public String getConfirmationTitleKey(String name) {
+	return getTableLink(name).getConfirmationTitleKey();
+    }
+
+    /**
      * The confirmationKey property indicates the key of the confirmation
      * message to show
      * 
@@ -1515,7 +1529,7 @@ public class CollectionRenderer extends OutputRenderer {
 		    container.addChild(link);
 		    String scriptText = "linkConfirmationHook('" + link.getId() + "','"
 			    + (confirmationMessage != null ? confirmationMessage : "") + "', '"
-			    + (confirmationTitle != null ? confirmationMessage : "") + "');";
+			    + (confirmationTitle != null ? confirmationTitle : "") + "');";
 
 		    HtmlScript script = new HtmlScript();
 		    script.setContentType("text/javascript");
