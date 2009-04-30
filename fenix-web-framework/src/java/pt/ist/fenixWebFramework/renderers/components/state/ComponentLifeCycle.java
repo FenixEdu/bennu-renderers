@@ -154,7 +154,10 @@ public class ComponentLifeCycle {
 	boolean anySkip = false;
 	boolean anyCanceled = false;
 	boolean skipValidation = false;
-
+	
+	skipValidation = Boolean.parseBoolean(request.getParameter("skipValidation"));
+	
+	
 	for (IViewState viewState : viewStates) {
 	    ViewStateHolder holder = new ViewStateHolder(viewState);
 	    viewStateHolders.add(holder);
