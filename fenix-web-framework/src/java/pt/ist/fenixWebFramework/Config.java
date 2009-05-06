@@ -246,11 +246,8 @@ public class Config extends pt.ist.fenixframework.Config {
     }
 
     public CasConfig getCasConfig(final String hostname) {
-	System.out.println("Searching for: " + hostname);
 	for (final Entry<String, CasConfig> entry : casConfigByHost.entrySet()) {
-	    System.out.println("Checking: " + entry.getKey());
 	    if (entry.getKey().startsWith(hostname)) {
-		System.out.println("Fount it: " + entry.getValue());
 		return entry.getValue();
 	    }
 	}
