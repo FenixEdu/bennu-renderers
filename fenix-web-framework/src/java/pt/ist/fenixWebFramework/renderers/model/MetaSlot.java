@@ -353,7 +353,7 @@ public class MetaSlot extends MetaObject {
 
     public boolean isRequired() {
 	for (Pair<Class<pt.ist.fenixWebFramework.renderers.validators.HtmlValidator>, Properties> validator : getValidators()) {
-	    if (RequiredValidator.class.getClass().isAssignableFrom(validator.getKey().getClass())) {
+	    if (RequiredValidator.class.isAssignableFrom(validator.getKey())) {
 		return true;
 	    }
 	}
