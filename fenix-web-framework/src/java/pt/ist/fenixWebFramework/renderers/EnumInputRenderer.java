@@ -31,9 +31,10 @@ import pt.utl.ist.fenix.tools.util.Pair;
  * 
  * <p>
  * Example:<br/> Choose a {@link java.lang.annotation.ElementType element type}:
- * <select> <option>Type</option> <option>Field</option> <option>Parameter</option>
- * <option>Constructor</option> <option>Local Variable</option>
- * <option>Annotation</option> <option>Package</option> </select>
+ * <select> <option>Type</option> <option>Field</option>
+ * <option>Parameter</option> <option>Constructor</option> <option>Local
+ * Variable</option> <option>Annotation</option> <option>Package</option>
+ * </select>
  * 
  * @author cfgi
  */
@@ -42,7 +43,9 @@ public class EnumInputRenderer extends InputRenderer {
     private String defaultText;
 
     private String defaultTextBundle;
-    
+
+    private boolean defaultOptionHidden = false;
+
     private String bundle;
 
     private boolean key;
@@ -81,6 +84,20 @@ public class EnumInputRenderer extends InputRenderer {
      */
     public void setDefaultText(String defaultText) {
 	this.defaultText = defaultText;
+    }
+
+    public boolean isDefaultOptionHidden() {
+	return defaultOptionHidden;
+    }
+
+    /**
+     * Don't show the default option, that is, the options meaning no value
+     * selected.
+     * 
+     * @property
+     */
+    public void setDefaultOptionHidden(boolean defaultOptionHidden) {
+	this.defaultOptionHidden = defaultOptionHidden;
     }
 
     public String getExcludedValues() {
@@ -233,8 +250,10 @@ public class EnumInputRenderer extends InputRenderer {
     protected HtmlSimpleValueComponent createInputContainerComponent(Enum enumerate) {
 	HtmlMenu menu = new HtmlMenu();
 
-	String defaultOptionTitle = getDefaultTitle();
-	menu.createDefaultOption(defaultOptionTitle).setSelected(enumerate == null);
+	if (!isDefaultOptionHidden()) {
+	    String defaultOptionTitle = getDefaultTitle();
+	    menu.createDefaultOption(defaultOptionTitle).setSelected(enumerate == null);
+	}
 
 	return menu;
     }
@@ -312,10 +331,10 @@ public class EnumInputRenderer extends InputRenderer {
     }
 
     public String getDefaultTextBundle() {
-        return defaultTextBundle;
+	return defaultTextBundle;
     }
 
     public void setDefaultTextBundle(String defaultTextBundle) {
-        this.defaultTextBundle = defaultTextBundle;
+	this.defaultTextBundle = defaultTextBundle;
     }
 }
