@@ -35,7 +35,8 @@ import org.apache.commons.collections.Predicate;
  * Example:
  * <ul>
  * <li><input type="checkbox"/><em>&lt;object A presentation&gt;</em></li>
- * <li><input type="checkbox" checked="checked"/><em>&lt;object B presentation&gt;</em></li>
+ * <li><input type="checkbox" checked="checked"/>
+ * <em>&lt;object B presentation&gt;</em></li>
  * <li><input type="checkbox"/><em>&lt;object C presentation&gt;</em></li>
  * </ul>
  * 
@@ -59,15 +60,15 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
     private boolean saveOptions;
 
     private boolean selectAllShown;
-    
+
     private String checkBoxClasses;
-    
+
     private String checkBoxStyle;
-    
+
     private String listItemClasses;
-    
+
     private String listItemStyle;
-    
+
     private boolean ordered;
 
     /**
@@ -77,11 +78,11 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
      * @property
      */
     public void setEachClasses(String classes) {
-        this.eachClasses = classes;
+	this.eachClasses = classes;
     }
 
     public String getEachClasses() {
-        return this.eachClasses;
+	return this.eachClasses;
     }
 
     /**
@@ -91,15 +92,15 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
      * @property
      */
     public void setEachStyle(String style) {
-        this.eachStyle = style;
+	this.eachStyle = style;
     }
 
     public String getEachStyle() {
-        return this.eachStyle;
+	return this.eachStyle;
     }
 
     public String getEachLayout() {
-        return eachLayout;
+	return eachLayout;
     }
 
     /**
@@ -108,11 +109,11 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
      * @property
      */
     public void setEachLayout(String eachLayout) {
-        this.eachLayout = eachLayout;
+	this.eachLayout = eachLayout;
     }
 
     public String getEachSchema() {
-        return eachSchema;
+	return eachSchema;
     }
 
     /**
@@ -122,19 +123,19 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
      * @property
      */
     public void setEachSchema(String eachSchema) {
-        this.eachSchema = eachSchema;
+	this.eachSchema = eachSchema;
     }
 
     public String getProviderClass() {
-        return this.providerClass;
+	return this.providerClass;
     }
 
     /**
-     * The class name of a {@link DataProvider data provider}. The data
-     * provider is responsible for providing a collection of objects. This
-     * collection represents all the possible options for the slot beeing
-     * edited. Additionally the data provider can also provide a custom
-     * converter for the object encoded values.
+     * The class name of a {@link DataProvider data provider}. The data provider
+     * is responsible for providing a collection of objects. This collection
+     * represents all the possible options for the slot beeing edited.
+     * Additionally the data provider can also provide a custom converter for
+     * the object encoded values.
      * 
      * <p>
      * Those objects that are already part of the slot's value will make the
@@ -145,11 +146,11 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
      * @property
      */
     public void setProviderClass(String providerClass) {
-        this.providerClass = providerClass;
+	this.providerClass = providerClass;
     }
 
     public String getSortBy() {
-        return this.sortBy;
+	return this.sortBy;
     }
 
     /**
@@ -160,11 +161,11 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
      * @property
      */
     public void setSortBy(String sortBy) {
-        this.sortBy = sortBy;
+	this.sortBy = sortBy;
     }
 
     public boolean isSelectAllShown() {
-        return this.selectAllShown;
+	return this.selectAllShown;
     }
 
     /**
@@ -174,11 +175,11 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
      * @property
      */
     public void setSelectAllShown(boolean selectAllShown) {
-        this.selectAllShown = selectAllShown;
+	this.selectAllShown = selectAllShown;
     }
 
     public boolean isSaveOptions() {
-        return saveOptions;
+	return saveOptions;
     }
 
     /**
@@ -188,249 +189,251 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
      * @property
      */
     public void setSaveOptions(boolean saveOptions) {
-        this.saveOptions = saveOptions;
+	this.saveOptions = saveOptions;
     }
 
     public String getCheckBoxClasses() {
-		return checkBoxClasses;
-	}
+	return checkBoxClasses;
+    }
 
     /**
      * Specifies the class applied to the input element
      * 
      * @property
      */
-	public void setCheckBoxClasses(String checkBoxClasses) {
-		this.checkBoxClasses = checkBoxClasses;
-	}
+    public void setCheckBoxClasses(String checkBoxClasses) {
+	this.checkBoxClasses = checkBoxClasses;
+    }
 
-	public String getCheckBoxStyle() {
-		return checkBoxStyle;
-	}
+    public String getCheckBoxStyle() {
+	return checkBoxStyle;
+    }
 
     /**
      * Specifies the style applied to the input element
      * 
      * @property
      */
-	public void setCheckBoxStyle(String checkBoxStyle) {
-		this.checkBoxStyle = checkBoxStyle;
-	}
+    public void setCheckBoxStyle(String checkBoxStyle) {
+	this.checkBoxStyle = checkBoxStyle;
+    }
 
-	public String getListItemClasses() {
-		return listItemClasses;
-	}
+    public String getListItemClasses() {
+	return listItemClasses;
+    }
 
     /**
      * Specifies the classes applied to the list element
      * 
      * @property
      */
-	public void setListItemClasses(String listItemClasses) {
-		this.listItemClasses = listItemClasses;
-	}
+    public void setListItemClasses(String listItemClasses) {
+	this.listItemClasses = listItemClasses;
+    }
 
-	public String getListItemStyle() {
-		return listItemStyle;
-	}
+    public String getListItemStyle() {
+	return listItemStyle;
+    }
 
     /**
      * Specifies the style applied to the list element
      * 
      * @property
      */
-	public void setListItemStyle(String listItemStyle) {
-		this.listItemStyle = listItemStyle;
-	}
+    public void setListItemStyle(String listItemStyle) {
+	this.listItemStyle = listItemStyle;
+    }
 
-	public boolean isOrdered() {
-		return ordered;
-	}
+    public boolean isOrdered() {
+	return ordered;
+    }
 
     /**
      * Specifies if the generated list will be ordered
      * 
      * @property
      */
-	public void setOrdered(boolean ordered) {
-		this.ordered = ordered;
-	}
+    public void setOrdered(boolean ordered) {
+	this.ordered = ordered;
+    }
 
-	@Override
+    @Override
     protected Layout getLayout(Object object, Class type) {
-        return new CheckBoxListLayout();
+	return new CheckBoxListLayout();
     }
 
     protected DataProvider getProvider() {
-        if (this.provider == null) {
-            String className = getProviderClass();
+	if (this.provider == null) {
+	    String className = getProviderClass();
 
-            try {
-                Class providerCass = (Class<DataProvider>) Class.forName(className);
-                this.provider = (DataProvider) providerCass.newInstance();
-            } catch (Exception e) {
-                throw new RuntimeException("could not get a data provider instance", e);
-            }
-        }
+	    try {
+		Class providerCass = (Class<DataProvider>) Class.forName(className);
+		this.provider = (DataProvider) providerCass.newInstance();
+	    } catch (Exception e) {
+		throw new RuntimeException("could not get a data provider instance", e);
+	    }
+	}
 
-        return this.provider;
+	return this.provider;
     }
 
     protected Converter getConverter() {
-        DataProvider provider = getProvider();
+	DataProvider provider = getProvider();
 
-        return provider.getConverter();
+	return provider.getConverter();
     }
 
     protected Collection getPossibleObjects() {
-        Object object = ((MetaSlot) getInputContext().getMetaObject()).getMetaObject().getObject();
-        Object value = getInputContext().getMetaObject().getObject();
+	Object object = ((MetaSlot) getInputContext().getMetaObject()).getMetaObject().getObject();
+	Object value = getInputContext().getMetaObject().getObject();
 
-        if (getProviderClass() != null) {
-            try {
-                DataProvider provider = getProvider();
-                Collection collection = (Collection) provider.provide(object, value);
+	if (getProviderClass() != null) {
+	    try {
+		DataProvider provider = getProvider();
+		Collection collection = (Collection) provider.provide(object, value);
 
-                if (getSortBy() == null) {
-                    return collection;
-                } else {
-                    return RenderUtils.sortCollectionWithCriteria(collection, getSortBy());
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("exception while executing data provider", e);
-            }
-        } else {
-            throw new RuntimeException("a data provider must be supplied");
-        }
+		if (getSortBy() == null) {
+		    return collection;
+		} else {
+		    return RenderUtils.sortCollectionWithCriteria(collection, getSortBy());
+		}
+	    } catch (Exception e) {
+		throw new RuntimeException("exception while executing data provider", e);
+	    }
+	} else {
+	    throw new RuntimeException("a data provider must be supplied");
+	}
     }
 
     protected class CheckBoxListLayout extends Layout {
 
-        public HtmlComponent createComponent(Object object, Class type) {
-            Collection collection = (Collection) object;
+	public HtmlComponent createComponent(Object object, Class type) {
+	    Collection collection = (Collection) object;
 
-            HtmlCheckBoxList listComponent = new HtmlCheckBoxList();
-            listComponent.getList().setOrdered(isOrdered());
-            listComponent.setSelectAllShown(isSelectAllShown());
+	    HtmlCheckBoxList listComponent = new HtmlCheckBoxList();
+	    listComponent.getList().setOrdered(isOrdered());
 
-            Schema schema = RenderKit.getInstance().findSchema(getEachSchema());
+	    Schema schema = RenderKit.getInstance().findSchema(getEachSchema());
 
-            List<MetaObject> possibleMetaObjects;
+	    List<MetaObject> possibleMetaObjects;
 
-            if (hasSavedPossibleMetaObjects()) {
-                possibleMetaObjects = getPossibleMetaObjects();
-            } else {
-                possibleMetaObjects = new ArrayList<MetaObject>();
+	    if (hasSavedPossibleMetaObjects()) {
+		possibleMetaObjects = getPossibleMetaObjects();
+	    } else {
+		possibleMetaObjects = new ArrayList<MetaObject>();
 
-                for (Object possibility : getPossibleObjects()) {
-                    possibleMetaObjects.add(MetaObjectFactory.createObject(possibility, schema));
-                }
-            }
+		for (Object possibility : getPossibleObjects()) {
+		    possibleMetaObjects.add(MetaObjectFactory.createObject(possibility, schema));
+		}
+	    }
 
-            for (MetaObject metaObject : possibleMetaObjects) {
-                Object obj = metaObject.getObject();
-                MetaObjectKey key = metaObject.getKey();
+	    for (MetaObject metaObject : possibleMetaObjects) {
+		Object obj = metaObject.getObject();
+		MetaObjectKey key = metaObject.getKey();
 
-                String layout = getEachLayout();
+		String layout = getEachLayout();
 
-                PresentationContext newContext = getContext().createSubContext(metaObject);
-                newContext.setLayout(layout);
-                newContext.setRenderMode(RenderMode.getMode("output"));
+		PresentationContext newContext = getContext().createSubContext(metaObject);
+		newContext.setLayout(layout);
+		newContext.setRenderMode(RenderMode.getMode("output"));
 
-                RenderKit kit = RenderKit.getInstance();
-                HtmlComponent component = kit.render(newContext, obj);
+		RenderKit kit = RenderKit.getInstance();
+		HtmlComponent component = kit.render(newContext, obj);
 
-                HtmlLabel label = new HtmlLabel();
-                label.setBody(component);
-                label.setStyle(eachStyle);
-                label.setClasses(eachClasses);
+		HtmlLabel label = new HtmlLabel();
+		label.setBody(component);
+		label.setStyle(eachStyle);
+		label.setClasses(eachClasses);
 
-                HtmlCheckBox checkBox = listComponent.addOption(label, key.toString());
-                label.setFor(checkBox);
-                checkBox.setClasses(getCheckBoxClasses());
-                checkBox.setStyle(getCheckBoxStyle());
+		HtmlCheckBox checkBox = listComponent.addOption(label, key.toString());
+		label.setFor(checkBox);
+		checkBox.setClasses(getCheckBoxClasses());
+		checkBox.setStyle(getCheckBoxStyle());
 
-                if (collection != null && collection.contains(obj)) {
-                    checkBox.setChecked(true);
-                }
-            }
+		if (collection != null && collection.contains(obj)) {
+		    checkBox.setChecked(true);
+		}
+	    }
 
-            if (isSaveOptions()) {
-                savePossibleMetaObjects(possibleMetaObjects);
-            }
-            
-            List<HtmlComponent> components = listComponent.getChildren(new Predicate() {
-				public boolean evaluate(Object arg0) {
-					return arg0 instanceof HtmlListItem;
-				}});
-            
-            for(HtmlComponent component : components) {
-            	HtmlListItem listItem = (HtmlListItem) component;
-            	
-            	listItem.setStyle(getListItemStyle());
-            	listItem.setClasses(getListItemClasses());
-            }
+	    listComponent.setSelectAllShown(listComponent.getList().getItems().size() > 1 && isSelectAllShown());
 
-            // TODO: make providers only provide a converter for a single object
-            // make a wrapper converter that calls that converter for each value
-            // this allows converters to be used to menus and checkboxes
-            listComponent.setConverter(new OptionConverter(possibleMetaObjects, getConverter()));
-            listComponent.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
+	    if (isSaveOptions()) {
+		savePossibleMetaObjects(possibleMetaObjects);
+	    }
 
-            return listComponent;
-        }
+	    List<HtmlComponent> components = listComponent.getChildren(new Predicate() {
+		public boolean evaluate(Object arg0) {
+		    return arg0 instanceof HtmlListItem;
+		}
+	    });
 
-        private boolean hasSavedPossibleMetaObjects() {
-            return getInputContext().getViewState().getLocalAttribute("options") != null;
-        }
+	    for (HtmlComponent component : components) {
+		HtmlListItem listItem = (HtmlListItem) component;
 
-        private List<MetaObject> getPossibleMetaObjects() {
-            return (List<MetaObject>) getInputContext().getViewState().getLocalAttribute("options");
-        }
+		listItem.setStyle(getListItemStyle());
+		listItem.setClasses(getListItemClasses());
+	    }
 
-        private void savePossibleMetaObjects(List<MetaObject> possibleMetaObjects) {
-            getInputContext().getViewState().setLocalAttribute("options", possibleMetaObjects);
-        }
+	    // TODO: make providers only provide a converter for a single object
+	    // make a wrapper converter that calls that converter for each value
+	    // this allows converters to be used to menus and checkboxes
+	    listComponent.setConverter(new OptionConverter(possibleMetaObjects, getConverter()));
+	    listComponent.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
+
+	    return listComponent;
+	}
+
+	private boolean hasSavedPossibleMetaObjects() {
+	    return getInputContext().getViewState().getLocalAttribute("options") != null;
+	}
+
+	private List<MetaObject> getPossibleMetaObjects() {
+	    return (List<MetaObject>) getInputContext().getViewState().getLocalAttribute("options");
+	}
+
+	private void savePossibleMetaObjects(List<MetaObject> possibleMetaObjects) {
+	    getInputContext().getViewState().setLocalAttribute("options", possibleMetaObjects);
+	}
 
     }
 
     private static class OptionConverter extends Converter {
 
-        private List<MetaObject> metaObjects;
+	private List<MetaObject> metaObjects;
 
-        private Converter converter;
+	private Converter converter;
 
-        public OptionConverter(List<MetaObject> metaObjects, Converter converter) {
-            this.metaObjects = metaObjects;
-            this.converter = converter;
-        }
+	public OptionConverter(List<MetaObject> metaObjects, Converter converter) {
+	    this.metaObjects = metaObjects;
+	    this.converter = converter;
+	}
 
-        @Override
-        public Object convert(Class type, Object value) {
-            String[] textValues = (String[]) value;
+	@Override
+	public Object convert(Class type, Object value) {
+	    String[] textValues = (String[]) value;
 
-            if (textValues == null || textValues.length == 0) {
-                return new ArrayList();
-            } else {
-                if (this.converter != null) {
-                    return this.converter.convert(type, value);
-                } else {
-                    List<Object> result = new ArrayList<Object>();
+	    if (textValues == null || textValues.length == 0) {
+		return new ArrayList();
+	    } else {
+		if (this.converter != null) {
+		    return this.converter.convert(type, value);
+		} else {
+		    List<Object> result = new ArrayList<Object>();
 
-                    for (MetaObject metaObject : this.metaObjects) {
-                        for (int i = 0; i < textValues.length; i++) {
-                            String textValue = textValues[i];
+		    for (MetaObject metaObject : this.metaObjects) {
+			for (int i = 0; i < textValues.length; i++) {
+			    String textValue = textValues[i];
 
-                            if (textValue.equals(metaObject.getKey().toString())) {
-                                result.add(metaObject.getObject());
-                            }
-                        }
-                    }
+			    if (textValue.equals(metaObject.getKey().toString())) {
+				result.add(metaObject.getObject());
+			    }
+			}
+		    }
 
-                    return result;
-                }
-            }
-        }
+		    return result;
+		}
+	    }
+	}
 
     }
 }
