@@ -2,6 +2,7 @@ package pt.ist.fenixWebFramework.servlets.filters;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.ref.SoftReference;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -41,6 +42,51 @@ import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
  * @author jpvl
  */
 public class RequestWrapperFilter implements Filter {
+
+    private static SoftReference<Map<String, Boolean>> sessionLogHashRefs = null;
+
+    private static void logSessionUsage(String arg0, Object arg1) {
+	Map<String, Boolean> sessionLogHashs = sessionLogHashRefs == null ? null : sessionLogHashRefs.get();
+	if (sessionLogHashs == null) {
+	    synchronized (RequestWrapperFilter.class) {
+		sessionLogHashs = sessionLogHashRefs == null ? null : sessionLogHashRefs.get();
+		if (sessionLogHashs == null) {
+		    sessionLogHashs = new Hashtable<String, Boolean>();
+		    sessionLogHashRefs = new SoftReference<Map<String, Boolean>>(sessionLogHashs);
+		}
+	    }
+	}
+	final String classType = arg1 == null ? null : arg1.getClass().getName();
+	final String hash = calcHash(classType);
+
+	if (!sessionLogHashs.containsKey(hash)) {
+	    sessionLogHashs.put(hash, Boolean.TRUE);
+	    final StringBuilder stringBuilder = new StringBuilder();
+	    stringBuilder.append("Adding object of type: ");
+	    stringBuilder.append(classType);
+	    stringBuilder.append(" to session.\n");
+	    for (final StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()) {
+		stringBuilder.append("   ");
+		stringBuilder.append(stackTraceElement.getClassName());
+		stringBuilder.append(".");
+		stringBuilder.append(stackTraceElement.getMethodName());
+		stringBuilder.append(" : ");
+		stringBuilder.append(stackTraceElement.getLineNumber());
+		stringBuilder.append("\n");
+	    }
+	    System.out.println(stringBuilder.toString());
+	}
+
+    }
+
+    private static String calcHash(final String classType) {
+	long hash = classType.hashCode();
+	for (final StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()) {
+	    hash += stackTraceElement.getClassName().hashCode() + stackTraceElement.getMethodName().hashCode()
+	    	+ stackTraceElement.getLineNumber();
+	}
+	return Long.toString(hash);
+    }
 
     public static class FenixSessionWrapper implements HttpSession {
 
@@ -113,6 +159,7 @@ public class RequestWrapperFilter implements Filter {
 	}
 
 	public void setAttribute(String arg0, Object arg1) {
+	    logSessionUsage(arg0, arg1);
 	    if (arg1 != null && !(arg1 instanceof Serializable)) {
 		try {
 		    throw new Error("Trying to find out where's the serialization problem");
