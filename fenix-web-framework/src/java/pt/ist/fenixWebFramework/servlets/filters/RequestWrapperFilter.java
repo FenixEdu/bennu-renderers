@@ -64,7 +64,9 @@ public class RequestWrapperFilter implements Filter {
 	    final StringBuilder stringBuilder = new StringBuilder();
 	    stringBuilder.append("Adding object of type: ");
 	    stringBuilder.append(classType);
-	    stringBuilder.append(" to session.\n");
+	    stringBuilder.append(" to session as attribute: ");
+	    stringBuilder.append(arg0);
+	    stringBuilder.append(".\n");
 	    for (final StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()) {
 		stringBuilder.append("   ");
 		stringBuilder.append(stackTraceElement.getClassName());
