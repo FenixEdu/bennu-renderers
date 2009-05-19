@@ -50,7 +50,7 @@ public class FenixSchemaFactory extends DefaultSchemaFactory {
     public static List<Slot> getDomainClassSlots(DomainClass domainClass) {
         List<Slot> slots = new ArrayList<Slot>();
         String[] slotsToIgnore = new String[] {
-          "^key.*", ".*Key$", "^chave.*", "^idInternal$", "^ackOptLock$"      
+          ".*Key$", "^chave.*", "^idInternal$", "^ackOptLock$"      
         };
         
         while (domainClass != null) {
