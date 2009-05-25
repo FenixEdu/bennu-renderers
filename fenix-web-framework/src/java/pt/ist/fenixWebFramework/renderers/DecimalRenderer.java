@@ -1,6 +1,7 @@
 package pt.ist.fenixWebFramework.renderers;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
@@ -17,10 +18,24 @@ public class DecimalRenderer extends OutputRenderer {
 
     private String format;
 
+    private String negativeStyle;
+
+    private String positiveStyle;
+
+    private char decimalSeparator;
+
+    private char groupingSeparator;
+
+    private String currencySymbol;
+
     private static final String DEFAULT_FORMAT = "######0.00";
 
     public DecimalRenderer() {
 	setFormat(DEFAULT_FORMAT);
+	DecimalFormatSymbols decimalFormatSymbols = new DecimalFormat(getFormat()).getDecimalFormatSymbols();
+	setDecimalSeparator(decimalFormatSymbols.getDecimalSeparator());
+	setGroupingSeparator(decimalFormatSymbols.getGroupingSeparator());
+	setCurrencySymbol(decimalFormatSymbols.getCurrencySymbol());
     }
 
     @Override
@@ -29,7 +44,24 @@ public class DecimalRenderer extends OutputRenderer {
 
 	    @Override
 	    public HtmlComponent createComponent(Object object, Class type) {
-		return new HtmlText(new DecimalFormat(getFormat()).format((Number) object));
+		HtmlText htmlText = new HtmlText(getDecimalFormat().format(object));
+		if (object != null && ((Number) object).doubleValue() < 0) {
+		    setStyle(getNegativeStyle());
+		} else {
+		    setStyle(getPositiveStyle());
+		}
+		return htmlText;
+	    }
+
+	    private DecimalFormat getDecimalFormat() {
+		DecimalFormat decimalFormat = new DecimalFormat(getFormat());
+		DecimalFormatSymbols decimalFormatSymbols = decimalFormat.getDecimalFormatSymbols();
+		decimalFormatSymbols.setDecimalSeparator(getDecimalSeparator());
+		decimalFormatSymbols.setMonetaryDecimalSeparator(decimalFormatSymbols.getDecimalSeparator());
+		decimalFormatSymbols.setGroupingSeparator(getGroupingSeparator());
+		decimalFormatSymbols.setCurrencySymbol(getCurrencySymbol());
+		decimalFormat.setDecimalFormatSymbols(decimalFormatSymbols);
+		return decimalFormat;
 	    }
 
 	};
@@ -41,6 +73,46 @@ public class DecimalRenderer extends OutputRenderer {
 
     public void setFormat(String format) {
 	this.format = format;
+    }
+
+    public String getNegativeStyle() {
+	return negativeStyle;
+    }
+
+    public void setNegativeStyle(String negativeStyle) {
+	this.negativeStyle = negativeStyle;
+    }
+
+    public String getPositiveStyle() {
+	return positiveStyle;
+    }
+
+    public void setPositiveStyle(String positiveStyle) {
+	this.positiveStyle = positiveStyle;
+    }
+
+    public char getDecimalSeparator() {
+	return decimalSeparator;
+    }
+
+    public void setDecimalSeparator(char decimalSeparator) {
+	this.decimalSeparator = decimalSeparator;
+    }
+
+    public char getGroupingSeparator() {
+	return groupingSeparator;
+    }
+
+    public void setGroupingSeparator(char groupingSeparator) {
+	this.groupingSeparator = groupingSeparator;
+    }
+
+    public String getCurrencySymbol() {
+	return currencySymbol;
+    }
+
+    public void setCurrencySymbol(String currencySymbol) {
+	this.currencySymbol = currencySymbol;
     }
 
 }
