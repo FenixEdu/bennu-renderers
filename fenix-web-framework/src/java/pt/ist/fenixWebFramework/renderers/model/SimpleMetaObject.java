@@ -57,7 +57,7 @@ public class SimpleMetaObject extends MetaObject {
                 try {
                     setProperty(slot, value);
                 } catch (Exception e) {
-                    throw new RuntimeException("could not write property '" + slot.getName() + "' in object " + getObject());
+                    throw new RuntimeException("could not write property '" + slot.getName() + "' in object " + getObject(), e);
                 } 
             }
         }
