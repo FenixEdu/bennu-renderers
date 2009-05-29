@@ -1,8 +1,13 @@
 package pt.ist.fenixWebFramework.renderers;
 
+import org.apache.commons.collections.Predicate;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlHiddenField;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
+import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
+import pt.ist.fenixWebFramework.renderers.components.HtmlListItem;
+import pt.ist.fenixWebFramework.renderers.components.HtmlRadioButton;
 import pt.ist.fenixWebFramework.renderers.components.HtmlRadioButtonList;
 import pt.ist.fenixWebFramework.renderers.components.controllers.HtmlController;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
@@ -40,9 +45,7 @@ public class RadioButtonListRendererWithPostback extends RadioButtonListRenderer
 
     @Override
     protected Layout getLayout(Object object, Class type) {
-	final Layout layout = super.getLayout(object, type);
-
-	return layout;
+	return new RadioButtonListLayoutWithPostback();
     }
 
     class RadioButtonListLayoutWithPostback extends RadioButtonListLayout {
@@ -56,13 +59,29 @@ public class RadioButtonListRendererWithPostback extends RadioButtonListRenderer
 	    HtmlHiddenField hidden = new HtmlHiddenField(prefix + HIDDEN_NAME, "");
 
 	    final HtmlRadioButtonList htmlComponent = (HtmlRadioButtonList) super.createComponent(object, type);
-	    htmlComponent.setOnClick("this.form." + prefix + HIDDEN_NAME + ".value='true';this.form.submit();");
+	    for (final HtmlRadioButton radioButton : htmlComponent.getRadioButtons()) {
+		radioButton.setOnClick("this.form." + prefix + HIDDEN_NAME + ".value='true';this.form.submit();");
+	    }
 	    htmlComponent.setController(new PostBackController(hidden, destination));
 
 	    container.addChild(hidden);
 	    container.addChild(htmlComponent);
 
 	    return container;
+	}
+
+	@Override
+	public void applyStyle(HtmlComponent component) {
+	    HtmlInlineContainer container = (HtmlInlineContainer) component;
+	    HtmlComponent list = container.getChild(new Predicate() {
+
+		@Override
+		public boolean evaluate(Object arg0) {
+		    return arg0 instanceof HtmlRadioButtonList;
+		}
+
+	    });
+	    super.applyStyle(list);
 	}
     }
 
