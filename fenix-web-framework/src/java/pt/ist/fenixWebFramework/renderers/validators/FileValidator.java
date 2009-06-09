@@ -65,7 +65,7 @@ public class FileValidator extends HtmlValidator {
     }
 
     public String getAcceptedTypes() {
-	return this.acceptedTypes.toLowerCase();
+	return this.acceptedTypes != null ? this.acceptedTypes.toLowerCase() : null;
     }
 
     /**
