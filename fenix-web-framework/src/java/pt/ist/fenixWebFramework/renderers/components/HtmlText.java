@@ -94,6 +94,7 @@ public class HtmlText extends HtmlComponent {
 	    	case EMPHASIS:   return "em";
 	    	case STRONG:     return "strong";
 	    	case MONOSPACED: return "tt";
+	    	case PARAGRAPH:	 return "p";
 	    	case H1:         return "h1";
 	    	case H2:         return "h2";
 	    	case H3:         return "h3";
