@@ -128,11 +128,11 @@ public class DomainMetaObject extends SimpleMetaObject {
 	                    throw (RuntimeException) e.getCause();
 	                }
 	            } catch (IllegalAccessException e) {
-	        	throw new Error();
+	        	throw new Error(e);
 		    } catch (NoSuchMethodException e) {
-			throw new Error();
+			throw new Error(e);
 		    } catch (InstantiationException e) {
-			throw new Error();
+			throw new Error(e);
 		    }
 	        }
 	        
