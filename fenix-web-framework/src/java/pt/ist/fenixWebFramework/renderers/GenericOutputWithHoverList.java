@@ -119,7 +119,9 @@ public class GenericOutputWithHoverList extends AbstractToolTipRenderer {
 		    inlineContainer.addChild(counterContainer);
 		}
 
-		inlineContainer.addChild(new HtmlText(": "));
+		if (getPrefix() != null | isCounterEnabled()) {
+		    inlineContainer.addChild(new HtmlText(": "));
+		}
 
 		inlineContainer.addChild(new HtmlText(RenderUtils.getFormattedProperties(getListFormat(), objectInList),
 			isEscape()));
