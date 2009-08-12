@@ -288,7 +288,7 @@ public class OrderableCollectionRenderer extends CollectionRenderer {
 			component = wrapComponent(link, false);
 		    }
 
-		    return link;
+		    return component;
 		} else {
 		    return new HtmlText();
 		}
