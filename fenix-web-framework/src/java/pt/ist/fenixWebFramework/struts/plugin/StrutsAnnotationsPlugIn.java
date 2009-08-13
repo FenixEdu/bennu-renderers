@@ -85,6 +85,8 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
 	    if (StringUtils.isEmpty(mapping.input())) {
 		actionMapping.setInput(findInputMethod(actionClass, mapping));
+	    } else {
+		actionMapping.setInput(mapping.input());
 	    }
 
 	    Forwards forwards = (Forwards) actionClass.getAnnotation(Forwards.class);
