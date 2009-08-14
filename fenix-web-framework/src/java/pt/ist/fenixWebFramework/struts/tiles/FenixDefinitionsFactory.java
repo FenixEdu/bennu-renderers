@@ -22,16 +22,22 @@ import org.apache.struts.tiles.xmlDefinition.I18nFactorySet;
  */
 public class FenixDefinitionsFactory extends I18nFactorySet {
 
+    private static final String DEFAULT_MODULE = "-defaultModule";
+
     private ComponentDefinition defaultModuleDefinition;
 
     private String defaultModuleDefinitionName;
 
-    private Map<String, ComponentDefinition> definitionsCache = new HashMap<String, ComponentDefinition>();
+    private final Map<String, ComponentDefinition> definitionsCache = new HashMap<String, ComponentDefinition>();
 
-    static private Set<String> definitionsToProcessNames = new HashSet<String>();
+    static private Map<String, String> forwardsUsingDefaultModule = new HashMap<String, String>();
 
-    static public void addDefinitionName(String name) {
-	definitionsToProcessNames.add(name);
+    static public String createDefinition(String forward) {
+	String defaultTileName = forward + DEFAULT_MODULE;
+	if (!forwardsUsingDefaultModule.containsKey(defaultTileName)) {
+	    forwardsUsingDefaultModule.put(defaultTileName, forward);
+	}
+	return defaultTileName;
     }
 
     @Override
@@ -42,10 +48,10 @@ public class FenixDefinitionsFactory extends I18nFactorySet {
     }
 
     @Override
-    public ComponentDefinition getDefinition(String name, ServletRequest request, ServletContext servletContext)
+    public ComponentDefinition getDefinition(String tileName, ServletRequest request, ServletContext servletContext)
 	    throws NoSuchDefinitionException, DefinitionsFactoryException {
 
-	if (definitionsToProcessNames.contains(name)) {
+	if (forwardsUsingDefaultModule.containsKey(tileName)) {
 
 	    // init default definition
 	    if (defaultModuleDefinition == null) {
@@ -60,22 +66,21 @@ public class FenixDefinitionsFactory extends I18nFactorySet {
 	    if (processedTiles == null) {
 		processedTiles = new HashSet<String>();
 		request.setAttribute("__processedTiles", processedTiles);
-	    } else if (processedTiles.contains(name)) {
+	    } else if (processedTiles.contains(tileName)) {
 		return null;
 	    }
-	    processedTiles.add(name);
+	    processedTiles.add(tileName);
 
-	    if (definitionsCache.containsKey(name)) {
-		return definitionsCache.get(name);
+	    if (definitionsCache.containsKey(tileName)) {
+		return definitionsCache.get(tileName);
 	    }
 
 	    ComponentDefinition componentDefinition = new ComponentDefinition(defaultModuleDefinition);
-	    componentDefinition.putAttribute("body", name);
-	    definitionsCache.put(name, componentDefinition);
+	    componentDefinition.putAttribute("body", forwardsUsingDefaultModule.get(tileName));
+	    definitionsCache.put(tileName, componentDefinition);
 	    return componentDefinition;
 	}
 
-	return super.getDefinition(name, request, servletContext);
+	return super.getDefinition(tileName, request, servletContext);
     }
-
 }

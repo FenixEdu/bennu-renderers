@@ -86,16 +86,24 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	    if (StringUtils.isEmpty(mapping.input())) {
 		actionMapping.setInput(findInputMethod(actionClass, mapping));
 	    } else {
-		actionMapping.setInput(mapping.input());
+		if (mapping.input().endsWith(".jsp")) {
+		    String tileName = FenixDefinitionsFactory.createDefinition(mapping.input());
+		    actionMapping.setInput(tileName);
+		} else {
+		    actionMapping.setInput(mapping.input());
+		}
 	    }
 
 	    Forwards forwards = (Forwards) actionClass.getAnnotation(Forwards.class);
 	    if (forwards != null) {
 		for (final Forward forward : forwards.value()) {
-		    actionMapping.addForwardConfig(new ActionForward(forward.name(), forward.path(), forward.redirect(), forward
-			    .contextRelative()));
 		    if (forward.useTile() && forward.path().endsWith(".jsp")) {
-			FenixDefinitionsFactory.addDefinitionName(forward.path());
+			String tileName = FenixDefinitionsFactory.createDefinition(forward.path());
+			actionMapping.addForwardConfig(new ActionForward(forward.name(), tileName, forward.redirect(), forward
+				.contextRelative()));
+		    } else {
+			actionMapping.addForwardConfig(new ActionForward(forward.name(), forward.path(), forward.redirect(),
+				forward.contextRelative()));
 		    }
 		}
 	    }
