@@ -53,11 +53,15 @@ public class RequestChecksumFilter implements Filter {
 		if (httpSession != null) {
 		    httpSession.invalidate();
 		}
-		response.sendRedirect(FenixWebFramework.getConfig().getTamperingRedirect());
+		redirectByTampering(request,response);
 	    }
 	} else {
 	    filterChain.doFilter(servletRequest, servletResponse);
 	}
+    }
+
+    protected void redirectByTampering(HttpServletRequest request, final HttpServletResponse response) throws IOException {
+	response.sendRedirect(FenixWebFramework.getConfig().getTamperingRedirect());
     }
 
     private void applyFilter(final ServletRequest servletRequest, final ServletResponse servletResponse,
