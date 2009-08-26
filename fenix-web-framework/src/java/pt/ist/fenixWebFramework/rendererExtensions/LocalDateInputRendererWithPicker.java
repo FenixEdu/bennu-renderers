@@ -34,7 +34,7 @@ public class LocalDateInputRendererWithPicker extends DateInputRendererWithPicke
 	    public Object convert(Class type, Object value) {
 		Date date = (Date) dateConverter.convert(type, value);
 
-		return new LocalDate(date);
+		return date == null ? null : new LocalDate(date);
 	    }
 
 	};
