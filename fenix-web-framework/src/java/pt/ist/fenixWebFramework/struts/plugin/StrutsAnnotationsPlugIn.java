@@ -6,6 +6,7 @@ package pt.ist.fenixWebFramework.struts.plugin;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,9 +46,12 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
     private static final String EXCEPTION_KEY_DEFAULT_PREFIX = "resources.Action.exceptions.";
 
+    private static final String[] UPPER_BOUND_SUPERCLASSES = { "FenixDispatchAction", "FenixAction", "DispatchAction", "Action",
+	    "Object" };
+
     private static boolean initialized = false;
 
-    private static final Set<Class> actionClasses = new HashSet<Class>();
+    private static final Set<Class<?>> actionClasses = new HashSet<Class<?>>();
 
     public void destroy() {
     }
@@ -61,8 +65,8 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
 	final String modulePrefix = config.getPrefix().startsWith("/") ? config.getPrefix().substring(1) : config.getPrefix();
 
-	for (Class actionClass : actionClasses) {
-	    Mapping mapping = (Mapping) actionClass.getAnnotation(Mapping.class);
+	for (Class<?> actionClass : actionClasses) {
+	    Mapping mapping = actionClass.getAnnotation(Mapping.class);
 	    if (mapping == null || !modulePrefix.equals(mapping.module())) {
 		continue;
 	    }
@@ -86,29 +90,18 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	    if (StringUtils.isEmpty(mapping.input())) {
 		actionMapping.setInput(findInputMethod(actionClass, mapping));
 	    } else {
-		if (mapping.input().endsWith(".jsp")) {
-		    String tileName = FenixDefinitionsFactory.createDefinition(mapping.input());
-		    actionMapping.setInput(tileName);
-		} else {
-		    actionMapping.setInput(mapping.input());
-		}
+		registerInput(actionMapping, mapping.input());
 	    }
 
-	    Forwards forwards = (Forwards) actionClass.getAnnotation(Forwards.class);
+	    Forwards forwards = actionClass.getAnnotation(Forwards.class);
 	    if (forwards != null) {
 		for (final Forward forward : forwards.value()) {
-		    if (forward.useTile() && forward.path().endsWith(".jsp")) {
-			String tileName = FenixDefinitionsFactory.createDefinition(forward.path());
-			actionMapping.addForwardConfig(new ActionForward(forward.name(), tileName, forward.redirect(), forward
-				.contextRelative()));
-		    } else {
-			actionMapping.addForwardConfig(new ActionForward(forward.name(), forward.path(), forward.redirect(),
-				forward.contextRelative()));
-		    }
+		    registerForward(actionMapping, forward);
 		}
 	    }
+	    registerSuperclassForwards(actionMapping, actionClass.getSuperclass());
 
-	    Exceptions exceptions = (Exceptions) actionClass.getAnnotation(Exceptions.class);
+	    Exceptions exceptions = actionClass.getAnnotation(Exceptions.class);
 	    if (exceptions != null) {
 		for (Class<? extends Exception> exClass : exceptions.value()) {
 		    final ExceptionConfig exceptionConfig = new ExceptionConfig();
@@ -128,6 +121,45 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
     }
 
+    private void registerSuperclassForwards(final ActionMapping actionMapping, Class<?> superclass) {
+	if (Arrays.asList(UPPER_BOUND_SUPERCLASSES).contains(superclass.getSimpleName())) {
+	    return;
+	}
+	System.out.println("Checking superclass \"" + superclass.getSimpleName() + "\" for forwards");
+	Forwards forwards = superclass.getAnnotation(Forwards.class);
+	if (forwards == null) {
+	    return;
+	}
+	for (final Forward forward : forwards.value()) {
+	    try {
+		actionMapping.findForward(forward.name());
+	    } catch (NullPointerException ex) {
+		registerForward(actionMapping, forward);
+	    }
+	}
+	registerSuperclassForwards(actionMapping, superclass.getSuperclass());
+    }
+
+    private void registerInput(final ActionMapping actionMapping, String input) {
+	if (input.endsWith(".jsp")) {
+	    String tileName = FenixDefinitionsFactory.createDefinition(input);
+	    actionMapping.setInput(tileName);
+	} else {
+	    actionMapping.setInput(input);
+	}
+    }
+
+    private void registerForward(final ActionMapping actionMapping, final Forward forward) {
+	if (forward.useTile() && forward.path().endsWith(".jsp")) {
+	    String tileName = FenixDefinitionsFactory.createDefinition(forward.path());
+	    actionMapping.addForwardConfig(new ActionForward(forward.name(), tileName, forward.redirect(), forward
+		    .contextRelative()));
+	} else {
+	    actionMapping.addForwardConfig(new ActionForward(forward.name(), forward.path(), forward.redirect(), forward
+		    .contextRelative()));
+	}
+    }
+
     private void createFormBeanConfigIfNecessary(ModuleConfig config, Mapping mapping, final String formName) {
 	FormBeanConfig formBeanConfig = config.findFormBeanConfig(formName);
 	if (formBeanConfig == null) {
@@ -138,7 +170,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	}
     }
 
-    private String findInputMethod(Class actionClass, Mapping mapping) {
+    private String findInputMethod(Class<?> actionClass, Mapping mapping) {
 	for (Method method : actionClass.getMethods()) {
 	    final Input input = method.getAnnotation(Input.class);
 	    if (input != null) {
@@ -148,7 +180,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	return mapping.path() + INPUT_DEFAULT_PAGE_AND_METHOD;
     }
 
-    private void loadActionsFromFile(final Set<Class> actionClasses) {
+    private void loadActionsFromFile(final Set<Class<?>> actionClasses) {
 	final InputStream inputStream = getClass().getResourceAsStream("/.actionAnnotationLog");
 	if (inputStream != null) {
 	    try {
@@ -156,7 +188,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 		for (final String classname : contents.split(ActionAnnotationProcessor.ENTRY_SEPERATOR)) {
 		    try {
 			ClassLoader loader = Thread.currentThread().getContextClassLoader();
-			Class type = loader.loadClass(classname);
+			Class<?> type = loader.loadClass(classname);
 			actionClasses.add(type);
 		    } catch (final ClassNotFoundException e) {
 			e.printStackTrace();
