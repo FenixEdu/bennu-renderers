@@ -125,7 +125,6 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	if (Arrays.asList(UPPER_BOUND_SUPERCLASSES).contains(superclass.getSimpleName())) {
 	    return;
 	}
-	System.out.println("Checking superclass \"" + superclass.getSimpleName() + "\" for forwards");
 	Forwards forwards = superclass.getAnnotation(Forwards.class);
 	if (forwards == null) {
 	    return;
