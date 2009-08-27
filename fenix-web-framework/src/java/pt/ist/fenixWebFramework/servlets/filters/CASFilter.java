@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.Config.CasConfig;
+import sun.security.util.PendingException;
 
 /**
  * 
@@ -23,7 +24,7 @@ import pt.ist.fenixWebFramework.Config.CasConfig;
  */
 public class CASFilter implements Filter {
 
-    private static final String URL_ENCODING = "UTF-8";
+    protected static final String URL_ENCODING = "UTF-8";
 
     public void init(final FilterConfig config) throws ServletException {
     }
@@ -58,16 +59,16 @@ public class CASFilter implements Filter {
 	return ticket == null || ticket.equals("");
     }
 
-    protected String encodeUrl(final CasConfig casConfig) throws UnsupportedEncodingException {
-	return URLEncoder.encode(casConfig.getServiceUrl(), URL_ENCODING);
+    protected String encodeUrl(final String casUrl) throws UnsupportedEncodingException {
+	return URLEncoder.encode(casUrl, URL_ENCODING);
     }
-
+    
     /**
      * Redirects the user to CAS, determining the service from the request.
      */
-    private void redirectToCAS(final CasConfig casConfig, final HttpServletRequest request, final HttpServletResponse response)
+    protected void redirectToCAS(final CasConfig casConfig, final HttpServletRequest request, final HttpServletResponse response)
     		throws IOException, ServletException {
-	final String serviceString = encodeUrl(casConfig);
+	final String serviceString = encodeUrl(casConfig.getServiceUrl());
 	final String casLoginUrl = casConfig.getCasLoginUrl();
 	final String casLoginString = casLoginUrl + "?service=" + serviceString;
 	response.sendRedirect(casLoginString);
