@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -46,8 +47,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
     private static final String EXCEPTION_KEY_DEFAULT_PREFIX = "resources.Action.exceptions.";
 
-    private static final String[] UPPER_BOUND_SUPERCLASSES = { "FenixDispatchAction", "FenixAction", "DispatchAction", "Action",
-	    "Object" };
+    private static final List<String> UPPER_BOUND_SUPERCLASSES = Arrays.asList("DispatchAction", "Action", "Object");
 
     private static boolean initialized = false;
 
@@ -122,7 +122,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
     }
 
     private void registerSuperclassForwards(final ActionMapping actionMapping, Class<?> superclass) {
-	if (Arrays.asList(UPPER_BOUND_SUPERCLASSES).contains(superclass.getSimpleName())) {
+	if (UPPER_BOUND_SUPERCLASSES.contains(superclass.getSimpleName())) {
 	    return;
 	}
 	Forwards forwards = superclass.getAnnotation(Forwards.class);
@@ -133,6 +133,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	    try {
 		actionMapping.findForward(forward.name());
 	    } catch (NullPointerException ex) {
+		// Forward wasn't registered in any subclass, so register it.
 		registerForward(actionMapping, forward);
 	    }
 	}
@@ -141,7 +142,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
     private void registerInput(final ActionMapping actionMapping, String input) {
 	if (input.endsWith(".jsp")) {
-	    String tileName = FenixDefinitionsFactory.createDefinition(input);
+	    String tileName = FenixDefinitionsFactory.registerDefinition(input);
 	    actionMapping.setInput(tileName);
 	} else {
 	    actionMapping.setInput(input);
@@ -150,7 +151,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
     private void registerForward(final ActionMapping actionMapping, final Forward forward) {
 	if (forward.useTile() && forward.path().endsWith(".jsp")) {
-	    String tileName = FenixDefinitionsFactory.createDefinition(forward.path());
+	    String tileName = FenixDefinitionsFactory.registerDefinition(forward.path(), forward.extend());
 	    actionMapping.addForwardConfig(new ActionForward(forward.name(), tileName, forward.redirect(), forward
 		    .contextRelative()));
 	} else {

@@ -20,8 +20,10 @@ public @interface Forward {
 
     String path();
 
+    String extend() default "";
+
     boolean redirect() default false;
-    
+
     boolean contextRelative() default false;
 
     boolean useTile() default true;

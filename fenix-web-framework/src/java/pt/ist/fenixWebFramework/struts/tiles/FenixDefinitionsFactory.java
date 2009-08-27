@@ -22,7 +22,27 @@ import org.apache.struts.tiles.xmlDefinition.I18nFactorySet;
  */
 public class FenixDefinitionsFactory extends I18nFactorySet {
 
-    private static final String DEFAULT_MODULE = "-defaultModule";
+    private static class PartialTileDefinition {
+	private final String forward;
+
+	private final String superTile;
+
+	public PartialTileDefinition(String forward, String superTile) {
+	    this.forward = forward;
+	    this.superTile = superTile;
+	}
+
+	public String getForward() {
+	    return forward;
+	}
+
+	public String getSuperTile() {
+	    return superTile;
+	}
+
+    }
+
+    private static final String DEFAULT_MODULE = "defaultModule";
 
     private ComponentDefinition defaultModuleDefinition;
 
@@ -32,27 +52,55 @@ public class FenixDefinitionsFactory extends I18nFactorySet {
 
     static private Map<String, String> forwardsUsingDefaultModule = new HashMap<String, String>();
 
-    static public String createDefinition(String forward) {
-	String defaultTileName = forward + DEFAULT_MODULE;
+    static private Map<String, PartialTileDefinition> forwardsUsingCustomTile = new HashMap<String, PartialTileDefinition>();
+
+    static public String registerDefinition(String forward) {
+	String defaultTileName = forward + "-" + DEFAULT_MODULE;
 	if (!forwardsUsingDefaultModule.containsKey(defaultTileName)) {
 	    forwardsUsingDefaultModule.put(defaultTileName, forward);
 	}
 	return defaultTileName;
     }
 
+    static public String registerDefinition(String forward, String superTile) {
+	if ((superTile == null) || (superTile.isEmpty())) {
+	    return registerDefinition(forward);
+	}
+	String customTileName = forward + "+" + superTile;
+	if (!forwardsUsingCustomTile.containsKey(customTileName)) {
+	    PartialTileDefinition customTile = new PartialTileDefinition(forward, superTile);
+	    forwardsUsingCustomTile.put(customTileName, customTile);
+	}
+	return customTileName;
+    }
+
     @Override
     public void initFactory(ServletContext servletContext, Map properties) throws DefinitionsFactoryException {
 	this.defaultModuleDefinitionName = (String) properties.get("defaultTileDefinition");
 	super.initFactory(servletContext, properties);
-
     }
 
     @Override
     public ComponentDefinition getDefinition(String tileName, ServletRequest request, ServletContext servletContext)
 	    throws NoSuchDefinitionException, DefinitionsFactoryException {
 
-	if (forwardsUsingDefaultModule.containsKey(tileName)) {
+	Set<String> processedTiles = (Set<String>) request.getAttribute("__processedTiles");
+	if (processedTiles == null) {
+	    processedTiles = new HashSet<String>();
+	    request.setAttribute("__processedTiles", processedTiles);
+	} else if (processedTiles.contains(tileName)) {
+	    return null;
+	}
+	processedTiles.add(tileName);
+	// No effect. Isn't this line missing?
+	// request.setAttribute("__processedTiles", processedTiles);
+	// If so, wouldn't the following cache be useless?
 
+	if (definitionsCache.containsKey(tileName)) {
+	    return definitionsCache.get(tileName);
+	}
+
+	if (forwardsUsingDefaultModule.containsKey(tileName)) {
 	    // init default definition
 	    if (defaultModuleDefinition == null) {
 		if (defaultModuleDefinitionName != null) {
@@ -62,25 +110,26 @@ public class FenixDefinitionsFactory extends I18nFactorySet {
 		}
 	    }
 
-	    Set<String> processedTiles = (Set<String>) request.getAttribute("__processedTiles");
-	    if (processedTiles == null) {
-		processedTiles = new HashSet<String>();
-		request.setAttribute("__processedTiles", processedTiles);
-	    } else if (processedTiles.contains(tileName)) {
-		return null;
-	    }
-	    processedTiles.add(tileName);
+	    return createComponentDefinition(tileName, forwardsUsingDefaultModule.get(tileName), defaultModuleDefinition);
+	}
 
-	    if (definitionsCache.containsKey(tileName)) {
-		return definitionsCache.get(tileName);
+	if (forwardsUsingCustomTile.containsKey(tileName)) {
+	    PartialTileDefinition customTile = forwardsUsingCustomTile.get(tileName);
+	    ComponentDefinition superComponent = super.getDefinition(customTile.getSuperTile(), request, servletContext);
+	    if (superComponent == null) {
+		throw new NoSuchDefinitionException();
 	    }
 
-	    ComponentDefinition componentDefinition = new ComponentDefinition(defaultModuleDefinition);
-	    componentDefinition.putAttribute("body", forwardsUsingDefaultModule.get(tileName));
-	    definitionsCache.put(tileName, componentDefinition);
-	    return componentDefinition;
+	    return createComponentDefinition(tileName, customTile.getForward(), superComponent);
 	}
 
 	return super.getDefinition(tileName, request, servletContext);
+    }
+
+    private ComponentDefinition createComponentDefinition(String tileName, String body, ComponentDefinition superComponent) {
+	ComponentDefinition componentDefinition = new ComponentDefinition(superComponent);
+	componentDefinition.putAttribute("body", body);
+	definitionsCache.put(tileName, componentDefinition);
+	return componentDefinition;
     }
 }
