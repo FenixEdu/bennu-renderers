@@ -96,7 +96,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	    Forwards forwards = actionClass.getAnnotation(Forwards.class);
 	    if (forwards != null) {
 		for (final Forward forward : forwards.value()) {
-		    registerForward(actionMapping, forward);
+		    registerForward(actionMapping, forward, forwards.extend());
 		}
 	    }
 	    registerSuperclassForwards(actionMapping, actionClass.getSuperclass());
@@ -134,7 +134,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 		actionMapping.findForward(forward.name());
 	    } catch (NullPointerException ex) {
 		// Forward wasn't registered in any subclass, so register it.
-		registerForward(actionMapping, forward);
+		registerForward(actionMapping, forward, forwards.extend());
 	    }
 	}
 	registerSuperclassForwards(actionMapping, superclass.getSuperclass());
@@ -149,9 +149,10 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	}
     }
 
-    private void registerForward(final ActionMapping actionMapping, final Forward forward) {
+    private void registerForward(final ActionMapping actionMapping, final Forward forward, String globalExtend) {
 	if (forward.useTile() && forward.path().endsWith(".jsp")) {
-	    String tileName = FenixDefinitionsFactory.registerDefinition(forward.path(), forward.extend());
+	    String extend = (forward.extend().isEmpty()) ? globalExtend : forward.extend();
+	    String tileName = FenixDefinitionsFactory.registerDefinition(forward.path(), extend);
 	    actionMapping.addForwardConfig(new ActionForward(forward.name(), tileName, forward.redirect(), forward
 		    .contextRelative()));
 	} else {
