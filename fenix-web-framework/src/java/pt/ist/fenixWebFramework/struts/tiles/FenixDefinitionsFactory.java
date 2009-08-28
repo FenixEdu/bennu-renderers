@@ -84,24 +84,20 @@ public class FenixDefinitionsFactory extends I18nFactorySet {
     public ComponentDefinition getDefinition(String tileName, ServletRequest request, ServletContext servletContext)
 	    throws NoSuchDefinitionException, DefinitionsFactoryException {
 
-	Set<String> processedTiles = (Set<String>) request.getAttribute("__processedTiles");
-	if (processedTiles == null) {
-	    processedTiles = new HashSet<String>();
-	    request.setAttribute("__processedTiles", processedTiles);
-	} else if (processedTiles.contains(tileName)) {
-	    return null;
-	}
-	processedTiles.add(tileName);
-	// No effect. Isn't this line missing?
-	// request.setAttribute("__processedTiles", processedTiles);
-	// If so, wouldn't the following cache be useless?
+//	Set<String> processedTiles = (Set<String>) request.getAttribute("__processedTiles");
+//	if (processedTiles == null) {
+//	    processedTiles = new HashSet<String>();
+//	    request.setAttribute("__processedTiles", processedTiles);
+//	} else if (processedTiles.contains(tileName)) {
+//	    return null;
+//	}
+//	processedTiles.add(tileName);
 
 	if (definitionsCache.containsKey(tileName)) {
 	    return definitionsCache.get(tileName);
 	}
 
 	if (forwardsUsingDefaultModule.containsKey(tileName)) {
-	    // init default definition
 	    if (defaultModuleDefinition == null) {
 		if (defaultModuleDefinitionName != null) {
 		    defaultModuleDefinition = super.getDefinition(defaultModuleDefinitionName, request, servletContext);
