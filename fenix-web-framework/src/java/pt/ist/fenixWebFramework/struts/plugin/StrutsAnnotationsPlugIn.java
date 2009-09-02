@@ -33,6 +33,7 @@ import pt.ist.fenixWebFramework.struts.annotations.Forwards;
 import pt.ist.fenixWebFramework.struts.annotations.Input;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixWebFramework.struts.tiles.FenixDefinitionsFactory;
+import pt.ist.fenixWebFramework.struts.tiles.PartialTileDefinition;
 import pt.utl.ist.fenix.tools.util.FileUtils;
 
 /**
@@ -96,7 +97,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	    Forwards forwards = actionClass.getAnnotation(Forwards.class);
 	    if (forwards != null) {
 		for (final Forward forward : forwards.value()) {
-		    registerForward(actionMapping, forward, forwards.extend());
+		    registerForward(actionMapping, forward, forwards);
 		}
 	    }
 	    registerSuperclassForwards(actionMapping, actionClass.getSuperclass());
@@ -134,7 +135,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 		actionMapping.findForward(forward.name());
 	    } catch (NullPointerException ex) {
 		// Forward wasn't registered in any subclass, so register it.
-		registerForward(actionMapping, forward, forwards.extend());
+		registerForward(actionMapping, forward, forwards);
 	    }
 	}
 	registerSuperclassForwards(actionMapping, superclass.getSuperclass());
@@ -142,19 +143,20 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
     private void registerInput(final ActionMapping actionMapping, String input) {
 	if (input.endsWith(".jsp")) {
-	    String tileName = FenixDefinitionsFactory.registerDefinition(input);
-	    actionMapping.setInput(tileName);
+	    PartialTileDefinition tileDefinition = new PartialTileDefinition(input);
+	    FenixDefinitionsFactory.registerDefinition(tileDefinition);
+	    actionMapping.setInput(tileDefinition.getName());
 	} else {
 	    actionMapping.setInput(input);
 	}
     }
 
-    private void registerForward(final ActionMapping actionMapping, final Forward forward, String globalExtend) {
+    private void registerForward(final ActionMapping actionMapping, final Forward forward, Forwards forwards) {
 	if (forward.useTile() && forward.path().endsWith(".jsp")) {
-	    String extend = (forward.extend().isEmpty()) ? globalExtend : forward.extend();
-	    String tileName = FenixDefinitionsFactory.registerDefinition(forward.path(), extend);
-	    actionMapping.addForwardConfig(new ActionForward(forward.name(), tileName, forward.redirect(), forward
-		    .contextRelative()));
+	    PartialTileDefinition tileDefinition = new PartialTileDefinition(forward, forwards);
+	    FenixDefinitionsFactory.registerDefinition(tileDefinition);
+	    actionMapping.addForwardConfig(new ActionForward(forward.name(), tileDefinition.getName(), forward.redirect(),
+		    forward.contextRelative()));
 	} else {
 	    actionMapping.addForwardConfig(new ActionForward(forward.name(), forward.path(), forward.redirect(), forward
 		    .contextRelative()));

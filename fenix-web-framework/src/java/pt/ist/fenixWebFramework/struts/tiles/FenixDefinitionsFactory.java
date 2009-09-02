@@ -22,56 +22,18 @@ import org.apache.struts.tiles.xmlDefinition.I18nFactorySet;
  */
 public class FenixDefinitionsFactory extends I18nFactorySet {
 
-    private static class PartialTileDefinition {
-	private final String forward;
-
-	private final String superTile;
-
-	public PartialTileDefinition(String forward, String superTile) {
-	    this.forward = forward;
-	    this.superTile = superTile;
-	}
-
-	public String getForward() {
-	    return forward;
-	}
-
-	public String getSuperTile() {
-	    return superTile;
-	}
-
-    }
-
-    private static final String DEFAULT_MODULE = "defaultModule";
-
     private ComponentDefinition defaultModuleDefinition;
 
     private String defaultModuleDefinitionName;
 
     private final Map<String, ComponentDefinition> definitionsCache = new HashMap<String, ComponentDefinition>();
 
-    static private Map<String, String> forwardsUsingDefaultModule = new HashMap<String, String>();
+    static private Map<String, PartialTileDefinition> partialDefinitions = new HashMap<String, PartialTileDefinition>();
 
-    static private Map<String, PartialTileDefinition> forwardsUsingCustomTile = new HashMap<String, PartialTileDefinition>();
-
-    static public String registerDefinition(String forward) {
-	String defaultTileName = forward + "-" + DEFAULT_MODULE;
-	if (!forwardsUsingDefaultModule.containsKey(defaultTileName)) {
-	    forwardsUsingDefaultModule.put(defaultTileName, forward);
+    static public void registerDefinition(PartialTileDefinition tileDefinition) {
+	if (!partialDefinitions.containsKey(tileDefinition.getName())) {
+	    partialDefinitions.put(tileDefinition.getName(), tileDefinition);
 	}
-	return defaultTileName;
-    }
-
-    static public String registerDefinition(String forward, String superTile) {
-	if ((superTile == null) || (superTile.isEmpty())) {
-	    return registerDefinition(forward);
-	}
-	String customTileName = forward + "+" + superTile;
-	if (!forwardsUsingCustomTile.containsKey(customTileName)) {
-	    PartialTileDefinition customTile = new PartialTileDefinition(forward, superTile);
-	    forwardsUsingCustomTile.put(customTileName, customTile);
-	}
-	return customTileName;
     }
 
     @Override
@@ -97,34 +59,26 @@ public class FenixDefinitionsFactory extends I18nFactorySet {
 	    return definitionsCache.get(tileName);
 	}
 
-	if (forwardsUsingDefaultModule.containsKey(tileName)) {
+	PartialTileDefinition partialTile = partialDefinitions.get(tileName);
+	if (partialTile == null) {
+	    return super.getDefinition(tileName, request, servletContext);
+	}
+
+	ComponentDefinition superComponent;
+	if (partialTile.hasExtend()) {
+	    superComponent = super.getDefinition(partialTile.getExtend(), request, servletContext);
+	} else {
 	    if (defaultModuleDefinition == null) {
-		if (defaultModuleDefinitionName != null) {
-		    defaultModuleDefinition = super.getDefinition(defaultModuleDefinitionName, request, servletContext);
-		} else {
-		    return null;
-		}
+		defaultModuleDefinition = super.getDefinition(defaultModuleDefinitionName, request, servletContext);
 	    }
-
-	    return createComponentDefinition(tileName, forwardsUsingDefaultModule.get(tileName), defaultModuleDefinition);
+	    superComponent = defaultModuleDefinition;
+	}
+	if (superComponent == null) {
+	    throw new NoSuchDefinitionException();
 	}
 
-	if (forwardsUsingCustomTile.containsKey(tileName)) {
-	    PartialTileDefinition customTile = forwardsUsingCustomTile.get(tileName);
-	    ComponentDefinition superComponent = super.getDefinition(customTile.getSuperTile(), request, servletContext);
-	    if (superComponent == null) {
-		throw new NoSuchDefinitionException();
-	    }
-
-	    return createComponentDefinition(tileName, customTile.getForward(), superComponent);
-	}
-
-	return super.getDefinition(tileName, request, servletContext);
-    }
-
-    private ComponentDefinition createComponentDefinition(String tileName, String body, ComponentDefinition superComponent) {
 	ComponentDefinition componentDefinition = new ComponentDefinition(superComponent);
-	componentDefinition.putAttribute("body", body);
+	partialTile.updateComponentDefinition(componentDefinition);
 	definitionsCache.put(tileName, componentDefinition);
 	return componentDefinition;
     }
