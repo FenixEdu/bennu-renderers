@@ -13,11 +13,29 @@
 	<property name="build.home" value="build"/>
 	<property name="deploy.home" location="deploy"/>
 
-	<property name="jar.file" value="${deploy.home}/fenix-web-framework.jar"/>
+	<property name="jar.file" value="${deploy.home}/fenix-web-framework"/>
 
 	<property name="compile.debug"       value="on"/>
 	<property name="compile.deprecation" value="off"/>
 	<property name="compile.optimize"    value="on"/>
+    <property name="svntask.dir" location="lib-devel/svntask"/>
+
+    <target name="version">
+      <typedef resource="com/googlecode/svntask/svntask.xml">
+        <classpath>
+          <fileset dir="${svntask.dir}">
+            <include name="svnkit.jar"/>
+            <include name="svntask.jar"/>
+          </fileset>
+        </classpath>
+      </typedef>
+
+      <!-- Do an update first to make sure you have the latest version -->
+      <!-- svn><update path="." force="true" recursive="true" /></svn -->
+
+      <svn><info path="./" revisionProperty="revisionVersion" /></svn>
+      <property name="svn.version" value="${revisionVersion}" />
+    </target>
 
 	<target name="clean-all" description="Removes any generated files">
 		<delete dir="${build.home}"/>
@@ -44,8 +62,8 @@
 		</javac>
 	</target>
 
-	<target name="jar" depends="compile" description="Generates the jar file">
-		<jar destfile="${jar.file}" basedir="${build.home}"/>
+	<target name="jar" depends="compile, version" description="Generates the jar file">
+		<jar destfile="${jar.file}-r${svn.version}.jar" basedir="${build.home}"/>
 	</target>
 
 </project>
