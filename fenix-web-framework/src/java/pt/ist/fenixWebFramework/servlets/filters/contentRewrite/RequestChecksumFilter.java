@@ -95,48 +95,48 @@ public class RequestChecksumFilter implements Filter {
 	    checksum = (String) httpServletRequest.getAttribute(GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME);
 	}
 	if (!isValidChecksum(httpServletRequest, checksum)) {
-	    if (LogLevel.ERROR) {
-		final User user = UserView.getUser();
-		final String userString = ((user == null) ? "<no user logged in>" : user.getUsername()) + " key : "
-			+ ((user == null) ? "No user" : user.getPrivateConstantForDigestCalculation());
-		final String url = httpServletRequest.getRequestURI() + '?' + httpServletRequest.getQueryString();
-		final StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("Detected url tampering by user: ");
-		stringBuilder.append(userString);
-		stringBuilder.append("\n           url: ");
-		stringBuilder.append(url);
-		stringBuilder.append("\n   decoded url iso-8859-1: ");
-		stringBuilder.append(decodeURL(url, "ISO-8859-1"));
-		stringBuilder.append("\n   decoded url utf-8: ");
-		stringBuilder.append(decodeURL(url, "UTF-8"));
-		stringBuilder.append("\n          from: ");
-		stringBuilder.append(httpServletRequest.getRemoteHost());
-		stringBuilder.append(" (");
-		stringBuilder.append(httpServletRequest.getRemoteAddr());
-		stringBuilder.append(")");
-		for (final Enumeration<String> headerNames = httpServletRequest.getHeaderNames(); headerNames.hasMoreElements();) {
-		    final String name = headerNames.nextElement();
-		    stringBuilder.append("\n        header: ");
-		    stringBuilder.append(name);
-		    stringBuilder.append(" = ");
-		    stringBuilder.append(httpServletRequest.getHeader(name));
-		}
-
-		HttpSession session = httpServletRequest.getSession(false);
-		if (session != null) {
-		    stringBuilder.append("\nSession creation: ");
-		    stringBuilder.append(session.getCreationTime());
-		    stringBuilder.append(" Session Id: ");
-		    stringBuilder.append(session.getId());
-		    stringBuilder.append(" Max inactive time: ");
-		    stringBuilder.append(session.getMaxInactiveInterval());
-		    stringBuilder.append(" Last time access: ");
-		    stringBuilder.append(session.getLastAccessedTime());
-		    stringBuilder.append(" Current time: ");
-		    stringBuilder.append(System.currentTimeMillis());
-		}
-		System.out.println(stringBuilder.toString());
-	    }
+//	    if (LogLevel.ERROR) {
+//		final User user = UserView.getUser();
+//		final String userString = ((user == null) ? "<no user logged in>" : user.getUsername()) + " key : "
+//			+ ((user == null) ? "No user" : user.getPrivateConstantForDigestCalculation());
+//		final String url = httpServletRequest.getRequestURI() + '?' + httpServletRequest.getQueryString();
+//		final StringBuilder stringBuilder = new StringBuilder();
+//		stringBuilder.append("Detected url tampering by user: ");
+//		stringBuilder.append(userString);
+//		stringBuilder.append("\n           url: ");
+//		stringBuilder.append(url);
+//		stringBuilder.append("\n   decoded url iso-8859-1: ");
+//		stringBuilder.append(decodeURL(url, "ISO-8859-1"));
+//		stringBuilder.append("\n   decoded url utf-8: ");
+//		stringBuilder.append(decodeURL(url, "UTF-8"));
+//		stringBuilder.append("\n          from: ");
+//		stringBuilder.append(httpServletRequest.getRemoteHost());
+//		stringBuilder.append(" (");
+//		stringBuilder.append(httpServletRequest.getRemoteAddr());
+//		stringBuilder.append(")");
+//		for (final Enumeration<String> headerNames = httpServletRequest.getHeaderNames(); headerNames.hasMoreElements();) {
+//		    final String name = headerNames.nextElement();
+//		    stringBuilder.append("\n        header: ");
+//		    stringBuilder.append(name);
+//		    stringBuilder.append(" = ");
+//		    stringBuilder.append(httpServletRequest.getHeader(name));
+//		}
+//
+//		HttpSession session = httpServletRequest.getSession(false);
+//		if (session != null) {
+//		    stringBuilder.append("\nSession creation: ");
+//		    stringBuilder.append(session.getCreationTime());
+//		    stringBuilder.append(" Session Id: ");
+//		    stringBuilder.append(session.getId());
+//		    stringBuilder.append(" Max inactive time: ");
+//		    stringBuilder.append(session.getMaxInactiveInterval());
+//		    stringBuilder.append(" Last time access: ");
+//		    stringBuilder.append(session.getLastAccessedTime());
+//		    stringBuilder.append(" Current time: ");
+//		    stringBuilder.append(System.currentTimeMillis());
+//		}
+//		System.out.println(stringBuilder.toString());
+//	    }
 	    throw new UrlTamperingException();
 	}
     }
