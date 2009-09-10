@@ -62,6 +62,7 @@ public class I18NFilter implements Filter {
             locale = localeFromSession == null ? Language.getDefaultLocale() : localeFromSession;
         }
 
+        setRequestReconstructor(request);
         setLocale(request, httpSession, locale);
         filterChain.doFilter(request, response);
     }
@@ -83,6 +84,10 @@ public class I18NFilter implements Filter {
         httpServletRequest.removeAttribute(Globals.LOCALE_KEY);
         httpServletRequest.setAttribute(Globals.LOCALE_KEY, locale);
         Language.setLocale(locale);	
+    }
+
+    private void setRequestReconstructor(final HttpServletRequest request) {
+	request.setAttribute("requestReconstructor", new RequestReconstructor(request));
     }
 
 }
