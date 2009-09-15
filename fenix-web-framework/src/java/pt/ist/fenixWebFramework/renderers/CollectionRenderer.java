@@ -17,6 +17,7 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
+import pt.ist.fenixWebFramework.renderers.components.HtmlTable;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTableCell;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
@@ -149,6 +150,8 @@ public class CollectionRenderer extends OutputRenderer {
     private String linkGroupSeparator;
 
     private boolean rowForLinks;
+
+    private Boolean renderCompliantTable = Boolean.FALSE;
 
     public CollectionRenderer() {
 	super();
@@ -841,6 +844,14 @@ public class CollectionRenderer extends OutputRenderer {
 	return getColumnCss(name).getStyleClass();
     }
 
+    public Boolean getRenderCompliantTable() {
+	return renderCompliantTable;
+    }
+
+    public void setRenderCompliantTable(Boolean renderCompliantTable) {
+	this.renderCompliantTable = renderCompliantTable;
+    }
+
     public List<ColumnCss> getColumnCssFor(int columnIndex) {
 	List<ColumnCss> csses = new ArrayList<ColumnCss>();
 	for (ColumnCss columnCss : this.columnCss.values()) {
@@ -904,6 +915,10 @@ public class CollectionRenderer extends OutputRenderer {
 	@Override
 	public HtmlComponent createLayout(Object object, Class type) {
 	    HtmlComponent component = super.createLayout(object, type);
+
+	    if (component instanceof HtmlTable) {
+		((HtmlTable) component).setRenderCompliantTable(getRenderCompliantTable());
+	    }
 
 	    if (isConfirmationUsed()) {
 		HtmlBlockContainer container = new HtmlBlockContainer();
