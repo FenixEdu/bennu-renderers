@@ -68,7 +68,7 @@ public class DateInputRendererWithPicker extends DateInputRenderer {
     protected HtmlInlineContainer getCalendarScript(String inputId) {
 	HtmlInlineContainer container = new HtmlInlineContainer();
 
-	String scriptText = "$(function() { $(\"input#" + escapeId(inputId) + "\").datepicker({showOn: 'button', buttonImage: '" + getImage()
+	String scriptText = "$(function() { $(\"input#" + RenderUtils.escapeId(inputId) + "\").datepicker({showOn: 'button', buttonImage: '" + getImage()
 		+ "', buttonImageOnly: true, firstDay: 1, currentText: '"
 		+ RenderUtils.getResourceString("RENDERER_RESOURCES", "renderers.datePicker.currentText") + 
 				"', monthNames: "
@@ -92,9 +92,6 @@ public class DateInputRendererWithPicker extends DateInputRenderer {
 	container.addChild(script);
     }
 
-    private String escapeId(String textFieldId) {
-	return textFieldId.replace(".", "\\\\.").replaceAll(":", "\\\\\\\\:");
-    }
 
     protected String getInputFormatForCalendar() {
 	Locale locale = getLocale();

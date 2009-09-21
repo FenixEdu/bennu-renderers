@@ -2,6 +2,8 @@ package pt.ist.fenixWebFramework.renderers.validators;
 
 import org.apache.commons.lang.StringUtils;
 
+import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 public class NumberValidator extends HtmlValidator {
@@ -50,5 +52,16 @@ public class NumberValidator extends HtmlValidator {
 		setValid(false);
 	    }
 	}
+    }
+
+    @Override
+    public boolean hasJavascriptSupport() {
+	return true;
+    }
+
+    @Override
+    protected String getSpecificValidatorScript(String componentId) {
+	return "$(\"#" + componentId + "\").blur(" + "function() { var text = $(this).attr('value');"
+		+ "if(text.length > 0 && !text.search(/^[0-9]+$/) == 0) {" + invalidOutput() + "}});";
     }
 }

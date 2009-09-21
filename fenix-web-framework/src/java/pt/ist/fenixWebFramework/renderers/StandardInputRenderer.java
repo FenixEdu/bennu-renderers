@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlImage;
+import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTable;
@@ -22,6 +24,7 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
+import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 
 /**
  * This renderer provides a simple way of editing objects. A table is used to
@@ -31,7 +34,8 @@ import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
  * the rightmost column validation errors are presented.
  * 
  * <p>
- * Example: <table border="1">
+ * Example:
+ * <table border="1">
  * <tr>
  * <th>Name</th>
  * <td><input type="text"/></td>
@@ -44,8 +48,8 @@ import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
  * </tr>
  * <tr>
  * <th>Gender</th>
- * <td> <select> <option>-- Please Select --</option> <option>Female</option>
- * <option>Male</option> </select> </td>
+ * <td><select> <option>-- Please Select --</option> <option>Female</option>
+ * <option>Male</option> </select></td>
  * <td>You must select a gender.</td>
  * </tr>
  * </table>
@@ -254,7 +258,15 @@ public class StandardInputRenderer extends InputRenderer {
 			if (formComponent.getId() == null) {
 			    formComponent.setId(slot.getKey().toString());
 			}
-
+			if (FenixWebFramework.getConfig().isJavascriptValidationEnabled()) {
+			    HtmlChainValidator chainValidator = getChainValidator(formComponent, slot);
+			    for (HtmlValidator validator : chainValidator.getSupportedJavascriptValidators()) {
+				HtmlInlineContainer container = new HtmlInlineContainer();
+				container.addChild(renderedSlot);
+				container.addChild(validator.bindJavascript(formComponent));
+				renderedSlot = container;
+			    }
+			}
 			inputComponents.put(rowIndex, validatable);
 		    }
 		}

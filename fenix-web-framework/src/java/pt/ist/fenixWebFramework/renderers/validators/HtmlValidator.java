@@ -1,5 +1,9 @@
 package pt.ist.fenixWebFramework.renderers.validators;
 
+import org.apache.commons.lang.StringUtils;
+
+import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.Validatable;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
@@ -75,4 +79,27 @@ public abstract class HtmlValidator extends AbstractHtmlValidator {
 	this.bundle = bundle;
     }
 
+    public boolean hasJavascriptSupport() {
+	return false;
+    }
+
+    public HtmlScript bindJavascript(HtmlFormComponent formComponent) {
+	HtmlScript script = new HtmlScript();
+	String escapeId = RenderUtils.escapeId(formComponent.getId());
+	script.setScript(
+		getSpecificValidatorScript(escapeId) 
+		+ "$(\"#" + escapeId + "\").keydown(function() {var submitButton = $(this).parents(\"form\").children(\"input[type=submit]:first\"); submitButton.removeAttr('disabled'); submitButton.removeClass('disabled'); $(this).parents(\"td\").next(\"td:last\").empty(); });"
+		+ "$(\"#" + escapeId + "\").click(function() { var submitButton = $(this).parents(\"form\").children(\"input[type=submit]:first\"); submitButton.removeAttr('disabled'); submitButton.removeClass('disabled'); $(this).parents(\"td\").next(\"td:last\").empty(); });");
+	return script;
+    }
+
+    protected String invalidOutput() {
+	return "$(this).parents(\"td\").next(\"td:last\").html('<span>" + getErrorMessage() + "</span>');" 
+	+ " var submitButton = $(this).parents(\"form\").children(\"input[type=submit]:first\");" 
+	+ " submitButton.attr('disabled','true'); submitButton.addClass('disabled');";
+    }
+    
+    protected String getSpecificValidatorScript(String componentId) {
+	return StringUtils.EMPTY;
+    }
 }

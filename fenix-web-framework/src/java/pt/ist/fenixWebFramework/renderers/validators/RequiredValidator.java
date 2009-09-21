@@ -1,7 +1,10 @@
 package pt.ist.fenixWebFramework.renderers.validators;
 
+import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.components.Validatable;
+import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 public class RequiredValidator extends HtmlValidator {
 
@@ -38,5 +41,16 @@ public class RequiredValidator extends HtmlValidator {
 		setValid(values.length > 0);
 	    }
 	}
+    }
+
+    @Override
+    public boolean hasJavascriptSupport() {
+	return true;
+    }
+
+    @Override
+    protected String getSpecificValidatorScript(String componentId) {
+	return "$(\"#" + componentId + "\").blur(" + "function() { var text = $(this).attr('value');" + "if(text.length == 0) {"
+		+ invalidOutput() + "}});";
     }
 }

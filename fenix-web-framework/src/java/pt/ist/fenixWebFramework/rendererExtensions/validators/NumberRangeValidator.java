@@ -89,4 +89,34 @@ public class NumberRangeValidator extends HtmlValidator {
 	return RenderUtils.getFormatedResourceString("renderers.validator.number.range.upper", upperBound);
     }
 
+    @Override
+    public boolean hasJavascriptSupport() {
+	return true;
+    }
+
+    @Override
+    protected String getSpecificValidatorScript(String componentId) {
+	return "$(\"#" + componentId + "\").blur(" + "function() { var text = $(this).attr('value'); var lb = " + getLowerBound()
+		+ "; var ub = " + getUpperBound() + ";"
+		+ "if(text.length > 0 && ((lb != null && parseInt(text) < lb) || (ub != null && parseInt(text) > ub) ) ) {"
+		+ invalidOutput() + "}});";
+    }
+
+    protected String invalidOutput() {
+	return "$(this).parents(\"td\").next(\"td:last\").html('<span>" + getJavascriptMessage() + "</span>');"
+		+ " var submitButton = $(this).parents(\"form\").children(\"input[type=submit]:first\");"
+		+ " submitButton.attr('disabled','true'); submitButton.addClass('disabled');";
+    }
+
+    private String getJavascriptMessage() {
+	if (lowerBound != null && upperBound != null) {
+	    return RenderUtils.getFormatedResourceString("renderers.validator.number.range.both", lowerBound, upperBound);
+	}
+
+	if (lowerBound != null) {
+	    return RenderUtils.getFormatedResourceString("renderers.validator.number.range.lower", lowerBound);
+	}
+
+	return RenderUtils.getFormatedResourceString("renderers.validator.number.range.upper", upperBound);
+    }
 }

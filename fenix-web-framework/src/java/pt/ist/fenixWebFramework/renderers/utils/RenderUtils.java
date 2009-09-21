@@ -346,7 +346,7 @@ public class RenderUtils {
 		    logger.warn("The object " + target + " does not support property '" + propertyName + "': " + e);
 		}
 	    } // IllegalAccessException, InvocationTargetException,
-	      // NoSuchMethodException
+	    // NoSuchMethodException
 	}
     }
 
@@ -415,7 +415,7 @@ public class RenderUtils {
 	}
 
 	Comparator<Object> comparator = null; // TODO: change to a comparator
-					      // chain
+	// chain
 
 	for (int i = 0; i < singleCriterias.length; i++) {
 	    String singleCriteria = singleCriterias[i].trim();
@@ -597,5 +597,9 @@ public class RenderUtils {
 	}
 
 	return map;
+    }
+
+    public static String escapeId(String id) {
+	return id.replace(".", "\\\\.").replaceAll(":", "\\\\\\\\:");
     }
 }

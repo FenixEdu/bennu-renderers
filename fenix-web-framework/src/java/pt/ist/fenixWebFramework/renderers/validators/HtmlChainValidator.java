@@ -76,4 +76,13 @@ public class HtmlChainValidator extends AbstractHtmlValidator {
 	return failedHtmlValidator != null ? failedHtmlValidator.getMessage() : "";
     }
 
+    public List<HtmlValidator> getSupportedJavascriptValidators() {
+	List<HtmlValidator> validators = new ArrayList<HtmlValidator>();
+	for (HtmlValidator validator : this.validators) {
+	    if (validator.hasJavascriptSupport()) {
+		validators.add(validator);
+	    }
+	}
+	return validators;
+    }
 }
