@@ -4,9 +4,8 @@
 package pt.ist.fenixWebFramework.struts.tiles;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
@@ -16,17 +15,28 @@ import org.apache.struts.tiles.DefinitionsFactoryException;
 import org.apache.struts.tiles.NoSuchDefinitionException;
 import org.apache.struts.tiles.xmlDefinition.I18nFactorySet;
 
+import pt.utl.ist.fenix.tools.util.i18n.Language;
+
 /**
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
  * 
  */
 public class FenixDefinitionsFactory extends I18nFactorySet {
+    private static final long serialVersionUID = 3791313145787770679L;
+
+    private class DefinitionsCache extends HashMap<String, ComponentDefinition> {
+	private static final long serialVersionUID = -6628486073076074205L;
+
+	public DefinitionsCache(String tileName, ComponentDefinition componentDefinition) {
+	    put(tileName, componentDefinition);
+	}
+    }
 
     private ComponentDefinition defaultModuleDefinition;
 
     private String defaultModuleDefinitionName;
 
-    private final Map<String, ComponentDefinition> definitionsCache = new HashMap<String, ComponentDefinition>();
+    private final Map<Locale, DefinitionsCache> caches = new HashMap<Locale, DefinitionsCache>();
 
     static private Map<String, PartialTileDefinition> partialDefinitions = new HashMap<String, PartialTileDefinition>();
 
@@ -55,8 +65,12 @@ public class FenixDefinitionsFactory extends I18nFactorySet {
 //	}
 //	processedTiles.add(tileName);
 
-	if (definitionsCache.containsKey(tileName)) {
-	    return definitionsCache.get(tileName);
+	Locale locale = Language.getLocale();
+	if (caches.containsKey(locale)) {
+	    DefinitionsCache cache = caches.get(locale);
+	    if (cache.containsKey(tileName)) {
+		return cache.get(tileName);
+	    }
 	}
 
 	PartialTileDefinition partialTile = partialDefinitions.get(tileName);
@@ -78,8 +92,14 @@ public class FenixDefinitionsFactory extends I18nFactorySet {
 	}
 
 	ComponentDefinition componentDefinition = new ComponentDefinition(superComponent);
-	partialTile.updateComponentDefinition(componentDefinition);
-	definitionsCache.put(tileName, componentDefinition);
+	partialTile.updateComponentDefinition(componentDefinition, locale);
+
+	if (caches.containsKey(locale)) {
+	    caches.get(locale).put(tileName, componentDefinition);
+	} else {
+	    caches.put(locale, new DefinitionsCache(tileName, componentDefinition));
+	}
+
 	return componentDefinition;
     }
 }

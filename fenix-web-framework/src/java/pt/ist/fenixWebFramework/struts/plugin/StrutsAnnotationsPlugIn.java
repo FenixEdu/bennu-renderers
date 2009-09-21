@@ -22,6 +22,7 @@ import org.apache.struts.action.ExceptionHandler;
 import org.apache.struts.action.PlugIn;
 import org.apache.struts.config.ExceptionConfig;
 import org.apache.struts.config.FormBeanConfig;
+import org.apache.struts.config.MessageResourcesConfig;
 import org.apache.struts.config.ModuleConfig;
 
 import pt.ist.fenixWebFramework.Config;
@@ -42,6 +43,10 @@ import pt.utl.ist.fenix.tools.util.FileUtils;
  */
 public class StrutsAnnotationsPlugIn implements PlugIn {
 
+    private static final String STRUTS_DEFAULT_RESOURCE_MESSAGE = "org.apache.struts.action.MESSAGE";
+
+    private static final String PAGE_FILE_EXTENSION = ".jsp";
+
     private static final String INPUT_PAGE_AND_METHOD = ".do?page=0&method=";
 
     private static final String INPUT_DEFAULT_PAGE_AND_METHOD = ".do?page=0&method=prepare";
@@ -61,17 +66,17 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
 	if (!initialized) {
 	    loadActionsFromFile(actionClasses);
+	    PartialTileDefinition.init();
 	    initialized = true;
 	}
 
-	final String modulePrefix = config.getPrefix().startsWith("/") ? config.getPrefix().substring(1) : config.getPrefix();
+	final String modulePrefix = StringUtils.removeStart(config.getPrefix(), "/");
 
 	for (Class<?> actionClass : actionClasses) {
 	    Mapping mapping = actionClass.getAnnotation(Mapping.class);
 	    if (mapping == null || !modulePrefix.equals(mapping.module())) {
 		continue;
 	    }
-
 	    final ActionMapping actionMapping = new ActionMapping();
 
 	    actionMapping.setPath(mapping.path());
@@ -84,23 +89,24 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 		final String formName = mapping.formBeanClass().getName();
 		createFormBeanConfigIfNecessary(config, mapping, formName);
 		actionMapping.setName(formName);
-	    } else if (!StringUtils.isEmpty(mapping.formBean())) {
+	    } else if (!mapping.formBean().isEmpty()) {
 		actionMapping.setName(mapping.formBean());
 	    }
 
-	    if (StringUtils.isEmpty(mapping.input())) {
+	    if (mapping.input().isEmpty()) {
 		actionMapping.setInput(findInputMethod(actionClass, mapping));
 	    } else {
 		registerInput(actionMapping, mapping.input());
 	    }
 
+	    String defaultResourcesName = getDefaultResourcesName(config);
 	    Forwards forwards = actionClass.getAnnotation(Forwards.class);
 	    if (forwards != null) {
 		for (final Forward forward : forwards.value()) {
-		    registerForward(actionMapping, forward, forwards);
+		    registerForward(actionMapping, forward, forwards, mapping, defaultResourcesName);
 		}
 	    }
-	    registerSuperclassForwards(actionMapping, actionClass.getSuperclass());
+	    registerSuperclassForwards(actionMapping, actionClass.getSuperclass(), mapping, defaultResourcesName);
 
 	    Exceptions exceptions = actionClass.getAnnotation(Exceptions.class);
 	    if (exceptions != null) {
@@ -122,7 +128,8 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
     }
 
-    private void registerSuperclassForwards(final ActionMapping actionMapping, Class<?> superclass) {
+    private static void registerSuperclassForwards(final ActionMapping actionMapping, Class<?> superclass, Mapping mapping,
+	    String defaultResourcesName) {
 	if (UPPER_BOUND_SUPERCLASSES.contains(superclass.getSimpleName())) {
 	    return;
 	}
@@ -135,32 +142,39 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 		actionMapping.findForward(forward.name());
 	    } catch (NullPointerException ex) {
 		// Forward wasn't registered in any subclass, so register it.
-		registerForward(actionMapping, forward, forwards);
+		registerForward(actionMapping, forward, forwards, mapping, defaultResourcesName);
 	    }
 	}
-	registerSuperclassForwards(actionMapping, superclass.getSuperclass());
+	registerSuperclassForwards(actionMapping, superclass.getSuperclass(), mapping, defaultResourcesName);
     }
 
-    private void registerInput(final ActionMapping actionMapping, String input) {
-	if (input.endsWith(".jsp")) {
+    private static void registerInput(final ActionMapping actionMapping, String input) {
+	if (isSimplePageFile(input)) {
 	    PartialTileDefinition tileDefinition = new PartialTileDefinition(input);
 	    FenixDefinitionsFactory.registerDefinition(tileDefinition);
 	    actionMapping.setInput(tileDefinition.getName());
 	} else {
+	    // The input is using an existing tile definition
 	    actionMapping.setInput(input);
 	}
     }
 
-    private void registerForward(final ActionMapping actionMapping, final Forward forward, Forwards forwards) {
-	if (forward.useTile() && forward.path().endsWith(".jsp")) {
-	    PartialTileDefinition tileDefinition = new PartialTileDefinition(forward, forwards);
+    private static void registerForward(final ActionMapping actionMapping, final Forward forward, Forwards forwards,
+	    Mapping mapping, String defaultResourcesName) {
+	if (forward.useTile() && isSimplePageFile(forward.path())) {
+	    PartialTileDefinition tileDefinition = new PartialTileDefinition(forward, forwards, mapping, defaultResourcesName);
 	    FenixDefinitionsFactory.registerDefinition(tileDefinition);
 	    actionMapping.addForwardConfig(new ActionForward(forward.name(), tileDefinition.getName(), forward.redirect(),
 		    forward.contextRelative()));
 	} else {
+	    // The forward is using an existing tile definition
 	    actionMapping.addForwardConfig(new ActionForward(forward.name(), forward.path(), forward.redirect(), forward
 		    .contextRelative()));
 	}
+    }
+
+    private static boolean isSimplePageFile(String str) {
+	return (str.endsWith(PAGE_FILE_EXTENSION)) && (StringUtils.countMatches(str, PAGE_FILE_EXTENSION) == 1);
     }
 
     private void createFormBeanConfigIfNecessary(ModuleConfig config, Mapping mapping, final String formName) {
@@ -171,6 +185,11 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	    formBeanConfig.setName(formName);
 	    config.addFormBeanConfig(formBeanConfig);
 	}
+    }
+
+    private static String getDefaultResourcesName(ModuleConfig config) {
+	MessageResourcesConfig resourcesConfig = config.findMessageResourcesConfig(STRUTS_DEFAULT_RESOURCE_MESSAGE);
+	return (resourcesConfig == null) ? null : resourcesConfig.getParameter();
     }
 
     private String findInputMethod(Class<?> actionClass, Mapping mapping) {
