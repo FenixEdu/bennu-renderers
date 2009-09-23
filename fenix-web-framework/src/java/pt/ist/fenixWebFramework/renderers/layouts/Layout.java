@@ -29,6 +29,8 @@ public abstract class Layout {
 
     private boolean optionalMarkShown;
 
+    private static final String REQUIRED_EXPLANATION_CLASS = "requiredMessage";
+
     public boolean isRequiredMarkShown() {
 	return requiredMarkShown;
     }
@@ -109,8 +111,10 @@ public abstract class Layout {
 	if (isRequiredMarkShown()) {
 	    HtmlBlockContainer container = new HtmlBlockContainer();
 	    container.addChild(component);
-	    container.addChild(new HtmlText(RenderUtils.getResourceString("RENDERER_RESOURCES",
-		    "renderers.validator.required.mark.explanation")));
+	    HtmlText requiredMessage = new HtmlText(RenderUtils.getResourceString("RENDERER_RESOURCES",
+		    "renderers.validator.required.mark.explanation"));
+	    requiredMessage.setClasses(REQUIRED_EXPLANATION_CLASS);
+	    container.addChild(requiredMessage);
 	    component = container;
 	}
 	return component;
