@@ -1,7 +1,5 @@
 package pt.ist.fenixWebFramework.renderers.validators;
 
-import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
-import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 public class RegexpValidator extends HtmlValidator {
@@ -59,10 +57,9 @@ public class RegexpValidator extends HtmlValidator {
     }
 
     @Override
-    protected String getSpecificValidatorScript(String componentId) {
-	return "$(\"#" + componentId + "\").blur(" + "function() { var text = $(this).attr('value');"
-		+ "if(text.length > 0 && !text.match('" + getRegexp() + "')) {"
-		+ invalidOutput() + "}});";
+    protected String getSpecificValidatorScript() {
+	return "function(element) { var text = $(element).attr('value');"
+		+ "return text.length == 0 || text.match('" + getRegexp() + "');}";
     }
 
 }

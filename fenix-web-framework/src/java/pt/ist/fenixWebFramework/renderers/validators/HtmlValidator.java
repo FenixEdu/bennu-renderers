@@ -17,6 +17,10 @@ public abstract class HtmlValidator extends AbstractHtmlValidator {
 
     private String bundle;
 
+    private String clearHandler;
+
+    private String errorHandler;
+
     protected HtmlValidator() {
 	super();
 	setKey(true);
@@ -31,6 +35,22 @@ public abstract class HtmlValidator extends AbstractHtmlValidator {
 
     public Validatable getComponent() {
 	return this.htmlChainValidator.getComponent();
+    }
+
+    public String getClearHandler() {
+	return clearHandler;
+    }
+
+    public void setClearHandler(String clearHandler) {
+	this.clearHandler = clearHandler;
+    }
+
+    public String getErrorHandler() {
+	return errorHandler;
+    }
+
+    public void setErrorHandler(String errorHandler) {
+	this.errorHandler = errorHandler;
     }
 
     public String getMessage() {
@@ -85,21 +105,31 @@ public abstract class HtmlValidator extends AbstractHtmlValidator {
 
     public HtmlScript bindJavascript(HtmlFormComponent formComponent) {
 	HtmlScript script = new HtmlScript();
-	String escapeId = RenderUtils.escapeId(formComponent.getId());
-	script.setScript(
-		getSpecificValidatorScript(escapeId) 
-		+ "$(\"#" + escapeId + "\").keydown(function() {var submitButton = $(this).parents(\"form\").children(\"input[type=submit]:first\"); submitButton.removeAttr('disabled'); submitButton.removeClass('disabled'); $(this).parents(\"td\").next(\"td:last\").empty(); });"
-		+ "$(\"#" + escapeId + "\").click(function() { var submitButton = $(this).parents(\"form\").children(\"input[type=submit]:first\"); submitButton.removeAttr('disabled'); submitButton.removeClass('disabled'); $(this).parents(\"td\").next(\"td:last\").empty(); });");
+	String escapeId = getValidatableId(formComponent);
+
+	String bindTo = bindJavascriptEventsTo(formComponent);
+
+	script.setScript("$(\"#" + escapeId + "\").validate({ " + (bindTo != null ? "bindEventsTo: \"" + bindTo + "\"," : "")
+		+ "validationHandler: " + getSpecificValidatorScript() + ", errorMessage: \"" + getJavascriptErrorMessage()
+		+ "\"" + (getClearHandler() != null ? ", clearHandler: " + getClearHandler() : "")
+		+ (getErrorHandler() != null ? ", errorHandler: " + getErrorHandler() : "") + "});");
+
 	return script;
     }
 
-    protected String invalidOutput() {
-	return "$(this).parents(\"td\").next(\"td:last\").html('<span>" + getErrorMessage() + "</span>');" 
-	+ " var submitButton = $(this).parents(\"form\").children(\"input[type=submit]:first\");" 
-	+ " submitButton.attr('disabled','true'); submitButton.addClass('disabled');";
+    protected String getValidatableId(HtmlFormComponent formComponent) {
+	return RenderUtils.escapeId(formComponent.getId());
     }
-    
-    protected String getSpecificValidatorScript(String componentId) {
+
+    protected String getSpecificValidatorScript() {
 	return StringUtils.EMPTY;
+    }
+
+    protected String getJavascriptErrorMessage() {
+	return getErrorMessage();
+    }
+
+    protected String bindJavascriptEventsTo(HtmlFormComponent formComponent) {
+	return null;
     }
 }

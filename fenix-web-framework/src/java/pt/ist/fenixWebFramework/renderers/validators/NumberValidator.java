@@ -60,8 +60,8 @@ public class NumberValidator extends HtmlValidator {
     }
 
     @Override
-    protected String getSpecificValidatorScript(String componentId) {
-	return "$(\"#" + componentId + "\").blur(" + "function() { var text = $(this).attr('value');"
-		+ "if(text.length > 0 && !text.search(/^[0-9]+$/) == 0) {" + invalidOutput() + "}});";
+    protected String getSpecificValidatorScript() {
+	return "function(element) { var text = $(element).attr('value');"
+		+ "return text.length == 0 || text.search(/^[0-9]+$/) == 0; }";
     }
 }

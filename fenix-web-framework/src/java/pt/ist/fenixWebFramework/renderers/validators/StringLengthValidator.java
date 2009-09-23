@@ -51,9 +51,8 @@ public class StringLengthValidator extends HtmlValidator {
     }
 
     @Override
-    protected String getSpecificValidatorScript(String componentId) {
-	return "$(\"#" + componentId + "\").blur(" + "function() { var text = $(this).attr('value');"
-		+ "if(text.length > 0 && (text.length <" + getMin() + (getMax() != null ? " || text.length > " + getMax() : "")
-		+ ")) {" + invalidOutput() + "}});";
+    protected String getSpecificValidatorScript() {
+	return "function(element) { var text = $(element).attr('value');"
+		+ "return text.length == 0 || (text.length >" + getMin() + (getMax() != null ? " && text.length < " + getMax() : "") + ";}";
     }
 }

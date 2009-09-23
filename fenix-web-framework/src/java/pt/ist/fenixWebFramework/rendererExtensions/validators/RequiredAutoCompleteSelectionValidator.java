@@ -39,18 +39,18 @@ public class RequiredAutoCompleteSelectionValidator extends HtmlValidator {
     }
 
     @Override
-    public HtmlScript bindJavascript(HtmlFormComponent formComponent) {
-	String supplierId = RenderUtils.escapeId(formComponent.getId().replace("_AutoComplete", ""));
-	String supplierHidden = RenderUtils.escapeId(formComponent.getId());
-	
-	HtmlScript script = new HtmlScript();
-	script.setScript("$(\"#" + supplierId + "\").blur("
-		+ "function() { var text = $(\"#" + supplierHidden + "\").attr('value');" 
-		+ "if(text.length == 0) {"
-			+ invalidOutput()
-		+ "}});" 
-		+ "$(\"#" + supplierId + "\").keydown(function() { $(this).parents(\"td\").next(\"td:last\").empty(); });"
-		+ "$(\"#" + supplierId + "\").click(function() { $(this).parents(\"td\").next(\"td:last\").empty(); });");
-	return script;
+    protected String getSpecificValidatorScript() {
+	return "function(element) { return $(element).prevAll(\"input[name$=_AutoComplete]\").attr('value').length > 0; }";
     }
-   }
+
+    @Override
+    protected String bindJavascriptEventsTo(HtmlFormComponent formComponent) {
+	return "#" + RenderUtils.escapeId(formComponent.getId().replace("_AutoComplete", ""));
+    }
+
+    @Override
+    protected String getValidatableId(HtmlFormComponent formComponent) {
+	return RenderUtils.escapeId(formComponent.getId().replace("_AutoComplete", ""));
+    }
+
+}
