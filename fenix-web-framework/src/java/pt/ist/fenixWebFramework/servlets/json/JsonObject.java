@@ -23,7 +23,11 @@ public class JsonObject {
     }
 
     public void addAttribute(String key, String value) {
-	properties.put(key, value);
+	properties.put(key, escape(value));
+    }
+
+    private String escape(String value) {
+	return value.replaceAll("\"", "\\\\\"");
     }
 
     public String getJsonString() {
