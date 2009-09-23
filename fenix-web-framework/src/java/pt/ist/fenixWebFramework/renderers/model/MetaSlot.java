@@ -7,6 +7,8 @@ import java.util.Properties;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
+import pt.ist.fenixWebFramework.rendererExtensions.AutoCompleteInputRenderer;
+import pt.ist.fenixWebFramework.rendererExtensions.validators.RequiredAutoCompleteSelectionValidator;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
@@ -353,7 +355,8 @@ public class MetaSlot extends MetaObject {
 
     public boolean isRequired() {
 	for (Pair<Class<pt.ist.fenixWebFramework.renderers.validators.HtmlValidator>, Properties> validator : getValidators()) {
-	    if (RequiredValidator.class.isAssignableFrom(validator.getKey())) {
+	    if (RequiredAutoCompleteSelectionValidator.class.isAssignableFrom(validator.getKey())
+		    || RequiredValidator.class.isAssignableFrom(validator.getKey())) {
 		return true;
 	    }
 	}
