@@ -112,7 +112,7 @@ public abstract class Layout {
 	    HtmlBlockContainer container = new HtmlBlockContainer();
 	    container.addChild(component);
 	    HtmlText requiredMessage = new HtmlText(RenderUtils.getResourceString("RENDERER_RESOURCES",
-		    "renderers.validator.required.mark.explanation"));
+		    "renderers.validator.required.mark.explanation"),false);
 	    requiredMessage.setClasses(REQUIRED_EXPLANATION_CLASS);
 	    container.addChild(requiredMessage);
 	    component = container;
