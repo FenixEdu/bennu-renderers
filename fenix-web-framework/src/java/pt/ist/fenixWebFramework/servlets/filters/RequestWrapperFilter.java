@@ -2,7 +2,9 @@ package pt.ist.fenixWebFramework.servlets.filters;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.SoftReference;
+import java.nio.charset.UnsupportedCharsetException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -34,7 +36,6 @@ import pt.ist.fenixWebFramework.security.User;
 import pt.ist.fenixWebFramework.security.UserView;
 import pt.ist.fenixWebFramework.servlets.commons.CommonsFile;
 import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
-
 
 /**
  * 17/Fev/2003
@@ -85,7 +86,7 @@ public class RequestWrapperFilter implements Filter {
 	long hash = classType.hashCode();
 	for (final StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()) {
 	    hash += stackTraceElement.getClassName().hashCode() + stackTraceElement.getMethodName().hashCode()
-	    	+ stackTraceElement.getLineNumber();
+		    + stackTraceElement.getLineNumber();
 	}
 	return Long.toString(hash);
     }
@@ -259,27 +260,34 @@ public class RequestWrapperFilter implements Filter {
 		    parseRequest(request);
 		} catch (FileUploadException e) {
 		    throw new Error(e);
+		} catch (UnsupportedEncodingException e) {
+		    throw new Error(e);
 		}
 	    }
 	    request.setAttribute(ITEM_MAP_ATTRIBUTE, itemsMap);
 	}
 
-	private void parseRequest(final HttpServletRequest request) throws FileUploadException {
+	private void parseRequest(final HttpServletRequest request) throws FileUploadException, UnsupportedEncodingException {
 	    final List fileItems = new FileUpload(new DefaultFileItemFactory()).parseRequest(request);
+
+	    String characterEncoding = request.getCharacterEncoding();
 
 	    for (final Object object : fileItems) {
 		final FileItem item = (FileItem) object;
 
 		if (item.isFormField()) {
-		    addParameter(item.getFieldName(), item.getString());
+		    addParameter(item.getFieldName(), item.getString(characterEncoding));
 		} else {
 		    UploadedFile uploadedFile = new CommonsFile(item);
 
-		    if (uploadedFile.getName() != null && uploadedFile.getName().length() > 0) {
+		    String uploadFileName = uploadedFile.getName();
+		    String decodedName = null;
+		    if (uploadFileName != null && uploadFileName.length() > 0) {
 			itemsMap.put(item.getFieldName(), uploadedFile);
+			decodedName = new String(uploadFileName.getBytes(), characterEncoding);
 		    }
 
-		    addParameter(item.getFieldName(), uploadedFile.getName());
+		    addParameter(item.getFieldName(), decodedName);
 		}
 	    }
 	}
@@ -369,7 +377,6 @@ public class RequestWrapperFilter implements Filter {
 	    final User user = UserView.getUser();
 	    return user == null ? super.getRemoteUser() : user.getUsername();
 	}
-
 
 	@Override
 	public Principal getUserPrincipal() {
