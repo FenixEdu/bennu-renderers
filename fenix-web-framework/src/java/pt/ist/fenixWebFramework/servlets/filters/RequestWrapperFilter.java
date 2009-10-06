@@ -276,7 +276,8 @@ public class RequestWrapperFilter implements Filter {
 		final FileItem item = (FileItem) object;
 
 		if (item.isFormField()) {
-		    addParameter(item.getFieldName(), item.getString(characterEncoding));
+		    addParameter(item.getFieldName(), characterEncoding != null ? item.getString(characterEncoding) : item
+			    .getString());
 		} else {
 		    UploadedFile uploadedFile = new CommonsFile(item);
 
@@ -284,7 +285,8 @@ public class RequestWrapperFilter implements Filter {
 		    String decodedName = null;
 		    if (uploadFileName != null && uploadFileName.length() > 0) {
 			itemsMap.put(item.getFieldName(), uploadedFile);
-			decodedName = new String(uploadFileName.getBytes(), characterEncoding);
+			decodedName = characterEncoding != null ? new String(uploadFileName.getBytes(), characterEncoding)
+				: new String(uploadFileName.getBytes());
 		    }
 
 		    addParameter(item.getFieldName(), decodedName);
