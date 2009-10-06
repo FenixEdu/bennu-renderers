@@ -146,8 +146,9 @@ public class FileInputRenderer extends InputRenderer {
 		Object object = this.object.getObject();
 
 		try {
-		    setPropertyIgnoringErrors(object, this.fileNameSlot, new String(file.getName().getBytes(),
-			    RenderersRequestProcessorImpl.getCurrentEncoding()));
+		    String currentEncoding = RenderersRequestProcessorImpl.getCurrentEncoding();
+		    setPropertyIgnoringErrors(object, this.fileNameSlot, currentEncoding != null ? new String(file.getName()
+			    .getBytes(), currentEncoding) : new String(file.getName().getBytes()));
 		} catch (UnsupportedEncodingException e) {
 		    // best effort name setting
 		    setPropertyIgnoringErrors(object, this.fileNameSlot, file.getName());
