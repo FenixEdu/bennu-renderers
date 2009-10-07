@@ -20,8 +20,8 @@
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.5-bin.jar"/>
 	<classpathentry kind="lib" path="lib/Tidy.jar"/>
 	<classpathentry kind="lib" path="lib/htmlentities.jar"/>
-	<classpathentry kind="lib" path="lib/dml-20090519.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/fenix-framework-r42666.jar"/>
+	<classpathentry kind="lib" path="lib/dml-20091001.jar"/>
+	<classpathentry kind="lib" path="lib/fenix-framework-r43972.jar"/>
 	<classpathentry kind="output" path="output"/>
 </classpath>
