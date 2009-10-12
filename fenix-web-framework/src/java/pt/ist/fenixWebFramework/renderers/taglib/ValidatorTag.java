@@ -5,7 +5,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 public class ValidatorTag extends TagSupport implements PropertyContainerTag {
 
-    private EditObjectTag parent;
+    private ValidatorContainerTag parent;
 
     private String name;
 
@@ -26,10 +26,10 @@ public class ValidatorTag extends TagSupport implements PropertyContainerTag {
     }
 
     public int doStartTag() throws JspException {
-	this.parent = (EditObjectTag) findAncestorWithClass(this, EditObjectTag.class);
+	this.parent = (ValidatorContainerTag) findAncestorWithClass(this, ValidatorContainerTag.class);
 
 	if (this.parent == null) {
-	    throw new RuntimeException("validator tag can only be used inside an input tag");
+	    throw new RuntimeException("validator tag can only be used inside an input tag or a schema slot description tag");
 	}
 
 	String name = getName();

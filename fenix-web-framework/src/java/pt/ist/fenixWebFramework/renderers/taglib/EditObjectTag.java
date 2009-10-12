@@ -36,7 +36,7 @@ import org.apache.struts.taglib.TagUtils;
 
 import pt.utl.ist.fenix.tools.util.Pair;
 
-public class EditObjectTag extends BaseRenderObjectTag {
+public class EditObjectTag extends BaseRenderObjectTag implements ValidatorContainerTag {
 
     private boolean nested;
 
@@ -137,7 +137,7 @@ public class EditObjectTag extends BaseRenderObjectTag {
     }
 
     @Override
-    protected PresentationContext createPresentationContext(Object object, String layout, String schema, Properties properties) {
+    protected PresentationContext createPresentationContext(Object object, String layout, Schema schema, Properties properties) {
 	IViewState viewState = createViewState(object);
 
 	if (viewState.getContext() != null) {
@@ -367,7 +367,7 @@ public class EditObjectTag extends BaseRenderObjectTag {
 
     protected Schema getComputedSchema(Object targetObject) {
 	if (getSlot() == null && isVisible()) {
-	    return RenderKit.getInstance().findSchema(getSchema());
+	    return getRealSchema();
 	} else {
 	    Schema schema = new Schema(null, targetObject.getClass());
 

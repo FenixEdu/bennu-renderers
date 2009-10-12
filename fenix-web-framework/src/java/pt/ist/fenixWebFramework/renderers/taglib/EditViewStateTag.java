@@ -9,6 +9,7 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.contexts.InputContext;
 import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
+import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 
 public class EditViewStateTag extends EditObjectTag {
 
@@ -36,7 +37,7 @@ public class EditViewStateTag extends EditObjectTag {
     }
 
     @Override
-    protected PresentationContext createPresentationContext(Object object, String layout, String schema, Properties properties) {
+    protected PresentationContext createPresentationContext(Object object, String layout, Schema schema, Properties properties) {
         IViewState viewState = (IViewState) object;
         
         viewState.setRequest((HttpServletRequest) pageContext.getRequest());

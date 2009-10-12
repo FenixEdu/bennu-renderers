@@ -26,42 +26,43 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import org.apache.commons.beanutils.BeanComparator;
 
 /**
- * This renderer allows you choose several object from a list of choices. The list of choices is
- * presented in a table but each row has a checkbox that allows you to select the object in that
- * row.
+ * This renderer allows you choose several object from a list of choices. The
+ * list of choices is presented in a table but each row has a checkbox that
+ * allows you to select the object in that row.
  * 
  * <p>
- * The list of options is given by a {@link pt.ist.fenixWebFramework.renderers.DataProvider data provider}.
+ * The list of options is given by a
+ * {@link pt.ist.fenixWebFramework.renderers.DataProvider data provider}.
  * 
  * <p>
  * Example:
  * <table border="1">
- *      <thead>
- *          <th></th>
- *          <th>Name</th>
- *          <th>Age</th>
- *          <th>Gender</th>
- *      </thead>
- *      <tr>
- *          <td><input type="checkbox"/></td>
- *          <td>Name A</td>
- *          <td>20</td>
- *          <td>Female</td>
- *      </tr>
- *      <tr>
- *          <td><input type="checkbox" checked="checked"/></td>
- *          <td>Name B</td>
- *          <td>22</td>
- *          <td>Male</td>
- *      </tr>
- *      <tr>
- *          <td><input type="checkbox" checked="checked"/></td>
- *          <td>Name C</td>
- *          <td>21</td>
- *          <td>Female</td>
- *      </tr>
- *  </table>
- *  
+ * <thead>
+ * <th></th>
+ * <th>Name</th>
+ * <th>Age</th>
+ * <th>Gender</th>
+ * </thead>
+ * <tr>
+ * <td><input type="checkbox"/></td>
+ * <td>Name A</td>
+ * <td>20</td>
+ * <td>Female</td>
+ * </tr>
+ * <tr>
+ * <td><input type="checkbox" checked="checked"/></td>
+ * <td>Name B</td>
+ * <td>22</td>
+ * <td>Male</td>
+ * </tr>
+ * <tr>
+ * <td><input type="checkbox" checked="checked"/></td>
+ * <td>Name C</td>
+ * <td>21</td>
+ * <td>Female</td>
+ * </tr>
+ * </table>
+ * 
  * @author pcma
  */
 public class TabularOptionInputRenderer extends InputRenderer {
@@ -71,283 +72,278 @@ public class TabularOptionInputRenderer extends InputRenderer {
     private String classes;
     private String emptyMessageKey;
     private String emptyMessageBundle;
-    
+
     private String columnClasses;
-    
+
     private String sortBy;
 
     public String getSortBy() {
-        return sortBy;
+	return sortBy;
     }
 
-	/**
+    /**
      * Selects column classes
      * 
      * @property
      * 
      */
     public String getColumnClasses() {
-		return columnClasses;
-	}
-
-
-	public void setColumnClasses(String columnClasses) {
-		this.columnClasses = columnClasses;
-	}
-
-
-	/**
-     * Selects the sorting criteria to apply to the collection of objects before presenting them.
-     * 
-     * @property
-     * @see pt.ist.fenixWebFramework.renderers.utils.RenderUtils#sortCollectionWithCriteria(Collection, String)
-     */
-    public void setSortBy(String sort) {
-        sortBy = sort;
+	return columnClasses;
     }
 
-    public String getProviderClass() {
-        return providerClass;
+    public void setColumnClasses(String columnClasses) {
+	this.columnClasses = columnClasses;
     }
 
     /**
-     * Chooses the class of the provider that will be used to determine the list of options.
+     * Selects the sorting criteria to apply to the collection of objects before
+     * presenting them.
+     * 
+     * @property
+     * @see pt.ist.fenixWebFramework.renderers.utils.RenderUtils#sortCollectionWithCriteria(Collection,
+     *      String)
+     */
+    public void setSortBy(String sort) {
+	sortBy = sort;
+    }
+
+    public String getProviderClass() {
+	return providerClass;
+    }
+
+    /**
+     * Chooses the class of the provider that will be used to determine the list
+     * of options.
      * 
      * @property
      */
     public void setProviderClass(String providerClass) {
-        this.providerClass = providerClass;
+	this.providerClass = providerClass;
     }
 
     protected DataProvider getProvider() {
-        if (this.provider == null) {
-            String className = getProviderClass();
+	if (this.provider == null) {
+	    String className = getProviderClass();
 
-            try {
-                Class providerCass = (Class<DataProvider>) Class.forName(className);
-                this.provider = (DataProvider) providerCass.newInstance();
-            } catch (Exception e) {
-                throw new RuntimeException("could not get a data provider instance", e);
-            }
-        }
+	    try {
+		Class providerCass = (Class<DataProvider>) Class.forName(className);
+		this.provider = (DataProvider) providerCass.newInstance();
+	    } catch (Exception e) {
+		throw new RuntimeException("could not get a data provider instance", e);
+	    }
+	}
 
-        return this.provider;
+	return this.provider;
     }
 
     protected Converter getConverter() {
-        DataProvider provider = getProvider();
+	DataProvider provider = getProvider();
 
-        return provider.getConverter();
+	return provider.getConverter();
     }
 
     protected Collection getPossibleObjects() {
-        Object object = getInputContext().getParentContext().getMetaObject().getObject();
-        Object value = getInputContext().getMetaObject().getObject();
+	Object object = getInputContext().getParentContext().getMetaObject().getObject();
+	Object value = getInputContext().getMetaObject().getObject();
 
-        if (getProviderClass() != null) {
-            try {
-                DataProvider provider = getProvider();
-                Collection collection = (Collection) provider.provide(object, value);
-                if (getSortBy() != null) {
-                    Collections.sort((List) collection, new BeanComparator(getSortBy()));
-                }
-                return collection;
-            } catch (Exception e) {
-                throw new RuntimeException("exception while executing data provider", e);
-            }
-        } else {
-            throw new RuntimeException("a data provider must be supplied");
-        }
+	if (getProviderClass() != null) {
+	    try {
+		DataProvider provider = getProvider();
+		Collection collection = (Collection) provider.provide(object, value);
+		if (getSortBy() != null) {
+		    Collections.sort((List) collection, new BeanComparator(getSortBy()));
+		}
+		return collection;
+	    } catch (Exception e) {
+		throw new RuntimeException("exception while executing data provider", e);
+	    }
+	} else {
+	    throw new RuntimeException("a data provider must be supplied");
+	}
     }
 
-    
     @Override
     protected Layout getLayout(Object object, Class type) {
 
-        List<MetaObject> metaObjects = (List<MetaObject>) getMetaObjects(getPossibleObjects());
-        Collection objectsReceived = (Collection) object;
+	List<MetaObject> metaObjects = (List<MetaObject>) getMetaObjects(getPossibleObjects());
+	Collection objectsReceived = (Collection) object;
 
-        HtmlMultipleHiddenField hiddenField = new HtmlMultipleHiddenField();
-        hiddenField.bind((MetaSlot) getContext().getMetaObject());
-        hiddenField.setConverter(getConverter());
+	HtmlMultipleHiddenField hiddenField = new HtmlMultipleHiddenField();
+	hiddenField.bind((MetaSlot) getContext().getMetaObject());
+	hiddenField.setConverter(getConverter());
 
-        return new CheckableTabularLayout(metaObjects,objectsReceived,hiddenField);
-     }
-
-    private List<MetaObject> getMetaObjects(Collection collection) {
-        List<MetaObject> metaObjects = new ArrayList<MetaObject>();
-
-        MetaObject contextMetaObject = getContext().getMetaObject();
-        if (contextMetaObject instanceof MetaObjectCollection) {
-            // reuse meta objects
-            MetaObjectCollection multipleMetaObject = (MetaObjectCollection) getContext()
-                    .getMetaObject();
-
-            for (Object object : collection) {
-                for (MetaObject metaObject : multipleMetaObject.getAllMetaObjects()) {
-                    if (object.equals(metaObject.getObject())) {
-                        metaObjects.add(metaObject);
-                        break;
-                    }
-                }
-            }
-        } else {
-            Schema schema = RenderKit.getInstance().findSchema(getContext().getSchema());
-            for (Object object : collection) {
-                metaObjects.add(MetaObjectFactory.createObject(object, schema));
-            }
-        }
-
-        return metaObjects;
+	return new CheckableTabularLayout(metaObjects, objectsReceived, hiddenField);
     }
 
-	public String getClasses() {
-		return classes;
+    private List<MetaObject> getMetaObjects(Collection collection) {
+	List<MetaObject> metaObjects = new ArrayList<MetaObject>();
+
+	MetaObject contextMetaObject = getContext().getMetaObject();
+	if (contextMetaObject instanceof MetaObjectCollection) {
+	    // reuse meta objects
+	    MetaObjectCollection multipleMetaObject = (MetaObjectCollection) getContext().getMetaObject();
+
+	    for (Object object : collection) {
+		for (MetaObject metaObject : multipleMetaObject.getAllMetaObjects()) {
+		    if (object.equals(metaObject.getObject())) {
+			metaObjects.add(metaObject);
+			break;
+		    }
+		}
+	    }
+	} else {
+	    Schema schema = getContext().getSchema();
+	    for (Object object : collection) {
+		metaObjects.add(MetaObjectFactory.createObject(object, schema));
+	    }
 	}
 
-	public void setClasses(String classes) {
-		this.classes = classes;
-	}
+	return metaObjects;
+    }
 
-	public String getEmptyMessageBundle() {
-		return emptyMessageBundle;
-	}
+    public String getClasses() {
+	return classes;
+    }
 
-	public void setEmptyMessageBundle(String emptyMessageBundle) {
-		this.emptyMessageBundle = emptyMessageBundle;
-	}
+    public void setClasses(String classes) {
+	this.classes = classes;
+    }
 
-	public String getEmptyMessageKey() {
-		return emptyMessageKey;
-	}
+    public String getEmptyMessageBundle() {
+	return emptyMessageBundle;
+    }
 
-	public void setEmptyMessageKey(String emptyMessageKey) {
-		this.emptyMessageKey = emptyMessageKey;
-	}
+    public void setEmptyMessageBundle(String emptyMessageBundle) {
+	this.emptyMessageBundle = emptyMessageBundle;
+    }
 
-	
-	
+    public String getEmptyMessageKey() {
+	return emptyMessageKey;
+    }
+
+    public void setEmptyMessageKey(String emptyMessageKey) {
+	this.emptyMessageKey = emptyMessageKey;
+    }
+
     public class CheckableTabularLayout extends TabularLayout {
 
-    	private List<MetaObject> metaObjects; 
-        private Collection objectsReceived;
-        private HtmlMultipleHiddenField hiddenField;
-        
-        private List<HtmlCheckBox> checkboxes = new ArrayList<HtmlCheckBox>();
-        
-        public CheckableTabularLayout(List<MetaObject> metaObjects, Collection collection, HtmlMultipleHiddenField hiddenField) {
-        	this.metaObjects = metaObjects;
-        	this.objectsReceived = collection;
-        	this.hiddenField = hiddenField;
-        }
-        
+	private List<MetaObject> metaObjects;
+	private Collection objectsReceived;
+	private HtmlMultipleHiddenField hiddenField;
 
-        public HtmlMultipleHiddenField getHiddenField() {
-        	return hiddenField;
-        }
-        
-        public List<HtmlCheckBox> getCheckBoxes() {
-        	return checkboxes;
-        }
-        
-        @Override
-        public HtmlComponent createLayout(Object object, Class type) {
-            HtmlContainer container = new HtmlInlineContainer();
-            HtmlComponent component = super.createLayout(object, type);
-            container.addChild(hiddenField);
-            container.addChild(component);
+	private List<HtmlCheckBox> checkboxes = new ArrayList<HtmlCheckBox>();
 
-            hiddenField.setController(new HtmlController() {
+	public CheckableTabularLayout(List<MetaObject> metaObjects, Collection collection, HtmlMultipleHiddenField hiddenField) {
+	    this.metaObjects = metaObjects;
+	    this.objectsReceived = collection;
+	    this.hiddenField = hiddenField;
+	}
 
-                @Override
-                public void execute(IViewState viewState) {
-                    List<String> values = new ArrayList<String>();
+	public HtmlMultipleHiddenField getHiddenField() {
+	    return hiddenField;
+	}
 
-                    for (HtmlCheckBox checkBox : checkboxes) {
-                        if (checkBox.isChecked()) {
-                            values.add(checkBox.getValue());
-                        }
-                    }
+	public List<HtmlCheckBox> getCheckBoxes() {
+	    return checkboxes;
+	}
 
-                    hiddenField.setValues(values.toArray(new String[0]));
-                }
-            });
+	@Override
+	public HtmlComponent createLayout(Object object, Class type) {
+	    HtmlContainer container = new HtmlInlineContainer();
+	    HtmlComponent component = super.createLayout(object, type);
+	    container.addChild(hiddenField);
+	    container.addChild(component);
 
-            return container;
-        }
+	    hiddenField.setController(new HtmlController() {
 
-        
-        @Override
-        protected boolean hasHeader() {
-            return metaObjects.size() > 0;
-        }
+		@Override
+		public void execute(IViewState viewState) {
+		    List<String> values = new ArrayList<String>();
 
-        @Override
-        protected HtmlComponent getHeaderComponent(int columnIndex) {
-            String text = "";
-            if (columnIndex != 0) {
-                text = metaObjects.get(0).getSlots().get(columnIndex - 1).getLabel();
-            }
-            return new HtmlText(text, false);
-        }
+		    for (HtmlCheckBox checkBox : checkboxes) {
+			if (checkBox.isChecked()) {
+			    values.add(checkBox.getValue());
+			}
+		    }
 
-        @Override
-        protected int getNumberOfColumns() {
-            if (metaObjects.size() > 0) {
-                MetaObject metaObject = metaObjects.get(0);
-                return metaObject.getSlots().size() + 1; // +1 due to the
-                // checkbox
-            } else {
-                return 0;
-            }
-        }
+		    hiddenField.setValues(values.toArray(new String[0]));
+		}
+	    });
 
-        @Override
-        protected int getNumberOfRows() {
-            return metaObjects.size();
-        }
+	    return container;
+	}
 
-        @Override
-        protected HtmlComponent getComponent(int rowIndex, int columnIndex) {
+	@Override
+	protected boolean hasHeader() {
+	    return metaObjects.size() > 0;
+	}
 
-            if (columnIndex == 0) {
-                HtmlCheckBox checkBox = new HtmlCheckBox();
-                this.checkboxes.add(checkBox);
+	@Override
+	protected HtmlComponent getHeaderComponent(int columnIndex) {
+	    String text = "";
+	    if (columnIndex != 0) {
+		text = metaObjects.get(0).getSlots().get(columnIndex - 1).getLabel();
+	    }
+	    return new HtmlText(text, false);
+	}
 
-                MetaObject metaObject = metaObjects.get(rowIndex);
-                checkBox.setUserValue(metaObject.getKey().toString());
+	@Override
+	protected int getNumberOfColumns() {
+	    if (metaObjects.size() > 0) {
+		MetaObject metaObject = metaObjects.get(0);
+		return metaObject.getSlots().size() + 1; // +1 due to the
+		// checkbox
+	    } else {
+		return 0;
+	    }
+	}
 
-                checkBox.setName(hiddenField.getName() + "/" + metaObject.getKey().toString());
+	@Override
+	protected int getNumberOfRows() {
+	    return metaObjects.size();
+	}
 
-                if (objectsReceived != null && objectsReceived.contains(metaObject.getObject())) {
-                    checkBox.setChecked(true);
-                }
-                return checkBox;
-            } else {
-                MetaSlot slot = getSlotUsingName(metaObjects.get(rowIndex), columnIndex - 1);
-                slot.setReadOnly(true);
-                return renderSlot(slot);
-            }
-        }
+	@Override
+	protected HtmlComponent getComponent(int rowIndex, int columnIndex) {
 
-        protected MetaSlot getSlotUsingName(MetaObject object, int columnIndex) {
-            MetaObject referenceObject = metaObjects.get(0);
-            MetaSlot referenceSlot = referenceObject.getSlots().get(columnIndex);
+	    if (columnIndex == 0) {
+		HtmlCheckBox checkBox = new HtmlCheckBox();
+		this.checkboxes.add(checkBox);
 
-            MetaSlot directSlot = object.getSlots().get(columnIndex); // common
-            // case
-            if (directSlot.getName().equals(referenceSlot.getName())) {
-                return directSlot;
-            }
+		MetaObject metaObject = metaObjects.get(rowIndex);
+		checkBox.setUserValue(metaObject.getKey().toString());
 
-            for (MetaSlot slot : object.getSlots()) {
-                if (slot.getName().equals(referenceSlot.getName())) {
-                    return slot;
-                }
-            }
+		checkBox.setName(hiddenField.getName() + "/" + metaObject.getKey().toString());
 
-            return null;
-        }
+		if (objectsReceived != null && objectsReceived.contains(metaObject.getObject())) {
+		    checkBox.setChecked(true);
+		}
+		return checkBox;
+	    } else {
+		MetaSlot slot = getSlotUsingName(metaObjects.get(rowIndex), columnIndex - 1);
+		slot.setReadOnly(true);
+		return renderSlot(slot);
+	    }
+	}
+
+	protected MetaSlot getSlotUsingName(MetaObject object, int columnIndex) {
+	    MetaObject referenceObject = metaObjects.get(0);
+	    MetaSlot referenceSlot = referenceObject.getSlots().get(columnIndex);
+
+	    MetaSlot directSlot = object.getSlots().get(columnIndex); // common
+	    // case
+	    if (directSlot.getName().equals(referenceSlot.getName())) {
+		return directSlot;
+	    }
+
+	    for (MetaSlot slot : object.getSlots()) {
+		if (slot.getName().equals(referenceSlot.getName())) {
+		    return slot;
+		}
+	    }
+
+	    return null;
+	}
 
     };
 

@@ -33,15 +33,14 @@ public class ViewObjectTag extends BaseRenderObjectTag {
     }
 
     @Override
-    protected PresentationContext createPresentationContext(Object object, String layout, String schema, Properties properties) {
+    protected PresentationContext createPresentationContext(Object object, String layout, Schema schema, Properties properties) {
         OutputContext context = new OutputContext();
         
         context.setSchema(schema);
         context.setLayout(layout);
         context.setProperties(properties);
         
-        Schema realSchema = RenderKit.getInstance().findSchema(schema);
-        MetaObject metaObject = MetaObjectFactory.createObject(object, realSchema);
+        MetaObject metaObject = MetaObjectFactory.createObject(object, schema);
 
         ViewState viewState = new ViewState(null);
         viewState.setMetaObject(metaObject);

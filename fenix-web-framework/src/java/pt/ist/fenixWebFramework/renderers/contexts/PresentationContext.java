@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
+import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 
 public abstract class PresentationContext {
@@ -12,7 +13,7 @@ public abstract class PresentationContext {
     
     private RenderMode renderMode;
     
-    private String schema;
+    private Schema schema;
     
     private String layout;
     
@@ -50,11 +51,11 @@ public abstract class PresentationContext {
         this.parentContext = parentContext;
     }
 
-    public String getSchema() {
+    public Schema getSchema() {
         return this.schema;
     }
 
-    public void setSchema(String schema) {
+    public void setSchema(Schema schema) {
         this.schema = schema;
     }
 

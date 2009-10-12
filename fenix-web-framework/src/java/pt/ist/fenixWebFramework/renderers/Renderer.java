@@ -168,7 +168,7 @@ public abstract class Renderer {
         MetaObject metaObject = MetaObjectFactory.createObject(value, schema);
 
         PresentationContext newContext = getContext().createSubContext(metaObject);
-        newContext.setSchema(schema == null ? null : schema.getName());
+        newContext.setSchema(schema == null ? null : schema);
         newContext.setLayout(layout);
         newContext.setProperties(properties);
         
@@ -223,7 +223,7 @@ public abstract class Renderer {
         MetaObject metaObject = MetaObjectFactory.createObject(slot.getObject(), slot.getSchema());
         
         PresentationContext newContext = getContext().createSubContext(metaObject);
-        newContext.setSchema(slot.getSchema() != null ? slot.getSchema().getName() : null);
+        newContext.setSchema(slot.getSchema() != null ? slot.getSchema() : null);
         newContext.setLayout(slot.getLayout());
         newContext.setProperties(slot.getProperties());
         
