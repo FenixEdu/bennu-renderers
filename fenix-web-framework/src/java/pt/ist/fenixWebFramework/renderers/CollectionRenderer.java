@@ -27,7 +27,6 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObjectCollection;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
-import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 
@@ -305,7 +304,7 @@ public class CollectionRenderer extends OutputRenderer {
 	return stringParts[index % stringParts.length];
     }
 
-    private TableLink getTableLink(String name) {
+    protected TableLink getTableLink(String name) {
 	TableLink tableLink = this.links.get(name);
 
 	if (tableLink == null) {
@@ -318,10 +317,14 @@ public class CollectionRenderer extends OutputRenderer {
 	return tableLink;
     }
 
-    private TableLink getTableLink(int order) {
+    protected TableLink getTableLink(int order) {
 	Collections.sort(this.sortedLinks);
 
 	return this.sortedLinks.get(order);
+    }
+
+    protected int getSortedLinksSize() {
+	return this.sortedLinks.size();
     }
 
     public String getLink(String name) {
@@ -916,6 +919,8 @@ public class CollectionRenderer extends OutputRenderer {
 	public HtmlComponent createLayout(Object object, Class type) {
 	    HtmlComponent component = super.createLayout(object, type);
 
+	    setExtraComponentOptions(object, component, type);
+
 	    if (component instanceof HtmlTable) {
 		((HtmlTable) component).setRenderCompliantTable(getRenderCompliantTable());
 	    }
@@ -947,6 +952,12 @@ public class CollectionRenderer extends OutputRenderer {
 		return container;
 	    } else {
 		return component;
+	    }
+	}
+
+	protected void setExtraComponentOptions(Object object, HtmlComponent component, Class type) {
+	    if (component instanceof HtmlTable) {
+		((HtmlTable) component).setRenderCompliantTable(getRenderCompliantTable());
 	    }
 	}
 
