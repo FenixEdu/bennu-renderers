@@ -14,6 +14,7 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlCheckBox;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
+import pt.ist.fenixWebFramework.renderers.components.HtmlImage;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
@@ -535,6 +536,20 @@ public class CollectionRenderer extends OutputRenderer {
 
     public String getVisibleIfNot(String name) {
 	return getTableLink(name).getVisibleIfNot();
+    }
+
+    /**
+     * Specifies the icon for the link
+     * 
+     * @param name
+     * @return
+     */
+    public String getIcon(String name) {
+	return getTableLink(name).getIcon();
+    }
+
+    public void setIcon(String name, String value) {
+	getTableLink(name).setIcon(value);
     }
 
     /**
@@ -1323,6 +1338,8 @@ public class CollectionRenderer extends OutputRenderer {
 
 	private String confirmationTitleKey;
 
+	private String icon;
+
 	public String getConfirmationTitleKey() {
 	    return confirmationTitleKey;
 	}
@@ -1484,6 +1501,14 @@ public class CollectionRenderer extends OutputRenderer {
 	    this.confirmationBundle = confirmationBundle;
 	}
 
+	public String getIcon() {
+	    return this.icon;
+	}
+
+	public void setIcon(final String value) {
+	    this.icon = value;
+	}
+
 	public int compareTo(TableLink other) {
 	    if (getOrder() == null) {
 		return 0;
@@ -1530,7 +1555,20 @@ public class CollectionRenderer extends OutputRenderer {
 		    link.setContextRelative(isContextRelative());
 		}
 
-		link.setText(getLinkText(this));
+		if (getIcon() != null && !getIcon().equals("none")) {
+		    HtmlLink forImage = new HtmlLink();
+		    forImage.setModuleRelative(false);
+		    forImage.setContextRelative(true);
+		    forImage.setUrl("/images/" + getIcon() + ".png");
+
+		    HtmlImage image = new HtmlImage();
+		    image.setSource(forImage.calculateUrl());
+		    image.setDescription(getLinkText(this));
+		    link.setBody(image);
+		} else {
+		    link.setText(getLinkText(this));
+		}
+
 		link.setModule(getModule());
 
 		if (getLinkFormat() != null) {
@@ -1569,7 +1607,7 @@ public class CollectionRenderer extends OutputRenderer {
 	    }
 	}
 
-	protected String getLinkText(TableLink tableLink) {
+	public String getLinkText(TableLink tableLink) {
 	    String text = tableLink.getText();
 
 	    if (text != null) {
