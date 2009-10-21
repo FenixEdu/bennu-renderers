@@ -374,7 +374,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		String finalUri = link.calculateUrl();
 		String scriptText = "$(\"input#" + escapeId(textFieldId) + "\").autocomplete(\"" + finalUri + "\", { minChars: "
 			+ getMinChars() + ", validSelection: false"
-			+ ", cleanSelection: clearAutoComplete, select: selectElement, after: updateCustomValue});";
+			+ ", cleanSelection: clearAutoComplete, select: selectElement, after: updateCustomValue, error:showError});";
 
 		HtmlScript script = new HtmlScript();
 		script.setContentType("text/javascript");
