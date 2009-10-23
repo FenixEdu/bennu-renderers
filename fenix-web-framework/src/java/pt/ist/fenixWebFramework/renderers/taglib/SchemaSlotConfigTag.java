@@ -12,9 +12,9 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.log4j.Logger;
 
-import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
+import pt.ist.fenixWebFramework.renderers.validators.RequiredValidator;
 import pt.utl.ist.fenix.tools.util.Pair;
 
 public class SchemaSlotConfigTag extends BodyTagSupport implements PropertyContainerTag, ValidatorContainerTag {
@@ -26,6 +26,7 @@ public class SchemaSlotConfigTag extends BodyTagSupport implements PropertyConta
     private String key;
     private String validator;
     private boolean readOnly;
+    private boolean required = false;
     private String layout;
     private String help;
     private SchemaConfigTag schemaTag;
@@ -57,8 +58,13 @@ public class SchemaSlotConfigTag extends BodyTagSupport implements PropertyConta
 	slot.setReadOnly(isReadOnly());
 	slot.setHelpLabel(getHelp());
 	slot.setLayout(getLayout());
+
 	if (this.validator != null) {
 	    addValidator(this.validator);
+	}
+
+	if (isRequired()) {
+	    validators.put(RequiredValidator.class.getName(), new Properties());
 	}
 
 	slot.setValidators(getValidatorsClass());
@@ -110,6 +116,14 @@ public class SchemaSlotConfigTag extends BodyTagSupport implements PropertyConta
 	this.readOnly = readOnly;
     }
 
+    public boolean isRequired() {
+	return required;
+    }
+
+    public void setRequired(boolean required) {
+	this.required = required;
+    }
+
     public String getLayout() {
 	return layout;
     }
@@ -130,6 +144,7 @@ public class SchemaSlotConfigTag extends BodyTagSupport implements PropertyConta
     public void release() {
 	this.validators = null;
 	this.properties = null;
+	this.required = false;
 	super.release();
     }
 
