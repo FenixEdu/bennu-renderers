@@ -333,6 +333,21 @@ public class CollectionRenderer extends OutputRenderer {
     }
 
     /**
+     * The Counter property indicates the property that should be getted to
+     * receive a number that will be displayed in the setted format right
+     * after the label
+     * 
+     * @property
+     */
+    public void setCounter(String name, String value) {
+	getTableLink(name).setCounter(value);
+    }
+
+    public String getCounter(String name) {
+	return getTableLink(name).getCounter();
+    }
+    
+    /**
      * The link property indicates the page to were the control link will point.
      * All params will be appended to this link.
      * 
@@ -1340,6 +1355,8 @@ public class CollectionRenderer extends OutputRenderer {
 
 	private String icon;
 
+	private String counter;
+
 	public String getConfirmationTitleKey() {
 	    return confirmationTitleKey;
 	}
@@ -1563,10 +1580,10 @@ public class CollectionRenderer extends OutputRenderer {
 
 		    HtmlImage image = new HtmlImage();
 		    image.setSource(forImage.calculateUrl());
-		    image.setDescription(getLinkText(this));
+		    image.setDescription(getLinkText(this,object));
 		    link.setBody(image);
 		} else {
-		    link.setText(getLinkText(this));
+		    link.setText(getLinkText(this,object));
 		}
 
 		link.setModule(getModule());
@@ -1607,7 +1624,7 @@ public class CollectionRenderer extends OutputRenderer {
 	    }
 	}
 
-	public String getLinkText(TableLink tableLink) {
+	public String getLinkText(TableLink tableLink, Object object) {
 	    String text = tableLink.getText();
 
 	    if (text != null) {
@@ -1623,11 +1640,11 @@ public class CollectionRenderer extends OutputRenderer {
 
 	    text = RenderUtils.getResourceString(bundle, key);
 
-	    if (text != null) {
-		return text;
+	    if (text == null) {
+		text = tableLink.getName();
 	    }
 
-	    return tableLink.getName();
+	    return getCounter() != null ? text +  RenderUtils.getFormattedProperties(getCounter(), object) : text;
 	}
 
 	protected void setLinkParameters(Object object, HtmlLink link, TableLink tableLink) {
@@ -1681,6 +1698,14 @@ public class CollectionRenderer extends OutputRenderer {
 		    e.printStackTrace();
 		}
 	    }
+	}
+
+	public void setCounter(String counter) {
+	    this.counter = counter;
+	}
+
+	public String getCounter() {
+	    return counter;
 	}
     }
 
