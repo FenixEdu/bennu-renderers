@@ -2,13 +2,14 @@ package pt.ist.fenixWebFramework.rendererExtensions.validators;
 
 import pt.ist.fenixWebFramework.rendererExtensions.AutoCompleteInputRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
-import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 
 public class RequiredAutoCompleteSelectionValidator extends HtmlValidator {
+
+    private boolean allowsCustom = false;
 
     public RequiredAutoCompleteSelectionValidator() {
 	super();
@@ -26,7 +27,8 @@ public class RequiredAutoCompleteSelectionValidator extends HtmlValidator {
 	HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getComponent();
 
 	String value = component.getValue();
-	if (value == null || value.length() == 0 || value.equals(AutoCompleteInputRenderer.TYPING_VALUE)) {
+	if (value == null || value.length() == 0
+		|| (!this.isAllowsCustom() && value.equals(AutoCompleteInputRenderer.TYPING_VALUE))) {
 	    setValid(false);
 	} else {
 	    setValid(true);
@@ -40,7 +42,15 @@ public class RequiredAutoCompleteSelectionValidator extends HtmlValidator {
 
     @Override
     protected String getSpecificValidatorScript() {
-	return "function(element) { return $(element).prevAll(\"input[name$=_AutoComplete]\").attr('value').length > 0; }";
+
+	StringBuilder validatorBuilder = new StringBuilder(
+		"function(element) { return $(element).prevAll(\"input[name$=_AutoComplete]\").attr('value').length > 0 ");
+	if (this.isAllowsCustom()) {
+	    validatorBuilder.append("|| ($(element).prevAll(\"input[name$=_AutoComplete]\").attr('value') == 'custom')");
+	}
+	validatorBuilder.append("; }");
+
+	return validatorBuilder.toString();
     }
 
     @Override
@@ -51,6 +61,14 @@ public class RequiredAutoCompleteSelectionValidator extends HtmlValidator {
     @Override
     protected String getValidatableId(HtmlFormComponent formComponent) {
 	return RenderUtils.escapeId(formComponent.getId().replace("_AutoComplete", ""));
+    }
+
+    public boolean isAllowsCustom() {
+	return allowsCustom;
+    }
+
+    public void setAllowsCustom(boolean allowsCustom) {
+	this.allowsCustom = allowsCustom;
     }
 
 }
