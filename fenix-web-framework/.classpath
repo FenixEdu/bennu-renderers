@@ -21,7 +21,7 @@
 	<classpathentry kind="lib" path="lib/Tidy.jar"/>
 	<classpathentry kind="lib" path="lib/htmlentities.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/dml-20091001.jar"/>
-	<classpathentry kind="lib" path="lib/fenix-framework-r43972.jar"/>
+	<classpathentry kind="lib" path="lib/dml-20091101.jar"/>
+	<classpathentry kind="lib" path="lib/fenix-framework-r44362.jar"/>
 	<classpathentry kind="output" path="output"/>
 </classpath>
