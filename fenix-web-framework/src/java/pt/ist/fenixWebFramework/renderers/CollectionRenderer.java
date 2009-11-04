@@ -334,8 +334,8 @@ public class CollectionRenderer extends OutputRenderer {
 
     /**
      * The Counter property indicates the property that should be getted to
-     * receive a number that will be displayed in the setted format right
-     * after the label
+     * receive a number that will be displayed in the setted format right after
+     * the label
      * 
      * @property
      */
@@ -346,7 +346,7 @@ public class CollectionRenderer extends OutputRenderer {
     public String getCounter(String name) {
 	return getTableLink(name).getCounter();
     }
-    
+
     /**
      * The link property indicates the page to were the control link will point.
      * All params will be appended to this link.
@@ -1576,14 +1576,14 @@ public class CollectionRenderer extends OutputRenderer {
 		    HtmlLink forImage = new HtmlLink();
 		    forImage.setModuleRelative(false);
 		    forImage.setContextRelative(true);
-		    forImage.setUrl("/images/" + getIcon() + ".png");
+		    forImage.setUrl("/images/" + getIcon() + ".gif");
 
 		    HtmlImage image = new HtmlImage();
 		    image.setSource(forImage.calculateUrl());
-		    image.setDescription(getLinkText(this,object));
+		    image.setDescription(getLinkText(this, object));
 		    link.setBody(image);
 		} else {
-		    link.setText(getLinkText(this,object));
+		    link.setText(getLinkText(this, object));
 		}
 
 		link.setModule(getModule());
@@ -1644,7 +1644,7 @@ public class CollectionRenderer extends OutputRenderer {
 		text = tableLink.getName();
 	    }
 
-	    return getCounter() != null ? text +  RenderUtils.getFormattedProperties(getCounter(), object) : text;
+	    return getCounter() != null ? text + RenderUtils.getFormattedProperties(getCounter(), object) : text;
 	}
 
 	protected void setLinkParameters(Object object, HtmlLink link, TableLink tableLink) {
