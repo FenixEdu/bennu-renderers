@@ -56,15 +56,6 @@ public class FenixDefinitionsFactory extends I18nFactorySet {
     public ComponentDefinition getDefinition(String tileName, ServletRequest request, ServletContext servletContext)
 	    throws NoSuchDefinitionException, DefinitionsFactoryException {
 
-//	Set<String> processedTiles = (Set<String>) request.getAttribute("__processedTiles");
-//	if (processedTiles == null) {
-//	    processedTiles = new HashSet<String>();
-//	    request.setAttribute("__processedTiles", processedTiles);
-//	} else if (processedTiles.contains(tileName)) {
-//	    return null;
-//	}
-//	processedTiles.add(tileName);
-
 	Locale locale = Language.getLocale();
 	if (caches.containsKey(locale)) {
 	    DefinitionsCache cache = caches.get(locale);

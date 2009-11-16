@@ -29,7 +29,8 @@ public class PartialTileDefinition {
 
     private static final Set<Method> tileMethods = new HashSet<Method>();
 
-    private final Map<String, String> attributes = new HashMap<String, String>();
+    private final Map<String, String> attributeValues = new HashMap<String, String>();
+    private final Map<String, String> attributeDefaults = new HashMap<String, String>();
 
     private final String path;
     private final String extend;
@@ -56,15 +57,41 @@ public class PartialTileDefinition {
 	Tile localTile = forward.tileProperties();
 	Tile globalTile = forwards.tileProperties();
 	path = forward.path();
-	extend = getDefinedValue(localTile.extend(), globalTile.extend());
-	title = getDefinedValue(localTile.title(), globalTile.title());
-	customBundleName = getDefinedValue(localTile.bundle(), globalTile.bundle());
+	extend = getDefinedValue(localTile.extend(), globalTile.extend(), getDefaultValue("extend"));
+	title = getDefinedValue(localTile.title(), globalTile.title(), getDefaultValue("title"));
+	customBundleName = getDefinedValue(localTile.bundle(), globalTile.bundle(), getDefaultValue("bundle"));
 	this.defaultBundleName = (defaultBundleName == null) ? mapping.module() : defaultBundleName;
 	for (Method tileMethod : tileMethods) {
 	    String localValue = invokeAnnotationMethod(tileMethod, localTile);
 	    String globalValue = invokeAnnotationMethod(tileMethod, globalTile);
-	    attributes.put(tileMethod.getName(), getDefinedValue(localValue, globalValue));
+	    attributeValues.put(tileMethod.getName(), getDefinedValue(localValue, globalValue, (String) tileMethod
+		    .getDefaultValue()));
+	    attributeDefaults.put(tileMethod.getName(), (String) tileMethod.getDefaultValue());
 	}
+    }
+
+    public PartialTileDefinition(String path) {
+	this.path = path;
+	extend = "";
+	title = "";
+	customBundleName = "";
+	defaultBundleName = "";
+    }
+
+    private static String getDefinedValue(String localValue, String globalValue, String defaultValue) {
+	if ((localValue == null) || (localValue == defaultValue)) {
+	    return globalValue;
+	}
+	return localValue;
+    }
+
+    private static String getDefaultValue(String methodName) {
+	try {
+	    return (String) Tile.class.getDeclaredMethod(methodName).getDefaultValue();
+	} catch (NoSuchMethodException ex) {
+	    ex.printStackTrace();
+	}
+	return "";
     }
 
     private static String invokeAnnotationMethod(Method method, Object annotation) {
@@ -76,14 +103,6 @@ public class PartialTileDefinition {
 	    ex.printStackTrace();
 	}
 	return "";
-    }
-
-    public PartialTileDefinition(String path) {
-	this.path = path;
-	extend = "";
-	title = "";
-	customBundleName = "";
-	defaultBundleName = "";
     }
 
     public String getExtend() {
@@ -105,8 +124,8 @@ public class PartialTileDefinition {
     public String getName() {
 	StringBuilder name = new StringBuilder();
 	name.append(path);
-	for (Entry<String, String> attribute : attributes.entrySet()) {
-	    if (!attribute.getValue().isEmpty()) {
+	for (Entry<String, String> attribute : attributeValues.entrySet()) {
+	    if (!attribute.getValue().equals(attributeDefaults.get(attribute.getKey()))) {
 		name.append("&").append(attribute.getKey()).append("=").append(attribute.getValue());
 	    }
 	}
@@ -126,13 +145,6 @@ public class PartialTileDefinition {
 
     }
 
-    private static String getDefinedValue(String localValue, String globalValue) {
-	if ((localValue == null) || (localValue.isEmpty())) {
-	    return globalValue;
-	}
-	return localValue;
-    }
-
     public void updateComponentDefinition(ComponentDefinition componentDefinition, Locale locale) {
 	componentDefinition.putAttribute("body", path);
 	if (!title.isEmpty()) {
@@ -143,8 +155,8 @@ public class PartialTileDefinition {
 	    }
 	}
 
-	for (Entry<String, String> attribute : attributes.entrySet()) {
-	    if (!attribute.getValue().isEmpty()) {
+	for (Entry<String, String> attribute : attributeValues.entrySet()) {
+	    if (!attribute.getValue().equals(attributeDefaults.get(attribute.getKey()))) {
 		componentDefinition.putAttribute(attribute.getKey(), attribute.getValue());
 	    }
 	}
