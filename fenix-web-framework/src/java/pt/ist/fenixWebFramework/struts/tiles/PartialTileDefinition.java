@@ -79,7 +79,7 @@ public class PartialTileDefinition {
     }
 
     private static String getDefinedValue(String localValue, String globalValue, String defaultValue) {
-	if ((localValue == null) || (localValue == defaultValue)) {
+	if ((localValue == null) || (localValue.equals(defaultValue))) {
 	    return globalValue;
 	}
 	return localValue;
