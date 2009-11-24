@@ -21,7 +21,24 @@ public class ServiceAnnotationInjector {
 	classPool.appendSystemPath();
 	try {
 	    for (final String arg : args) {
-		classPool.appendClassPath(arg);
+		if (arg.indexOf('*') >= 0) {
+		    final int wildCardPos = arg.indexOf('*');
+		    final int lastDirPos = arg.lastIndexOf(File.separatorChar);
+		    final String dirName = arg.substring(0, lastDirPos);
+		    final File dir = new File(dirName);
+
+		    final String p1 = arg.substring(lastDirPos + 1, wildCardPos);
+		    final String p2 = arg.substring(wildCardPos + 1);
+
+		    for (final File file : dir.listFiles()) {
+			final String filename = file.getName();
+			if (filename.startsWith(p1) && filename.endsWith(p2)) {
+			    classPool.appendClassPath(file.getAbsolutePath());
+			}
+		    }
+		} else {
+		    classPool.appendClassPath(arg);
+		}
 	    }
 	} catch (NotFoundException e) {
 	    throw new Error(e);
