@@ -286,7 +286,7 @@ public class HtmlCheckBoxList extends HtmlMultipleValueComponent {
 		    allChecked = false;
 		}
 
-		selectAllScript.append("document.getElementById('" + checkBox.getId() + "').checked = this.checked; ");
+		selectAllScript.append("var checkbox = document.getElementById('" + checkBox.getId() + "'); if (!checkbox.disabled) checkbox.checked = this.checked; ");
 
 		String eachScript = "if (! this.checked) document.getElementById('" + checkAllId + "').checked = false;";
 		checkBox.setOnClick(eachScript);
