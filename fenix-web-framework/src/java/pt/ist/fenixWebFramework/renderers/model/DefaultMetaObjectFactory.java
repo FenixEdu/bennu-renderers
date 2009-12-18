@@ -1,5 +1,6 @@
 package pt.ist.fenixWebFramework.renderers.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -110,6 +111,8 @@ public class DefaultMetaObjectFactory extends MetaObjectFactory {
 
 	if (isPrimitiveObject(object)) {
 	    result = new PrimitiveMetaObject(object);
+	} else if (object != null && !(object instanceof Serializable)) {
+	    result = new TransientMetaObject(object);
 	} else {
 	    SimpleMetaObject metaObject = new SimpleMetaObject(object);
 
