@@ -49,8 +49,8 @@ public class DateTimeInputRendererWithPicker extends DateTimeInputRenderer {
 	protected HtmlInlineContainer getCalendarScript(String inputId) {
 	    HtmlInlineContainer container = new HtmlInlineContainer();
 
-	    String scriptText = "$(function() { $(\"input#" + RenderUtils.escapeId(inputId)
-		    + "\").datepicker({showOn: 'button', buttonImage: '" + getImage()
+	    String scriptText = "$(function() { $(\"input[name='" + RenderUtils.escapeId(inputId)
+		    + "']\").datepicker({showOn: 'button', buttonImage: '" + getImage()
 		    + "', buttonImageOnly: true, firstDay: 1, currentText: '"
 		    + RenderUtils.getResourceString("RENDERER_RESOURCES", "renderers.datePicker.currentText") + "', monthNames: "
 		    + RenderUtils.getResourceString("RENDERER_RESOURCES", "renderers.datePicker.monthNames")
