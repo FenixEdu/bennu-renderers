@@ -34,7 +34,7 @@ public class GenericChecksumRewriter extends RequestRewriter {
 	for (final String string : strings) {
 	    stringBuilder.append(string);
 	}
-	
+
 	final User user = UserView.getUser();
 	if (user != null) {
 	    stringBuilder.append(user.getPrivateConstantForDigestCalculation());
@@ -63,6 +63,12 @@ public class GenericChecksumRewriter extends RequestRewriter {
 	    }
 	}
 	return calculateChecksum(strings);
+    }
+
+    public static String injectChecksumInUrl(final String contextPath, final String url) {
+	String checksum = GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "="
+		+ GenericChecksumRewriter.calculateChecksum(contextPath + url);
+	return url + "&" + checksum;
     }
 
     public GenericChecksumRewriter(HttpServletRequest httpServletRequest) {
