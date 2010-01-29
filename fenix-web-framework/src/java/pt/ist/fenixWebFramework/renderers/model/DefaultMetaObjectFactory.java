@@ -75,7 +75,7 @@ public class DefaultMetaObjectFactory extends MetaObjectFactory {
 	}
     }
 
-    protected void addSlotDescriptions(Schema schema, SimpleMetaObject metaObject) {
+    protected void addSlotDescriptions(Schema schema, MetaObject metaObject) {
 	List<SchemaSlotDescription> slotDescriptions = schema.getSlotDescriptions();
 	for (SchemaSlotDescription description : slotDescriptions) {
 	    MetaSlot metaSlot = (MetaSlot) createMetaSlot(metaObject, description);
@@ -112,7 +112,9 @@ public class DefaultMetaObjectFactory extends MetaObjectFactory {
 	if (isPrimitiveObject(object)) {
 	    result = new PrimitiveMetaObject(object);
 	} else if (object != null && !(object instanceof Serializable)) {
-	    result = new TransientMetaObject(object);
+	    TransientMetaObject metaObject = new TransientMetaObject(object);
+	    addSlotDescriptions(schema, metaObject);
+	    result = metaObject;
 	} else {
 	    SimpleMetaObject metaObject = new SimpleMetaObject(object);
 
@@ -150,9 +152,9 @@ public class DefaultMetaObjectFactory extends MetaObjectFactory {
 	MetaSlot metaSlot;
 
 	if (metaObject instanceof CreationMetaObject) {
-	    metaSlot = new MetaSlotWithDefault((SimpleMetaObject) metaObject, slotDescription.getSlotName());
+	    metaSlot = new MetaSlotWithDefault(metaObject, slotDescription.getSlotName());
 	} else {
-	    metaSlot = new MetaSlot((SimpleMetaObject) metaObject, slotDescription.getSlotName());
+	    metaSlot = new MetaSlot(metaObject, slotDescription.getSlotName());
 	}
 
 	metaSlot.setLabelKey(slotDescription.getKey());
