@@ -47,6 +47,8 @@ public class RequiredAutoCompleteSelectionValidator extends HtmlValidator {
 		"function(element) { return $(element).prevAll(\"input[name$=_AutoComplete]\").attr('value').length > 0 ");
 	if (this.isAllowsCustom()) {
 	    validatorBuilder.append("|| ($(element).prevAll(\"input[name$=_AutoComplete]\").attr('value') == 'custom')");
+	}else {
+	    validatorBuilder.append("&& ($(element).prevAll(\"input[name$=_AutoComplete]\").attr('value') != 'custom')");
 	}
 	validatorBuilder.append("; }");
 

@@ -1,14 +1,14 @@
 package pt.ist.fenixWebFramework.rendererExtensions;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
 
 import pt.ist.fenixWebFramework.rendererExtensions.converters.DomainObjectKeyConverter;
 import pt.ist.fenixWebFramework.renderers.InputRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlHiddenField;
-import pt.ist.fenixWebFramework.renderers.components.HtmlImage;
-import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
@@ -68,14 +68,26 @@ public class AutoCompleteInputRenderer extends InputRenderer {
     private String autoCompleteItemsStyleClass;
     private String textFieldStyleClass;
     private String errorStyleClass;
-
-    private boolean indicatorShown;
+    private String autoCompleteWidth;
 
     public AutoCompleteInputRenderer() {
 	super();
 
-	setIndicatorShown(true);
 	setMinChars(3);
+    }
+
+    public String getAutoCompleteWidth() {
+	return autoCompleteWidth;
+    }
+
+    /**
+     * Enforces a given width to the auto complete list. If it's not setted then
+     * the width will be the same as the input text field.
+     * 
+     * @param autoCompleteWidth
+     */
+    public void setAutoCompleteWidth(String autoCompleteWidth) {
+	this.autoCompleteWidth = autoCompleteWidth;
     }
 
     public String getRawSlotName() {
@@ -246,20 +258,6 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 	this.minChars = minChars;
     }
 
-    public boolean isIndicatorShown() {
-	return this.indicatorShown;
-    }
-
-    /**
-     * When this property is set to <code>true</code> a progress indicator is
-     * shown during the comunication with the server.
-     * 
-     * @property
-     */
-    public void setIndicatorShown(boolean indicatorShown) {
-	this.indicatorShown = indicatorShown;
-    }
-
     @Override
     protected Layout getLayout(Object object, Class type) {
 	return new Layout() {
@@ -267,7 +265,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 	    @Override
 	    public HtmlComponent createComponent(Object object, Class type) {
 
-		HtmlInlineContainer container = new HtmlInlineContainer();
+		HtmlBlockContainer container = new HtmlBlockContainer();
 
 		addScripts(container);
 
@@ -330,7 +328,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		return container;
 	    }
 
-	    private void addScripts(HtmlInlineContainer container) {
+	    private void addScripts(HtmlContainer container) {
 		HtmlLink link = new HtmlLink();
 		link.setModuleRelative(false);
 		link.setContextRelative(true);
@@ -341,13 +339,13 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		}
 	    }
 
-	    private void addSingleScript(HtmlInlineContainer container, HtmlLink link, String scriptName) {
+	    private void addSingleScript(HtmlContainer container, HtmlLink link, String scriptName) {
 		link.setUrl("/javaScript/" + scriptName);
 		HtmlScript script = new HtmlScript("text/javascript", link.calculateUrl(), true);
 		container.addChild(script);
 	    }
 
-	    private void addFinalScript(HtmlInlineContainer container, String textFieldId) {
+	    private void addFinalScript(HtmlContainer container, String textFieldId) {
 
 		HtmlLink link = new HtmlLink();
 		link.setModuleRelative(false);
@@ -373,10 +371,16 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 
 		String finalUri = link.calculateUrl();
 		String escapeId = escapeId(textFieldId);
-		String scriptText = "$(\"input#" + escapeId + "\").autocomplete(\"" + finalUri + "\", { minChars: "
-			+ getMinChars() + ", validSelection: false"
-			+ ", cleanSelection: clearAutoComplete, select: selectElement, after: updateCustomValue, error:showError}); +\n" +
-			"$(\"input[name='" + escapeId + "']\").val($(\"input#" + escapeId + "\").val());";
+		String scriptText = "$(\"input#"
+			+ escapeId
+			+ "\").autocomplete(\""
+			+ finalUri
+			+ "\", { minChars: "
+			+ getMinChars()
+			+ (!StringUtils.isEmpty(getAutoCompleteWidth()) ? ", width: '" + getAutoCompleteWidth() + "'" : "")
+			+ ", validSelection: false"
+			+ ", cleanSelection: clearAutoComplete, select: selectElement, after: updateCustomValue, error:showError}); +\n"
+			+ "$(\"input[name='" + escapeId + "']\").val($(\"input#" + escapeId + "\").val());";
 
 		HtmlScript script = new HtmlScript();
 		script.setContentType("text/javascript");
