@@ -1,14 +1,17 @@
 package pt.ist.fenixWebFramework.renderers.components.state;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
-import pt.ist.fenixWebFramework._development.LogLevel;
+import org.apache.commons.collections.Predicate;
+import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.taglib.html.Constants;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlHiddenField;
@@ -25,15 +28,8 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
-import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
-import pt.utl.ist.fenix.tools.util.Pair;
-
-import org.apache.commons.collections.Predicate;
-import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.taglib.html.Constants;
 
 public class ComponentLifeCycle {
     private static final Logger logger = Logger.getLogger(ComponentLifeCycle.class);
@@ -154,10 +150,9 @@ public class ComponentLifeCycle {
 	boolean anySkip = false;
 	boolean anyCanceled = false;
 	boolean skipValidation = false;
-	
+
 	skipValidation = Boolean.parseBoolean(request.getParameter("skipValidation"));
-	
-	
+
 	for (IViewState viewState : viewStates) {
 	    ViewStateHolder holder = new ViewStateHolder(viewState);
 	    viewStateHolders.add(holder);
@@ -302,37 +297,35 @@ public class ComponentLifeCycle {
 
 	});
 
-	if (validators.isEmpty()) {
-	    List<HtmlComponent> formComponents = HtmlComponent.getComponents(component, new Predicate() {
+	List<HtmlComponent> formComponents = HtmlComponent.getComponents(component, new Predicate() {
 
-		public boolean evaluate(Object object) {
-		    if (!(object instanceof HtmlFormComponent)) {
-			return false;
-		    }
-
-		    HtmlFormComponent formComponent = (HtmlFormComponent) object;
-		    return formComponent.getTargetSlot() != null;
+	    public boolean evaluate(Object object) {
+		if (!(object instanceof HtmlFormComponent)) {
+		    return false;
 		}
 
-	    });
+		HtmlFormComponent formComponent = (HtmlFormComponent) object;
+		return formComponent.getTargetSlot() != null;
+	    }
 
-	    if (!formComponents.isEmpty()) {
-		for (HtmlComponent boundComponent : formComponents) {
-		    HtmlFormComponent formComponent = (HtmlFormComponent) boundComponent;
-		    HtmlChainValidator chainValidator = formComponent.getChainValidator();
-		    if (chainValidator == null) {
-			chainValidator = new HtmlChainValidator(formComponent);
-		    }
+	});
 
-		    MetaSlotKey key = formComponent.getTargetSlot();
-		    MetaSlot slot = getMetaSlot(metaObject, key);
-
-		    for (HtmlValidator validator : slot.getValidatorsList()) {
-			chainValidator.addValidator(validator);
-		    }
-
-		    validators.add(chainValidator);
+	if (!formComponents.isEmpty()) {
+	    for (HtmlComponent boundComponent : formComponents) {
+		HtmlFormComponent formComponent = (HtmlFormComponent) boundComponent;
+		HtmlChainValidator chainValidator = formComponent.getChainValidator();
+		if (chainValidator == null) {
+		    chainValidator = new HtmlChainValidator(formComponent);
 		}
+
+		MetaSlotKey key = formComponent.getTargetSlot();
+		MetaSlot slot = getMetaSlot(metaObject, key);
+
+		for (HtmlValidator validator : slot.getValidatorsList()) {
+		    chainValidator.addValidator(validator);
+		}
+
+		validators.add(chainValidator);
 	    }
 	}
 
@@ -498,10 +491,8 @@ public class ComponentLifeCycle {
 		Object finalValue = formComponent.getConvertedValue(metaSlot);
 		metaSlot.setObject(finalValue);
 	    } catch (Exception e) {
-		e.printStackTrace();
-		if (LogLevel.WARN) {
-		    logger.warn("failed to do conversion for slot " + metaSlot.getName() + ": " + e);
-		}
+		logger.warn("failed to do conversion for slot " + metaSlot.getName() + ": " + e);
+		logger.debug("conversation stacktrace",e);
 		addConvertError(viewState, metaSlot, e);
 		hasConvertError = true;
 	    }
