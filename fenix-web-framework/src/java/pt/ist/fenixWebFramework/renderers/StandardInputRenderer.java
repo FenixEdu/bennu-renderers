@@ -258,7 +258,7 @@ public class StandardInputRenderer extends InputRenderer {
 			if (formComponent.getId() == null) {
 			    formComponent.setId(slot.getKey().toString());
 			}
-			if (FenixWebFramework.getConfig().isJavascriptValidationEnabled()) {
+			if (FenixWebFramework.getConfig().isJavascriptValidationEnabled() && !isHideValidators()) {
 			    HtmlChainValidator chainValidator = getChainValidator(formComponent, slot);
 			    for (HtmlValidator validator : chainValidator.getSupportedJavascriptValidators()) {
 				HtmlInlineContainer container = new HtmlInlineContainer();
