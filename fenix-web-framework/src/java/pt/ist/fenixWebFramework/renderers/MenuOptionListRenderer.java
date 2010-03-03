@@ -23,74 +23,72 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 /**
- * This renderer as a purpose similar to {@link pt.ist.fenixWebFramework.renderers.CheckBoxOptionListRenderer}
- * but is intended to collect only one value. All the possible values for the slot beeing edited
- * are presented in an html menu. The presentation of each object must have in consideration
- * that the object is beeing presented in an option of the menu so it must be short and simple.
- * If possible used the <tt>format</tt> property to format the object. Nevertheless the usual 
+ * This renderer as a purpose similar to
+ * {@link pt.ist.fenixWebFramework.renderers.CheckBoxOptionListRenderer} but is
+ * intended to collect only one value. All the possible values for the slot
+ * beeing edited are presented in an html menu. The presentation of each object
+ * must have in consideration that the object is beeing presented in an option
+ * of the menu so it must be short and simple. If possible used the
+ * <tt>format</tt> property to format the object. Nevertheless the usual
  * configuration is possible with <tt>eachLayout</tt> and <tt>eachSchema</tt>.
  * 
  * <p>
- * Example:
- * <select>
- *  <option>&lt;object A presentation&gt;</option>
- *  <option>&lt;object B presentation&gt;</option>
- *  <option>&lt;object C presentation&gt;</option>
- * </select>
+ * Example: <select> <option>&lt;object A presentation&gt;</option>
+ * <option>&lt;object B presentation&gt;</option> <option>&lt;object C
+ * presentation&gt;</option> </select>
  * 
  * @author cfgi
  */
 public class MenuOptionListRenderer extends InputRenderer {
-    private String format; 
-    
+    private String format;
+
     private String eachSchema;
 
     private String eachLayout;
-    
+
     private String providerClass;
 
     private DataProvider provider;
-    
+
     private String sortBy;
-    
+
     private boolean saveOptions;
-    
+
     private boolean nullOptionHidden;
     private String defaultText;
     private String bundle;
     private boolean key;
 
     public String getFormat() {
-        return this.format;
+	return this.format;
     }
 
     /**
-     * This allows to specify a presentation format for each
-     * object. For more details about the format syntaxt
-     * check the {@see FormatRenderer}. 
+     * This allows to specify a presentation format for each object. For more
+     * details about the format syntaxt check the {@see FormatRenderer}.
      * 
      * @property
      */
     public void setFormat(String format) {
-        this.format = format;
+	this.format = format;
     }
 
     public String getEachLayout() {
-        return this.eachLayout;
+	return this.eachLayout;
     }
 
     /**
      * The layout to be used when presenting each object. This property will
-     * only be used if {@link #setFormat(String) format} is not specified. 
+     * only be used if {@link #setFormat(String) format} is not specified.
      * 
      * @property
      */
     public void setEachLayout(String eachLayout) {
-        this.eachLayout = eachLayout;
+	this.eachLayout = eachLayout;
     }
 
     public String getEachSchema() {
-        return this.eachSchema;
+	return this.eachSchema;
     }
 
     /**
@@ -99,26 +97,25 @@ public class MenuOptionListRenderer extends InputRenderer {
      * @property
      */
     public void setEachSchema(String eachSchema) {
-        this.eachSchema = eachSchema;
+	this.eachSchema = eachSchema;
     }
 
     public String getProviderClass() {
-        return this.providerClass;
+	return this.providerClass;
     }
 
     /**
-     * The class name of a {@linkplain DataProvider data provider}. The
-     * provider is responsible for constructing a collection will all
-     * possible values.
+     * The class name of a {@linkplain DataProvider data provider}. The provider
+     * is responsible for constructing a collection will all possible values.
      * 
      * @property
      */
     public void setProviderClass(String providerClass) {
-        this.providerClass = providerClass;
+	this.providerClass = providerClass;
     }
 
     public String getSortBy() {
-        return this.sortBy;
+	return this.sortBy;
     }
 
     /**
@@ -129,11 +126,11 @@ public class MenuOptionListRenderer extends InputRenderer {
      * @property
      */
     public void setSortBy(String sortBy) {
-        this.sortBy = sortBy;
+	this.sortBy = sortBy;
     }
 
     public String getBundle() {
-        return this.bundle;
+	return this.bundle;
     }
 
     /**
@@ -142,11 +139,11 @@ public class MenuOptionListRenderer extends InputRenderer {
      * @property
      */
     public void setBundle(String bundle) {
-        this.bundle = bundle;
+	this.bundle = bundle;
     }
 
     public String getDefaultText() {
-        return this.defaultText;
+	return this.defaultText;
     }
 
     /**
@@ -155,235 +152,225 @@ public class MenuOptionListRenderer extends InputRenderer {
      * @property
      */
     public void setDefaultText(String defaultText) {
-        this.defaultText = defaultText;
+	this.defaultText = defaultText;
     }
 
     public boolean isKey() {
-        return this.key;
+	return this.key;
     }
 
     /**
      * Indicates the the default text is a key to a resource bundle.
-     *  
+     * 
      * @property
      */
     public void setKey(boolean key) {
-        this.key = key;
+	this.key = key;
     }
-    
+
     public boolean isSaveOptions() {
-        return saveOptions;
+	return saveOptions;
     }
 
     /**
-     * Allows the possible object list to be persisted between requests,
-     * meaning that the provider is invoked only once.
+     * Allows the possible object list to be persisted between requests, meaning
+     * that the provider is invoked only once.
      * 
      * @property
      */
     public void setSaveOptions(boolean saveOptions) {
-        this.saveOptions = saveOptions;
+	this.saveOptions = saveOptions;
     }
 
     public boolean isNullOptionHidden() {
-        return this.nullOptionHidden;
+	return this.nullOptionHidden;
     }
 
     /**
-     * Don't show the default option, that is, the options meaning no value selected.
+     * Don't show the default option, that is, the options meaning no value
+     * selected.
      * 
      * @property
      */
     public void setNullOptionHidden(boolean nullOptionHidden) {
-        this.nullOptionHidden = nullOptionHidden;
+	this.nullOptionHidden = nullOptionHidden;
     }
 
     @Override
     protected Layout getLayout(Object object, Class type) {
-        return new MenuOptionLayout();
+	return new MenuOptionLayout();
     }
 
     protected DataProvider getProvider() {
-        if (this.provider == null) {
-            String className = getProviderClass();
-            
-            try {
-                Class providerCass = (Class<DataProvider>) Class.forName(className);
-                this.provider = (DataProvider) providerCass.newInstance();  
-            } catch (Exception e) {
-                throw new RuntimeException("could not get a data provider instance", e);
-            }
-        }
-        
-        return this.provider;
+	if (this.provider == null) {
+	    String className = getProviderClass();
+
+	    try {
+		Class<?> providerCass = Class.forName(className);
+		this.provider = (DataProvider) providerCass.newInstance();
+	    } catch (Exception e) {
+		throw new RuntimeException("could not get a data provider instance", e);
+	    }
+	}
+
+	return this.provider;
     }
-    
+
     protected Converter getConverter() {
-        DataProvider provider = getProvider();
-        return provider == null ? null : provider.getConverter();
+	DataProvider provider = getProvider();
+	return provider == null ? null : provider.getConverter();
     }
-    
-    protected Collection getPossibleObjects() {
-        Object object = ((MetaSlot) getInputContext().getMetaObject()).getMetaObject().getObject();
-        Object value = getInputContext().getMetaObject().getObject();
-        
-        if (getProviderClass() != null) {
-            try {
-                DataProvider provider = getProvider();
-                Collection collection = (Collection) provider.provide(object, value);
-                
-                if (getSortBy() == null) {
-                    return collection;
-                }
-                else {
-                    return RenderUtils.sortCollectionWithCriteria(collection, getSortBy());
-                }
-            }
-            catch (Exception e) {
-                throw new RuntimeException("exception while executing data provider", e);
-            }
-        }
-        else {
-            throw new RuntimeException("a data provider must be supplied");
-        }
+
+    protected Collection<?> getPossibleObjects() {
+	Object object = ((MetaSlot) getInputContext().getMetaObject()).getMetaObject().getObject();
+	Object value = getInputContext().getMetaObject().getObject();
+
+	if (getProviderClass() != null) {
+	    try {
+		DataProvider provider = getProvider();
+		Collection<?> collection = (Collection<?>) provider.provide(object, value);
+
+		if (getSortBy() == null) {
+		    return collection;
+		} else {
+		    return RenderUtils.sortCollectionWithCriteria(collection, getSortBy());
+		}
+	    } catch (Exception e) {
+		throw new RuntimeException("exception while executing data provider", e);
+	    }
+	} else {
+	    throw new RuntimeException("a data provider must be supplied");
+	}
     }
-    
+
     class MenuOptionLayout extends Layout {
-        
-        @Override
-        public HtmlComponent createComponent(Object object, Class type) {
-            HtmlMenu menu = new HtmlMenu();
-            
-            if (! isNullOptionHidden()) {
-                String defaultOptionTitle = getDefaultTitle();
-                menu.createDefaultOption(defaultOptionTitle).setSelected(object == null);
-            }
-            
-            RenderKit kit = RenderKit.getInstance();
-            Schema schema = kit.findSchema(getEachSchema()); 
-            
-            List<MetaObject> possibleMetaObjects;
-            
-            if (hasSavedPossibleMetaObjects()) {
-                possibleMetaObjects = getPossibleMetaObjects();
-            } else {
-                possibleMetaObjects = new ArrayList<MetaObject>();                
-                for (Object possibility : getPossibleObjects()) {
-                    possibleMetaObjects.add(MetaObjectFactory.createObject(possibility, schema));
-                }
-            }
-            
-            for (MetaObject metaObject : possibleMetaObjects) {
-                Object obj = metaObject.getObject();
-                HtmlMenuOption option = menu.createOption(null);
-                
-                if (getConverter() instanceof BiDirectionalConverter) {
-                    option.setValue(((BiDirectionalConverter) getConverter()).deserialize(obj)); 
-                } else {
-                    MetaObjectKey key = metaObject.getKey();
-                    option.setValue(key.toString());
-                }
 
-                //FIXME enum rendering does not use resource bundle when no layout is defined
-                //turnaround: use a non existing layout to force the rendering with the RenderKit
-                if (getEachLayout() == null) {
-                    option.setText(getObjectLabel(obj));
-                }
-                else {
-                    PresentationContext newContext = getContext().createSubContext(metaObject);
-                    newContext.setLayout(getEachLayout());
-                    newContext.setRenderMode(RenderMode.getMode("output"));
-                    
-                    HtmlComponent component = kit.render(newContext, obj);                    
-                    option.setBody(component);
-                }
+	@Override
+	public HtmlComponent createComponent(Object object, Class type) {
+	    HtmlMenu menu = new HtmlMenu();
 
-                if (obj.equals(object)) {
-                    option.setSelected(true);
-                }
-            }
-            
-            if (isSaveOptions()) {
-                savePossibleMetaObjects(possibleMetaObjects);
-            }
-            
-            Converter converter = getConverter();
-            menu.setConverter(new OptionConverter(possibleMetaObjects, converter));
-            
-            menu.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
-            return menu;
-        }
-        
-        private boolean hasSavedPossibleMetaObjects() {
-            return getInputContext().getViewState().getLocalAttribute("options") != null;
-        }
+	    if (!isNullOptionHidden()) {
+		String defaultOptionTitle = getDefaultTitle();
+		menu.createDefaultOption(defaultOptionTitle).setSelected(object == null);
+	    }
 
-        private List<MetaObject> getPossibleMetaObjects() {
-            return (List<MetaObject>) getInputContext().getViewState().getLocalAttribute("options");
-        }
-        
-        private void savePossibleMetaObjects(List<MetaObject> possibleMetaObjects) {
-            getInputContext().getViewState().setLocalAttribute("options", possibleMetaObjects);
-        }
+	    RenderKit kit = RenderKit.getInstance();
+	    Schema schema = kit.findSchema(getEachSchema());
 
-        // TODO: duplicate code, id=menu.getDefaultTitle
-        private String getDefaultTitle() {
-            if (getDefaultText() == null) {
-                return RenderUtils.getResourceString("renderers.menu.default.title");
-            }
-            else {
-                if (isKey()) {
-                    return RenderUtils.getResourceString(getBundle(), getDefaultText());
-                }
-                else {
-                    return getDefaultText();
-                }
-            }
-        }
+	    List<MetaObject> possibleMetaObjects;
 
-        protected String getObjectLabel(Object object) {
-            if (getFormat() != null) {
-                return RenderUtils.getFormattedProperties(getFormat(), object);
-            }
-            else {
-                return String.valueOf(object);
-            }
-        }
+	    if (hasSavedPossibleMetaObjects()) {
+		possibleMetaObjects = getPossibleMetaObjects();
+	    } else {
+		possibleMetaObjects = new ArrayList<MetaObject>();
+		for (Object possibility : getPossibleObjects()) {
+		    possibleMetaObjects.add(MetaObjectFactory.createObject(possibility, schema));
+		}
+	    }
+
+	    for (MetaObject metaObject : possibleMetaObjects) {
+		Object obj = metaObject.getObject();
+		HtmlMenuOption option = menu.createOption(null);
+
+		if (getConverter() instanceof BiDirectionalConverter) {
+		    option.setValue(((BiDirectionalConverter) getConverter()).deserialize(obj));
+		} else {
+		    MetaObjectKey key = metaObject.getKey();
+		    option.setValue(key.toString());
+		}
+
+		if ((getEachLayout() == null) && (!Enum.class.isAssignableFrom(obj.getClass()))) {
+		    option.setText(getObjectLabel(obj));
+		} else {
+		    PresentationContext newContext = getContext().createSubContext(metaObject);
+		    newContext.setLayout(getEachLayout());
+		    newContext.setRenderMode(RenderMode.getMode("output"));
+
+		    HtmlComponent component = kit.render(newContext, obj);
+		    option.setBody(component);
+		}
+
+		if (obj.equals(object)) {
+		    option.setSelected(true);
+		}
+	    }
+
+	    if (isSaveOptions()) {
+		savePossibleMetaObjects(possibleMetaObjects);
+	    }
+
+	    Converter converter = getConverter();
+	    menu.setConverter(new OptionConverter(possibleMetaObjects, converter));
+
+	    menu.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
+	    return menu;
+	}
+
+	private boolean hasSavedPossibleMetaObjects() {
+	    return getInputContext().getViewState().getLocalAttribute("options") != null;
+	}
+
+	private List<MetaObject> getPossibleMetaObjects() {
+	    return (List<MetaObject>) getInputContext().getViewState().getLocalAttribute("options");
+	}
+
+	private void savePossibleMetaObjects(List<MetaObject> possibleMetaObjects) {
+	    getInputContext().getViewState().setLocalAttribute("options", possibleMetaObjects);
+	}
+
+	// TODO: duplicate code, id=menu.getDefaultTitle
+	private String getDefaultTitle() {
+	    if (getDefaultText() == null) {
+		return RenderUtils.getResourceString("renderers.menu.default.title");
+	    } else {
+		if (isKey()) {
+		    return RenderUtils.getResourceString(getBundle(), getDefaultText());
+		} else {
+		    return getDefaultText();
+		}
+	    }
+	}
+
+	protected String getObjectLabel(Object object) {
+	    if (getFormat() != null) {
+		return RenderUtils.getFormattedProperties(getFormat(), object);
+	    } else {
+		return String.valueOf(object);
+	    }
+	}
 
     }
-    
+
     private static class OptionConverter extends Converter {
 
-        private List<MetaObject> metaObjects;
-        private Converter converter;
+	private final List<MetaObject> metaObjects;
+	private final Converter converter;
 
-        public OptionConverter(List<MetaObject> metaObjects, Converter converter) {
-            this.metaObjects = metaObjects;
-            this.converter = converter;
-        }
+	public OptionConverter(List<MetaObject> metaObjects, Converter converter) {
+	    this.metaObjects = metaObjects;
+	    this.converter = converter;
+	}
 
-        @Override
-        public Object convert(Class type, Object value) {
-            String textValue = (String) value;
-            
-            if (textValue == null || textValue.length() == 0) {
-                return null;
-            }
-            else {
-                if (this.converter != null) {
-                    return this.converter.convert(type, value);
-                }
-                else {
-                    for (MetaObject metaObject : this.metaObjects) {
-                        if (textValue.equals(metaObject.getKey().toString())) {
-                            return metaObject.getObject();
-                        }
-                    }
-                    
-                    throw new ConversionException("renderers.menuOption.convert.invalid.value");
-                }
-            }
-        }
-        
+	@Override
+	public Object convert(Class type, Object value) {
+	    String textValue = (String) value;
+
+	    if (textValue == null || textValue.length() == 0) {
+		return null;
+	    } else {
+		if (this.converter != null) {
+		    return this.converter.convert(type, value);
+		} else {
+		    for (MetaObject metaObject : this.metaObjects) {
+			if (textValue.equals(metaObject.getKey().toString())) {
+			    return metaObject.getObject();
+			}
+		    }
+
+		    throw new ConversionException("renderers.menuOption.convert.invalid.value");
+		}
+	    }
+	}
+
     }
 }
