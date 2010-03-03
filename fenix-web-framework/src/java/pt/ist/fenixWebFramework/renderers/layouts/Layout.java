@@ -3,18 +3,14 @@ package pt.ist.fenixWebFramework.renderers.layouts;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.jsp.tagext.BodyContent;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
-import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.log4j.Logger;
-import org.w3c.dom.html.HTMLBodyElement;
 
 public abstract class Layout {
     private static Logger logger = Logger.getLogger(Layout.class);
@@ -27,6 +23,8 @@ public abstract class Layout {
 
     private boolean requiredMarkShown;
 
+    private boolean requiredMessageShown;
+
     private boolean optionalMarkShown;
 
     private static final String REQUIRED_EXPLANATION_CLASS = "requiredMessage";
@@ -37,6 +35,14 @@ public abstract class Layout {
 
     public void setRequiredMarkShown(boolean requiredMarkShown) {
 	this.requiredMarkShown = requiredMarkShown;
+    }
+
+    public boolean isRequiredMessageShown() {
+	return requiredMessageShown;
+    }
+
+    public void setRequiredMessageShown(boolean requiredMessageShown) {
+	this.requiredMessageShown = requiredMessageShown;
     }
 
     public boolean isOptionalMarkShown() {
@@ -91,7 +97,7 @@ public abstract class Layout {
     }
 
     public String[] getPropertyNames() {
-	return new String[] { "classes", "style", "title", "requiredMarkShown", "optionalMarkShown" };
+	return new String[] { "classes", "style", "title", "requiredMarkShown", "requiredMessageShown", "optionalMarkShown" };
     }
 
     protected String[] mergePropertyNames(String[] parentNames, String[] ownNames) {
@@ -108,11 +114,11 @@ public abstract class Layout {
 	HtmlComponent component = createComponent(object, type);
 	applyStyle(component);
 
-	if (isRequiredMarkShown()) {
+	if (isRequiredMarkShown() && isRequiredMessageShown()) {
 	    HtmlBlockContainer container = new HtmlBlockContainer();
 	    container.addChild(component);
 	    HtmlText requiredMessage = new HtmlText(RenderUtils.getResourceString("RENDERER_RESOURCES",
-		    "renderers.validator.required.mark.explanation"),false);
+		    "renderers.validator.required.mark.explanation"), false);
 	    requiredMessage.setClasses(REQUIRED_EXPLANATION_CLASS);
 	    container.addChild(requiredMessage);
 	    component = container;

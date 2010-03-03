@@ -71,6 +71,8 @@ public class StandardInputRenderer extends InputRenderer {
 
     private boolean requiredMarkShown = false;
 
+    private boolean requiredMessageShown = true;
+
     private boolean optionalMarkShown = false;
 
     private String helpNoJavascriptClasses;
@@ -388,6 +390,14 @@ public class StandardInputRenderer extends InputRenderer {
 
     public void setRequiredMarkShown(boolean requiredMarkShown) {
 	this.requiredMarkShown = requiredMarkShown;
+    }
+
+    public boolean isRequiredMessageShown() {
+	return requiredMessageShown;
+    }
+
+    public void setRequiredMessageShown(boolean requiredMessageShown) {
+	this.requiredMessageShown = requiredMessageShown;
     }
 
     public String getHelpImageIcon() {
