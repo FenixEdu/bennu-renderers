@@ -13,13 +13,11 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTableCell.CellType;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
-import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
-import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 
 public class MatrixRenderer extends InputRenderer {
 
-    private List<CellConfiguration> cellConfigurations;
+    private final List<CellConfiguration> cellConfigurations;
 
     public MatrixRenderer() {
 	this.cellConfigurations = new ArrayList<CellConfiguration>();
@@ -45,11 +43,19 @@ public class MatrixRenderer extends InputRenderer {
 	return getCellConfiguration(id).getSlotName();
     }
 
+    public void setLabelHidden(String id, String value) {
+	getCellConfiguration(id).setLabelHidden(Boolean.valueOf(value));
+    }
+
+    public String getLabelHidden(String id) {
+	return getCellConfiguration(id).isLabelHidden().toString();
+    }
+
     public void setColumn(String id, String value) {
 	getCellConfiguration(id).setColumn(Integer.valueOf(value));
     }
 
-    public String geColumn(String id) {
+    public String getColumn(String id) {
 	return getCellConfiguration(id).getColumn().toString();
     }
 
@@ -57,7 +63,7 @@ public class MatrixRenderer extends InputRenderer {
 	getCellConfiguration(id).setRow(Integer.valueOf(value));
     }
 
-    public String geRow(String id) {
+    public String getRow(String id) {
 	return getCellConfiguration(id).getRow().toString();
     }
 
@@ -65,7 +71,7 @@ public class MatrixRenderer extends InputRenderer {
 	getCellConfiguration(id).setColumnSpan(Integer.valueOf(value));
     }
 
-    public String geColumnSpan(String id) {
+    public String getColumnSpan(String id) {
 	return getCellConfiguration(id).getColumnSpan().toString();
     }
 
@@ -81,7 +87,7 @@ public class MatrixRenderer extends InputRenderer {
 	getCellConfiguration(id).setLabelColumnSpan(Integer.valueOf(value));
     }
 
-    public String geLabelColumnSpan(String id) {
+    public String getLabelColumnSpan(String id) {
 	return getCellConfiguration(id).getLabelColumnSpan().toString();
     }
 
@@ -95,12 +101,13 @@ public class MatrixRenderer extends InputRenderer {
 
     @Override
     protected Layout getLayout(Object object, Class type) {
-	return new MatrixLayout(object);
+	return new MatrixLayout(getContext().getMetaObject());
     }
 
     private static class CellConfiguration {
 	private String id;
 	private String slotName;
+	private Boolean labelHidden;
 	private Integer labelRowSpan;
 	private Integer labelColumnSpan;
 	private Integer rowSpan;
@@ -110,10 +117,19 @@ public class MatrixRenderer extends InputRenderer {
 
 	public CellConfiguration(String id) {
 	    this.id = id;
+	    labelHidden = false;
 	    labelRowSpan = 1;
 	    labelColumnSpan = 1;
 	    rowSpan = 1;
 	    columnSpan = 1;
+	}
+
+	public Boolean isLabelHidden() {
+	    return labelHidden;
+	}
+
+	public void setLabelHidden(Boolean labelHidden) {
+	    this.labelHidden = labelHidden;
 	}
 
 	public Integer getLabelRowSpan() {
@@ -182,18 +198,17 @@ public class MatrixRenderer extends InputRenderer {
 
     }
 
+    // TODO: This should inherit from TabularLayout
     public class MatrixLayout extends Layout {
 
-	private MetaObject metaObject;
+	private final MetaObject metaObject;
 	private Map<Integer, List<CellConfiguration>> matrix;
 
 	private int maxColumns;
 	private int maxRows;
 
 	public MatrixLayout(Object object) {
-
-	    Schema schema = getContext().getSchema();
-	    this.metaObject = MetaObjectFactory.createObject(object, schema);
+	    this.metaObject = (MetaObject) object;
 	    this.matrix = new HashMap<Integer, List<CellConfiguration>>();
 	    this.maxColumns = -1;
 	    this.maxRows = -1;
@@ -244,10 +259,12 @@ public class MatrixRenderer extends InputRenderer {
 		    CellConfiguration configuration = getCell(row, column);
 		    if (configuration != null) {
 			MetaSlot slot = this.metaObject.getSlot(configuration.getSlotName());
-			HtmlTableCell headerCell = tableRow.createCell(CellType.HEADER);
-			headerCell.setRowspan(configuration.getLabelRowSpan());
-			headerCell.setColspan(configuration.getLabelColumnSpan());
-			headerCell.setBody(new HtmlText(slot.getLabel()));
+			if (!configuration.isLabelHidden()) {
+			    HtmlTableCell headerCell = tableRow.createCell(CellType.HEADER);
+			    headerCell.setRowspan(configuration.getLabelRowSpan());
+			    headerCell.setColspan(configuration.getLabelColumnSpan());
+			    headerCell.setBody(new HtmlText(slot.getLabel()));
+			}
 			HtmlTableCell componentCell = tableRow.createCell(CellType.DATA);
 			componentCell.setBody(renderSlot(slot));
 			componentCell.setRowspan(configuration.getRowSpan());
