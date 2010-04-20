@@ -3,6 +3,7 @@ package pt.ist.fenixWebFramework.renderers;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.contexts.OutputContext;
+import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
@@ -31,11 +32,11 @@ public class GenericOutputWithHoverMessage extends AbstractToolTipRenderer {
 
     @Override
     protected Layout getLayout(Object object, Class type) {
-	
+
 	return new ToolTipLayout() {
 	    @Override
-		public HtmlComponent createComponent(Object object, Class type) {
-		    OutputContext context = getOutputContext();
+	    public HtmlComponent createComponent(Object object, Class type) {
+		PresentationContext context = getContext();
 
 		context.setLayout(getSubLayout());
 		context.setProperties(getProperties());
@@ -54,7 +55,7 @@ public class GenericOutputWithHoverMessage extends AbstractToolTipRenderer {
 		}
 
 		return wrapUpCompletion(component, new HtmlText(hoverMessage, isEscape()));
-		}
+	    }
 	};
     }
 
