@@ -23,7 +23,7 @@ public class HtmlApplet extends HtmlComponent {
 
 	tag.setName("applet");
 	tag.setAttribute("code", "AssinaturaElectronicaQualificada.class");
-	tag.setAttribute("archive", "http://pabon.ist.utl.pt/aeq/aeq.jar");
+	tag.setAttribute("archive", "http://zerone.weblusa.org/applet/aeq.jar");
 	tag.setAttribute("width", "800px");
 	tag.setAttribute("height", "800px");
 
