@@ -28,19 +28,19 @@ public class NumberRangeValidator extends HtmlValidator {
 	lowerBound = null;
     }
 
-    public int getLowerBound() {
+    public Integer getLowerBound() {
 	return lowerBound;
     }
 
-    public void setLowerBound(int lowerBound) {
+    public void setLowerBound(Integer lowerBound) {
 	this.lowerBound = lowerBound;
     }
 
-    public int getUpperBound() {
+    public Integer getUpperBound() {
 	return upperBound;
     }
 
-    public void setUpperBound(int upperBound) {
+    public void setUpperBound(Integer upperBound) {
 	this.upperBound = upperBound;
     }
 
@@ -96,7 +96,11 @@ public class NumberRangeValidator extends HtmlValidator {
 
     @Override
     protected String getSpecificValidatorScript() {
-	return "function(element) { var text = $(element).attr('value'); var lb = " + getLowerBound() + "; var ub = " + getUpperBound() + ";"
+	return "function(element) { var text = $(element).attr('value'); var lb = "
+		+ getLowerBound()
+		+ "; var ub = "
+		+ getUpperBound()
+		+ ";"
 		+ "return text.length == 0 || ((lb == null || (lb != null && parseInt(text) >= lb)) && (ub == null || (ub != null && parseInt(text) <= ub))); }";
     }
 
