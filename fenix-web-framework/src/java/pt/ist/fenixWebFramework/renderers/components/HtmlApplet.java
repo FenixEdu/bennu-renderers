@@ -6,7 +6,8 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlApplet extends HtmlComponent {
 
-    private final HtmlTag param = new HtmlTag("param");
+    private final HtmlTag signContentURL = new HtmlTag("param");
+    private final HtmlTag serverURL = new HtmlTag("param");
 
     private String code;
     private String archive;
@@ -17,9 +18,14 @@ public class HtmlApplet extends HtmlComponent {
 	super();
     }
 
-    public void setURL(String value) {
-	param.setAttribute("name", "url");
-	param.setAttribute("value", value);
+    public void setServerURL(String value) {
+	serverURL.setAttribute("name", "serverURL");
+	serverURL.setAttribute("value", value);
+    }
+
+    public void setSignContentURL(String value) {
+	signContentURL.setAttribute("name", "signContentURL");
+	signContentURL.setAttribute("value", value);
     }
 
     @Override
@@ -32,7 +38,8 @@ public class HtmlApplet extends HtmlComponent {
 	tag.setAttribute("width", getWidth() + "px");
 	tag.setAttribute("height", getHeight() + "px");
 
-	tag.addChild(param);
+	tag.addChild(serverURL);
+	tag.addChild(signContentURL);
 
 	return tag;
     }

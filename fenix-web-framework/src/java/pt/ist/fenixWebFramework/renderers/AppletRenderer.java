@@ -3,17 +3,17 @@ package pt.ist.fenixWebFramework.renderers;
 import pt.ist.fenixWebFramework.renderers.components.HtmlApplet;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
-import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 
 /**
  * The default output renderer for the signature applet
  * 
- * @author diogo
+ * @author Diogo Figueiredo
  */
 public class AppletRenderer extends OutputRenderer {
 
     private String bundle;
-    private String link;
+    private String signContentURL;
+    private String serverURL;
 
     private String code;
     private String archive;
@@ -41,29 +41,41 @@ public class AppletRenderer extends OutputRenderer {
 	    public HtmlComponent createComponent(Object object, Class type) {
 		String objectId = (String) object;
 
-		String url = getLink();
-		String fullUrl = url + "&" + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "="
-			+ GenericChecksumRewriter.calculateChecksum(url);
+		/*
+		 * String url = getLink(); String fullUrl = url + "&" +
+		 * GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "=" +
+		 * GenericChecksumRewriter.calculateChecksum(url);
+		 */
 
 		HtmlApplet applet = new HtmlApplet();
 
-		applet.setURL(fullUrl);
 		applet.setCode(getCode());
 		applet.setArchive(getArchive());
 		applet.setWidth(getWidth());
 		applet.setHeight(getHeight());
+
+		applet.setSignContentURL(getSignContentURL());
+		applet.setServerURL(getServerURL());
 
 		return applet;
 	    }
 	};
     }
 
-    public void setLink(String link) {
-	this.link = link;
+    public void setSignContentURL(String link) {
+	this.signContentURL = link;
     }
 
-    public String getLink() {
-	return link;
+    public String getSignContentURL() {
+	return signContentURL;
+    }
+
+    public void setServerURL(String link) {
+	this.serverURL = link;
+    }
+
+    public String getServerURL() {
+	return serverURL;
     }
 
     public String getCode() {
