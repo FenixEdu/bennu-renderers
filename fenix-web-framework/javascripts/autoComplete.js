@@ -149,7 +149,7 @@ jQuery.fn.autocomplete = function(url, settings )
 		}
 		
 		textInput.focus(function focus(e) {
-			var currentWidth = settings.width != null ? settings.width : list.parent().width();
+			var currentWidth = settings.width != null ? settings.width : $(e.currentTarget).width();
 			if (list.width() != currentWidth) {
 				list.css({ width: currentWidth});
 			}
