@@ -5,6 +5,7 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSubmitButton;
+import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.controllers.HtmlSubmitButtonController;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
@@ -15,8 +16,9 @@ public class StringCaseChangerRenderer extends StringInputRenderer {
     @Override
     protected HtmlComponent createTextField(Object object, Class type) {
         HtmlInlineContainer container = new HtmlInlineContainer();
-
-        HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) super.createTextField(object, type);
+        HtmlContainer fieldComponent = (HtmlContainer) super.createTextField(object, type);
+        
+        HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) fieldComponent.getChildren().get(0);
         HtmlSubmitButton caseChangeButton = new HtmlSubmitButton("");
         HtmlSubmitButton capitalizeButton = new HtmlSubmitButton("Capitalize");
         
@@ -24,6 +26,7 @@ public class StringCaseChangerRenderer extends StringInputRenderer {
         nameButton(capitalizeButton, "capitalize-button-name");
         
         container.addChild(component);
+        container.addChild(new HtmlText(getFormatLabel()));
         container.addChild(caseChangeButton);
         container.addChild(capitalizeButton);
         

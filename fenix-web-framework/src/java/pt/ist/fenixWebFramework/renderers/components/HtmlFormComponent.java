@@ -27,7 +27,7 @@ public abstract class HtmlFormComponent extends HtmlComponent implements Convert
 
     private boolean disabled;
 
-    private HtmlChainValidator chainValidator;
+    private HtmlChainValidator chainValidator;    
 
     public HtmlFormComponent() {
 	super();
@@ -60,7 +60,7 @@ public abstract class HtmlFormComponent extends HtmlComponent implements Convert
     public boolean isDisabled() {
 	return this.disabled;
     }
-
+    
     public boolean hasConverter() {
 	return this.converter != null;
     }

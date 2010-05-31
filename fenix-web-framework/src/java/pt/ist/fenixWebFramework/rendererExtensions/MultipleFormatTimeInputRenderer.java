@@ -16,6 +16,11 @@ import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.converters.DateConverter;
 import pt.ist.fenixWebFramework.renderers.converters.MultipleFormatDateConverter;
 
+/**
+ * By default the value of <code>format</code> is used to show to the user
+ * how to write the date. The <code>formatText</code> property allows you to override that default.
+ * This means that the value of the property will be shown instead.
+ */
 public class MultipleFormatTimeInputRenderer extends DateInputRenderer {
 
     private boolean minute;

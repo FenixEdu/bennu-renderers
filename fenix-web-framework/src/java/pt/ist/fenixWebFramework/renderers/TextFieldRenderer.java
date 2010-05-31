@@ -1,11 +1,14 @@
 package pt.ist.fenixWebFramework.renderers;
 
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextInput;
 import pt.ist.fenixWebFramework.renderers.contexts.InputContext;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
+import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 /**
  * This renderer serves as a base for all input renderers that are
@@ -22,6 +25,10 @@ public abstract class TextFieldRenderer extends InputRenderer {
     private String size;
 
     private Integer maxLength;
+    
+    private String formatText;
+    private String bundle;
+    private boolean key;
 
     public boolean getDisabled() {
         return disabled;
@@ -77,11 +84,61 @@ public abstract class TextFieldRenderer extends InputRenderer {
         this.size = size;
     }
 
+    /**
+     * When the value of the <code>formatText</code> is a key this property indicates
+     * the name of the bundle where the key will be looked for.
+     * 
+     * @property
+     */
+    public void setBundle(String bundle) {
+        this.bundle = bundle;
+    }
+
+    public boolean isKey() {
+        return this.key;
+    }
+
+    /**
+     * Indicates the the value of the <code>formatText</code> property is 
+     * a key and not the text itself.
+     * 
+     * @property
+     */
+    public void setKey(boolean key) {
+        this.key = key;
+    }
+    
+    public String getFormatText() {
+        return this.formatText;
+    }
+
+    /**
+     * The value that will be appended next to the input text box.
+     * 
+     * @property
+     */
+    public void setFormatText(String formatText) {
+        this.formatText = formatText;
+    }
+
+    public String getBundle() {
+        return this.bundle;
+    }
+    
     @Override
     protected Layout getLayout(Object object, Class type) {
         return new TextFieldLayout();
     }
 
+    protected String getFormatLabel() {
+	if (isKey()) {
+	    return RenderUtils.getResourceString(getBundle(), getFormatText());
+	} else if (getFormatText() != null) {
+	    return getFormatText();
+	}
+	return StringUtils.EMPTY;
+    }
+    
     protected abstract HtmlComponent createTextField(Object object, Class type);
 
     protected class TextFieldLayout extends Layout {

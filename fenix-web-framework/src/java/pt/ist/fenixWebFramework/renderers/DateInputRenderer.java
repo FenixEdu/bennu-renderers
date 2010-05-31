@@ -6,6 +6,8 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts.util.RequestUtils;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
@@ -16,8 +18,6 @@ import pt.ist.fenixWebFramework.renderers.converters.DateConverter;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
-
-import org.apache.struts.util.RequestUtils;
 
 /**
  * This renderer provides a simple way of doing the input of a date. The date
@@ -33,10 +33,6 @@ import org.apache.struts.util.RequestUtils;
 public class DateInputRenderer extends TextFieldRenderer {
 
     private String format;
-
-    private String formatText;
-    private String bundle;
-    private boolean key;
     
     /**
      * The format in which the date should be displayed. The format can
@@ -58,49 +54,6 @@ public class DateInputRenderer extends TextFieldRenderer {
 
     public boolean isFormatSet() {
         return this.format != null;
-    }
-
-    public String getFormatText() {
-        return this.formatText;
-    }
-
-    /**
-     * By default the value of <code>format</code> is used to show to the user
-     * how to write the date. This property allows you to override that default.
-     * This means that the value of the property will be shown instead.
-     * 
-     * @property
-     */
-    public void setFormatText(String formatText) {
-        this.formatText = formatText;
-    }
-
-    public String getBundle() {
-        return this.bundle;
-    }
-
-    /**
-     * When the value of the <code>formatText</code> is a key this property indicates
-     * the name of the bundle where the key will be looked for.
-     * 
-     * @property
-     */
-    public void setBundle(String bundle) {
-        this.bundle = bundle;
-    }
-
-    public boolean isKey() {
-        return this.key;
-    }
-
-    /**
-     * Indicates the the value of the <code>formatText</code> property is 
-     * a key and not the text itself.
-     * 
-     * @property
-     */
-    public void setKey(boolean key) {
-        this.key = key;
     }
 
     protected Locale getLocale() {
@@ -130,6 +83,7 @@ public class DateInputRenderer extends TextFieldRenderer {
         return container;
     }
 
+    @Override
     protected String getFormatLabel() {
         if (isKey()) {
             return RenderUtils.getResourceString(getBundle(), getFormatText());

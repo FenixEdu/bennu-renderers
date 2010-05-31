@@ -6,6 +6,7 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
+import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextInput;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
@@ -21,7 +22,9 @@ public class ColorInputRenderer extends StringInputRenderer {
 	
     @Override
     protected HtmlComponent createTextField(Object object, Class type) {
-        HtmlTextInput input = (HtmlTextInput) super.createTextField(object, type);
+	HtmlContainer fieldComponent = (HtmlContainer) super.createTextField(object, type);
+	
+        HtmlTextInput input = (HtmlTextInput) fieldComponent.getChildren().get(0);
         input.setId(getContext().getMetaObject().getKey().toString());
         
         HtmlLink link = new HtmlLink();
@@ -38,6 +41,7 @@ public class ColorInputRenderer extends StringInputRenderer {
         HtmlContainer container = new HtmlInlineContainer();
 
         container.addChild(input);
+        container.addChild(new HtmlText(getFormatLabel()));
         container.addChild(script);
         
         return container;

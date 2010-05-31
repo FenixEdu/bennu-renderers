@@ -1,7 +1,10 @@
 package pt.ist.fenixWebFramework.renderers;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
+import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
 /**
@@ -33,11 +36,15 @@ public abstract class NumberInputRenderer extends StringInputRenderer {
 
     @Override
     protected HtmlComponent createTextField(Object object, Class type) {
-        HtmlFormComponent formComponent = (HtmlFormComponent) super.createTextField(object, type);
+	HtmlContainer fieldComponent = (HtmlContainer) super.createTextField(object, type);
         
+        HtmlFormComponent formComponent = (HtmlFormComponent) fieldComponent.getChildren().get(0);
         formComponent.setConverter(getConverter());
         
-        return formComponent;
+        HtmlContainer container = new HtmlInlineContainer();
+        container.addChild(formComponent);
+        container.addChild(new HtmlText(getFormatLabel()));
+        return container;
     }
 
     protected abstract Converter getConverter();
