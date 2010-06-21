@@ -1,13 +1,16 @@
 package pt.ist.fenixWebFramework.renderers.components;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import javax.servlet.jsp.PageContext;
 
 import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlApplet extends HtmlComponent {
 
-    private final HtmlTag signContentURL = new HtmlTag("param");
-    private final HtmlTag serverURL = new HtmlTag("param");
+    private final Map<String, String> properties = new HashMap<String, String>();
 
     private String code;
     private String archive;
@@ -16,16 +19,6 @@ public class HtmlApplet extends HtmlComponent {
 
     public HtmlApplet() {
 	super();
-    }
-
-    public void setServerURL(String value) {
-	serverURL.setAttribute("name", "serverURL");
-	serverURL.setAttribute("value", value);
-    }
-
-    public void setSignContentURL(String value) {
-	signContentURL.setAttribute("name", "signContentURL");
-	signContentURL.setAttribute("value", value);
     }
 
     @Override
@@ -38,10 +31,24 @@ public class HtmlApplet extends HtmlComponent {
 	tag.setAttribute("width", getWidth() + "px");
 	tag.setAttribute("height", getHeight() + "px");
 
-	tag.addChild(serverURL);
-	tag.addChild(signContentURL);
+	for (Entry<String, String> entry : properties.entrySet()) {
+	    HtmlTag paramTag = new HtmlTag("param");
+
+	    paramTag.setAttribute("name", entry.getKey());
+	    paramTag.setAttribute("value", entry.getValue());
+
+	    tag.addChild(paramTag);
+	}
 
 	return tag;
+    }
+
+    public void setProperty(String key, String value) {
+	properties.put(key, value);
+    }
+
+    public void removeProperty(String key) {
+	properties.remove(key);
     }
 
     public String getCode() {
