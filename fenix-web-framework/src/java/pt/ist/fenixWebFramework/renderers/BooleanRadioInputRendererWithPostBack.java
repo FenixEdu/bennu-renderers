@@ -14,9 +14,9 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 public class BooleanRadioInputRendererWithPostBack extends BooleanRadioInputRenderer {
     private String destination;
     private final String HIDDEN_NAME = "postback";
-    
+
     public String getDestination() {
-        return destination;
+	return destination;
     }
 
     /**
@@ -26,75 +26,74 @@ public class BooleanRadioInputRendererWithPostBack extends BooleanRadioInputRend
      * @property
      */
     public void setDestination(String destination) {
-        this.destination = destination;
+	this.destination = destination;
     }
 
     @Override
     protected Layout getLayout(Object object, Class type) {
-        final Layout layout = super.getLayout(object, type);
-        
-        return new Layout() {
-            
-            @Override
-            public HtmlComponent createComponent(Object object, Class type) {
-            	 HtmlInlineContainer container = new HtmlInlineContainer();
+	final Layout layout = super.getLayout(object, type);
 
-                 String prefix = ((MetaSlot) getInputContext().getMetaObject()).getName();
+	return new Layout() {
 
-                 HtmlHiddenField hidden = new HtmlHiddenField(prefix + HIDDEN_NAME, "");
-                 hidden.setController(new PostBackController(hidden, getDestination()));
-                 
-                 
-                 HtmlRadioButtonList radioButtonList = (HtmlRadioButtonList) layout.createComponent(object, type);
-                 
-                 for (HtmlRadioButton button : radioButtonList.getRadioButtons()) {
-                 	button.setOnClick("this.form." + prefix + HIDDEN_NAME + ".value='true';this.form.submit();");
-                 	button.setOnDblClick("this.form." + prefix + HIDDEN_NAME + ".value='true';this.form.submit();");
-                 	
-                 }
-                 
-                 if(getClasses()!=null) {
-                	 applyStyle(radioButtonList);
-                 }
-                 
-                 container.addChild(hidden);
-                 container.addChild(radioButtonList);
+	    @Override
+	    public HtmlComponent createComponent(Object object, Class type) {
+		HtmlInlineContainer container = new HtmlInlineContainer();
 
-                 return container;
+		String prefix = ((MetaSlot) getInputContext().getMetaObject()).getKey().toString().replaceAll("\\.", "_")
+			.replaceAll("\\:", "_");
 
-            }
+		HtmlHiddenField hidden = new HtmlHiddenField(prefix + HIDDEN_NAME, "");
+		hidden.setController(new PostBackController(hidden, getDestination()));
 
-        };
+		HtmlRadioButtonList radioButtonList = (HtmlRadioButtonList) layout.createComponent(object, type);
+
+		for (HtmlRadioButton button : radioButtonList.getRadioButtons()) {
+		    button.setOnClick("this.form." + prefix + HIDDEN_NAME + ".value='true';this.form.submit();");
+		    button.setOnDblClick("this.form." + prefix + HIDDEN_NAME + ".value='true';this.form.submit();");
+
+		}
+
+		if (getClasses() != null) {
+		    applyStyle(radioButtonList);
+		}
+
+		container.addChild(hidden);
+		container.addChild(radioButtonList);
+
+		return container;
+
+	    }
+
+	};
     }
 
     private static class PostBackController extends HtmlController {
 
-        private HtmlHiddenField hidden;
+	private final HtmlHiddenField hidden;
 
-        private String destination;
+	private final String destination;
 
-        public PostBackController(HtmlHiddenField hidden, String destination) {
-            this.hidden = hidden;
-            this.destination = destination;
-        }
+	public PostBackController(HtmlHiddenField hidden, String destination) {
+	    this.hidden = hidden;
+	    this.destination = destination;
+	}
 
-        @Override
-        public void execute(IViewState viewState) {
-            if (hidden.getValue() != null && hidden.getValue().length() != 0) {
-                String destinationName = this.destination == null ? "postBack" : this.destination;
-                ViewDestination destination = viewState.getDestination(destinationName);
+	@Override
+	public void execute(IViewState viewState) {
+	    if (hidden.getValue() != null && hidden.getValue().length() != 0) {
+		String destinationName = this.destination == null ? "postBack" : this.destination;
+		ViewDestination destination = viewState.getDestination(destinationName);
 
-                if (destination != null) {
-                    viewState.setCurrentDestination(destination);
-                } else {
-                    viewState.setCurrentDestination("postBack");
-                }
+		if (destination != null) {
+		    viewState.setCurrentDestination(destination);
+		} else {
+		    viewState.setCurrentDestination("postBack");
+		}
 
-                viewState.setSkipValidation(true);
-            }
+		viewState.setSkipValidation(true);
+	    }
 
-        }
-
+	}
 
     }
 }

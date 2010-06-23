@@ -5,8 +5,6 @@ import org.apache.commons.collections.Predicate;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlHiddenField;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
-import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
-import pt.ist.fenixWebFramework.renderers.components.HtmlListItem;
 import pt.ist.fenixWebFramework.renderers.components.HtmlRadioButton;
 import pt.ist.fenixWebFramework.renderers.components.HtmlRadioButtonList;
 import pt.ist.fenixWebFramework.renderers.components.controllers.HtmlController;
@@ -54,7 +52,8 @@ public class RadioButtonListRendererWithPostback extends RadioButtonListRenderer
 	public HtmlComponent createComponent(Object object, Class type) {
 	    HtmlInlineContainer container = new HtmlInlineContainer();
 
-	    String prefix = ((MetaSlot) getInputContext().getMetaObject()).getName();
+	    String prefix = ((MetaSlot) getInputContext().getMetaObject()).getKey().toString().replaceAll("\\.", "_").replaceAll(
+		    "\\:", "_");
 
 	    HtmlHiddenField hidden = new HtmlHiddenField(prefix + HIDDEN_NAME, "");
 
@@ -87,9 +86,9 @@ public class RadioButtonListRendererWithPostback extends RadioButtonListRenderer
 
     private static class PostBackController extends HtmlController {
 
-	private HtmlHiddenField hidden;
+	private final HtmlHiddenField hidden;
 
-	private String destination;
+	private final String destination;
 
 	public PostBackController(HtmlHiddenField hidden, String destination) {
 	    this.hidden = hidden;
