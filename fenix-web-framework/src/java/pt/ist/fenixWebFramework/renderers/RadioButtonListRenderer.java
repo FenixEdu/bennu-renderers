@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
+import pt.ist.fenixWebFramework.rendererExtensions.converters.DomainObjectKeyConverter;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlRadioButton;
@@ -36,6 +39,7 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  * </form>
  */
 public class RadioButtonListRenderer extends InputRenderer {
+
     private String eachClasses;
 
     private String eachStyle;
@@ -51,6 +55,10 @@ public class RadioButtonListRenderer extends InputRenderer {
     private String sortBy;
 
     private boolean saveOptions;
+
+    private String nullOptionKey;
+
+    private String nullOptionBundle;
 
     /**
      * This property allows you to configure the class attribute for each
@@ -157,6 +165,28 @@ public class RadioButtonListRenderer extends InputRenderer {
 	this.saveOptions = saveOptions;
     }
 
+    /**
+     * Allow to add option null. Need to set the property setNullOptionBundle
+     * 
+     * @property
+     */
+
+    public void setNullOptionKey(String nullOptionKey) {
+	this.nullOptionKey = nullOptionKey;
+    }
+
+    public String getNullOptionKey() {
+	return nullOptionKey;
+    }
+
+    public void setNullOptionBundle(String nullOptionLabel) {
+	this.nullOptionBundle = nullOptionLabel;
+    }
+
+    public String getNullOptionBundle() {
+	return nullOptionBundle;
+    }
+
     @Override
     protected Layout getLayout(Object object, Class type) {
 	return new RadioButtonListLayout();
@@ -167,7 +197,7 @@ public class RadioButtonListRenderer extends InputRenderer {
 	    String className = getProviderClass();
 
 	    try {
-		Class providerCass = (Class<DataProvider>) Class.forName(className);
+		Class providerCass = Class.forName(className);
 		this.provider = (DataProvider) providerCass.newInstance();
 	    } catch (Exception e) {
 		throw new RuntimeException("could not get a data provider instance", e);
@@ -254,6 +284,12 @@ public class RadioButtonListRenderer extends InputRenderer {
 		}
 	    }
 
+	    if (!StringUtils.isEmpty(getNullOptionKey())) {
+		HtmlLabel label = new HtmlLabel();
+		label.setText(RenderUtils.getResourceString(getNullOptionBundle(), getNullOptionKey()));
+		listComponent.addOption(label, DomainObjectKeyConverter.NULL_VALUE_MARKER);
+	    }
+
 	    if (isSaveOptions()) {
 		savePossibleMetaObjects(possibleMetaObjects);
 	    }
@@ -280,8 +316,8 @@ public class RadioButtonListRenderer extends InputRenderer {
 
     private static class OptionConverter extends Converter {
 
-	private List<MetaObject> metaObjects;
-	private Converter converter;
+	private final List<MetaObject> metaObjects;
+	private final Converter converter;
 
 	public OptionConverter(List<MetaObject> metaObjects, Converter converter) {
 	    this.metaObjects = metaObjects;
