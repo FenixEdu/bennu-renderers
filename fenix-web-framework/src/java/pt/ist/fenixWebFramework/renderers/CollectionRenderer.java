@@ -139,11 +139,11 @@ public class CollectionRenderer extends OutputRenderer {
 
     private Boolean displayHeaders = Boolean.TRUE;
 
-    private Map<String, TableLink> links;
+    protected Map<String, TableLink> links;
 
     private Map<String, ColumnCss> columnCss;
 
-    private List<TableLink> sortedLinks;
+    protected List<TableLink> sortedLinks;
 
     private String sortBy;
 
@@ -1088,7 +1088,7 @@ public class CollectionRenderer extends OutputRenderer {
 	    }
 	}
 
-	private void addScripts(HtmlContainer container) {
+	protected void addScripts(HtmlContainer container) {
 	    HtmlLink link = new HtmlLink();
 	    link.setModuleRelative(false);
 	    link.setContextRelative(true);

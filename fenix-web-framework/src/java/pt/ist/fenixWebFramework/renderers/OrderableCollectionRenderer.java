@@ -244,132 +244,139 @@ public class OrderableCollectionRenderer extends CollectionRenderer {
 	Collection sortedCollection = (isSortIgnored()) ? (Collection) object : RenderUtils.sortCollectionWithCriteria(
 		(Collection) object, getSortBy());
 
-	return new CollectionTabularLayout(sortedCollection) {
+	return new OrderedCollectionTabularLayout(sortedCollection);
+    }
 
-	    @Override
-	    protected HtmlComponent getHeaderComponent(int columnIndex) {
-		if (columnIndex == 0 && isCheckable()) {
-		    return new HtmlText();
-		} else if (columnIndex < getNumberOfColumns() - getNumberOfLinkColumns()) {
-		    HtmlComponent component = super.getHeaderComponent(columnIndex);
-		    String slotName = getObject(0).getSlots().get(columnIndex - (isCheckable() ? 1 : 0)).getName();
+    protected class OrderedCollectionTabularLayout extends CollectionTabularLayout {
 
-		    if (!isSortable(slotName)) {
-			return component;
-		    }
+	public OrderedCollectionTabularLayout(Collection object) {
+	    super(object);
+	}
 
-		    if (isSortActionLink()) {
-			return buildActionLink(component, slotName);
-		    }
+	@Override
+	protected HtmlComponent getHeaderComponent(int columnIndex) {
+	    if (columnIndex == 0 && isCheckable()) {
+		return new HtmlText();
+	    } else if (columnIndex < getNumberOfColumns() - getNumberOfLinkColumns()) {
+		HtmlComponent component = super.getHeaderComponent(columnIndex);
+		String slotName = getObject(0).getSlots().get(columnIndex - (isCheckable() ? 1 : 0)).getName();
 
-		    HtmlLink link = new HtmlLink();
-
-		    if (getSortUrl() != null) {
-			link.setUrl(getSortUrl());
-		    } else {
-			ViewDestination destination = getContext().getViewState().getInputDestination();
-
-			link.setModule(destination.getModule());
-			link.setUrl(destination.getPath());
-		    }
-
-		    link.setBody(component);
-
-		    if (getSortBy() != null && getSortBy().contains(slotName)) {
-			if (getSortBy().contains("=desc")) {
-			    link.setParameter(getSortParameter(), slotName + "=ascending");
-			    component = wrapComponent(link, false);
-			} else {
-			    link.setParameter(getSortParameter(), slotName + "=descending");
-			    component = wrapComponent(link, true);
-			}
-		    } else {
-			link.setParameter(getSortParameter(), slotName + "=ascending");
-			component = wrapComponent(link, false);
-		    }
-
+		if (!isSortable(slotName)) {
 		    return component;
-		} else {
-		    return new HtmlText();
 		}
-	    }
 
-	    private HtmlComponent buildActionLink(final HtmlComponent component, final String slotName) {
-		final HtmlActionLink link = new HtmlActionLink();
+		if (isSortActionLink()) {
+		    return buildActionLink(component, slotName);
+		}
+
+		HtmlLink link = new HtmlLink();
+
+		if (getSortUrl() != null) {
+		    link.setUrl(getSortUrl());
+		} else {
+		    ViewDestination destination = getContext().getViewState().getInputDestination();
+
+		    link.setModule(destination.getModule());
+		    link.setUrl(destination.getPath());
+		}
+
 		link.setBody(component);
 
-		final HtmlComponent result;
 		if (getSortBy() != null && getSortBy().contains(slotName)) {
 		    if (getSortBy().contains("=desc")) {
-			link.setOnClick(String.format(AL_ON_CLICK, getSortFormId(), getSortParameter(), slotName, "asc"));
-			result = wrapComponent(link, false);
+			link.setParameter(getSortParameter(), slotName + "=ascending");
+			component = wrapComponent(link, false);
 		    } else {
-			link.setOnClick(String.format(AL_ON_CLICK, getSortFormId(), getSortParameter(), slotName, "desc"));
-			result = wrapComponent(link, true);
+			link.setParameter(getSortParameter(), slotName + "=descending");
+			component = wrapComponent(link, true);
 		    }
 		} else {
+		    link.setParameter(getSortParameter(), slotName + "=ascending");
+		    component = wrapComponent(link, false);
+		}
+
+		return component;
+	    } else {
+		return new HtmlText();
+	    }
+	}
+
+	private HtmlComponent buildActionLink(final HtmlComponent component, final String slotName) {
+	    final HtmlActionLink link = new HtmlActionLink();
+	    link.setBody(component);
+
+	    final HtmlComponent result;
+	    if (getSortBy() != null && getSortBy().contains(slotName)) {
+		if (getSortBy().contains("=desc")) {
 		    link.setOnClick(String.format(AL_ON_CLICK, getSortFormId(), getSortParameter(), slotName, "asc"));
 		    result = wrapComponent(link, false);
+		} else {
+		    link.setOnClick(String.format(AL_ON_CLICK, getSortFormId(), getSortParameter(), slotName, "desc"));
+		    result = wrapComponent(link, true);
 		}
-
-		return result;
+	    } else {
+		link.setOnClick(String.format(AL_ON_CLICK, getSortFormId(), getSortParameter(), slotName, "asc"));
+		result = wrapComponent(link, false);
 	    }
 
-	    private boolean isSortable(String slotName) {
-		String sortableSlots = getSortableSlots();
+	    return result;
+	}
 
-		if (sortableSlots == null) {
+	private boolean isSortable(String slotName) {
+	    String sortableSlots = getSortableSlots();
+
+	    if (sortableSlots == null) {
+		return true;
+	    }
+
+	    String[] slots = sortableSlots.split(",");
+	    for (int i = 0; i < slots.length; i++) {
+		String trimmed = slots[i].trim();
+
+		if (trimmed.length() == 0) {
+		    continue;
+		}
+
+		if (trimmed.equals(slotName)) {
 		    return true;
 		}
-
-		String[] slots = sortableSlots.split(",");
-		for (int i = 0; i < slots.length; i++) {
-		    String trimmed = slots[i].trim();
-
-		    if (trimmed.length() == 0) {
-			continue;
-		    }
-
-		    if (trimmed.equals(slotName)) {
-			return true;
-		    }
-		}
-
-		return false;
 	    }
 
-	    private HtmlComponent wrapComponent(HtmlComponent component, boolean ascending) {
-		String image = null;
+	    return false;
+	}
 
-		if (ascending) {
-		    if (getAscendingClasses() != null) {
-			component.setClasses(getAscendingClasses());
-		    }
+	private HtmlComponent wrapComponent(HtmlComponent component, boolean ascending) {
+	    String image = null;
 
-		    image = getAscendingImage();
-		} else {
-		    if (getDescendingClasses() != null) {
-			component.setClasses(getDescendingClasses());
-		    }
-
-		    image = getDescendingImage();
+	    if (ascending) {
+		if (getAscendingClasses() != null) {
+		    component.setClasses(getAscendingClasses());
 		}
 
-		if (image == null) {
-		    return component;
+		image = getAscendingImage();
+	    } else {
+		if (getDescendingClasses() != null) {
+		    component.setClasses(getDescendingClasses());
 		}
 
-		HtmlContainer container = new HtmlInlineContainer();
-
-		HtmlImage htmlImage = new HtmlImage();
-		htmlImage.setSource(getImagePath(image));
-
-		container.addChild(htmlImage);
-		container.addChild(component);
-
-		return container;
+		image = getDescendingImage();
 	    }
 
-	};
+	    if (image == null) {
+		return component;
+	    }
+
+	    HtmlContainer container = new HtmlInlineContainer();
+
+	    HtmlImage htmlImage = new HtmlImage();
+	    htmlImage.setSource(getImagePath(image));
+
+	    container.addChild(htmlImage);
+	    container.addChild(component);
+
+	    return container;
+	}
+
     }
+
 }
