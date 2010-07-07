@@ -491,6 +491,7 @@ public class ComponentLifeCycle {
 		Object finalValue = formComponent.getConvertedValue(metaSlot);
 		metaSlot.setObject(finalValue);
 	    } catch (Exception e) {
+		e.printStackTrace();
 		logger.warn("failed to do conversion for slot " + metaSlot.getName() + ": " + e);
 		logger.debug("conversation stacktrace",e);
 		addConvertError(viewState, metaSlot, e);
