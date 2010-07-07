@@ -42,16 +42,12 @@ public class StringInputRenderer extends TextFieldRenderer {
 
         @Override
         protected void setContextSlot(HtmlComponent component, MetaSlotKey slotKey) {
-            HtmlContainer container = (HtmlContainer) component;
-            
-            super.setContextSlot(container.getChildren().get(0), slotKey);
+            super.setContextSlot(component.getChildren().get(0), slotKey);
         }
 
         @Override
         public void applyStyle(HtmlComponent component) {
-            HtmlContainer container = (HtmlContainer) component;
-            
-            super.applyStyle(container.getChildren().get(0));
+            super.applyStyle(component.getChildren().get(0));
         }
         
     }
