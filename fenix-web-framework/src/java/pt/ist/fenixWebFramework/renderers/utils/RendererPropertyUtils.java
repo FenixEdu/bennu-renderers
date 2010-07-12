@@ -2,6 +2,7 @@ package pt.ist.fenixWebFramework.renderers.utils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,12 +25,12 @@ public class RendererPropertyUtils {
 
     /**
      * Provides an alternative to the bean utils
-     * {@link PropertyUtils#getPropertyDescriptor(java.lang.Object, java.lang.String)}.
-     * Nevertheless only simple properties are supported.
+     * {@link PropertyUtils#getPropertyDescriptor(java.lang.Object, java.lang.String)}
+     * . Nevertheless only simple properties are supported.
      * 
      * TODO: cfgi, support complex properties
      */
-    public static PropertyDescriptor getPropertyDescriptor(Class type, String name) {
+    public static Class<?> getPropertyDescriptor(Class type, String name) {
 	PropertyDescriptor[] descriptors;
 	if (propertyDescriptorsCache != null) {
 	    descriptors = propertyDescriptorsCache.get(type);
@@ -41,14 +42,25 @@ public class RendererPropertyUtils {
 	    descriptors = PropertyUtils.getPropertyDescriptors(type);
 	}
 
-	for (int i = 0; i < descriptors.length; i++) {
-	    PropertyDescriptor descriptor = descriptors[i];
-
+	for (PropertyDescriptor descriptor : descriptors) {
 	    if (descriptor.getName().equals(name)) {
-		return descriptor;
+		return descriptor.getPropertyType();
+	    }
+	    if (name.contains("(")) {
+		String simpleName = name.substring(0, name.indexOf('('));
+		if (descriptor.getName().equals(simpleName)) {
+		    ParameterizedType returnType = (ParameterizedType) descriptor.getReadMethod().getGenericReturnType();
+		    return (Class<?>) returnType.getActualTypeArguments()[1];
+		}
+	    }
+	    if (name.contains("[")) {
+		String simpleName = name.substring(0, name.indexOf('['));
+		if (descriptor.getName().equals(simpleName)) {
+		    ParameterizedType returnType = (ParameterizedType) descriptor.getReadMethod().getGenericReturnType();
+		    return (Class<?>) returnType.getActualTypeArguments()[0];
+		}
 	    }
 	}
-
 	return null;
     }
 
@@ -82,13 +94,12 @@ public class RendererPropertyUtils {
 	    remaining = name.substring(index + 1);
 	}
 
-	PropertyDescriptor descriptor = getPropertyDescriptor(type, firstPart);
-	if (descriptor == null) {
+	Class<?> clazz = getPropertyDescriptor(type, firstPart);
+	if (clazz == null) {
 	    throw new RuntimeException("cound not find property '" + firstPart + "' in type " + type);
 	}
 
-	final Class propertyType = descriptor.getPropertyType();
-	final Class result = remaining == null ? propertyType : getPropertyType(propertyType, remaining);
+	final Class<?> result = remaining == null ? clazz : getPropertyType(clazz, remaining);
 	if (propertyTypeId != null) {
 	    propertyTypeCache.put(propertyTypeId, result);
 	}
@@ -103,7 +114,7 @@ public class RendererPropertyUtils {
 	    Class type = getPropertyType(object.getClass(), name);
 
 	    property = type.newInstance(); // ASSUMPTION: type is a complex
-					    // value with a default
+					   // value with a default
 	    // constructor
 	    PropertyUtils.setProperty(object, name, property);
 	}
@@ -121,11 +132,11 @@ public class RendererPropertyUtils {
      * wrapped in a {@link RuntimeException}.
      * 
      * @param object
-     *                the target object
+     *            the target object
      * @param name
-     *                the property name
+     *            the property name
      * @param create
-     *                true to create intermediary values
+     *            true to create intermediary values
      * @return
      */
     static public Object getProperty(Object object, String name, boolean create) {
