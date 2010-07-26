@@ -38,8 +38,8 @@ public class BooleanInputRenderWithPostBack extends BooleanInputRenderer {
 	    public HtmlComponent createComponent(Object object, Class type) {
 		HtmlInlineContainer container = new HtmlInlineContainer();
 
-		String prefix = ((MetaSlot) getInputContext().getMetaObject()).getKey().toString().replaceAll("\\.", "_")
-			.replaceAll("\\:", "_");
+		String prefix = HtmlComponent.getValidIdOrName(((MetaSlot) getInputContext().getMetaObject()).getKey().toString()
+			.replaceAll("\\.", "_").replaceAll("\\:", "_"));
 
 		HtmlHiddenField hidden = new HtmlHiddenField(prefix + HIDDEN_NAME, "");
 		HtmlCheckBox checkBox = (HtmlCheckBox) layout.createComponent(object, type);
