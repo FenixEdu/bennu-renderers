@@ -1,5 +1,7 @@
 package pt.ist.fenixWebFramework.renderers;
 
+import org.apache.commons.collections.Predicate;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
@@ -27,28 +29,44 @@ public class StringInputRenderer extends TextFieldRenderer {
 	input.setValue(string);
 
 	HtmlContainer container = new HtmlInlineContainer();
-        container.addChild(input);
-        container.addChild(new HtmlText(getFormatLabel()));
-        
+	container.addChild(input);
+	container.addChild(new HtmlText(getFormatLabel()));
+
 	return container;
     }
-    
+
     @Override
     protected Layout getLayout(Object object, Class type) {
-        return new StringInputFieldLayout();
+	return new StringInputFieldLayout();
     }
 
     class StringInputFieldLayout extends TextFieldLayout {
 
-        @Override
-        protected void setContextSlot(HtmlComponent component, MetaSlotKey slotKey) {
-            super.setContextSlot(component.getChildren().get(0), slotKey);
-        }
+	@Override
+	protected void setContextSlot(HtmlComponent component, MetaSlotKey slotKey) {
+	    HtmlComponent actualComponent = component.getChild(new Predicate() {
 
-        @Override
-        public void applyStyle(HtmlComponent component) {
-            super.applyStyle(component.getChildren().get(0));
-        }
-        
+		@Override
+		public boolean evaluate(Object arg0) {
+		    return arg0 instanceof HtmlTextInput;
+		}
+
+	    });
+	    super.setContextSlot(actualComponent, slotKey);
+	}
+
+	@Override
+	public void applyStyle(HtmlComponent component) {
+	    HtmlComponent actualComponent = component.getChild(new Predicate() {
+
+		@Override
+		public boolean evaluate(Object arg0) {
+		    return arg0 instanceof HtmlTextInput;
+		}
+
+	    });
+	    super.applyStyle(actualComponent);
+	}
+
     }
 }
