@@ -44,7 +44,7 @@ public class StringInputRenderer extends TextFieldRenderer {
 
 	@Override
 	protected void setContextSlot(HtmlComponent component, MetaSlotKey slotKey) {
-	    HtmlComponent actualComponent = component.getChild(new Predicate() {
+	    HtmlComponent actualComponent = component instanceof HtmlTextInput ? component : component.getChild(new Predicate() {
 
 		@Override
 		public boolean evaluate(Object arg0) {
@@ -57,7 +57,7 @@ public class StringInputRenderer extends TextFieldRenderer {
 
 	@Override
 	public void applyStyle(HtmlComponent component) {
-	    HtmlComponent actualComponent = component.getChild(new Predicate() {
+	    HtmlComponent actualComponent = component instanceof HtmlTextInput ? component : component.getChild(new Predicate() {
 
 		@Override
 		public boolean evaluate(Object arg0) {
