@@ -5,6 +5,7 @@ import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 public class TransientMetaObject extends MetaObject {
 
     private transient Object object;
+    private Class<?> type;
     private int code;
 
     public TransientMetaObject(Object object) {
@@ -15,20 +16,25 @@ public class TransientMetaObject extends MetaObject {
     protected void setObject(Object object) {
 	this.object = object;
 	this.code = object == null ? 0 : object.hashCode();
+	this.type = object.getClass();
     }
 
+    @Override
     public Object getObject() {
 	return this.object;
     }
 
-    public Class getType() {
-	return this.object.getClass();
+    @Override
+    public Class<?> getType() {
+	return type;
     }
 
+    @Override
     public MetaObjectKey getKey() {
 	return new MetaObjectKey(getType(), this.code);
     }
 
+    @Override
     public void commit() {
 	for (MetaSlot slot : getAllSlots()) {
 	    if (slot.isSetterIgnored()) {
