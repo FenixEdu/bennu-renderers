@@ -3,7 +3,6 @@ package pt.ist.fenixWebFramework.servlets.filters.contentRewrite;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,10 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import pt.ist.fenixWebFramework.FenixWebFramework;
-import pt.ist.fenixWebFramework._development.LogLevel;
-import pt.ist.fenixWebFramework.security.User;
-import pt.ist.fenixWebFramework.security.UserView;
-import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 
 public class RequestChecksumFilter implements Filter {
 
@@ -53,7 +48,7 @@ public class RequestChecksumFilter implements Filter {
 		if (httpSession != null) {
 		    httpSession.invalidate();
 		}
-		redirectByTampering(request,response);
+		redirectByTampering(request, response);
 	    }
 	} else {
 	    filterChain.doFilter(servletRequest, servletResponse);
@@ -95,48 +90,53 @@ public class RequestChecksumFilter implements Filter {
 	    checksum = (String) httpServletRequest.getAttribute(GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME);
 	}
 	if (!isValidChecksum(httpServletRequest, checksum)) {
-//	    if (LogLevel.ERROR) {
-//		final User user = UserView.getUser();
-//		final String userString = ((user == null) ? "<no user logged in>" : user.getUsername()) + " key : "
-//			+ ((user == null) ? "No user" : user.getPrivateConstantForDigestCalculation());
-//		final String url = httpServletRequest.getRequestURI() + '?' + httpServletRequest.getQueryString();
-//		final StringBuilder stringBuilder = new StringBuilder();
-//		stringBuilder.append("Detected url tampering by user: ");
-//		stringBuilder.append(userString);
-//		stringBuilder.append("\n           url: ");
-//		stringBuilder.append(url);
-//		stringBuilder.append("\n   decoded url iso-8859-1: ");
-//		stringBuilder.append(decodeURL(url, "ISO-8859-1"));
-//		stringBuilder.append("\n   decoded url utf-8: ");
-//		stringBuilder.append(decodeURL(url, "UTF-8"));
-//		stringBuilder.append("\n          from: ");
-//		stringBuilder.append(httpServletRequest.getRemoteHost());
-//		stringBuilder.append(" (");
-//		stringBuilder.append(httpServletRequest.getRemoteAddr());
-//		stringBuilder.append(")");
-//		for (final Enumeration<String> headerNames = httpServletRequest.getHeaderNames(); headerNames.hasMoreElements();) {
-//		    final String name = headerNames.nextElement();
-//		    stringBuilder.append("\n        header: ");
-//		    stringBuilder.append(name);
-//		    stringBuilder.append(" = ");
-//		    stringBuilder.append(httpServletRequest.getHeader(name));
-//		}
-//
-//		HttpSession session = httpServletRequest.getSession(false);
-//		if (session != null) {
-//		    stringBuilder.append("\nSession creation: ");
-//		    stringBuilder.append(session.getCreationTime());
-//		    stringBuilder.append(" Session Id: ");
-//		    stringBuilder.append(session.getId());
-//		    stringBuilder.append(" Max inactive time: ");
-//		    stringBuilder.append(session.getMaxInactiveInterval());
-//		    stringBuilder.append(" Last time access: ");
-//		    stringBuilder.append(session.getLastAccessedTime());
-//		    stringBuilder.append(" Current time: ");
-//		    stringBuilder.append(System.currentTimeMillis());
-//		}
-//		System.out.println(stringBuilder.toString());
-//	    }
+	    // if (LogLevel.ERROR) {
+	    // final User user = UserView.getUser();
+	    // final String userString = ((user == null) ? "<no user logged in>"
+	    // : user.getUsername()) + " key : "
+	    // + ((user == null) ? "No user" :
+	    // user.getPrivateConstantForDigestCalculation());
+	    // final String url = httpServletRequest.getRequestURI() + '?' +
+	    // httpServletRequest.getQueryString();
+	    // final StringBuilder stringBuilder = new StringBuilder();
+	    // stringBuilder.append("Detected url tampering by user: ");
+	    // stringBuilder.append(userString);
+	    // stringBuilder.append("\n           url: ");
+	    // stringBuilder.append(url);
+	    // stringBuilder.append("\n   decoded url iso-8859-1: ");
+	    // stringBuilder.append(decodeURL(url, "ISO-8859-1"));
+	    // stringBuilder.append("\n   decoded url utf-8: ");
+	    // stringBuilder.append(decodeURL(url, "UTF-8"));
+	    // stringBuilder.append("\n          from: ");
+	    // stringBuilder.append(httpServletRequest.getRemoteHost());
+	    // stringBuilder.append(" (");
+	    // stringBuilder.append(httpServletRequest.getRemoteAddr());
+	    // stringBuilder.append(")");
+	    // for (final Enumeration<String> headerNames =
+	    // httpServletRequest.getHeaderNames();
+	    // headerNames.hasMoreElements();) {
+	    // final String name = headerNames.nextElement();
+	    // stringBuilder.append("\n        header: ");
+	    // stringBuilder.append(name);
+	    // stringBuilder.append(" = ");
+	    // stringBuilder.append(httpServletRequest.getHeader(name));
+	    // }
+	    //
+	    // HttpSession session = httpServletRequest.getSession(false);
+	    // if (session != null) {
+	    // stringBuilder.append("\nSession creation: ");
+	    // stringBuilder.append(session.getCreationTime());
+	    // stringBuilder.append(" Session Id: ");
+	    // stringBuilder.append(session.getId());
+	    // stringBuilder.append(" Max inactive time: ");
+	    // stringBuilder.append(session.getMaxInactiveInterval());
+	    // stringBuilder.append(" Last time access: ");
+	    // stringBuilder.append(session.getLastAccessedTime());
+	    // stringBuilder.append(" Current time: ");
+	    // stringBuilder.append(System.currentTimeMillis());
+	    // }
+	    // System.out.println(stringBuilder.toString());
+	    // }
 	    throw new UrlTamperingException();
 	}
     }
@@ -159,7 +159,9 @@ public class RequestChecksumFilter implements Filter {
 
 	isValidChecksum(uri, httpServletRequest.getQueryString(), checksum) ||
 
-	isValidChecksumIgnoringPath(httpServletRequest, checksum, "ISO-8859-1");
+	isValidChecksumIgnoringPath(uri, checksum, decodeURL(httpServletRequest.getQueryString(), "ISO-8859-1")) ||
+
+	isValidChecksumIgnoringPath(uri, checksum, httpServletRequest.getQueryString());
 
     }
 
@@ -168,14 +170,11 @@ public class RequestChecksumFilter implements Filter {
 	return checksum != null && checksum.length() > 0 && checksum.equals(GenericChecksumRewriter.calculateChecksum(request));
     }
 
-    private boolean isValidChecksumIgnoringPath(final HttpServletRequest httpServletRequest, final String checksum,
-	    final String encoding) {
-	final String uri = decodeURL(httpServletRequest.getRequestURI(), encoding);
+    private boolean isValidChecksumIgnoringPath(final String uri, final String checksum, String queryString) {
 	if (uri.endsWith(".faces")) {
 	    final int lastSlash = uri.lastIndexOf('/');
 	    if (lastSlash >= 0) {
 		final String chopedUri = uri.substring(lastSlash + 1);
-		final String queryString = decodeURL(httpServletRequest.getQueryString(), encoding);
 		final String request = queryString != null ? chopedUri + '?' + queryString : chopedUri;
 		final String calculatedChecksum = GenericChecksumRewriter.calculateChecksum(request);
 		return checksum != null && checksum.length() > 0 && checksum.equals(calculatedChecksum);
