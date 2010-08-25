@@ -21,9 +21,9 @@ public class ServiceManager {
 
     public static final Map<String, String> KNOWN_WRITE_SERVICES = new ConcurrentHashMap<String, String>();
 
-    private static InheritableThreadLocal<String> isInServiceVar = new InheritableThreadLocal<String>();
+    private static ThreadLocal<String> isInServiceVar = new ThreadLocal<String>();
 
-    private static InheritableThreadLocal<List<Command>> afterCommitCommands = new InheritableThreadLocal<List<Command>>();
+    private static ThreadLocal<List<Command>> afterCommitCommands = new ThreadLocal<List<Command>>();
 
     public static final String BERSERK_SERVICE = "berserk";
 
