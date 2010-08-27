@@ -145,6 +145,9 @@ public abstract class TabularLayout extends Layout {
 		    if (cell.getColspan() != null) {
 			columnIndex += cell.getColspan() - 1;
 		    }
+		    if (getCellClasses(rowIndex, columnIndex) != null) {
+			cell.addClass(getCellClasses(rowIndex, columnIndex));
+		    }
 
 		    cell.setBody(getComponent(rowIndex, columnIndex));
 		}
@@ -183,6 +186,10 @@ public abstract class TabularLayout extends Layout {
     protected abstract int getNumberOfRows();
 
     protected abstract HtmlComponent getComponent(int rowIndex, int columnIndex);
+
+    protected String getCellClasses(int rowIndex, int columnIndex) {
+	return null;
+    }
 
     protected boolean isHeader(int rowIndex, int columnIndex) {
 	return false;
@@ -250,7 +257,7 @@ public abstract class TabularLayout extends Layout {
 		for (HtmlTableCell cell : row.getCells()) {
 		    String chooseCellClass = cellClasses[cellIndex % cellClasses.length];
 		    if (!chooseCellClass.equals("")) {
-			cell.setClasses(chooseCellClass);
+			cell.addClass(chooseCellClass);
 		    }
 
 		    cellIndex++;

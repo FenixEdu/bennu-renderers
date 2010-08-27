@@ -141,7 +141,7 @@ public class CollectionRenderer extends OutputRenderer {
 
     protected Map<String, TableLink> links;
 
-    private Map<String, ColumnCss> columnCss;
+    private final Map<String, ColumnCss> columnCss;
 
     protected List<TableLink> sortedLinks;
 
@@ -1254,6 +1254,31 @@ public class CollectionRenderer extends OutputRenderer {
 	    }
 	}
 
+	@Override
+	protected String getCellClasses(int rowIndex, int columnIndex) {
+	    int objectRow = isRowForLinks() ? rowIndex / 2 : rowIndex;
+	    MetaObject object = getObject(objectRow);
+
+	    if (isRowForLinks() && rowIndex % 2 == 1) {
+		// links dont support classes yet
+		return null;
+	    }
+
+	    if (columnIndex == 0 && isCheckable()) {
+		// checkboxes dont support classes yet
+		return null;
+	    } else if (columnIndex < getNumberOfColumns() - getNumberOfLinkColumns()) {
+		String styleClass = null;
+		for (ColumnCss columnCss : getColumnCssFor(columnIndex)) {
+		    if (canApplyConditionalClasses(object, columnCss)) {
+			styleClass = ((styleClass != null) ? styleClass + " " : "") + columnCss.getStyleClass();
+		    }
+		}
+		return styleClass;
+	    }
+	    return null;
+	}
+
 	protected HtmlComponent generateObjectComponent(int columnIndex, MetaObject object) {
 	    MetaSlot slot = getSlotUsingName(object, columnIndex);
 
@@ -1262,22 +1287,17 @@ public class CollectionRenderer extends OutputRenderer {
 	    }
 
 	    HtmlComponent component = renderSlot(slot);
-	    for (ColumnCss columnCss : getColumnCssFor(columnIndex)) {
-		applyConditionalClasses(object, component, columnCss);
-	    }
 	    component = wrapPrefixAndSuffix(component, columnIndex);
 
 	    return component;
 	}
 
-	private void applyConditionalClasses(MetaObject metaObject, HtmlComponent component, ColumnCss columnCss) {
+	private boolean canApplyConditionalClasses(MetaObject metaObject, ColumnCss columnCss) {
 	    Boolean useIf = ((columnCss.getUseIf() != null) && (Boolean) RendererPropertyUtils.getProperty(
 		    metaObject.getObject(), columnCss.getUseIf(), false));
 	    Boolean useIfNot = ((columnCss.getUseIfNot() != null) && (Boolean) RendererPropertyUtils.getProperty(metaObject
 		    .getObject(), columnCss.getUseIfNot(), false));
-	    if (useIf || !useIfNot) {
-		component.setClasses(columnCss.getStyleClass());
-	    }
+	    return useIf || !useIfNot;
 	}
 
 	/**
