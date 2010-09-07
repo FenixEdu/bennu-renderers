@@ -69,7 +69,7 @@ public class StandardInputRenderer extends InputRenderer {
 
     private boolean displayLabel = Boolean.TRUE;
 
-    private boolean requiredMarkShown = false;
+    private boolean requiredMarkShown = FenixWebFramework.getConfig().getRequiredMarkShown();
 
     private boolean requiredMessageShown = true;
 
@@ -241,6 +241,8 @@ public class StandardInputRenderer extends InputRenderer {
 
 			buffer.append(addLabelTerminator(slot.getLabel()));
 			label.setText(buffer.toString());
+			label.setTitle(slot.getTitle());
+
 			component = label;
 		    }
 		} else {
@@ -273,8 +275,8 @@ public class StandardInputRenderer extends InputRenderer {
 		    }
 		}
 
-		component = slot.hasHelp() ? renderHelpOnComponent(renderedSlot, slot.getBundle(), slot.getHelpLabel(), slot
-			.getName()) : renderedSlot;
+		component = slot.hasHelp() ? renderHelpOnComponent(renderedSlot, slot.getBundle(), slot.getHelpLabel(),
+			slot.getName()) : renderedSlot;
 
 		break;
 	    case 2:

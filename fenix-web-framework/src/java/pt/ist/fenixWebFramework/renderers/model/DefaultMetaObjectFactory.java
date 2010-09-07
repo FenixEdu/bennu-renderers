@@ -167,6 +167,8 @@ public class DefaultMetaObjectFactory extends MetaObjectFactory {
 	metaSlot.setConverter(slotDescription.getConverter());
 	metaSlot.setReadOnly(slotDescription.isReadOnly());
 	metaSlot.setHelpLabel(slotDescription.getHelpLabel());
+        metaSlot.setDescription(slotDescription.getDescription());
+        metaSlot.setDescriptionFormat(slotDescription.getDescriptionFormat());
 	// metaSlot.setSetterIgnored(slotDescription.isSetterIgnored());
 
 	return metaSlot;

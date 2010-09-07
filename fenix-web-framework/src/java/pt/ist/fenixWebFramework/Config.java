@@ -44,13 +44,6 @@ public class Config extends pt.ist.fenixframework.Config {
     }
 
     /**
-     * This <strong>optional</strong> parameter that indicates if the database
-     * structure should be automatically updated with missing structure entries
-     * when the framework is initialized. Defaults to false;
-     */
-    protected boolean updateDataRepositoryStructure = false;
-
-    /**
      * This <strong>required</strong> parameter specifies the default language
      * that will be used to construct the default <code>java.util.Locale<code>
      * used by the frameworks localization tools.
@@ -138,6 +131,13 @@ public class Config extends pt.ist.fenixframework.Config {
      * Defaults to <strong>false</strong>
      */
     protected boolean javascriptValidationEnabled = false;
+
+    /**
+     * This is a <strong>optional</strong> that determines when the
+     * StandardInputRenderer shows the required (*) mark. Defaults to
+     * <strong>false</strong>
+     */
+    protected boolean requiredMarkShown = false;
 
     // TODO : make method in superclass visible in the hierarchy so we don't
     // need to replicate the code here.
@@ -262,11 +262,11 @@ public class Config extends pt.ist.fenixframework.Config {
 	return null;
     }
 
-    public boolean isUpdateDataRepositoryStructure() {
-	return updateDataRepositoryStructure;
-    }
-
     public boolean isJavascriptValidationEnabled() {
 	return javascriptValidationEnabled;
+    }
+
+    public boolean getRequiredMarkShown() {
+	return requiredMarkShown;
     }
 }

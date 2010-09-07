@@ -39,6 +39,7 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  * </form>
  */
 public class RadioButtonListRenderer extends InputRenderer {
+    private String format;
 
     private String eachClasses;
 
@@ -59,6 +60,20 @@ public class RadioButtonListRenderer extends InputRenderer {
     private String nullOptionKey;
 
     private String nullOptionBundle;
+
+    public String getFormat() {
+	return this.format;
+    }
+
+    /**
+     * This allows to specify a presentation format for each object. For more
+     * details about the format syntaxt check the {@see FormatRenderer}.
+     * 
+     * @property
+     */
+    public void setFormat(String format) {
+	this.format = format;
+    }
 
     /**
      * This property allows you to configure the class attribute for each
@@ -261,15 +276,20 @@ public class RadioButtonListRenderer extends InputRenderer {
 
 		String layout = getEachLayout();
 
+		HtmlLabel label = new HtmlLabel();
+
+		if (layout == null) {
+		    label.setText(getObjectLabel(obj));
+		} else {
 		PresentationContext newContext = getContext().createSubContext(metaObject);
 		newContext.setLayout(layout);
 		newContext.setRenderMode(RenderMode.getMode("output"));
 
 		RenderKit kit = RenderKit.getInstance();
 		HtmlComponent component = kit.render(newContext, obj);
+		    label.setBody(component);
+		}
 
-		HtmlLabel label = new HtmlLabel();
-		label.setBody(component);
 		label.setStyle(eachStyle);
 		label.setClasses(eachClasses);
 
@@ -287,7 +307,10 @@ public class RadioButtonListRenderer extends InputRenderer {
 	    if (!StringUtils.isEmpty(getNullOptionKey())) {
 		HtmlLabel label = new HtmlLabel();
 		label.setText(RenderUtils.getResourceString(getNullOptionBundle(), getNullOptionKey()));
-		listComponent.addOption(label, DomainObjectKeyConverter.NULL_VALUE_MARKER);
+		HtmlRadioButton addOption = listComponent.addOption(label, DomainObjectKeyConverter.NULL_VALUE_MARKER);
+		if (object == null) {
+		    addOption.setChecked(true);
+		}
 	    }
 
 	    if (isSaveOptions()) {
@@ -310,6 +333,14 @@ public class RadioButtonListRenderer extends InputRenderer {
 
 	private void savePossibleMetaObjects(List<MetaObject> possibleMetaObjects) {
 	    getInputContext().getViewState().setLocalAttribute("options", possibleMetaObjects);
+	}
+
+	protected String getObjectLabel(Object object) {
+	    if (getFormat() != null) {
+		return RenderUtils.getFormattedProperties(getFormat(), object);
+	    } else {
+		return String.valueOf(object);
+	    }
 	}
 
     }

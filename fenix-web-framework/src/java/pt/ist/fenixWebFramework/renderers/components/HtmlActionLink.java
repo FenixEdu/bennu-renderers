@@ -11,6 +11,8 @@ public class HtmlActionLink extends HtmlSimpleValueComponent {
 
     private boolean activated;
 
+    private String hiddenFieldId;
+
     public HtmlActionLink() {
 	super();
 
@@ -19,7 +21,7 @@ public class HtmlActionLink extends HtmlSimpleValueComponent {
 
     public HtmlActionLink(HtmlComponent body) {
 	super();
-
+	this.hiddenFieldId = "____" + getName();
 	setBody(body);
     }
 
@@ -56,11 +58,15 @@ public class HtmlActionLink extends HtmlSimpleValueComponent {
 	setActivated(value != null && value.equals(getName()));
     }
 
+    public String getHiddenFieldId() {
+	return hiddenFieldId;
+    }
+
     @Override
     public HtmlTag getOwnTag(PageContext context) {
 
 	HtmlHiddenField hidden = new HtmlHiddenField(getName(), null);
-	hidden.setId("____" + getName());
+	hidden.setId(this.hiddenFieldId);
 
 	HtmlLink link = new HtmlLink();
 

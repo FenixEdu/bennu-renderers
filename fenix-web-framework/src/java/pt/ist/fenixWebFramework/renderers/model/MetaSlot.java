@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
-import pt.ist.fenixWebFramework.rendererExtensions.AutoCompleteInputRenderer;
 import pt.ist.fenixWebFramework.rendererExtensions.validators.RequiredAutoCompleteSelectionValidator;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
@@ -48,6 +47,10 @@ public class MetaSlot extends MetaObject {
 
     private boolean isCached;
     private MetaObject valueMetaObject;
+
+    private String description;
+
+    private String descriptionFormat;
 
     public MetaSlot(MetaObject metaObject, String name) {
 	super();
@@ -100,6 +103,11 @@ public class MetaSlot extends MetaObject {
      * @see RenderUtils#getSlotLabel(Class, String, String, String)
      */
     public String getLabel() {
+	final Object object = getMetaObject().getObject();
+	if (object != null) {
+	    return RenderUtils.getSlotLabel(object.getClass(), getName(), getBundle(), getLabelKey());
+	}
+
 	Class type;
 
 	if (getMetaObject().getSchema() != null) {
@@ -131,6 +139,15 @@ public class MetaSlot extends MetaObject {
      */
     public String getBundle() {
 	return this.bundle;
+    }
+
+    public void setDescriptionFormat(String descriptionFormat) {
+	this.descriptionFormat = descriptionFormat;
+
+    }
+
+    public String getDescriptionFormat() {
+	return descriptionFormat;
     }
 
     public boolean hasConverter() {
@@ -374,4 +391,43 @@ public class MetaSlot extends MetaObject {
     public boolean hasHelp() {
 	return getHelpLabel() != null;
     }
+
+    public String getDescription() {
+	return description;
+    }
+
+    public void setDescription(String description) {
+	this.description = description;
+    }
+
+    public String getTitle() {
+	String label = null;
+	String key = getDescription();
+
+	if (key != null) {
+	    label = RenderUtils.getResourceString(bundle, key);
+	}
+
+	if (label != null) {
+	    return label;
+	}
+
+	String labelFormat = getDescriptionFormat();
+
+	final Object object = getMetaObject().getObject();
+	if (object != null && labelFormat != null) {
+	    return RenderUtils.getFormattedProperties(labelFormat, object);
+	}
+
+	Class type;
+
+	if (getMetaObject().getSchema() != null) {
+	    type = getMetaObject().getSchema().getType();
+	} else {
+	    type = getMetaObject().getType();
+	}
+
+	return RenderUtils.getSlotLabel(type, getName(), getBundle(), getDescription());
+    }
+
 }

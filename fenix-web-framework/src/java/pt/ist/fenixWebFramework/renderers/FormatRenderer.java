@@ -15,6 +15,8 @@ public class FormatRenderer extends OutputRenderer {
 
     private String format;
     
+    private Boolean escaped;
+
     public String getFormat() {
         return this.format;
     }
@@ -51,6 +53,14 @@ public class FormatRenderer extends OutputRenderer {
         return new FormatLayout();
     }
 
+    public Boolean getEscaped() {
+	return escaped;
+    }
+
+    public void setEscaped(Boolean escaped) {
+	this.escaped = escaped;
+    }
+
     private class FormatLayout extends Layout {
 
         @Override
@@ -60,7 +70,7 @@ public class FormatRenderer extends OutputRenderer {
             }
             
             String formatedObject = RenderUtils.getFormattedProperties(getFormat(), object);
-            return new HtmlText(formatedObject);
+	    return getEscaped() != null ? new HtmlText(formatedObject, getEscaped()) : new HtmlText(formatedObject);
         }
 
     }

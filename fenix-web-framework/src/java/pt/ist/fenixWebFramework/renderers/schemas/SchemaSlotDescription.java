@@ -3,10 +3,9 @@ package pt.ist.fenixWebFramework.renderers.schemas;
 import java.util.List;
 import java.util.Properties;
 
-import pt.utl.ist.fenix.tools.util.Pair;
-
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
+import pt.utl.ist.fenix.tools.util.Pair;
 
 public class SchemaSlotDescription {
 
@@ -28,6 +27,9 @@ public class SchemaSlotDescription {
     private boolean readOnly;
     private boolean hidden;
     private boolean setterIgnored;
+
+    private String description;
+    private String descriptionFormat;
 
     private String helpLabel;
 
@@ -139,4 +141,19 @@ public class SchemaSlotDescription {
 	this.helpLabel = helpLabel;
     }
 
+    public String getDescription() {
+	return description;
+    }
+
+    public void setDescription(String description) {
+	this.description = description;
+    }
+
+    public String getDescriptionFormat() {
+	return descriptionFormat;
+    }
+
+    public void setDescriptionFormat(String descriptionFormat) {
+	this.descriptionFormat = descriptionFormat;
+    }
 }

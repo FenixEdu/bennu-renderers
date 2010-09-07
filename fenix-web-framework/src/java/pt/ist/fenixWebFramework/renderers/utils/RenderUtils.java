@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.text.Collator;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -300,11 +302,18 @@ public class RenderUtils {
 
 		    try {
 			Object value = PropertyUtils.getProperty(object, property);
-
 			args.add(value);
 
 		    } catch (Exception e) {
-			throw new RuntimeException("could not retrieve property '" + property + "' for object " + object, e);
+
+			try {
+			    Object value = findPropertyFromRequest(property);
+			    args.add(value);
+			} catch (RuntimeException rt) {
+			    throw rt;
+			} catch (Exception e1) {
+			    throw new RuntimeException("could not retrieve property '" + property + "' for object " + object, e);
+			}
 		    }
 		}
 	    }
@@ -313,6 +322,34 @@ public class RenderUtils {
 	}
 
 	return String.format(getLocale(), builder.toString(), args.toArray());
+    }
+
+    private static Object findPropertyFromRequest(String property) throws Exception {
+
+	final HttpServletRequest currentRequest = RenderersRequestProcessorImpl.getCurrentRequest();
+	if (currentRequest != null) {
+	    final int indexOfDot = property.indexOf('.');
+	    final String objectName = indexOfDot != -1 ? property.substring(0, indexOfDot) : property;
+	    final String propertyName = indexOfDot != -1 ? property.substring(indexOfDot + 1) : null;
+
+	    Enumeration attributeNames = currentRequest.getAttributeNames();
+	    while (attributeNames.hasMoreElements()) {
+		if (attributeNames.nextElement().equals(objectName)) {
+		    final Object objectFromRequest = currentRequest.getAttribute(objectName);
+		    if (objectFromRequest != null && propertyName != null) {
+			try {
+			    return PropertyUtils.getProperty(objectFromRequest, propertyName);
+			} catch (Exception e1) {
+			    throw new RuntimeException("could not retrieve property '" + propertyName + "' from request object "
+				    + objectName, e1);
+			}
+		    }
+		    return objectFromRequest;
+		}
+	    }
+	}
+
+	throw new Exception("could not retrieve property '" + property + "' from request object ");
     }
 
     public static void setProperties(Object target, Properties properties) {
@@ -346,7 +383,7 @@ public class RenderUtils {
 		    logger.warn("The object " + target + " does not support property '" + propertyName + "': " + e);
 		}
 	    } // IllegalAccessException, InvocationTargetException,
-	    // NoSuchMethodException
+	      // NoSuchMethodException
 	}
     }
 
@@ -445,6 +482,21 @@ public class RenderUtils {
 	return result;
     }
 
+    /**
+     * 
+     * @param <T>
+     * @param collection
+     * @param criteria
+     * @return
+     */
+    public static <T> List<T> sortCollectionWithCriteria(T[] collection, String criteria) {
+	if (collection == null) {
+	    return null;
+	}
+	List<T> result = Arrays.asList(collection);
+	return sortCollectionWithCriteria(result, criteria);
+    }
+
     private static Comparator<Object> createCompositeComparator(final Comparator<Object> comparator, final String slot,
 	    final boolean ascending) {
 	return new Comparator<Object>() {
@@ -486,6 +538,7 @@ public class RenderUtils {
 		} catch (Exception e) {
 		    throw new RuntimeException(e);
 		}
+
 	    }
 
 	};

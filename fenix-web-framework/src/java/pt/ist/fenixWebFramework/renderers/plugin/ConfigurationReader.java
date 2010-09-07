@@ -210,6 +210,9 @@ public class ConfigurationReader {
 		    String hiddenValue = slotElement.getAttributeValue("hidden");
 		    String helpLabelValue = slotElement.getAttributeValue("help");
 		    
+		    String description = slotElement.getAttributeValue("description");
+		    String descriptionFormat = slotElement.getAttributeValue("descriptionFormat");
+
 		    Properties properties = getPropertiesFromElement(slotElement);
 
 		    // Validators
@@ -287,6 +290,9 @@ public class ConfigurationReader {
 		    slotDescription.setHidden(hidden);
 		    slotDescription.setHelpLabel(helpLabelValue);
 		    
+		    slotDescription.setDescription(description);
+		    slotDescription.setDescriptionFormat(descriptionFormat);
+
 		    schema.addSlotDescription(slotDescription);
 		}
 

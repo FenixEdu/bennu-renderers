@@ -227,11 +227,11 @@ public class TabularOptionInputRenderer extends InputRenderer {
 
     public class CheckableTabularLayout extends TabularLayout {
 
-	private List<MetaObject> metaObjects;
-	private Collection objectsReceived;
-	private HtmlMultipleHiddenField hiddenField;
+	protected List<MetaObject> metaObjects;
+	protected Collection objectsReceived;
+	protected HtmlMultipleHiddenField hiddenField;
 
-	private List<HtmlCheckBox> checkboxes = new ArrayList<HtmlCheckBox>();
+	protected List<HtmlCheckBox> checkboxes = new ArrayList<HtmlCheckBox>();
 
 	public CheckableTabularLayout(List<MetaObject> metaObjects, Collection collection, HtmlMultipleHiddenField hiddenField) {
 	    this.metaObjects = metaObjects;

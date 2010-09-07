@@ -17,6 +17,7 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlImage;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
+import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTable;
@@ -1166,8 +1167,19 @@ public class CollectionRenderer extends OutputRenderer {
 	    if (columnIndex == 0 && isCheckable()) {
 		return new HtmlText();
 	    } else if (columnIndex < getNumberOfColumns() - getNumberOfLinkColumns()) {
-		String slotLabel = getLabel(columnIndex);
-		return new HtmlText(slotLabel + getHeaderToolTip(columnIndex), false);
+		HtmlLabel label = new HtmlLabel();
+		MetaSlot metaSlot = getObject(0).getSlots().get(columnIndex);
+		label.setFor(metaSlot.getKey().toString());
+		label.setTitle(metaSlot.getTitle());
+		HtmlText text = new HtmlText();
+		text.setEscaped(false);
+		if (!metaSlot.isReadOnly()) {
+		    text.setText(getLabel(columnIndex) + (metaSlot.isRequired() ? " (*)" : ""));
+		} else {
+		    text.setText(getLabel(columnIndex));
+		}
+		label.setBody(text);
+		return label;
 	    } else {
 		return new HtmlText();
 	    }
@@ -1188,7 +1200,7 @@ public class CollectionRenderer extends OutputRenderer {
 	    int realIndex = columnIndex - (isCheckable() ? 1 : 0);
 
 	    if (realIndex >= 0) {
-		return getObject(0).getSlots().get(realIndex).getLabel();
+		return getObject(0).getSlots().get(realIndex).getLabel() + getHeaderToolTip(columnIndex);
 	    } else {
 		return "";
 	    }
