@@ -15,6 +15,7 @@ public class HtmlActionLink extends HtmlSimpleValueComponent {
 
     public HtmlActionLink() {
 	super();
+	this.hiddenFieldId = "____" + getName();
 
 	setActivated(false);
     }
@@ -77,12 +78,12 @@ public class HtmlActionLink extends HtmlSimpleValueComponent {
 	link.setContextRelative(false);
 
 	String existingScript = getOnClick();
-    if (existingScript == null) {
-        existingScript = "";
-    }
-    
-    setOnClick(existingScript + "document.getElementById('" + hidden.getId() + "').value='"
-		+ getName() + "'; " + "document.getElementById('" + hidden.getId() + "').form.submit();");
+	if (existingScript == null) {
+	    existingScript = "";
+	}
+
+	setOnClick(existingScript + "document.getElementById('" + hidden.getId() + "').value='" + getName() + "'; "
+		+ "document.getElementById('" + hidden.getId() + "').form.submit();");
 
 	HtmlTag tag = super.getOwnTag(context);
 
