@@ -1168,7 +1168,7 @@ public class CollectionRenderer extends OutputRenderer {
 		return new HtmlText();
 	    } else if (columnIndex < getNumberOfColumns() - getNumberOfLinkColumns()) {
 		HtmlLabel label = new HtmlLabel();
-		MetaSlot metaSlot = getObject(0).getSlots().get(columnIndex);
+		MetaSlot metaSlot = getObject(0).getSlots().get(columnIndex - (isCheckable() ? 1 : 0));
 		label.setFor(metaSlot.getKey().toString());
 		label.setTitle(metaSlot.getTitle());
 		HtmlText text = new HtmlText();
