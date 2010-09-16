@@ -40,7 +40,7 @@ public class SetUserViewFilter implements Filter {
     }
 
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
-    		throws IOException, ServletException {
+	    throws IOException, ServletException {
 	final User user = getUserView(servletRequest);
 	if (user != null) {
 	    final DateTime lastLogoutDateTime = user.getLastLogoutDateTime();
@@ -52,8 +52,11 @@ public class SetUserViewFilter implements Filter {
 	} else {
 	    UserView.setUser(null);
 	}
-	filterChain.doFilter(servletRequest, servletResponse);
+	try {
+	    filterChain.doFilter(servletRequest, servletResponse);
+	} finally {
+	    UserView.setUser(null);
+	}
     }
 
 }
-
