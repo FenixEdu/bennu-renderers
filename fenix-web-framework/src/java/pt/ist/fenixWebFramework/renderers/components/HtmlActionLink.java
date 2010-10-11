@@ -15,14 +15,14 @@ public class HtmlActionLink extends HtmlSimpleValueComponent {
 
     public HtmlActionLink() {
 	super();
-	this.hiddenFieldId = "____" + getName();
+	this.hiddenFieldId = getValidIdOrName("____" + getName());
 
 	setActivated(false);
     }
 
     public HtmlActionLink(HtmlComponent body) {
 	super();
-	this.hiddenFieldId = "____" + getName();
+	this.hiddenFieldId = getValidIdOrName("____" + getName());
 	setBody(body);
     }
 
