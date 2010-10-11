@@ -279,7 +279,7 @@ public class MenuOptionListRenderer extends InputRenderer {
 		    option.setValue(key.toString());
 		}
 
-		if ((getEachLayout() == null) && (!Enum.class.isAssignableFrom(obj.getClass()))) {
+		if (getEachLayout() == null) {
 		    option.setText(getObjectLabel(obj));
 		} else {
 		    PresentationContext newContext = getContext().createSubContext(metaObject);
