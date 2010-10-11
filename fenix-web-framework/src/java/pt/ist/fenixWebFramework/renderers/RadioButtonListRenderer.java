@@ -278,16 +278,14 @@ public class RadioButtonListRenderer extends InputRenderer {
 
 		HtmlLabel label = new HtmlLabel();
 
-		if (layout == null) {
-		    label.setText(getObjectLabel(obj));
+		if (StringUtils.isEmpty(layout)) {
+		    if (Enum.class.isAssignableFrom(obj.getClass()) && StringUtils.isEmpty(getFormat())) {
+			fillBodyForRadioLabel(metaObject, obj, layout, label);
+		    } else {
+			label.setText(getObjectLabel(obj));
+		    }
 		} else {
-		PresentationContext newContext = getContext().createSubContext(metaObject);
-		newContext.setLayout(layout);
-		newContext.setRenderMode(RenderMode.getMode("output"));
-
-		RenderKit kit = RenderKit.getInstance();
-		HtmlComponent component = kit.render(newContext, obj);
-		    label.setBody(component);
+		    fillBodyForRadioLabel(metaObject, obj, layout, label);
 		}
 
 		label.setStyle(eachStyle);
@@ -321,6 +319,16 @@ public class RadioButtonListRenderer extends InputRenderer {
 	    listComponent.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 
 	    return listComponent;
+	}
+
+	private void fillBodyForRadioLabel(MetaObject metaObject, Object obj, String layout, HtmlLabel label) {
+	    PresentationContext newContext = getContext().createSubContext(metaObject);
+	    newContext.setLayout(layout);
+	    newContext.setRenderMode(RenderMode.getMode("output"));
+
+	    RenderKit kit = RenderKit.getInstance();
+	    HtmlComponent component = kit.render(newContext, obj);
+	    label.setBody(component);
 	}
 
 	private boolean hasSavedPossibleMetaObjects() {

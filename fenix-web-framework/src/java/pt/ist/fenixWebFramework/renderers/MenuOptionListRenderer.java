@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenu;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenuOption;
@@ -279,15 +281,14 @@ public class MenuOptionListRenderer extends InputRenderer {
 		    option.setValue(key.toString());
 		}
 
-		if (getEachLayout() == null) {
-		    option.setText(getObjectLabel(obj));
+		if (StringUtils.isEmpty(getEachLayout())) {
+		    if (Enum.class.isAssignableFrom(obj.getClass()) && StringUtils.isEmpty(getFormat())) {
+			fillBodyWithRenderKit(kit, metaObject, obj, option);
+		    } else {
+			option.setText(getObjectLabel(obj));
+		    }
 		} else {
-		    PresentationContext newContext = getContext().createSubContext(metaObject);
-		    newContext.setLayout(getEachLayout());
-		    newContext.setRenderMode(RenderMode.getMode("output"));
-
-		    HtmlComponent component = kit.render(newContext, obj);
-		    option.setBody(component);
+		    fillBodyWithRenderKit(kit, metaObject, obj, option);
 		}
 
 		if (obj.equals(object)) {
@@ -304,6 +305,15 @@ public class MenuOptionListRenderer extends InputRenderer {
 
 	    menu.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 	    return menu;
+	}
+
+	private void fillBodyWithRenderKit(RenderKit kit, MetaObject metaObject, Object obj, HtmlMenuOption option) {
+	    PresentationContext newContext = getContext().createSubContext(metaObject);
+	    newContext.setLayout(getEachLayout());
+	    newContext.setRenderMode(RenderMode.getMode("output"));
+
+	    HtmlComponent component = kit.render(newContext, obj);
+	    option.setBody(component);
 	}
 
 	private boolean hasSavedPossibleMetaObjects() {
