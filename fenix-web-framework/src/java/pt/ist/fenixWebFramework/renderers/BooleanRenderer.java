@@ -8,8 +8,8 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 /**
  * The default output renderer for a boolean value. The value is used to search
  * for the corresponding message in the resources. The key <tt>TRUE</tt> and
- * <tt>FALSE</tt> are used to retrieve the messages for the <tt>true</tt>
- * and <tt>false</tt> values.
+ * <tt>FALSE</tt> are used to retrieve the messages for the <tt>true</tt> and
+ * <tt>false</tt> values.
  * 
  * @author cfgi
  */
@@ -17,10 +17,24 @@ public class BooleanRenderer extends OutputRenderer {
 
     private String trueLabel;
     private String falseLabel;
+    private String nullLabel;
     private String bundle;
 
     public String getBundle() {
-        return this.bundle;
+	return this.bundle;
+    }
+
+    /**
+     * Chooses the label to be displayed when it is null
+     * 
+     * @property
+     */
+    public String getNullLabel() {
+	return nullLabel;
+    }
+
+    public void setNullLabel(String nullLabel) {
+	this.nullLabel = nullLabel;
     }
 
     /**
@@ -29,11 +43,11 @@ public class BooleanRenderer extends OutputRenderer {
      * @property
      */
     public void setBundle(String bundle) {
-        this.bundle = bundle;
+	this.bundle = bundle;
     }
 
     public String getFalseLabel() {
-        return this.falseLabel;
+	return this.falseLabel;
     }
 
     /**
@@ -42,11 +56,11 @@ public class BooleanRenderer extends OutputRenderer {
      * @property
      */
     public void setFalseLabel(String falseLabel) {
-        this.falseLabel = falseLabel;
+	this.falseLabel = falseLabel;
     }
 
     public String getTrueLabel() {
-        return this.trueLabel;
+	return this.trueLabel;
     }
 
     /**
@@ -55,36 +69,36 @@ public class BooleanRenderer extends OutputRenderer {
      * @property
      */
     public void setTrueLabel(String trueLabel) {
-        this.trueLabel = trueLabel;
+	this.trueLabel = trueLabel;
     }
 
     @Override
     protected Layout getLayout(Object object, Class type) {
-        return new Layout() {
+	return new Layout() {
 
-            @Override
-            public HtmlComponent createComponent(Object object, Class type) {
-                Boolean booleanValue = (Boolean) object;
+	    @Override
+	    public HtmlComponent createComponent(Object object, Class type) {
+		Boolean booleanValue = (Boolean) object;
 
-                if (booleanValue == null) {
-                    return new HtmlText();
-                }
+		if (booleanValue == null) {
+		    String nullLabel = getNullLabel();
+		    return new HtmlText(nullLabel != null ? RenderUtils.getResourceString(getBundle(), nullLabel) : "");
+		}
 
-                String booleanResourceKey = getBooleanLabel(booleanValue);
-                return new HtmlText(RenderUtils.getResourceString(getBundle(), booleanResourceKey));
-            }
+		String booleanResourceKey = getBooleanLabel(booleanValue);
+		return new HtmlText(RenderUtils.getResourceString(getBundle(), booleanResourceKey));
+	    }
 
-            private String getBooleanLabel(Boolean booleanValue) {
-                String label = booleanValue ? getTrueLabel() : getFalseLabel();
+	    private String getBooleanLabel(Boolean booleanValue) {
+		String label = booleanValue ? getTrueLabel() : getFalseLabel();
 
-                if (label != null) {
-                    return label;
-                } else {
-                    return booleanValue.toString().toUpperCase();
-                }
-            }
+		if (label != null) {
+		    return label;
+		} else {
+		    return booleanValue.toString().toUpperCase();
+		}
+	    }
 
-        };
+	};
     }
-
 }
