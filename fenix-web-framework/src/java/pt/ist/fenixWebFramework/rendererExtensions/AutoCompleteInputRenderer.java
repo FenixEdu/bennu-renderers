@@ -377,7 +377,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 
 	    String finalUri = link.calculateUrl();
 	    String escapeId = escapeId(textFieldId);
-	    String scriptText = "$(\"input#"
+	    String scriptText = "jQuery(\"input#"
 		    + escapeId
 		    + "\").autocomplete(\""
 		    + finalUri
@@ -386,7 +386,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		    + (!StringUtils.isEmpty(getAutoCompleteWidth()) ? ", width: '" + getAutoCompleteWidth() + "'" : "")
 		    + ", validSelection: false"
 		    + ", cleanSelection: clearAutoComplete, select: selectElement, after: updateCustomValue, error:showError}); +\n"
-		    + "$(\"input[name='" + escapeId + "']\").val($(\"input#" + escapeId + "\").val());";
+		    + "jQuery(\"input[name='" + escapeId + "']\").val(jQuery(\"input#" + escapeId + "\").val());";
 
 	    HtmlScript script = new HtmlScript();
 	    script.setContentType("text/javascript");

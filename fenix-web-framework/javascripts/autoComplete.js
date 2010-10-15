@@ -30,10 +30,10 @@ jQuery.fn.autocomplete = function(url, settings )
 	return this.each( function()//do it for each matched element
 	{
 		//this is the original input
-		var textInput = $(this);
+		var textInput = jQuery(this);
 		//create a new hidden input that will be used for holding the return value when posting the form, then swap names with the original input
 		textInput.after('<input type=hidden name="' + textInput.attr("name") + '"/>').attr("name", textInput.attr("name") + "_text");
-		var valueInput = $(this).next();
+		var valueInput = jQuery(this).next();
 		//create the ul that will hold the text and values
 		valueInput.after('<div><ul class="autocomplete"><li></li></ul></div>');
 		var list = valueInput.next().children();
@@ -69,7 +69,7 @@ jQuery.fn.autocomplete = function(url, settings )
 				}
 				textInput.addClass('autocomplete-loading');
 				settings.parameters.value = text;
-				$.ajax({ 
+				jQuery.ajax({ 
                     url: url, 
                     data: settings.parameters,
                     dataType: 'json', 
@@ -85,12 +85,12 @@ jQuery.fn.autocomplete = function(url, settings )
         						  list.html(items);
         						  //on mouse hover over elements set selected class and on click set the selected value and close list
         						  list.show().children().
-        						  hover(function() { $(this).addClass("selected").siblings().removeClass("selected");}, function() { $(this).removeClass("selected") } ).
+        						  hover(function() { jQuery(this).addClass("selected").siblings().removeClass("selected");}, function() { jQuery(this).removeClass("selected") } ).
         						  click(function () { 
-        							valueInput.val( $(this).attr('name') );
-        							textInput.val( $(this).text() ); 
+        							valueInput.val( jQuery(this).attr('name') );
+        							textInput.val( jQuery(this).text() ); 
         							if (settings.select != null) {
-        								settings.select(textInput,text,$(this));
+        								settings.select(textInput,text,jQuery(this));
         							}
         							clear(); 
         							selectNextInput();
@@ -149,7 +149,7 @@ jQuery.fn.autocomplete = function(url, settings )
 		}
 		
 		textInput.focus(function focus(e) {
-			var currentWidth = settings.width != null ? settings.width : $(e.currentTarget).width();
+			var currentWidth = settings.width != null ? settings.width : jQuery(e.currentTarget).width();
 			if (list.width() != currentWidth) {
 				list.css({ width: currentWidth});
 			}
@@ -190,7 +190,7 @@ jQuery.fn.autocomplete = function(url, settings )
 				{
 					
 					if (settings.select != null) {
-						selectedItem = $(list.children()[selected]);
+						selectedItem = jQuery(list.children()[selected]);
 						settings.select(textInput,textInput.val(),selectedItem);
 						valueInput = textInput.next();
 						valueInput.val(selectedItem.attr('name'));
@@ -215,7 +215,7 @@ jQuery.fn.autocomplete = function(url, settings )
 						selected = 0;
 					}
 					textInput.val( list.children().removeClass('selected').eq(selected).addClass('selected').text() );	        
-					selectedItem = $(list.children()[selected]);
+					selectedItem = jQuery(list.children()[selected]);
 					settings.select(textInput,textInput.val(),selectedItem);
 					valueInput = textInput.next();
 					valueInput.val(selectedItem.attr('name'));
