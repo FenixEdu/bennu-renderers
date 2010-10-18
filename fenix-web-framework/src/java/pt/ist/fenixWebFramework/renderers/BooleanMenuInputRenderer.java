@@ -1,8 +1,11 @@
 package pt.ist.fenixWebFramework.renderers;
 
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenu;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenuOption;
+import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
@@ -53,6 +56,12 @@ public class BooleanMenuInputRenderer extends InputRenderer {
 		if (getNullOptionKey() != null) {
 		    String defaultOptionTitle = RenderUtils.getResourceString(getBundle(), getNullOptionKey());
 		    menu.createDefaultOption(defaultOptionTitle).setSelected(object == null);
+		    menu.setConverter(new Converter() {
+			@Override
+			public Object convert(Class type, Object value) {
+			    return StringUtils.isEmpty((String) value) ? null : Boolean.valueOf((String) value);
+			}
+		    });
 		}
 
 		HtmlMenuOption trueOption = menu.createOption(RenderUtils.getResourceString("TRUE"));
