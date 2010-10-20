@@ -17,24 +17,31 @@ public class ValidatorTag extends TagSupport implements PropertyContainerTag {
 	this.parent = null;
     }
 
+	public void setClass(String name) {
+		this.name = name;
+	}
+
+	@Deprecated
     public String getName() {
 	return name;
     }
 
+	@Deprecated
     public void setName(String name) {
 	this.name = name;
     }
 
-    public int doStartTag() throws JspException {
+    @Override
+	public int doStartTag() throws JspException {
 	this.parent = (ValidatorContainerTag) findAncestorWithClass(this, ValidatorContainerTag.class);
 
 	if (this.parent == null) {
 	    throw new RuntimeException("validator tag can only be used inside an input tag or a schema slot description tag");
 	}
 
-	String name = getName();
+		String name = this.name;
 	if (name != null) {
-	    this.parent.addValidator(getName());
+			this.parent.addValidator(this.name);
 	}
 
 	return EVAL_BODY_INCLUDE;
@@ -46,7 +53,7 @@ public class ValidatorTag extends TagSupport implements PropertyContainerTag {
     }
 
     public void addProperty(String name, String value) {
-	this.parent.addValidatorProperty(getName(), name, value);
+		this.parent.addValidatorProperty(this.name, name, value);
     }
 
 }
