@@ -7,44 +7,39 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 public class RequiredNrItemsValidator extends HtmlValidator {
-    private Integer nrRequiredItems;
+	private Integer nrRequiredItems;
 
-    public RequiredNrItemsValidator() {
-	super();
-	setMessage("renderers.validator.invalid.nrItems");
-    }
-
-    public RequiredNrItemsValidator(HtmlChainValidator htmlChainValidator) {
-	super(htmlChainValidator);
-
-	setMessage("renderers.validator.invalid.nrItems");
-    }
-
-    @Override
-    public void performValidation() {
-	HtmlCheckBoxList component = (HtmlCheckBoxList) getComponent();
-
-	String values[] = component.getValues();
-	if (getNrRequiredItems() == null)
-	{
-	    throw new RuntimeException("renderers.validator.nr.items.not.specified");
+	public RequiredNrItemsValidator() {
+		super();
+		setMessage("renderers.validator.invalid.nrItems");
 	}
-	    
 
-	setValid(values.length >= getNrRequiredItems().intValue());
+	public RequiredNrItemsValidator(HtmlChainValidator htmlChainValidator) {
+		super(htmlChainValidator);
 
-    }
+		setMessage("renderers.validator.invalid.nrItems");
+	}
 
-    public void setNrRequiredItems(Integer nrRequiredItems) {
-	String []arguments = new String[1];
-	arguments[0] = nrRequiredItems.toString();
-	setArguments(arguments);
-	this.nrRequiredItems = nrRequiredItems;
-    }
+	@Override
+	public void performValidation() {
+		HtmlCheckBoxList component = (HtmlCheckBoxList) getComponent();
 
-    public Integer getNrRequiredItems() {
-	return nrRequiredItems;
-    }
+		String values[] = component.getValues();
+		if (getNrRequiredItems() == null) {
+			throw new RuntimeException(
+					"renderers.validator.nr.items.not.specified");
+		}
 
+		setValid(values.length >= getNrRequiredItems().intValue());
+
+	}
+
+	public void setNrRequiredItems(Integer nrRequiredItems) {
+		this.nrRequiredItems = nrRequiredItems;
+	}
+
+	public Integer getNrRequiredItems() {
+		return nrRequiredItems;
+	}
 
 }
