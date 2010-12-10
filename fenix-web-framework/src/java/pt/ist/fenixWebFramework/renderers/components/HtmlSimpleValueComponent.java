@@ -54,6 +54,8 @@ public abstract class HtmlSimpleValueComponent extends HtmlFormComponent {
             }
         }
         
+        if (getValue() == null)
+        	return null;
         return ConvertUtils.convert(getValue(), slot.getStaticType());
     }
     
