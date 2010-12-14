@@ -18,9 +18,9 @@ import org.apache.struts.config.ModuleConfig;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.components.state.ComponentLifeCycle;
+import pt.ist.fenixWebFramework.renderers.components.state.EditRequest.ViewStateUserChangedException;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.components.state.ViewDestination;
-import pt.ist.fenixWebFramework.renderers.components.state.EditRequest.ViewStateUserChangedException;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 /**
@@ -121,11 +121,12 @@ public class SimpleRenderersRequestProcessor extends RequestProcessor {
 		    if (forward != null) {
 			return forward;
 		    } else {
-			return processException(request, response, e, form, mapping);
+//			return processException(request, response, e, form, mapping);
 		    }
 		} else {
-		    return processException(request, response, e, form, mapping);
+//		    return processException(request, response, e, form, mapping);
 		}
+		throw new ServletException(e);
 	    }
 	} else {
 	    return super.processActionPerform(request, response, action, form, mapping);

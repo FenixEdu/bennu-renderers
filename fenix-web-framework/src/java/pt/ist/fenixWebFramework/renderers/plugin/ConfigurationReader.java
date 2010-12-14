@@ -201,6 +201,7 @@ public class ConfigurationReader {
 		    String slotName = slotElement.getAttributeValue("name");
 		    String layout = slotElement.getAttributeValue("layout");
 		    String key = slotElement.getAttributeValue("key");
+		    String arg0 = slotElement.getAttributeValue("arg0");
 		    String bundle = slotElement.getAttributeValue("bundle");
 		    String slotSchema = slotElement.getAttributeValue("schema");
 		    String validatorName = slotElement.getAttributeValue("validator");
@@ -280,6 +281,7 @@ public class ConfigurationReader {
 
 		    slotDescription.setLayout(layout);
 		    slotDescription.setKey(key);
+		    slotDescription.setArg0(arg0);
 		    slotDescription.setBundle(bundle);
 		    slotDescription.setProperties(properties);
 		    slotDescription.setSchema(slotSchema);

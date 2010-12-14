@@ -31,6 +31,7 @@ public class MetaSlot extends MetaObject {
 
     private String bundle;
     private String labelKey;
+    private String labelArg0;
 
     private String layout;
 
@@ -105,7 +106,11 @@ public class MetaSlot extends MetaObject {
     public String getLabel() {
 	final Object object = getMetaObject().getObject();
 	if (object != null) {
-	    return RenderUtils.getSlotLabel(object.getClass(), getName(), getBundle(), getLabelKey());
+	    if (getLabelArg0() == null) {
+		return RenderUtils.getSlotLabel(object.getClass(), getName(), getBundle(), getLabelKey());
+	    } else {
+		return RenderUtils.getSlotLabel(object.getClass(), getName(), getBundle(), getLabelKey(), getLabelArg0());
+	    }
 	}
 
 	Class type;
@@ -116,7 +121,11 @@ public class MetaSlot extends MetaObject {
 	    type = getMetaObject().getType();
 	}
 
-	return RenderUtils.getSlotLabel(type, getName(), getBundle(), getLabelKey());
+	if (getLabelArg0() == null) {
+	    return RenderUtils.getSlotLabel(type, getName(), getBundle(), getLabelKey());
+	} else {
+	    return RenderUtils.getSlotLabel(type, getName(), getBundle(), getLabelKey(), getLabelArg0());
+	}
     }
 
     public void setLabelKey(String key) {
@@ -132,6 +141,14 @@ public class MetaSlot extends MetaObject {
 
     public void setBundle(String bundle) {
 	this.bundle = bundle;
+    }
+
+    public String getLabelArg0() {
+        return labelArg0;
+    }
+
+    public void setLabelArg0(String labelArg0) {
+        this.labelArg0 = labelArg0;
     }
 
     /**

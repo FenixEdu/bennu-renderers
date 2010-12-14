@@ -20,7 +20,9 @@ public class LabelTag extends BodyTagSupport {
     private String bundle;
     
     private String key;
-    
+
+    private String arg0;
+
     public LabelTag() {
         super();
     }
@@ -62,10 +64,18 @@ public class LabelTag extends BodyTagSupport {
             
             if (slot != null) {
                 if (getKey() != null) {
-                    write(RenderUtils.getSlotLabel(object.getType(), getProperty(), getBundle(), getKey()));
+                    if (getArg0() == null) {
+                	write(RenderUtils.getSlotLabel(object.getType(), getProperty(), getBundle(), getKey()));
+                    } else {
+                	write(RenderUtils.getSlotLabel(object.getType(), getProperty(), getBundle(), getKey(), getArg0()));
+                    }
                 }
                 else if (getBundle() != null) {
-                    write(RenderUtils.getSlotLabel(object.getType(), getProperty(), getBundle(), slot.getLabelKey()));
+                    if (getArg0() == null) {
+                	write(RenderUtils.getSlotLabel(object.getType(), getProperty(), getBundle(), slot.getLabelKey()));
+                    } else {
+                	write(RenderUtils.getSlotLabel(object.getType(), getProperty(), getBundle(), slot.getLabelKey(), getArg0()));
+                    }
                 }
                 else {
                     write(slot.getLabel());
@@ -114,5 +124,12 @@ public class LabelTag extends BodyTagSupport {
         this.key = null;
     }
 
+    public String getArg0() {
+        return arg0;
+    }
+
+    public void setArg0(String arg0) {
+        this.arg0 = arg0;
+    }
     
 }

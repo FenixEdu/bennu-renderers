@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
@@ -24,6 +24,8 @@ public class SchemaSlotConfigTag extends BodyTagSupport implements PropertyConta
     private String name;
     private String bundle;
     private String key;
+    private String arg0;
+
     private String validator;
     private boolean readOnly;
     private boolean required = false;
@@ -55,6 +57,8 @@ public class SchemaSlotConfigTag extends BodyTagSupport implements PropertyConta
 	SchemaSlotDescription slot = new SchemaSlotDescription(getName());
 	slot.setBundle(getBundle());
 	slot.setKey(getKey());
+	slot.setArg0(getArg0());
+	slot.setArg0(getArg0());
 	slot.setReadOnly(isReadOnly());
 	slot.setHelpLabel(getHelp());
 	slot.setLayout(getLayout());
@@ -176,4 +180,13 @@ public class SchemaSlotConfigTag extends BodyTagSupport implements PropertyConta
 	}
 	return res;
     }
+
+    public String getArg0() {
+        return arg0;
+    }
+
+    public void setArg0(String arg0) {
+        this.arg0 = arg0;
+    }
+
 }

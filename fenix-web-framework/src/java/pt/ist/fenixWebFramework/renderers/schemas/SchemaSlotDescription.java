@@ -17,6 +17,7 @@ public class SchemaSlotDescription {
 
     private String bundle;
     private String key;
+    private String arg0;
 
     private Class<Converter> converter;
 
@@ -59,6 +60,14 @@ public class SchemaSlotDescription {
 
     public void setKey(String key) {
 	this.key = key;
+    }
+
+    public String getArg0() {
+        return arg0;
+    }
+
+    public void setArg0(String arg0) {
+        this.arg0 = arg0;
     }
 
     public String getBundle() {

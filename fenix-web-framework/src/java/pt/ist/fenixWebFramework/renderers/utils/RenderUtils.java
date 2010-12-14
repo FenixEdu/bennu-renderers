@@ -43,15 +43,17 @@ public class RenderUtils {
     public static String RESOURCE_LABEL_PREFIX = "label";
     public static String COMPONENT_REGISTRY_NAME = RenderUtils.class.getName() + "/component/registry";
 
+/**
     public static String getSlotLabel(Class objectType, String slotName, String key) {
 	return getSlotLabel(objectType, slotName, null, key);
     }
+*/
 
-    public static String getSlotLabel(Class objectType, String slotName, String bundle, String key) {
+    public static String getSlotLabel(Class objectType, String slotName, String bundle, String key, String... args) {
 	String label = null;
 
 	if (key != null) {
-	    label = RenderUtils.getResourceString(bundle, key);
+	    label = RenderUtils.getResourceString(bundle, key, args);
 	}
 
 	if (label != null) {
@@ -63,26 +65,26 @@ public class RenderUtils {
 	}
 
 	label = RenderUtils.getResourceString(bundle, RenderUtils.RESOURCE_LABEL_PREFIX + "." + objectType.getName() + "."
-		+ slotName);
+		+ slotName, args);
 
 	if (label != null) {
 	    return label;
 	}
 
-	label = RenderUtils.getResourceString(bundle, RenderUtils.RESOURCE_LABEL_PREFIX + "." + slotName);
+	label = RenderUtils.getResourceString(bundle, RenderUtils.RESOURCE_LABEL_PREFIX + "." + slotName, args);
 
 	if (label != null) {
 	    return label;
 	}
 
-	label = RenderUtils.getResourceString(bundle, slotName);
+	label = RenderUtils.getResourceString(bundle, slotName, args);
 
 	if (label != null) {
 	    return label;
 	}
 
 	if (slotName.contains(".")) {
-	    label = RenderUtils.getResourceString(bundle, slotName.substring(slotName.lastIndexOf(".") + 1));
+	    label = RenderUtils.getResourceString(bundle, slotName.substring(slotName.lastIndexOf(".") + 1), args);
 	}
 
 	if (label != null) {
