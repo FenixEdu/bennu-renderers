@@ -11,13 +11,10 @@ public class RequiredNrItemsValidator extends HtmlValidator {
 
 	public RequiredNrItemsValidator() {
 		super();
-		setMessage("renderers.validator.invalid.nrItems");
 	}
 
 	public RequiredNrItemsValidator(HtmlChainValidator htmlChainValidator) {
 		super(htmlChainValidator);
-
-		setMessage("renderers.validator.invalid.nrItems");
 	}
 
 	@Override
@@ -25,13 +22,22 @@ public class RequiredNrItemsValidator extends HtmlValidator {
 		HtmlCheckBoxList component = (HtmlCheckBoxList) getComponent();
 
 		String values[] = component.getValues();
+		defineMessage();
+
+		setValid(values.length >= getNrRequiredItems().intValue());
+
+	}
+	
+	private void defineMessage()
+	{
+		setKey(false);
 		if (getNrRequiredItems() == null) {
 			throw new RuntimeException(
 					"renderers.validator.nr.items.not.specified");
 		}
-
-		setValid(values.length >= getNrRequiredItems().intValue());
-
+		else {
+		setMessage(RenderUtils.getFormatedResourceString(getBundle(), "renderers.validator.invalid.nrItems",getNrRequiredItems()));
+		}
 	}
 
 	public void setNrRequiredItems(Integer nrRequiredItems) {
