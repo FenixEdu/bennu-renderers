@@ -4,8 +4,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
-import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink.Target;
+import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.state.ViewDestination;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
@@ -290,7 +290,7 @@ public class ObjectLinkRenderer extends OutputRenderer {
 		    if (text != null) {
 			link.setText(text);
 		    } else if (getFormat() != null) {
-			link.setText(RenderUtils.getFormattedProperties(getFormat(), object));
+			link.setText(RenderUtils.getFormattedProperties(getFormat(), usedObject));
 		    } else {
 			link.setBody(getLinkBody(object));
 		    }
