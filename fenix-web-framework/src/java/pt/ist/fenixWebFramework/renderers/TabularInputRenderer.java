@@ -5,6 +5,7 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInputComponent;
+import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.Validatable;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
@@ -53,6 +54,8 @@ public class TabularInputRenderer extends InputRenderer {
     private String validatorClasses;
 
     private boolean hideValidators = true;
+
+    private boolean allValidatorsInline = false;
 
     public TabularInputRenderer() {
 	this.collectionRenderer = new CollectionRenderer() {
@@ -458,6 +461,14 @@ public class TabularInputRenderer extends InputRenderer {
 	this.hideValidators = hideValidators;
     }
 
+    public void setAllValidatorsInline(boolean allValidatorsInline) {
+	this.allValidatorsInline = allValidatorsInline;
+    }
+
+    public boolean isAllValidatorsInline() {
+	return allValidatorsInline;
+    }
+
     @Override
     protected Layout getLayout(Object object, Class type) {
 	this.collectionRenderer.setContext(getContext());
@@ -499,26 +510,32 @@ public class TabularInputRenderer extends InputRenderer {
 			input.setAlternateText(HtmlText.escape(label));
 		    }
 
-		    MetaSlot metaSlot = getContext().getMetaObject().getSlots().get(columnIndex);
-		    HtmlChainValidator chainValidator = getChainValidator(input, metaSlot);
-		    if (chainValidator != null && !chainValidator.isEmpty() && !isHideValidators()) {
-			chainValidator.setClasses(getValidatorClasses());
-			if (component instanceof HtmlContainer) {
-			    HtmlContainer container = (HtmlContainer) component;
-			    container.addChild(chainValidator);
-			} else {
-			    HtmlContainer container = new HtmlInlineContainer();
-			    container.addChild(component);
-			    container.addChild(chainValidator);
-			    return container;
-			}
-		    }
+		    component = addInlineValidators(columnIndex, component, input);
+		} else if (isAllValidatorsInline()) {
+		    HtmlSimpleValueComponent input = (HtmlSimpleValueComponent) validatable;
+		    component = addInlineValidators(columnIndex, component, input);
 		}
 
 		return component;
 	    }
 
+	    private HtmlComponent addInlineValidators(int columnIndex, HtmlComponent component, HtmlSimpleValueComponent input) {
+		MetaSlot metaSlot = getContext().getMetaObject().getSlots().get(columnIndex);
+		HtmlChainValidator chainValidator = getChainValidator(input, metaSlot);
+		if (chainValidator != null && !chainValidator.isEmpty() && !isHideValidators()) {
+		    chainValidator.setClasses(getValidatorClasses());
+		    if (component instanceof HtmlContainer) {
+			HtmlContainer container = (HtmlContainer) component;
+			container.addChild(chainValidator);
+		    } else {
+			HtmlContainer container = new HtmlInlineContainer();
+			container.addChild(component);
+			container.addChild(chainValidator);
+			return container;
+		    }
+		}
+		return component;
+	    }
 	};
     }
-
 }
