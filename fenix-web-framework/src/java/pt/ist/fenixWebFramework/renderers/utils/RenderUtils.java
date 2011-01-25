@@ -36,7 +36,6 @@ import pt.ist.fenixWebFramework.renderers.components.state.ComponentLifeCycle;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.components.state.LifeCycleConstants;
 import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessorImpl;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
 
 public class RenderUtils {
     private static Logger logger = Logger.getLogger(RenderUtils.class);
@@ -98,7 +97,7 @@ public class RenderUtils {
 	Class clazzIter = objectType;
 	
 	String label = null;
-	while (AbstractDomainObject.class.isAssignableFrom(clazzIter)) {
+	while (Object.class.equals(clazzIter)) {
 	    label = RenderUtils.getResourceString(bundle, RenderUtils.RESOURCE_LABEL_PREFIX + "." + clazzIter.getName() + "."
 		    + slotName);
 	    if (label != null) {
