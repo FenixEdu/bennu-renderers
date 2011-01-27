@@ -94,10 +94,11 @@ public class RenderUtils {
     }
 
     static private String readClassResourceString(String bundle, Class objectType, String slotName, String... args) {
+
 	Class clazzIter = objectType;
-	
 	String label = null;
-	while (!Object.class.equals(clazzIter)) {
+
+	while (clazzIter != null && !Object.class.equals(clazzIter)) {
 	    label = RenderUtils.getResourceString(bundle, RenderUtils.RESOURCE_LABEL_PREFIX + "." + clazzIter.getName() + "."
 		    + slotName);
 	    if (label != null) {
