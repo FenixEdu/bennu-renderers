@@ -5,6 +5,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanComparator;
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlCheckBox;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
@@ -21,9 +24,7 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObjectCollection;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
-import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
-
-import org.apache.commons.beanutils.BeanComparator;
+import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 /**
  * This renderer allows you choose several object from a list of choices. The
@@ -126,7 +127,7 @@ public class TabularOptionInputRenderer extends InputRenderer {
 	    String className = getProviderClass();
 
 	    try {
-		Class providerCass = (Class<DataProvider>) Class.forName(className);
+		Class providerCass = Class.forName(className);
 		this.provider = (DataProvider) providerCass.newInstance();
 	    } catch (Exception e) {
 		throw new RuntimeException("could not get a data provider instance", e);
@@ -165,7 +166,7 @@ public class TabularOptionInputRenderer extends InputRenderer {
     @Override
     protected Layout getLayout(Object object, Class type) {
 
-	List<MetaObject> metaObjects = (List<MetaObject>) getMetaObjects(getPossibleObjects());
+	List<MetaObject> metaObjects = getMetaObjects(getPossibleObjects());
 	Collection objectsReceived = (Collection) object;
 
 	HtmlMultipleHiddenField hiddenField = new HtmlMultipleHiddenField();
@@ -201,10 +202,12 @@ public class TabularOptionInputRenderer extends InputRenderer {
 	return metaObjects;
     }
 
+    @Override
     public String getClasses() {
 	return classes;
     }
 
+    @Override
     public void setClasses(String classes) {
 	this.classes = classes;
     }
@@ -253,6 +256,11 @@ public class TabularOptionInputRenderer extends InputRenderer {
 	    HtmlComponent component = super.createLayout(object, type);
 	    container.addChild(hiddenField);
 	    container.addChild(component);
+	    if (metaObjects.isEmpty() && !StringUtils.isEmpty(getEmptyMessageKey())) {
+		HtmlText emptyMessage = new HtmlText(
+			RenderUtils.getResourceString(getEmptyMessageBundle(), getEmptyMessageKey()), false);
+		container.addChild(emptyMessage);
+	    }
 
 	    hiddenField.setController(new HtmlController() {
 
