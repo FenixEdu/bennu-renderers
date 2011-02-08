@@ -388,6 +388,13 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		    + ", cleanSelection: clearAutoComplete, select: selectElement, after: updateCustomValue, error:showError}); +\n"
 		    + "jQuery(\"input[name='" + escapeId + "']\").val(jQuery(\"input#" + escapeId + "\").val());";
 
+	    //on submit let's call the updateCustomValue to make sure that the rawSlotName is correctly filled;
+	    if (getRawSlotName() != null) {
+		scriptText = scriptText.concat("\njQuery(\"input[name='" + escapeId + "']\").closest('form').submit(function() {\n" +
+		"var inputFieldVal = jQuery(\"input[name='" + escapeId + "_text']\").val()\n" +
+		"updateCustomValue(jQuery(\"input[name='" + escapeId + "_text']\"),inputFieldVal);});");
+	    }
+
 	    HtmlScript script = new HtmlScript();
 	    script.setContentType("text/javascript");
 	    script.setScript(scriptText);
@@ -408,7 +415,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 
     protected static class UpdateRawNameController extends HtmlController {
 
-	private String rawSlotName;
+	private final String rawSlotName;
 
 	public UpdateRawNameController(String rawSlotName) {
 	    super();
