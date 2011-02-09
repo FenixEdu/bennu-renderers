@@ -301,6 +301,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 	    textField.setName(textField.getId());
 	    textField.setClasses(getTextFieldStyleClass());
 	    textField.setSize(getSize());
+	    textField.setAttribute("autocomplete", "off");
 	    container.addChild(textField);
 
 	    if (object != null && getLabelField() != null) {
