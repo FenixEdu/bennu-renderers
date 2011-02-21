@@ -11,13 +11,14 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-//cannot use ActiveObject.class.getName() the value must be a constant expression BLEAH!
-@SupportedAnnotationTypes( { "pt.ist.fenixWebFramework.services.Service" })
+// cannot use ActiveObject.class.getName() the value must be a constant
+// expression BLEAH!
+@SupportedAnnotationTypes({ "pt.ist.fenixWebFramework.services.Service" })
 public class ServiceAnnotationProcessor extends AbstractProcessor {
 
     static final String LOG_FILENAME = ".serviceAnnotationLog";
@@ -35,8 +36,7 @@ public class ServiceAnnotationProcessor extends AbstractProcessor {
 
 	    for (final MethodSymbol methodElement : annotatedElements) {
 		final ClassSymbol classSymbol = (ClassSymbol) methodElement.getEnclosingElement();
-		final String className = classSymbol.getQualifiedName().toString();
-
+		String className = processClassName(classSymbol);
 		fileWriter.write(className);
 		fileWriter.write(FIELD_SEPERATOR);
 		fileWriter.write(methodElement.getSimpleName().toString());
@@ -55,6 +55,14 @@ public class ServiceAnnotationProcessor extends AbstractProcessor {
 	}
 
 	return true;
+    }
+
+    private String processClassName(ClassSymbol classSymbol) {
+	Symbol symbol = classSymbol.getEnclosingElement();
+	if (symbol instanceof ClassSymbol) {
+	    return processClassName((ClassSymbol) symbol) + "$" + classSymbol.getSimpleName();
+	}
+	return classSymbol.getQualifiedName().toString();
     }
 
 }
