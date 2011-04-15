@@ -2,13 +2,6 @@ package pt.ist.fenixWebFramework;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -22,10 +15,8 @@ import org.apache.log4j.varia.DenyAllFilter;
 import org.apache.log4j.varia.LevelRangeFilter;
 
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.fenixframework.pstm.repository.SQLUpdateGenerator;
 import pt.utl.ist.fenix.tools.file.DSpaceFileManagerFactory;
 import pt.utl.ist.fenix.tools.file.FileManagerFactory;
-import pt.utl.ist.fenix.tools.util.FileUtils;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 import dml.DomainModel;
 
@@ -33,9 +24,15 @@ public class FenixWebFramework extends FenixFramework {
 
     private static final Object INIT_LOCK = new Object();
 
+    public static void bootStrap(final Config config) {
+	synchronized (INIT_LOCK) {
+	    FenixFramework.bootStrap(config);
+	}
+    }
+
     public static void initialize(final Config config) {
 	synchronized (INIT_LOCK) {
-	    FenixFramework.initialize(config);
+	    FenixFramework.initialize();
 
 	    final Locale locale = new Locale(config.getDefaultLanguage(), config.getDefaultLocation(), config.getDefaultVariant());
 	    Language.setDefaultLocale(locale);
