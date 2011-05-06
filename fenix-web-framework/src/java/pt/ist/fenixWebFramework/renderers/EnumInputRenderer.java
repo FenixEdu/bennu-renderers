@@ -18,8 +18,10 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlMenuOption;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextInput;
 import pt.ist.fenixWebFramework.renderers.contexts.InputContext;
+import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
 import pt.ist.fenixWebFramework.renderers.converters.EnumConverter;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
+import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.utl.ist.fenix.tools.util.Pair;
@@ -140,7 +142,7 @@ public class EnumInputRenderer extends InputRenderer {
     }
 
     @Override
-    protected Layout getLayout(Object object, Class type) {
+    protected Layout getLayout(final Object object, Class type) {
 	if (getReadOnly()) {
 	    return new Layout() {
 		@Override
@@ -188,8 +190,9 @@ public class EnumInputRenderer extends InputRenderer {
 		    type = type.getEnclosingClass();
 		}
 
-		Collection<Object> constants = getIncludedEnumValues(type, targetObject);
-		Collection<Object> excludedValues = getExcludedEnumValues(type, targetObject);
+		final Object bean = getRenderedObject();
+		Collection<Object> constants = getIncludedEnumValues(type, bean);
+		Collection<Object> excludedValues = getExcludedEnumValues(type, bean);
 		List<Pair<Enum, String>> pairList = new ArrayList<Pair<Enum, String>>();
 
 		for (Object object : constants) {
@@ -223,6 +226,18 @@ public class EnumInputRenderer extends InputRenderer {
 		holderComponent.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 
 		return holderComponent;
+	    }
+
+	    private Object getRenderedObject() {
+		final PresentationContext context = getContext();
+		if (context != null) {
+		    final PresentationContext parentContext = context.getParentContext();
+		    if (parentContext != null) {
+			final MetaObject metaObject = parentContext.getMetaObject();
+			return metaObject == null ? null : metaObject.getObject();
+		    }
+		}
+		return null;
 	    }
 
 	    @Override
@@ -283,7 +298,7 @@ public class EnumInputRenderer extends InputRenderer {
 
 	    return Arrays.asList(constants);
 	} else {
-	    String formatedValues = RenderUtils.getFormattedProperties(valuesString, object);
+	    String formatedValues = object == null ? valuesString : RenderUtils.getFormattedProperties(valuesString, object);
 	    return getEnumValues(type, formatedValues);
 	}
     }
@@ -294,7 +309,7 @@ public class EnumInputRenderer extends InputRenderer {
 	if (valuesString == null || valuesString.length() == 0) {
 	    return Collections.emptyList();
 	} else {
-	    String formatedValues = RenderUtils.getFormattedProperties(valuesString, object);
+	    String formatedValues = object == null ? valuesString : RenderUtils.getFormattedProperties(valuesString, object);
 	    return getEnumValues(type, formatedValues);
 	}
     }
