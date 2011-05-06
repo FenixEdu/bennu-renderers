@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-fileupload_1_0.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.0.4.jar"/>
-	<classpathentry kind="lib" path="lib/fenix-tools.jar"/>
+	<classpathentry kind="lib" path="lib/fenix-tools.jar" sourcepath="/fenix-tools"/>
 	<classpathentry kind="lib" path="lib/jvstm.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.8.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api-2.3.jar"/>
