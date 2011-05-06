@@ -188,8 +188,8 @@ public class EnumInputRenderer extends InputRenderer {
 		    type = type.getEnclosingClass();
 		}
 
-		Collection<Object> constants = getIncludedEnumValues(type);
-		Collection<Object> excludedValues = getExcludedEnumValues(type);
+		Collection<Object> constants = getIncludedEnumValues(type, targetObject);
+		Collection<Object> excludedValues = getExcludedEnumValues(type, targetObject);
 		List<Pair<Enum, String>> pairList = new ArrayList<Pair<Enum, String>>();
 
 		for (Object object : constants) {
@@ -272,7 +272,7 @@ public class EnumInputRenderer extends InputRenderer {
 	}
     }
 
-    private Collection<Object> getIncludedEnumValues(Class type) {
+    private Collection<Object> getIncludedEnumValues(Class type, final Object object) {
 	final String valuesString = getIncludedValues();
 
 	if (valuesString == null || valuesString.length() == 0) {
@@ -283,17 +283,19 @@ public class EnumInputRenderer extends InputRenderer {
 
 	    return Arrays.asList(constants);
 	} else {
-	    return getEnumValues(type, valuesString);
+	    String formatedValues = RenderUtils.getFormattedProperties(valuesString, object);
+	    return getEnumValues(type, formatedValues);
 	}
     }
 
-    private Collection<Object> getExcludedEnumValues(Class type) {
+    private Collection<Object> getExcludedEnumValues(Class type, final Object object) {
 	final String valuesString = getExcludedValues();
 
 	if (valuesString == null || valuesString.length() == 0) {
 	    return Collections.emptyList();
 	} else {
-	    return getEnumValues(type, valuesString);
+	    String formatedValues = RenderUtils.getFormattedProperties(valuesString, object);
+	    return getEnumValues(type, formatedValues);
 	}
     }
 
