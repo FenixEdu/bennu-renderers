@@ -317,7 +317,10 @@ public class EnumInputRenderer extends InputRenderer {
     private Collection<Object> getEnumValues(Class type, String valuesString) {
 	ArrayList<Object> result = new ArrayList<Object>();
 	for (String part : valuesString.split(",")) {
-	    result.add(Enum.valueOf(type, part.trim()));
+	    final String trimmedValue = part.trim();
+	    if (trimmedValue.length() > 0) {
+		result.add(Enum.valueOf(type, trimmedValue));
+	    }
 	}
 
 	return result;
