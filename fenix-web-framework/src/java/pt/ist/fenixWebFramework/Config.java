@@ -13,6 +13,9 @@ public class Config extends pt.ist.fenixframework.Config {
 	protected String casValidateUrl = null;
 	protected String serviceUrl = null;
 
+	public CasConfig() {
+	}
+
 	public CasConfig(final String casLoginUrl, final String casLogoutUrl, final String casValidateUrl, final String serviceUrl) {
 	    this.casEnabled = true;
 	    this.casLoginUrl = casLoginUrl;
