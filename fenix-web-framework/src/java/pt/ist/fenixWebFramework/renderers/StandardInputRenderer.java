@@ -231,16 +231,17 @@ public class StandardInputRenderer extends InputRenderer {
 					"renderers.validator.required.mark"));
 				buffer.append(" ");
 			    }
-			} else {
-			    if (isOptionalMarkShown()) {
-				buffer.append(RenderUtils.getResourceString("RENDERER_RESOURCES",
-					"renderers.validator.optional.mark"));
-				buffer.append(" ");
-			    }
 			}
 
-			buffer.append(addLabelTerminator(slot.getLabel()));
-			label.setText(buffer.toString());
+			buffer.append(slot.getLabel());
+
+			if (!slot.isRequired() && isOptionalMarkShown()) {
+			    buffer.append(" ");
+			    buffer.append(RenderUtils
+				    .getResourceString("RENDERER_RESOURCES", "renderers.validator.optional.mark"));
+			}
+
+			label.setText(addLabelTerminator(buffer.toString()));
 			label.setTitle(slot.getTitle());
 
 			component = label;
