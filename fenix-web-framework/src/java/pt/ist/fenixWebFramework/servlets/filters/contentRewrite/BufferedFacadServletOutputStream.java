@@ -39,5 +39,9 @@ public class BufferedFacadServletOutputStream extends ServletOutputStream {
 	realOutputStream.close();
     }
 
+    public String getContent() {
+	return byteArrayOutputStream.toString();
+    }
+
 }
 

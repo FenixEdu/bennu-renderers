@@ -58,4 +58,8 @@ public class BufferedFacadPrintWriter extends PrintWriter {
 	printWriter.close();
     }
 
+    public String getContent() {
+	return stringBuilder.toString();
+    }
+
 }

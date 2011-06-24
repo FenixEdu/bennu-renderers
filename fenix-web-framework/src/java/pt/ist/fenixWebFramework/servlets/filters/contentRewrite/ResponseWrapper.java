@@ -7,6 +7,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriterFilter.RequestRewriter;
 
 public class ResponseWrapper extends HttpServletResponseWrapper {
@@ -56,6 +58,16 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 	if (bufferedFacadPrintWriter != null) {
 	    bufferedFacadPrintWriter.writeRealResponse(requestRewriters);
 	}
+    }
+
+    public String getContent() {
+	if (bufferedFacadServletOutputStream != null) {
+	    return bufferedFacadServletOutputStream.getContent();
+	}
+	if (bufferedFacadPrintWriter != null) {
+	    return bufferedFacadPrintWriter.getContent();
+	}
+	return StringUtils.EMPTY;
     }
 
 }
