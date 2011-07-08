@@ -10,6 +10,7 @@ import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 public class LocalDateValidator extends HtmlValidator {
 
     private boolean required;
+    private LocalDate calculatedDate;
 
     public LocalDateValidator() {
 	super();
@@ -54,7 +55,7 @@ public class LocalDateValidator extends HtmlValidator {
 			int day = Integer.valueOf(dateParts[0]);
 			int month = Integer.valueOf(dateParts[1]);
 			int year = Integer.valueOf(dateParts[2]);
-			LocalDate test = new LocalDate(year, month, day);
+			calculatedDate = new LocalDate(year, month, day);
 
 		    } catch (NumberFormatException e) {
 			setMessage("renderers.validator.dateTime.notNumbers");
@@ -68,6 +69,14 @@ public class LocalDateValidator extends HtmlValidator {
 		    setValid(false);
 		}
 	    }
+	}
+    }
+
+    protected LocalDate getCalculatedDate() {
+	if(isValid()) {
+	    return calculatedDate;
+	} else {
+	    return null;
 	}
     }
 
