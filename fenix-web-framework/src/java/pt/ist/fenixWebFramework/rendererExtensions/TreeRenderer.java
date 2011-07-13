@@ -71,7 +71,7 @@ import pt.ist.fenixframework.DomainObject;
 public class TreeRenderer extends OutputRenderer {
 
     private String treeId;
-    
+
     private boolean expandable;
     private String fieldId;
     private String saveUrl;
@@ -79,65 +79,65 @@ public class TreeRenderer extends OutputRenderer {
     private String saveParameter;
     private String onComplete;
     private String onError;
-    
+
     private String eachLayout;
     private String eachSchema;
-    
+
     private String image;
     private String children;
     private String links;
     private String hiddenLinks;
     private boolean includeImage;
-    
+
     private String listClass;
     private String listStyle;
     private String itemClass;
     private String itemStyle;
     private String linksClasses;
     private String linksStyle;
-    
+
     private String movedClass;
-    
-    private Map<String, String> layoutsMap;
-    private Map<String, String> schemasMap;
-    
-    private Map<String, String> childrenMap;
-    private Map<String, String> noChildrenMap;
-    private Map<String, String> classesMap;
-    private Map<String, String> styleMap;
-    private Map<String, String> linksMap;
-    private Map<String, String> hiddenLinksMap;
-    private Map<String, String> imagesMap;
+
+    private final Map<String, String> layoutsMap;
+    private final Map<String, String> schemasMap;
+
+    private final Map<String, String> childrenMap;
+    private final Map<String, String> noChildrenMap;
+    private final Map<String, String> classesMap;
+    private final Map<String, String> styleMap;
+    private final Map<String, String> linksMap;
+    private final Map<String, String> hiddenLinksMap;
+    private final Map<String, String> imagesMap;
 
     private LevelDecorator decorator;
-    
+
     private String current;
     private String currentClasses;
     private String currentStyle;
 
     public TreeRenderer() {
-        super();
-        
-        this.childrenMap = new HashMap<String, String>();
-        this.noChildrenMap = new HashMap<String, String>();
-        this.classesMap = new HashMap<String, String>();
-        this.styleMap = new HashMap<String, String>();
-        this.linksMap = new HashMap<String, String>();
-        this.hiddenLinksMap = new HashMap<String, String>();
-        this.imagesMap = new HashMap<String, String>();
-        this.layoutsMap = new HashMap<String, String>();
-        this.schemasMap = new HashMap<String, String>();
-        
-        setStyle("margin: 0px; padding: 0px;");
-        setListStyle("margin-left: 20px; padding-left: 20px;");
-        setItemStyle("vertical-align:middle;");
-        
-        setModuleRelative(true);
-        setIncludeImage(true);
+	super();
+
+	this.childrenMap = new HashMap<String, String>();
+	this.noChildrenMap = new HashMap<String, String>();
+	this.classesMap = new HashMap<String, String>();
+	this.styleMap = new HashMap<String, String>();
+	this.linksMap = new HashMap<String, String>();
+	this.hiddenLinksMap = new HashMap<String, String>();
+	this.imagesMap = new HashMap<String, String>();
+	this.layoutsMap = new HashMap<String, String>();
+	this.schemasMap = new HashMap<String, String>();
+
+	setStyle("margin: 0px; padding: 0px;");
+	setListStyle("margin-left: 20px; padding-left: 20px;");
+	setItemStyle("vertical-align:middle;");
+
+	setModuleRelative(true);
+	setIncludeImage(true);
     }
 
     public String getTreeId() {
-        return this.treeId;
+	return this.treeId;
     }
 
     /**
@@ -158,11 +158,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setTreeId(String treeId) {
-        this.treeId = treeId;
+	this.treeId = treeId;
     }
 
     public String getEachLayout() {
-        return this.eachLayout;
+	return this.eachLayout;
     }
 
     /**
@@ -171,11 +171,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setEachLayout(String eachLayout) {
-        this.eachLayout = eachLayout;
+	this.eachLayout = eachLayout;
     }
 
     public String getEachSchema() {
-        return this.eachSchema;
+	return this.eachSchema;
     }
 
     /**
@@ -184,17 +184,17 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setEachSchema(String eachSchema) {
-        this.eachSchema = eachSchema;
+	this.eachSchema = eachSchema;
     }
 
     public String getFieldId() {
-        return this.fieldId;
+	return this.fieldId;
     }
 
     public String getLayoutFor(String type) {
-        return this.layoutsMap.get(type);
+	return this.layoutsMap.get(type);
     }
-    
+
     /**
      * Chooses the layout to be used to presente objects of the specified type. You
      * can use the simple name of the type.
@@ -202,13 +202,13 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setLayoutFor(String type, String layout) {
-        this.layoutsMap.put(type, layout);
+	this.layoutsMap.put(type, layout);
     }
-    
+
     public String getSchemaFor(String type) {
-        return this.schemasMap.get(type);
+	return this.schemasMap.get(type);
     }
-    
+
     /**
      * Chooses the schema to be used when presenting objects of the specified type. You
      * can use the simple name of the type.
@@ -216,11 +216,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setSchemaFor(String type, String schema) {
-        this.schemasMap.put(type, schema);
+	this.schemasMap.put(type, schema);
     }
-    
+
     public String getChildren() {
-        return this.children;
+	return this.children;
     }
 
     /**
@@ -231,26 +231,26 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setChildren(String children) {
-        this.children = children;
+	this.children = children;
     }
 
     public String getChildrenFor(String type) {
-        return this.childrenMap.get(type);
+	return this.childrenMap.get(type);
     }
-    
+
     /**
      * Allows you to filter some subclasses and avoid them to have children.
      * 
      * @property
      */
     public void setNoChildrenFor(String type, String value) {
-        this.noChildrenMap.put(type, value);
+	this.noChildrenMap.put(type, value);
     }
 
     public String getNoChildrenFor(String type) {
-        return this.noChildrenMap.get(type);
+	return this.noChildrenMap.get(type);
     }
-    
+
     /**
      * This property specifies the name of the method that should be used to obtain the
      * list of children for item that are objects of the specified type. You can use
@@ -259,9 +259,9 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setChildrenFor(String type, String method) {
-        this.childrenMap.put(type, method);
+	this.childrenMap.put(type, method);
     }
-    
+
     /**
      * This property indicates two things. First it indicates that you want a draggable
      * tree. Second it specifies the id of the form field were the tree structure will
@@ -280,11 +280,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setFieldId(String fieldId) {
-        this.fieldId = fieldId;
+	this.fieldId = fieldId;
     }
 
     public String getSaveUrl() {
-        return this.saveUrl;
+	return this.saveUrl;
     }
 
     /**
@@ -301,11 +301,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setSaveUrl(String saveUrl) {
-        this.saveUrl = saveUrl;
+	this.saveUrl = saveUrl;
     }
 
     public boolean isModuleRelative() {
-        return this.moduleRelative;
+	return this.moduleRelative;
     }
 
     /**
@@ -315,11 +315,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setModuleRelative(boolean moduleRelative) {
-        this.moduleRelative = moduleRelative;
+	this.moduleRelative = moduleRelative;
     }
 
     public String getSaveParameter() {
-        return this.saveParameter;
+	return this.saveParameter;
     }
 
     /**
@@ -329,11 +329,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setSaveParameter(String saveParameter) {
-        this.saveParameter = saveParameter;
+	this.saveParameter = saveParameter;
     }
 
     public String getOnComplete() {
-        return this.onComplete;
+	return this.onComplete;
     }
 
     /**
@@ -344,11 +344,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setOnComplete(String onComplete) {
-        this.onComplete = onComplete;
+	this.onComplete = onComplete;
     }
 
     public String getOnError() {
-        return this.onError;
+	return this.onError;
     }
 
     /**
@@ -359,11 +359,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setOnError(String onError) {
-        this.onError = onError;
+	this.onError = onError;
     }
 
     public String getListClass() {
-        return this.listClass;
+	return this.listClass;
     }
 
     /**
@@ -372,11 +372,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setListClass(String listClass) {
-        this.listClass = listClass;
+	this.listClass = listClass;
     }
 
     public String getListStyle() {
-        return this.listStyle;
+	return this.listStyle;
     }
 
     /**
@@ -385,11 +385,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setListStyle(String listStyle) {
-        this.listStyle = listStyle;
+	this.listStyle = listStyle;
     }
 
     public String getItemClass() {
-        return this.itemClass;
+	return this.itemClass;
     }
 
     /**
@@ -407,11 +407,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setItemClass(String itemClass) {
-        this.itemClass = itemClass;
+	this.itemClass = itemClass;
     }
 
     public String getItemStyle() {
-        return this.itemStyle;
+	return this.itemStyle;
     }
 
     /**
@@ -420,24 +420,24 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setItemStyle(String itemStyle) {
-        this.itemStyle = itemStyle;
+	this.itemStyle = itemStyle;
     }
 
     public String getClassesFor(String type) {
-        return this.classesMap.get(type);
+	return this.classesMap.get(type);
     }
-    
+
     /**
      * The css classes to be used in items corresponding to objects of the specified type.
      * 
      * @property
      */
     public void setClassesFor(String type, String method) {
-        this.classesMap.put(type, method);
+	this.classesMap.put(type, method);
     }
 
     public String getLinks() {
-        return this.links;
+	return this.links;
     }
 
     /**
@@ -448,11 +448,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setLinks(String links) {
-        this.links = links;
+	this.links = links;
     }
-    
+
     public String getHiddenLinks() {
-        return hiddenLinks;
+	return hiddenLinks;
     }
 
     /**
@@ -463,13 +463,13 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setHiddenLinks(String hiddenlinks) {
-        this.hiddenLinks = hiddenlinks;
+	this.hiddenLinks = hiddenlinks;
     }
 
     public String getLinksFor(String type) {
-        return this.linksMap.get(type);
+	return this.linksMap.get(type);
     }
-    
+
     /**
      * Specifies the links that should appear near items corresponding to objects of the
      * given type. The link text is replaced in the same way than {@link #setLinks(String)}.
@@ -477,13 +477,13 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setLinksFor(String type, String method) {
-        this.linksMap.put(type, method);
+	this.linksMap.put(type, method);
     }
-    
+
     public String getHiddenLinksFor(String type) {
-        return this.hiddenLinksMap.get(type);
+	return this.hiddenLinksMap.get(type);
     }
-    
+
     /**
      * Specifies the hidden links that should appear near items corresponding to objects of the
      * given type. The link text is replaced in the same way than {@link #setHiddenLinks(String)}.
@@ -491,11 +491,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setHiddenLinksFor(String type, String method) {
-        this.hiddenLinksMap.put(type, method);
+	this.hiddenLinksMap.put(type, method);
     }
-    
+
     public String getLinksClasses() {
-        return this.linksClasses;
+	return this.linksClasses;
     }
 
     /**
@@ -505,11 +505,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setLinksClasses(String linksClass) {
-        this.linksClasses = linksClass;
+	this.linksClasses = linksClass;
     }
 
     public String getLinksStyle() {
-        return this.linksStyle;
+	return this.linksStyle;
     }
 
     /**
@@ -518,11 +518,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setLinksStyle(String linksStyle) {
-        this.linksStyle = linksStyle;
+	this.linksStyle = linksStyle;
     }
-    
+
     public String getMovedClass() {
-        return this.movedClass;
+	return this.movedClass;
     }
 
     /**
@@ -531,11 +531,11 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setMovedClass(String moveClass) {
-        this.movedClass = moveClass;
+	this.movedClass = moveClass;
     }
 
     public String getImage() {
-        return image;
+	return image;
     }
 
     /**
@@ -544,14 +544,14 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setImage(String image) {
-        setIncludeImage(false);
-        this.image = image;
+	setIncludeImage(false);
+	this.image = image;
     }
 
     public String getImageFor(String type) {
-        return this.imagesMap.get(type);
+	return this.imagesMap.get(type);
     }
-    
+
     /**
      * Sets the path of the image that should be used as a icon of items correponding
      * to objects of the given type. The path is context relative. 
@@ -559,12 +559,12 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setImageFor(String type, String method) {
-        setIncludeImage(false);
-        this.imagesMap.put(type, method);
+	setIncludeImage(false);
+	this.imagesMap.put(type, method);
     }
 
     public boolean isIncludeImage() {
-        return this.includeImage;
+	return this.includeImage;
     }
 
     /**
@@ -574,303 +574,294 @@ public class TreeRenderer extends OutputRenderer {
      * @property
      */
     public void setIncludeImage(boolean includeImage) {
-        this.includeImage = includeImage;
+	this.includeImage = includeImage;
     }
 
     public String getCurrent() {
-		return current;
-	}
+	return current;
+    }
 
     /**
      * @property
      */
-	public void setCurrent(String current) {
-		this.current = current;
-	}
+    public void setCurrent(String current) {
+	this.current = current;
+    }
 
-	public String getCurrentClasses() {
-		return currentClasses;
-	}
+    public String getCurrentClasses() {
+	return currentClasses;
+    }
 
-	/**
-	 * @property
-	 */
-	public void setCurrentClasses(String currentClasses) {
-		this.currentClasses = currentClasses;
-	}
+    /**
+     * @property
+     */
+    public void setCurrentClasses(String currentClasses) {
+	this.currentClasses = currentClasses;
+    }
 
-	public String getCurrentStyle() {
-		return currentStyle;
-	}
+    public String getCurrentStyle() {
+	return currentStyle;
+    }
 
-	/**
-	 * @property
-	 */
-	public void setCurrentStyle(String currentStyle) {
-		this.currentStyle = currentStyle;
-	}
+    /**
+     * @property
+     */
+    public void setCurrentStyle(String currentStyle) {
+	this.currentStyle = currentStyle;
+    }
 
-	@Override
+    @Override
     protected Layout getLayout(Object object, Class type) {
-        return new TreeLayout();
+	return new TreeLayout();
     }
 
     public boolean isDraggable() {
-        return getTreeId() != null && (getFieldId() != null || getSaveUrl() != null);
+	return getTreeId() != null && (getFieldId() != null || getSaveUrl() != null);
     }
 
     public boolean isExpandable() {
-        return this.expandable || isDraggable();
+	return this.expandable || isDraggable();
     }
 
     public void setExpandable(boolean expandable) {
-        this.expandable = expandable;
+	this.expandable = expandable;
     }
-    
+
     public LevelDecorator getDecorator() {
-        return this.decorator;
+	return this.decorator;
     }
 
     public void setDecorator(LevelDecorator decorator) {
-        this.decorator = decorator;
+	this.decorator = decorator;
     }
 
     protected class TreeLayout extends Layout {
 
-        @Override
-        public HtmlComponent createComponent(Object object, Class type) {
-            HtmlList list = createList(new ArrayList<HtmlListItem>(), (Collection) object);
-            
-            if (isDraggable()) {
-                return createScript(list, true);
-            }
-            else {
-                if (isExpandable()) {
-                    return createScript(list, false);
-                }
-                else {
-                    return list;
-                }
-            }
-        }
+	@Override
+	public HtmlComponent createComponent(Object object, Class type) {
+	    HtmlList list = createList(new ArrayList<HtmlListItem>(), (Collection) object);
 
-        private HtmlComponent createScript(HtmlList list, boolean drag) {
-            String id = getTreeId();
-            
-            if (id == null && !drag) {
-                id = "topLevelTree";
-            }
+	    if (isDraggable()) {
+		return createScript(list, true);
+	    } else {
+		if (isExpandable()) {
+		    return createScript(list, false);
+		} else {
+		    return list;
+		}
+	    }
+	}
 
-            list.setId(id);
-            
-            HtmlLink imagesUrlLink = new HtmlLink();
-            imagesUrlLink.setModuleRelative(false);
-            imagesUrlLink.setUrl("/javaScript/drag-drop-folder-tree/images/");
-            
-            HtmlLink requestUrlLink = new HtmlLink();
-            requestUrlLink.setModuleRelative(isModuleRelative());
-            requestUrlLink.setUrl(getSaveUrl());
-            
-            String requestUrl = getSaveUrl() != null ? requestUrlLink.calculateUrl() : null;
-            
-            HtmlScript scriptA = new HtmlScript();
-            scriptA.setContentType("text/javascript");
-            scriptA.setScript(getTreeScript(id, requestUrl, imagesUrlLink.calculateUrl(), drag));
-            
-            HtmlStyle style = new HtmlStyle();
-            style.setStyleBody(
-                    (getStyle() != null ? String.format("#%s,#%s-container { %s }", id, id, getStyle()) : "") + "\n" +
-                    String.format("#%s ul { %s }", id, getListStyle()) + "\n" + 
-                    String.format("#%s li,#%s-container li { %s }", id, id, getItemStyle()) + "\n"
-            );
-            
-            HtmlContainer container = new HtmlBlockContainer();
+	private HtmlComponent createScript(HtmlList list, boolean drag) {
+	    String id = getTreeId();
 
-            container.addChild(list);
-            container.addChild(style);
-            container.addChild(scriptA);
-            
-            return container;
-        }
+	    if (id == null && !drag) {
+		id = "topLevelTree";
+	    }
 
-        private String getTreeScript(String id, String requestUrl, String imagesFolder, boolean drag) {
-            StringBuilder script = new StringBuilder();
-            
-            script.append("treeRenderer_init('" + id + "', {");
+	    list.setId(id);
 
-            script.append("imageFolder: '" + imagesFolder + "'");
-            script.append(", includeImage: " + isIncludeImage());
-            
-            if (drag) {
-                if (requestUrl != null) {
-                    script.append(", requestUrl: '" + requestUrl + "'");
-                }
-                
-                if (getSaveParameter() != null) {
-                    script.append(", requestParameter: '" + getSaveParameter() + "'");
-                }
-                
-                if (getFieldId() != null) {
-                    script.append(", fieldId: '" + getFieldId() + "'");
-                }
-    
-                if (getOnComplete() != null) {
-                    script.append(", onComplete: " + getOnComplete());
-                }
-                
-                if (getOnError() != null) {
-                    script.append(", onError: " + getOnError());
-                }
-    
-                if (getMovedClass() != null) {
-                    script.append(", movedClass: '" + getMovedClass() + "'");
-                }
-            }
-            else {
-                script.append(", disableDrag: true");
-            }
-            
-            if (getUsableLinksClasses() != null) {
-                script.append(", linkClasses: '" + getUsableLinksClasses() + "'");
-            }
-            
-            script.append("});");
+	    HtmlLink imagesUrlLink = new HtmlLink();
+	    imagesUrlLink.setModuleRelative(false);
+	    imagesUrlLink.setUrl("/javaScript/drag-drop-folder-tree/images/");
 
-            return script.toString();
-        }
+	    HtmlLink requestUrlLink = new HtmlLink();
+	    requestUrlLink.setModuleRelative(isModuleRelative());
+	    requestUrlLink.setUrl(getSaveUrl());
 
-        public HtmlList createList(List<HtmlListItem> itemPath, Collection collection) {
-            HtmlList list = new HtmlList();
-            
-            list.setClasses(getListClass());
-            
-            if (collection == null) {
-                return list;
-            }
+	    String requestUrl = getSaveUrl() != null ? requestUrlLink.calculateUrl() : null;
 
-            for (Object object : collection) {
-            	if (isIgnored(object)) {
-            		continue;
-            	}
-            	
-                HtmlListItem item = list.createItem();
+	    HtmlScript scriptA = new HtmlScript();
+	    scriptA.setContentType("text/javascript");
+	    scriptA.setScript(getTreeScript(id, requestUrl, imagesUrlLink.calculateUrl(), drag));
 
-                item.setClasses(getClassFor(object));
-                item.setStyle(getStyleFor(object));
-                
-                HtmlComponent component = generateMainComponent(object);
-                
-                String imageUrl = getImageFor(object);
-                if (imageUrl != null) {
-                    HtmlLink imageLink = new HtmlLink();
-                    imageLink.setModuleRelative(false);
-                    imageLink.setUrl(imageUrl);
-                    
-                    HtmlImage image = new HtmlImage();
-                    image.setSource(imageLink.calculateUrl());
-                    
-                    item.addChild(image);
-                }
-                
-                LevelDecorator decorator = getDecorator();
-                if (decorator != null) {
-                    HtmlComponent decoratorComponent = decorator.decorate(object);
-                    if (decoratorComponent != null) {
-                        item.addChild(decoratorComponent);
-                    }
-                }
-                
-                item.addChild(component);
-                
-                String linksForItem = getLinksFor(object);
-                String hiddenLinksForItem = getHiddenLinksFor(object);
-                
-                if (linksForItem != null || hiddenLinksForItem != null) {
-                
-                    HtmlContainer linksContainer = new HtmlInlineContainer();
-                    linksContainer.setClasses(getUsableLinksClasses());
-                    linksContainer.setStyle(getLinksStyle());
+	    HtmlStyle style = new HtmlStyle();
+	    style.setStyleBody((getStyle() != null ? String.format("#%s,#%s-container { %s }", id, id, getStyle()) : "") + "\n"
+		    + String.format("#%s ul { %s }", id, getListStyle()) + "\n"
+		    + String.format("#%s li,#%s-container li { %s }", id, id, getItemStyle()) + "\n");
 
-                    if (hiddenLinksForItem != null) {
-                        
-                	HtmlContainer hiddenContainer = new HtmlInlineContainer();
-                        hiddenContainer.addChild(new HtmlText(RenderUtils.getFormattedProperties(hiddenLinksForItem, object), false));
-                        linksContainer.addChild(hiddenContainer);
-                    }
-                    
-                    linksContainer.addChild(new HtmlText(RenderUtils.getFormattedProperties(linksForItem, object), false));
-                    item.addChild(linksContainer);
-                }
-                
-                boolean current = false;
-                if (getCurrent() != null) {
-                	DomainObject domainObject = (DomainObject) object;
-                	if (domainObject.getIdInternal().toString().equals(getCurrent())) {
-                		current = true;
+	    HtmlContainer container = new HtmlBlockContainer();
 
-                		for (HtmlListItem level : itemPath) {
-                			level.setAttribute("expanded", "true");
-                		}
-                		
-                		component.setClasses(getCurrentClasses());
-                		component.setStyle(getCurrentStyle());
-                	}
-                }
-                
-                try {
-                    String children = getChildrenFor(object);
-                    boolean noChildren = getNoChildrenFor(object) != null;
-                    
-                    if (children != null && !noChildren) {
-                        Collection subCollection = getChildrenObjects(object, children);
-                        
-                        if (subCollection != null && ! subCollection.isEmpty()) {
-                        	try {
-	                        	itemPath.add(item);
+	    container.addChild(list);
+	    container.addChild(style);
+	    container.addChild(scriptA);
 
-	                        	if (current) {
-	                        		item.setAttribute("expanded", "true");
-	                        	}
-	                        	
-	                        beforeRecursion(object);
-	                        HtmlList subList = createList(itemPath, subCollection);
-	                        afterRecursion(object);
-	                        
-	                            if (! subList.getChildren().isEmpty()) {
-	                            	item.addChild(subList);
-	                            }
-                        	}
-                        	finally {
-                        		itemPath.remove(item);
-                        	}
-                        }
-                    }
-                    else {
-                        item.setAttribute("noChildren", "true");
-                    }
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            
-            return list;
-        }
+	    return container;
+	}
+
+	private String getTreeScript(String id, String requestUrl, String imagesFolder, boolean drag) {
+	    StringBuilder script = new StringBuilder();
+
+	    script.append("treeRenderer_init('" + id + "', {");
+
+	    script.append("imageFolder: '" + imagesFolder + "'");
+	    script.append(", includeImage: " + isIncludeImage());
+
+	    if (drag) {
+		if (requestUrl != null) {
+		    script.append(", requestUrl: '" + requestUrl + "'");
+		}
+
+		if (getSaveParameter() != null) {
+		    script.append(", requestParameter: '" + getSaveParameter() + "'");
+		}
+
+		if (getFieldId() != null) {
+		    script.append(", fieldId: '" + getFieldId() + "'");
+		}
+
+		if (getOnComplete() != null) {
+		    script.append(", onComplete: " + getOnComplete());
+		}
+
+		if (getOnError() != null) {
+		    script.append(", onError: " + getOnError());
+		}
+
+		if (getMovedClass() != null) {
+		    script.append(", movedClass: '" + getMovedClass() + "'");
+		}
+	    } else {
+		script.append(", disableDrag: true");
+	    }
+
+	    if (getUsableLinksClasses() != null) {
+		script.append(", linkClasses: '" + getUsableLinksClasses() + "'");
+	    }
+
+	    script.append("});");
+
+	    return script.toString();
+	}
+
+	public HtmlList createList(List<HtmlListItem> itemPath, Collection collection) {
+	    HtmlList list = new HtmlList();
+
+	    list.setClasses(getListClass());
+
+	    if (collection == null) {
+		return list;
+	    }
+
+	    for (Object object : collection) {
+		if (isIgnored(object)) {
+		    continue;
+		}
+
+		HtmlListItem item = list.createItem();
+
+		item.setClasses(getClassFor(object));
+		item.setStyle(getStyleFor(object));
+
+		HtmlComponent component = generateMainComponent(object);
+
+		String imageUrl = getImageFor(object);
+		if (imageUrl != null) {
+		    HtmlLink imageLink = new HtmlLink();
+		    imageLink.setModuleRelative(false);
+		    imageLink.setUrl(imageUrl);
+
+		    HtmlImage image = new HtmlImage();
+		    image.setSource(imageLink.calculateUrl());
+
+		    item.addChild(image);
+		}
+
+		LevelDecorator decorator = getDecorator();
+		if (decorator != null) {
+		    HtmlComponent decoratorComponent = decorator.decorate(object);
+		    if (decoratorComponent != null) {
+			item.addChild(decoratorComponent);
+		    }
+		}
+
+		item.addChild(component);
+
+		String linksForItem = getLinksFor(object);
+		String hiddenLinksForItem = getHiddenLinksFor(object);
+
+		if (linksForItem != null || hiddenLinksForItem != null) {
+
+		    HtmlContainer linksContainer = new HtmlInlineContainer();
+		    linksContainer.setClasses(getUsableLinksClasses());
+		    linksContainer.setStyle(getLinksStyle());
+
+		    if (hiddenLinksForItem != null) {
+
+			HtmlContainer hiddenContainer = new HtmlInlineContainer();
+			hiddenContainer.addChild(new HtmlText(RenderUtils.getFormattedProperties(hiddenLinksForItem, object),
+				false));
+			linksContainer.addChild(hiddenContainer);
+		    }
+
+		    linksContainer.addChild(new HtmlText(RenderUtils.getFormattedProperties(linksForItem, object), false));
+		    item.addChild(linksContainer);
+		}
+
+		boolean current = false;
+		if (getCurrent() != null) {
+		    DomainObject domainObject = (DomainObject) object;
+		    if (domainObject.getIdInternal().toString().equals(getCurrent())) {
+			current = true;
+
+			for (HtmlListItem level : itemPath) {
+			    level.setAttribute("expanded", "true");
+			}
+
+			component.setClasses(getCurrentClasses());
+			component.setStyle(getCurrentStyle());
+		    }
+		}
+
+		try {
+		    String children = getChildrenFor(object);
+		    boolean noChildren = getNoChildrenFor(object) != null;
+
+		    if (children != null && !noChildren) {
+			Collection subCollection = getChildrenObjects(object, children);
+
+			if (subCollection != null && !subCollection.isEmpty()) {
+			    try {
+				itemPath.add(item);
+
+				if (current) {
+				    item.setAttribute("expanded", "true");
+				}
+
+				beforeRecursion(object);
+				HtmlList subList = createList(itemPath, subCollection);
+				afterRecursion(object);
+
+				if (!subList.getChildren().isEmpty()) {
+				    item.addChild(subList);
+				}
+			    } finally {
+				itemPath.remove(item);
+			    }
+			}
+		    } else {
+			item.setAttribute("noChildren", "true");
+		    }
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+	    }
+
+	    return list;
+	}
 
 	private String getUsableLinksClasses() {
-            if (getLinksClasses() == null) {
-                if (getTreeId() != null) {
-                    return getTreeId() + "-links";
-                }
-                else {
-                    return null;
-                }
-            }
-            else {
-                return getLinksClasses();
-            }
-        }
-        
+	    if (getLinksClasses() == null) {
+		if (getTreeId() != null) {
+		    return getTreeId() + "-links";
+		} else {
+		    return null;
+		}
+	    } else {
+		return getLinksClasses();
+	    }
+	}
+
     }
 
     protected void beforeRecursion(Object object) {
@@ -880,76 +871,76 @@ public class TreeRenderer extends OutputRenderer {
     }
 
     protected HtmlComponent generateMainComponent(Object object) {
-	   Schema schema = RenderKit.getInstance().findSchema(getSchemaFor(object));
-           return renderValue(object, object.getClass(), schema, getLayoutFor(object));
+	Schema schema = RenderKit.getInstance().findSchema(getSchemaFor(object));
+	return renderValue(object, object.getClass(), schema, getLayoutFor(object));
     }
-    
+
     protected String getChildrenFor(Object object) {
-        return getValueFor(object, TreeRenderer.this.childrenMap, getChildren());
+	return getValueFor(object, TreeRenderer.this.childrenMap, getChildren());
     }
-    
+
     protected String getNoChildrenFor(Object object) {
-        return getValueFor(object, TreeRenderer.this.noChildrenMap, null);
+	return getValueFor(object, TreeRenderer.this.noChildrenMap, null);
     }
 
     protected String getClassFor(Object object) {
-        return getValueFor(object, TreeRenderer.this.classesMap, getItemClass());
+	return getValueFor(object, TreeRenderer.this.classesMap, getItemClass());
     }
-    
+
     protected String getStyleFor(Object object) {
-        return getValueFor(object, TreeRenderer.this.styleMap, null);
+	return getValueFor(object, TreeRenderer.this.styleMap, null);
     }
-    
+
     protected String getLinksFor(Object object) {
-        return getValueFor(object, TreeRenderer.this.linksMap, getLinks());
+	return getValueFor(object, TreeRenderer.this.linksMap, getLinks());
     }
-    
+
     protected String getHiddenLinksFor(Object object) {
-        return getValueFor(object, TreeRenderer.this.hiddenLinksMap, getHiddenLinks());
+	return getValueFor(object, TreeRenderer.this.hiddenLinksMap, getHiddenLinks());
     }
 
     protected String getImageFor(Object object) {
-        return getValueFor(object, TreeRenderer.this.imagesMap, getImage());
+	return getValueFor(object, TreeRenderer.this.imagesMap, getImage());
     }
 
     protected String getSchemaFor(Object object) {
-        return getValueFor(object, TreeRenderer.this.schemasMap, getEachSchema());
+	return getValueFor(object, TreeRenderer.this.schemasMap, getEachSchema());
     }
 
     protected String getLayoutFor(Object object) {
-        return getValueFor(object, TreeRenderer.this.layoutsMap, getEachLayout());
+	return getValueFor(object, TreeRenderer.this.layoutsMap, getEachLayout());
     }
 
     protected String getValueFor(Object object, Map<String, String> map, String defaultValue) {
-        String value = null;
-        String key = null;
-        
-        for (String type : map.keySet()) {
-            if (object.getClass().getName().contains(type)) {
-                if (key == null || key.length() < type.length()) {
-                    key = type;
-                    value = map.get(key);
-                }
-            }
-        }
-        
-        if (value == null) {
-            value = defaultValue;
-        }
-        
-        return value;
+	String value = null;
+	String key = null;
+
+	for (String type : map.keySet()) {
+	    if (object.getClass().getName().contains(type)) {
+		if (key == null || key.length() < type.length()) {
+		    key = type;
+		    value = map.get(key);
+		}
+	    }
+	}
+
+	if (value == null) {
+	    value = defaultValue;
+	}
+
+	return value;
     }
 
     protected boolean isIgnored(Object object) {
-    	return false;
+	return false;
     }
-    
-    protected Collection getChildrenObjects(Object object, String children) {
-		return (Collection) RendererPropertyUtils.getProperty(object, children, false);
-	}
 
-	public interface LevelDecorator {
-        public HtmlComponent decorate(Object object);
+    protected Collection getChildrenObjects(Object object, String children) {
+	return (Collection) RendererPropertyUtils.getProperty(object, children, false);
+    }
+
+    public interface LevelDecorator {
+	public HtmlComponent decorate(Object object);
     }
 
 }

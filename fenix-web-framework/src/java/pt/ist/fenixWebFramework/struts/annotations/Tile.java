@@ -37,4 +37,9 @@ public @interface Tile {
     String head() default "";
 
     String navLocal() default "";
+
+    String navGeral() default "";
+
+    @TileProperty(customName = "body-context")
+    String bodyContext() default "";
 }

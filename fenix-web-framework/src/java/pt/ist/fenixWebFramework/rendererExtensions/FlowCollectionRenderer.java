@@ -30,9 +30,9 @@ public class FlowCollectionRenderer extends OutputRenderer {
     private String eachSchema;
 
     private String eachClasses;
-    
+
     private String eachStyle;
-    
+
     private String htmlSeparator;
 
     private String emptyMessageKey;
@@ -42,11 +42,11 @@ public class FlowCollectionRenderer extends OutputRenderer {
     private String emptyMessageBundle;
 
     private String eachInline;
-    
+
     private boolean indented = true;
-    
+
     public boolean isIndented() {
-        return this.indented;
+	return this.indented;
     }
 
     /**
@@ -57,11 +57,11 @@ public class FlowCollectionRenderer extends OutputRenderer {
      * @property
      */
     public void setIndented(boolean indented) {
-        this.indented = indented;
+	this.indented = indented;
     }
 
     public String getEachLayout() {
-        return eachLayout;
+	return eachLayout;
     }
 
     /**
@@ -70,15 +70,15 @@ public class FlowCollectionRenderer extends OutputRenderer {
      * @property
      */
     public void setEachLayout(String eachLayout) {
-        this.eachLayout = eachLayout;
+	this.eachLayout = eachLayout;
     }
 
     public String getEachSchema() {
-        return eachSchema;
+	return eachSchema;
     }
 
     public String getEachClasses() {
-        return this.eachClasses;
+	return this.eachClasses;
     }
 
     /**
@@ -87,11 +87,11 @@ public class FlowCollectionRenderer extends OutputRenderer {
      * @property
      */
     public void setEachClasses(String eachClasses) {
-        this.eachClasses = eachClasses;
+	this.eachClasses = eachClasses;
     }
 
     public String getEachStyle() {
-        return this.eachStyle;
+	return this.eachStyle;
     }
 
     /**
@@ -100,7 +100,7 @@ public class FlowCollectionRenderer extends OutputRenderer {
      * @property
      */
     public void setEachStyle(String eachStyle) {
-        this.eachStyle = eachStyle;
+	this.eachStyle = eachStyle;
     }
 
     /**
@@ -109,11 +109,11 @@ public class FlowCollectionRenderer extends OutputRenderer {
      * @property
      */
     public void setEachSchema(String eachSchema) {
-        this.eachSchema = eachSchema;
+	this.eachSchema = eachSchema;
     }
 
     public String getHtmlSeparator() {
-        return htmlSeparator;
+	return htmlSeparator;
     }
 
     /**
@@ -125,11 +125,11 @@ public class FlowCollectionRenderer extends OutputRenderer {
      * @property
      */
     public void setHtmlSeparator(String htmlSeparator) {
-        this.htmlSeparator = htmlSeparator;
+	this.htmlSeparator = htmlSeparator;
     }
 
     public String getEmptyMessageKey() {
-        return emptyMessageKey;
+	return emptyMessageKey;
     }
 
     /**
@@ -140,11 +140,11 @@ public class FlowCollectionRenderer extends OutputRenderer {
      * @property
      */
     public void setEmptyMessageKey(String emptyMessageKey) {
-        this.emptyMessageKey = emptyMessageKey;
+	this.emptyMessageKey = emptyMessageKey;
     }
 
     public String getEmptyMessageClasses() {
-        return emptyMessageClasses;
+	return emptyMessageClasses;
     }
 
     /**
@@ -154,12 +154,12 @@ public class FlowCollectionRenderer extends OutputRenderer {
      * @property
      */
     public void setEmptyMessageClasses(String emptyMessageClasses) {
-        this.emptyMessageClasses = emptyMessageClasses;
+	this.emptyMessageClasses = emptyMessageClasses;
     }
 
     public String getEmptyMessageBundle() {
-		return emptyMessageBundle;
-	}
+	return emptyMessageBundle;
+    }
 
     /**
      * When <code>emptyMessageKey</code> is used to specify wich resource key will be used
@@ -169,11 +169,11 @@ public class FlowCollectionRenderer extends OutputRenderer {
      * @property
      */
     public void setEmptyMessageBundle(String emptyMessageBundle) {
-		this.emptyMessageBundle = emptyMessageBundle;
-	}
+	this.emptyMessageBundle = emptyMessageBundle;
+    }
 
-	public String getEachInline() {
-        return this.eachInline;
+    public String getEachInline() {
+	return this.eachInline;
     }
 
     /**
@@ -183,70 +183,69 @@ public class FlowCollectionRenderer extends OutputRenderer {
      * @property
      */
     public void setEachInline(String eachInline) {
-        this.eachInline = eachInline;
+	this.eachInline = eachInline;
     }
 
     @Override
     protected Layout getLayout(final Object object, Class type) {
-        return new FlowCollectionLayout(object,type);
+	return new FlowCollectionLayout(object, type);
     }
 
 
     public class FlowCollectionLayout extends FlowLayout {
 
-        protected boolean insertSeparator;
-        
-        protected Iterator iterator;
-        
-        private boolean empty;
-        
-        public FlowCollectionLayout(final Object object, Class type) {
-        	iterator = ((Collection) object).iterator();   	
-        }
-        
-        @Override
-        public HtmlComponent createComponent(Object object, Class type) {
-            HtmlComponent component = null;
+	protected boolean insertSeparator;
 
-            if ((getEmptyMessageKey() != null) && (hasMoreComponents() == false)) {
-                component = new HtmlText(RenderUtils.getResourceString(getEmptyMessageBundle(), getEmptyMessageKey()), false);
-                this.empty = true;
-            } else {
-                component = super.createComponent(object, type);
-                component.setIndented(isIndented());
-                this.empty = false;
-            }
+	protected Iterator iterator;
 
-            return component;
+	private boolean empty;
 
-        }
+	public FlowCollectionLayout(final Object object, Class type) {
+	    iterator = ((Collection) object).iterator();
+	}
 
-        @Override
-        public void applyStyle(HtmlComponent component) {
-            if (this.empty) {
-                component.setClasses(getEmptyMessageClasses());
-            } else {
-                super.applyStyle(component);
-            }
-        }
+	@Override
+	public HtmlComponent createComponent(Object object, Class type) {
+	    HtmlComponent component = null;
 
-        @Override
-        protected boolean hasMoreComponents() {
-            return iterator.hasNext();
-        }
+	    if ((getEmptyMessageKey() != null) && (hasMoreComponents() == false)) {
+		component = new HtmlText(RenderUtils.getResourceString(getEmptyMessageBundle(), getEmptyMessageKey()), false);
+		this.empty = true;
+	    } else {
+		component = super.createComponent(object, type);
+		component.setIndented(isIndented());
+		this.empty = false;
+	    }
 
-        @Override
-        protected HtmlComponent getNextComponent() {
-            if (this.insertSeparator) {
-                this.insertSeparator = false;
-                return new HtmlText(getHtmlSeparator(),false);
-            } else if (hasMoreComponents() && getHtmlSeparator() != null) {
-                this.insertSeparator = true;
-            }
+	    return component;
 
-            return renderValue(iterator.next(), RenderKit.getInstance().findSchema(getEachSchema()),
-                    getEachLayout());
-        }
+	}
+
+	@Override
+	public void applyStyle(HtmlComponent component) {
+	    if (this.empty) {
+		component.setClasses(getEmptyMessageClasses());
+	    } else {
+		super.applyStyle(component);
+	    }
+	}
+
+	@Override
+	protected boolean hasMoreComponents() {
+	    return iterator.hasNext();
+	}
+
+	@Override
+	protected HtmlComponent getNextComponent() {
+	    if (this.insertSeparator) {
+		this.insertSeparator = false;
+		return new HtmlText(getHtmlSeparator(), false);
+	    } else if (hasMoreComponents() && getHtmlSeparator() != null) {
+		this.insertSeparator = true;
+	    }
+
+	    return renderValue(iterator.next(), RenderKit.getInstance().findSchema(getEachSchema()), getEachLayout());
+	}
     };
 
 

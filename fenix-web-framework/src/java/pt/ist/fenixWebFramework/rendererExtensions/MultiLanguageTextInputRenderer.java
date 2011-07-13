@@ -18,18 +18,18 @@ public class MultiLanguageTextInputRenderer extends MultiLanguageStringInputRend
 
     public Integer rows;
     public Integer columns;
-    
+
     /**
      * Allows you to configure the columns if the text area used for the input in each language.
      * 
      * @property
      */
     public void setColumns(Integer columns) {
-        this.columns = columns;
+	this.columns = columns;
     }
 
     public Integer getColumns() {
-        return this.columns;
+	return this.columns;
     }
 
     /**
@@ -38,30 +38,30 @@ public class MultiLanguageTextInputRenderer extends MultiLanguageStringInputRend
      * @property
      */
     public void setRows(Integer rows) {
-        this.rows = rows;
+	this.rows = rows;
     }
 
     public Integer getRows() {
-        return this.rows;
+	return this.rows;
     }
-    
+
     @Override
     protected void configureLanguageContainer(HtmlContainer languageContainer, HtmlSimpleValueComponent input, HtmlSimpleValueComponent languageComponent, HtmlActionLink removeLink) {
-        languageComponent.setStyle("display: block;");
-        
-        languageContainer.addChild(languageComponent);
-        languageContainer.addChild(input);
-        languageContainer.addChild(removeLink);
+	languageComponent.setStyle("display: block;");
+
+	languageContainer.addChild(languageComponent);
+	languageContainer.addChild(input);
+	languageContainer.addChild(removeLink);
     }
 
     @Override
     protected HtmlSimpleValueComponent getInputComponent() {
-        HtmlTextArea textArea = new HtmlTextArea();
-        
-        textArea.setColumns(getColumns());
-        textArea.setRows(getRows());
-        
-        return textArea;
+	HtmlTextArea textArea = new HtmlTextArea();
+
+	textArea.setColumns(getColumns());
+	textArea.setRows(getRows());
+
+	return textArea;
     }
-    
+
 }

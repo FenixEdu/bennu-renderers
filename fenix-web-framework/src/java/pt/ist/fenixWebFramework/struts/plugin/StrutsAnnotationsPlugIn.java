@@ -5,6 +5,7 @@ package pt.ist.fenixWebFramework.struts.plugin;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -28,6 +29,7 @@ import org.apache.struts.config.ModuleConfig;
 import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.struts.annotations.ActionAnnotationProcessor;
+import pt.ist.fenixWebFramework.struts.annotations.ExceptionHandling;
 import pt.ist.fenixWebFramework.struts.annotations.Exceptions;
 import pt.ist.fenixWebFramework.struts.annotations.Forward;
 import pt.ist.fenixWebFramework.struts.annotations.Forwards;
@@ -77,13 +79,17 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	    if (mapping == null || !modulePrefix.equals(mapping.module())) {
 		continue;
 	    }
-	    final ActionMapping actionMapping = new ActionMapping();
+
+	    final ActionMapping actionMapping = createCustomActionMapping(mapping);
+	    if (actionMapping == null) {
+		continue;
+	    }
 
 	    actionMapping.setPath(mapping.path());
 	    actionMapping.setType(actionClass.getName());
-	    actionMapping.setScope("request");
-	    actionMapping.setParameter("method");
-	    actionMapping.setValidate(true);
+	    actionMapping.setScope(mapping.scope());
+	    actionMapping.setParameter(mapping.parameter());
+	    actionMapping.setValidate(mapping.validate());
 
 	    if (mapping.formBeanClass() != ActionForm.class) {
 		final String formName = mapping.formBeanClass().getName();
@@ -110,22 +116,90 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
 	    Exceptions exceptions = actionClass.getAnnotation(Exceptions.class);
 	    if (exceptions != null) {
-		for (Class<? extends Exception> exClass : exceptions.value()) {
-		    final ExceptionConfig exceptionConfig = new ExceptionConfig();
-		    final Config appConfig = FenixWebFramework.getConfig();
-		    final String exceptionHandler = appConfig.getExceptionHandlerClassname() == null ? ExceptionHandler.class
-			    .getName() : appConfig.getExceptionHandlerClassname();
-		    exceptionConfig.setHandler(exceptionHandler);
-		    exceptionConfig.setType(exClass.getName());
-		    exceptionConfig.setKey(EXCEPTION_KEY_DEFAULT_PREFIX + exClass.getSimpleName());
-		    actionMapping.addExceptionConfig(exceptionConfig);
-		}
+		registerExceptionHandling(actionMapping, exceptions);
 	    }
+
+	    initializeActionMappingProperties(actionMapping, mapping.customMappingProperties());
 
 	    config.addActionConfig(actionMapping);
 
 	}
 
+    }
+
+    private static void registerExceptionHandling(final ActionMapping actionMapping, Exceptions exceptions) {
+	for (final ExceptionHandling exception : exceptions.value()) {
+	    final ExceptionConfig exceptionConfig = new ExceptionConfig();
+
+	    Class<? extends Exception> exClass = exception.type();
+	    Class<? extends ExceptionHandler> handlerClass = exception.handler();
+
+	    String exceptionHandler = (handlerClass == null ? null : handlerClass.getName());
+	    if (exceptionHandler == null) {
+		final Config appConfig = FenixWebFramework.getConfig();
+		exceptionHandler = (appConfig.getExceptionHandlerClassname() == null ? ExceptionHandler.class.getName()
+			: appConfig.getExceptionHandlerClassname());
+	    }
+
+	    String key = (exception.key() == null ? EXCEPTION_KEY_DEFAULT_PREFIX + exClass.getSimpleName() : exception
+		    .key());
+
+	    exceptionConfig.setKey(key);
+	    exceptionConfig.setHandler(exceptionHandler);
+	    exceptionConfig.setType(exClass.getName());
+
+	    if (!StringUtils.isEmpty(exception.path())) {
+		exceptionConfig.setPath(exception.path());
+	    }
+
+	    if (!StringUtils.isEmpty(exception.scope())) {
+		exceptionConfig.setScope(exception.scope());
+	    }
+
+	    actionMapping.addExceptionConfig(exceptionConfig);
+	}
+    }
+
+    private static ActionMapping createCustomActionMapping(Mapping mapping) {
+	try {
+	    return mapping.customMappingClass().newInstance();
+	} catch (InstantiationException e) {
+	    e.printStackTrace();
+	} catch (IllegalAccessException e) {
+	    e.printStackTrace();
+	}
+	return null;
+    }
+
+    private static void initializeActionMappingProperties(ActionMapping actionMapping, String[] properties) {
+	Method[] mappingMethods = actionMapping.getClass().getMethods();
+	for (int i = 0; i < properties.length; i += 2) {
+	    String property = properties[i];
+	    String value = properties[i + 1];
+
+	    String setterName = "set" + property.substring(0, 1).toUpperCase() + property.substring(1);
+	    Method setterMethod = null;
+	    for (Method mappingMethod : mappingMethods) {
+		if (mappingMethod.getName().equals(setterName) && mappingMethod.getParameterTypes().length == 1) {
+		    setterMethod = mappingMethod;
+		    break;
+		}
+	    }
+
+	    if (setterMethod == null) {
+		continue;
+	    }
+
+	    try {
+		setterMethod.invoke(actionMapping, value);
+	    } catch (IllegalArgumentException e) {
+		e.printStackTrace();
+	    } catch (IllegalAccessException e) {
+		e.printStackTrace();
+	    } catch (InvocationTargetException e) {
+		e.printStackTrace();
+	    }
+	}
     }
 
     private static void registerSuperclassForwards(final ActionMapping actionMapping, Class<?> superclass, Mapping mapping,

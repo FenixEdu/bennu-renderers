@@ -70,8 +70,7 @@ public class DateInputRendererWithPicker extends DateInputRenderer {
 
 	String scriptText = "$(function() { $(\"input#" + RenderUtils.escapeId(inputId) + "\").datepicker({showOn: 'button', buttonImage: '" + getImage()
 		+ "', buttonImageOnly: true, firstDay: 1, currentText: '"
-		+ RenderUtils.getResourceString("RENDERER_RESOURCES", "renderers.datePicker.currentText") + 
-				"', monthNames: "
+		+ RenderUtils.getResourceString("RENDERER_RESOURCES", "renderers.datePicker.currentText") + "', monthNames: "
 		+ RenderUtils.getResourceString("RENDERER_RESOURCES", "renderers.datePicker.monthNames") + ", monthNamesShort: "
 		+ RenderUtils.getResourceString("RENDERER_RESOURCES", "renderers.datePicker.monthNamesShort")
 		+ ", dayNamesShort: " + RenderUtils.getResourceString("RENDERER_RESOURCES", "renderers.datePicker.dayNamesShort")

@@ -8,10 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.tiles.ComponentDefinition;
@@ -20,6 +20,7 @@ import pt.ist.fenixWebFramework.struts.annotations.Forward;
 import pt.ist.fenixWebFramework.struts.annotations.Forwards;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixWebFramework.struts.annotations.Tile;
+import pt.ist.fenixWebFramework.struts.annotations.TileProperty;
 
 public class PartialTileDefinition {
 
@@ -62,11 +63,13 @@ public class PartialTileDefinition {
 	customBundleName = getDefinedValue(localTile.bundle(), globalTile.bundle(), getDefaultValue("bundle"));
 	this.defaultBundleName = (defaultBundleName == null) ? mapping.module() : defaultBundleName;
 	for (Method tileMethod : tileMethods) {
+	    TileProperty tileProperty = tileMethod.getAnnotation(TileProperty.class);
+	    String tileMethodName = (tileProperty != null) ? tileProperty.customName() : tileMethod.getName();
 	    String localValue = invokeAnnotationMethod(tileMethod, localTile);
 	    String globalValue = invokeAnnotationMethod(tileMethod, globalTile);
-	    attributeValues.put(tileMethod.getName(), getDefinedValue(localValue, globalValue, (String) tileMethod
+	    attributeValues.put(tileMethodName, getDefinedValue(localValue, globalValue, (String) tileMethod
 		    .getDefaultValue()));
-	    attributeDefaults.put(tileMethod.getName(), (String) tileMethod.getDefaultValue());
+	    attributeDefaults.put(tileMethodName, (String) tileMethod.getDefaultValue());
 	}
     }
 

@@ -13,9 +13,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.Config.CasConfig;
-import sun.security.util.PendingException;
+import pt.ist.fenixWebFramework.FenixWebFramework;
 
 /**
  * 

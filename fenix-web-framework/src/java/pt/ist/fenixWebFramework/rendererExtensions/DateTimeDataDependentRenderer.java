@@ -20,37 +20,35 @@ public class DateTimeDataDependentRenderer extends FormatRenderer {
     private String formatWithoutTime;
 
     public String getFormatWithoutTime() {
-        return formatWithoutTime;
+	return formatWithoutTime;
     }
 
     public void setFormatWithoutTime(String formatWithoutTime) {
-        this.formatWithoutTime = formatWithoutTime;
+	this.formatWithoutTime = formatWithoutTime;
     }
 
     public String getFormatWithTime() {
-        return formatWithTime;
+	return formatWithTime;
     }
 
     public void setFormatWithTime(String formatWithTime) {
-        this.formatWithTime = formatWithTime;
+	this.formatWithTime = formatWithTime;
     }
 
     @Override
     protected Layout getLayout(Object object, Class type) {
-        if (object == null) {
-            return super.getLayout(object, type);
-        }
-        
-        DateTime dateTime = (DateTime) object;
-        if (dateTime.getHourOfDay() == 0 && dateTime.getMinuteOfHour() == 0) {
-            setFormat(getFormatWithoutTime());
-        }
-        else {
-            setFormat(getFormatWithTime());
-        }
-        
-        return super.getLayout(object, type);
+	if (object == null) {
+	    return super.getLayout(object, type);
+	}
+
+	DateTime dateTime = (DateTime) object;
+	if (dateTime.getHourOfDay() == 0 && dateTime.getMinuteOfHour() == 0) {
+	    setFormat(getFormatWithoutTime());
+	} else {
+	    setFormat(getFormatWithTime());
+	}
+
+	return super.getLayout(object, type);
     }
-    
-    
+
 }

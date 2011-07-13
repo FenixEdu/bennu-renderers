@@ -1,6 +1,3 @@
-/**
- * 
- */
 package pt.ist.fenixWebFramework.struts.annotations;
 
 import java.lang.annotation.ElementType;
@@ -8,14 +5,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * @author - Shezad Anavarali (shezad@ist.utl.pt)
- * 
- */
-@Target( { ElementType.TYPE })
+@Target({ ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Exceptions {
+public @interface TileProperty {
 
-    ExceptionHandling[] value();
+    /**
+     * Allows specifying that a Tile parameter name does not match correctly the
+     * property that it is mapped to.
+     */
+    String customName() default "";
 
 }

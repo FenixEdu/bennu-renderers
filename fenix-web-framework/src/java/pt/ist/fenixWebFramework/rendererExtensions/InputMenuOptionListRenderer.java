@@ -1,15 +1,12 @@
 package pt.ist.fenixWebFramework.rendererExtensions;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import pt.ist.fenixWebFramework.rendererExtensions.converters.DomainObjectKeyConverter;
 import pt.ist.fenixWebFramework.renderers.MenuOptionListRenderer;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
 import pt.ist.fenixWebFramework.renderers.converters.EnumConverter;
-import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixframework.DomainObject;
 
 /**
@@ -21,11 +18,11 @@ import pt.ist.fenixframework.DomainObject;
  */
 public class InputMenuOptionListRenderer extends MenuOptionListRenderer {
     private String choiceType;
-    
+
     private String filterClass;
-    
+
     public String getChoiceType() {
-        return this.choiceType;
+	return this.choiceType;
     }
 
     /**
@@ -37,11 +34,11 @@ public class InputMenuOptionListRenderer extends MenuOptionListRenderer {
      * @property
      */
     public void setChoiceType(String choiceType) {
-        this.choiceType = choiceType;
+	this.choiceType = choiceType;
     }
 
     public String getFilterClass() {
-        return this.filterClass;
+	return this.filterClass;
     }
 
     /**
@@ -52,73 +49,73 @@ public class InputMenuOptionListRenderer extends MenuOptionListRenderer {
      * @property
      */
     public void setFilterClass(String filterClass) {
-        this.filterClass = filterClass;
+	this.filterClass = filterClass;
     }
 
     // HACK: duplicated code, id=inputChoices.selectPossibilitiesAndConverter
     @Override
     protected Converter getConverter() {
-        if (getProviderClass() != null) {
-            return super.getConverter();
-        }
-        else {
-            try {
-                Class choiceTypeClass = Class.forName(getChoiceType());
-                
-                if (DomainObject.class.isAssignableFrom(choiceTypeClass)) {
-                    return new DomainObjectKeyConverter(); 
-                }
-                else if (Enum.class.isAssignableFrom(choiceTypeClass)) {
-                    return new EnumConverter();
-                }
-                else {
-                    return null;
-                }
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException("could not retrieve class named '" + getChoiceType() + "'");
-            }
-        }
+	if (getProviderClass() != null) {
+	    return super.getConverter();
+	} else {
+	    try {
+		Class choiceTypeClass = Class.forName(getChoiceType());
+
+		if (DomainObject.class.isAssignableFrom(choiceTypeClass)) {
+		    return new DomainObjectKeyConverter();
+		} else if (Enum.class.isAssignableFrom(choiceTypeClass)) {
+		    return new EnumConverter();
+		} else {
+		    return null;
+		}
+	    } catch (ClassNotFoundException e) {
+		throw new RuntimeException("could not retrieve class named '" + getChoiceType() + "'");
+	    }
+	}
     }
 
     // HACK: duplicated code, id=inputChoices.selectPossibilitiesAndConverter
     @Override
     protected Collection getPossibleObjects() {
-        if (getProviderClass() != null) {
-            return super.getPossibleObjects();
-        }
-        else {
-            PresentationContext parentContext = getInputContext().getParentContext();
-            Object object = parentContext == null ? getInputContext().getMetaObject().getObject() : parentContext.getMetaObject().getObject();
-            
-            String choiceType = getChoiceType();
-            String filterClassName = getFilterClass();
+	if (getProviderClass() != null) {
+	    return super.getPossibleObjects();
+	} else {
+	    PresentationContext parentContext = getInputContext().getParentContext();
+	    Object object = parentContext == null ? getInputContext().getMetaObject().getObject() : parentContext.getMetaObject()
+		    .getObject();
 
-//            try {
-        	if (true) throw new Error("no.mechanism.available.for.reading.all.domain.objects.of.a.givin.type");
-        	return null;
-//                Collection allChoices = readAllChoicesByType(choiceType);
-//
-//                if (getFilterClass() != null) {
-//                    Class filterClass = Class.forName(filterClassName);
-//                    DataFilter filter = (DataFilter) filterClass.newInstance();
-//    
-//                    List result = new ArrayList();
-//                    for (Object choice : allChoices) {
-//                        if (filter.acccepts(object, choice)) {
-//                            result.add(object);
-//                        }
-//                    }
-//                    
-//                    return RenderUtils.sortCollectionWithCriteria(result, getSortBy());
-//                }
-//                else {
-//                    return RenderUtils.sortCollectionWithCriteria(allChoices, getSortBy());
-//                }
-//            }
-//            catch (Exception e) {
-//                throw new RuntimeException("could not filter choices", e);
-//            }
-        }
+	    String choiceType = getChoiceType();
+	    String filterClassName = getFilterClass();
+
+	    // try {
+	    if (true)
+		throw new Error("no.mechanism.available.for.reading.all.domain.objects.of.a.givin.type");
+	    return null;
+	    // Collection allChoices = readAllChoicesByType(choiceType);
+	    //
+	    // if (getFilterClass() != null) {
+	    // Class filterClass = Class.forName(filterClassName);
+	    // DataFilter filter = (DataFilter) filterClass.newInstance();
+	    //
+	    // List result = new ArrayList();
+	    // for (Object choice : allChoices) {
+	    // if (filter.acccepts(object, choice)) {
+	    // result.add(object);
+	    // }
+	    // }
+	    //
+	    // return RenderUtils.sortCollectionWithCriteria(result,
+	    // getSortBy());
+	    // }
+	    // else {
+	    // return RenderUtils.sortCollectionWithCriteria(allChoices,
+	    // getSortBy());
+	    // }
+	    // }
+	    // catch (Exception e) {
+	    // throw new RuntimeException("could not filter choices", e);
+	    // }
+	}
     }
-    
+
 }
