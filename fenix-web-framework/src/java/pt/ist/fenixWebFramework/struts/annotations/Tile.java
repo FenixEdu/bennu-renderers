@@ -40,6 +40,6 @@ public @interface Tile {
 
     String navGeral() default "";
 
-    @TileProperty(customName = "body-context")
+    @TileCustomPropertyName("body-context")
     String bodyContext() default "";
 }

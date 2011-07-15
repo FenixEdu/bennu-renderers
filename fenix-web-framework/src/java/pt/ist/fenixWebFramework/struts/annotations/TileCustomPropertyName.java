@@ -7,12 +7,12 @@ import java.lang.annotation.Target;
 
 @Target({ ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface TileProperty {
+public @interface TileCustomPropertyName {
 
     /**
      * Allows specifying that a Tile parameter name does not match correctly the
      * property that it is mapped to.
      */
-    String customName() default "";
+    String value();
 
 }

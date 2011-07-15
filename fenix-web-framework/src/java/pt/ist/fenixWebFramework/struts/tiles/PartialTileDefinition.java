@@ -20,7 +20,7 @@ import pt.ist.fenixWebFramework.struts.annotations.Forward;
 import pt.ist.fenixWebFramework.struts.annotations.Forwards;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixWebFramework.struts.annotations.Tile;
-import pt.ist.fenixWebFramework.struts.annotations.TileProperty;
+import pt.ist.fenixWebFramework.struts.annotations.TileCustomPropertyName;
 
 public class PartialTileDefinition {
 
@@ -63,8 +63,8 @@ public class PartialTileDefinition {
 	customBundleName = getDefinedValue(localTile.bundle(), globalTile.bundle(), getDefaultValue("bundle"));
 	this.defaultBundleName = (defaultBundleName == null) ? mapping.module() : defaultBundleName;
 	for (Method tileMethod : tileMethods) {
-	    TileProperty tileProperty = tileMethod.getAnnotation(TileProperty.class);
-	    String tileMethodName = (tileProperty != null) ? tileProperty.customName() : tileMethod.getName();
+	    TileCustomPropertyName tileCustomProperty = tileMethod.getAnnotation(TileCustomPropertyName.class);
+	    String tileMethodName = (tileCustomProperty != null) ? tileCustomProperty.value() : tileMethod.getName();
 	    String localValue = invokeAnnotationMethod(tileMethod, localTile);
 	    String globalValue = invokeAnnotationMethod(tileMethod, globalTile);
 	    attributeValues.put(tileMethodName, getDefinedValue(localValue, globalValue, (String) tileMethod
