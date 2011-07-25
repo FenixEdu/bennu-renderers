@@ -42,4 +42,6 @@ public @interface Tile {
 
     @TileCustomPropertyName("body-context")
     String bodyContext() default "";
+    
+    String hideLanguage() default "";
 }
