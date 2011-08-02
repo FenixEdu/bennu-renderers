@@ -178,11 +178,12 @@ public class RichTextInputRenderer extends InputRenderer {
 		script.setContentType("text/javascript");
 		script.setConditional(true);
 		script.setScript("\n" + "function fenix_removeEditor(editors) {\n" + "	for (var i in editors) {\n"
-			+ "		var editorId = tinyMCE.getEditorId(editors[i]);\n" + "		if (! editorId) continue;\n"
-			+ "		tinyMCE.removeMCEControl(editorId);\n" + "	}\n" + "}\n" + "function fenix_addEditor(editors) {\n"
+			+ "		var editorId = tinyMCE.get(editors[i]);\n" + "		if (! editorId) continue;\n"
+			+ "		tinyMCE.get(editorId.id).remove();\n" + "	}\n" + "}\n" + "function fenix_addEditor(editors) {\n"
 			+ "	for (var i in editors) {\n" + "		var id = editors[i];\n"
-			+ "		var editorId = tinyMCE.getEditorId(id);\n" + "		if (editorId) continue;\n"
-			+ "		var element = document.getElementById(id);\n" + "		tinyMCE.addMCEControl(element, id);\n" + "	}\n"
+ + "		var editorId = tinyMCE.get(id);\n"
+			+ "		if (editorId) continue;\n" + "		var element = document.getElementById(id);\n"
+			+ "		tinyMCE.execCommand('mceAddControl', false, id);\n" + "	}\n"
 			+ "}\n");
 
 		HtmlRadioButtonList radioList = new HtmlRadioButtonList();
