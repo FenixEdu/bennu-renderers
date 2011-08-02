@@ -1,15 +1,12 @@
 package pt.ist.fenixWebFramework.rendererExtensions;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import pt.ist.fenixWebFramework.rendererExtensions.converters.DomainObjectKeyConverter;
 import pt.ist.fenixWebFramework.renderers.MenuOptionListRenderer;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
 import pt.ist.fenixWebFramework.renderers.converters.EnumConverter;
-import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixframework.DomainObject;
 
 /**
@@ -90,55 +87,35 @@ public class InputMenuOptionListRenderer extends MenuOptionListRenderer {
 	    String choiceType = getChoiceType();
 	    String filterClassName = getFilterClass();
 
-	    try {
-		Collection allChoices = readAllChoicesByType(choiceType);
-
-		if (getFilterClass() != null) {
-		    Class filterClass = Class.forName(filterClassName);
-		    DataFilter filter = (DataFilter) filterClass.newInstance();
-
-		    List result = new ArrayList();
-		    for (Object choice : allChoices) {
-			if (filter.acccepts(object, choice)) {
-			    result.add(object);
-			}
-		    }
-
-		    return RenderUtils.sortCollectionWithCriteria(result, getSortBy());
-		} else {
-		    return RenderUtils.sortCollectionWithCriteria(allChoices, getSortBy());
-		}
-	    } catch (Exception e) {
-		throw new RuntimeException("could not filter choices", e);
-	    }
-
-	}
-    }
-
-    // HACK: duplicated code, id=inputChoices.selectPossibilitiesAndConverter
-    private Collection readAllChoicesByType(String choiceType) {
-	try {
-	    Class type = Class.forName(choiceType);
-
-	    if (DomainObject.class.isAssignableFrom(type)) {
+	    // try {
+	    if (true)
 		throw new Error("no.mechanism.available.for.reading.all.domain.objects.of.a.givin.type");
-	    } else if (Enum.class.isAssignableFrom(type)) {
-		List result = new ArrayList();
-		Object[] constants = type.getEnumConstants();
-
-		for (int i = 0; i < constants.length; i++) {
-		    result.add(constants[i]);
-		}
-
-		return result;
-	    } else {
-		throw new RuntimeException("cannot generate choices automatically for type '" + choiceType + "'");
-	    }
-	} catch (Exception e) {
-	    throw new RuntimeException("could not find type '" + choiceType + "' to generate choices");
+	    return null;
+	    // Collection allChoices = readAllChoicesByType(choiceType);
+	    //
+	    // if (getFilterClass() != null) {
+	    // Class filterClass = Class.forName(filterClassName);
+	    // DataFilter filter = (DataFilter) filterClass.newInstance();
+	    //
+	    // List result = new ArrayList();
+	    // for (Object choice : allChoices) {
+	    // if (filter.acccepts(object, choice)) {
+	    // result.add(object);
+	    // }
+	    // }
+	    //
+	    // return RenderUtils.sortCollectionWithCriteria(result,
+	    // getSortBy());
+	    // }
+	    // else {
+	    // return RenderUtils.sortCollectionWithCriteria(allChoices,
+	    // getSortBy());
+	    // }
+	    // }
+	    // catch (Exception e) {
+	    // throw new RuntimeException("could not filter choices", e);
+	    // }
 	}
-
     }
-
 
 }

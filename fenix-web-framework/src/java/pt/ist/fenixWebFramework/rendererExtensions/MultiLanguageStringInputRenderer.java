@@ -18,7 +18,6 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlHiddenField;
-import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextInput;
 import pt.ist.fenixWebFramework.renderers.components.controllers.HtmlActionLinkController;
@@ -280,12 +279,9 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
 	    container.addChild(hiddenField);
 
 	    // add link
-	    HtmlInlineContainer inline = new HtmlInlineContainer();
-	    inline.setClasses("addlanguage");
 	    HtmlActionLink addLink = new HtmlActionLink(RenderUtils.getResourceString("renderers.language.add"));
 	    addLink.setName(getLocalName("add"));
-	    inline.addChild(addLink);
-	    container.addChild(inline);
+	    container.addChild(addLink);
 
 	    Map<Integer, LanguageBean> map = getLanguageMap(false);
 	    if ((map == null || map.isEmpty()) && (mls != null && !mls.isEmpty())) {
