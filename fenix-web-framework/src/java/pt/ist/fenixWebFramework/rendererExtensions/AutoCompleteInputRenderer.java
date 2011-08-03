@@ -393,7 +393,8 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 	    if (getRawSlotName() != null) {
 		scriptText = scriptText.concat("\njQuery(\"input[name='" + escapeId + "']\").closest('form').submit(function() {\n" +
 		"var inputFieldVal = jQuery(\"input[name='" + escapeId + "_text']\").val()\n" +
-		"updateCustomValue(jQuery(\"input[name='" + escapeId + "_text']\"),inputFieldVal);});");
+ "updateRawSlotNameOnSubmit(jQuery(\"input[name='" + escapeId
+			+ "_text']\"),inputFieldVal);});");
 	    }
 
 	    HtmlScript script = new HtmlScript();
