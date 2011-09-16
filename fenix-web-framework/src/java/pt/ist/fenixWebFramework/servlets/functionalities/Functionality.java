@@ -9,8 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Functionality {
 
-    public String relativeLink() default "";
-
-    public String absoluteLink() default "";
+    public String relativeLink();
 
 }

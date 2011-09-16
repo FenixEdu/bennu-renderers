@@ -2,6 +2,7 @@ package pt.ist.fenixWebFramework.servlets.functionalities;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -21,6 +22,7 @@ public class FunctionalityAnnotationProcessor extends AbstractProcessor {
     public static final String FUNCTIONALITIES_FILE = ".functionalitiesMappingLog";
     private static final String EMPTY_LINK = "-";
     private static final String SEPERATOR = ",";
+    private static final Set<String> existingLinks = new HashSet<String>();
 
     @Override
     public boolean process(Set<? extends TypeElement> elements, RoundEnvironment env) {
@@ -31,17 +33,19 @@ public class FunctionalityAnnotationProcessor extends AbstractProcessor {
 	    }
 
 	    String relativeLink = functionality.relativeLink();
-	    String absoluteLink = functionality.absoluteLink();
 	    String mappingPath = elem.getEnclosingElement().getAnnotation(Mapping.class).path();
 	    String methodName = elem.getSimpleName().toString();
 
-	    if (isEmpty(relativeLink) && isEmpty(absoluteLink)) {
+	    String link = mappingPath + relativeLink;
+
+	    if (existingLinks.contains(link)) {
 		throw new RuntimeException("Functionality in action: " + elem.getEnclosingElement().getSimpleName()
-			+ " in method " + methodName + " must have at least one semantic link");
+			+ " in method " + methodName + " has a semantic link that already exists");
 	    }
+	    existingLinks.add(link);
 
 	    try {
-		appendToFile(mappingPath, methodName, relativeLink, absoluteLink);
+		appendToFile(mappingPath, methodName, relativeLink);
 	    } catch (IOException e) {
 		e.printStackTrace();
 	    }
