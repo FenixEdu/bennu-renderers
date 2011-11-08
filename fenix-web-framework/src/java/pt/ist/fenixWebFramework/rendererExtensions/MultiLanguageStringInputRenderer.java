@@ -8,8 +8,8 @@ import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import pt.ist.fenixWebFramework.rendererExtensions.validators.MultiLanguageStringValidator;
 import pt.ist.fenixWebFramework.renderers.InputRenderer;
@@ -37,7 +37,7 @@ import pt.utl.ist.fenix.tools.util.i18n.Language;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 /**
- * This renderer provides a generic wya of editing slots that contain a
+ * This renderer provides a generic way of editing slots that contain a
  * {@link MultiLanguageString}. The interface generated allows the user to
  * incrementally add more values in different languages. The user can also
  * remove some of the values already introduced.
@@ -45,11 +45,11 @@ import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
  * Example: <div> <div> <input type="text"/> <select> <option
  * selected="selected" value="">-- Choose an option --</option> <option
  * value="eo">Esperanto</option> <option value="xx-klingon">Klingon</option>
- * <option value="xx-piglatin">Pig Latin</option> <option
- * value="xx-elmer">Elmer Fudd</option> </select> <a href="#">Remove</a>
- * </div> <div> <input type="text"/> <select> <option selected="selected"
- * value="">-- Choose an option --</option> <option value="eo">Esperanto</option>
- * <option value="xx-klingon">Klingon</option> <option value="xx-piglatin">Pig
+ * <option value="xx-piglatin">Pig Latin</option> <option value="xx-elmer">Elmer
+ * Fudd</option> </select> <a href="#">Remove</a> </div> <div> <input
+ * type="text"/> <select> <option selected="selected" value="">-- Choose an
+ * option --</option> <option value="eo">Esperanto</option> <option
+ * value="xx-klingon">Klingon</option> <option value="xx-piglatin">Pig
  * Latin</option> <option value="xx-elmer">Elmer Fudd</option> </select> <a
  * href="#">Remove</a> </div> <a href="#">Add</a> </div>
  * 
@@ -300,6 +300,7 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
 		List<Map.Entry<Integer, LanguageBean>> list = new ArrayList<Map.Entry<Integer, LanguageBean>>(map.entrySet());
 		Collections.sort(list, new Comparator<Map.Entry<Integer, LanguageBean>>() {
 
+		    @Override
 		    public int compare(Entry<Integer, LanguageBean> o1, Entry<Integer, LanguageBean> o2) {
 			return o1.getKey().compareTo(o2.getKey());
 		    }
@@ -419,8 +420,8 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
 
 	private class AddNewLanguageController extends HtmlActionLinkController {
 
-	    private HtmlBlockContainer container;
-	    private HtmlActionLink link;
+	    private final HtmlBlockContainer container;
+	    private final HtmlActionLink link;
 
 	    public AddNewLanguageController(HtmlBlockContainer container, HtmlActionLink link) {
 		this.container = container;
@@ -445,10 +446,10 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
 
 	private class RemoveLanguageController extends HtmlActionLinkController {
 
-	    private HtmlContainer container;
-	    private HtmlContainer inputContainer;
+	    private final HtmlContainer container;
+	    private final HtmlContainer inputContainer;
 	    private HtmlActionLink link;
-	    private Integer index;
+	    private final Integer index;
 
 	    public RemoveLanguageController(HtmlContainer container, HtmlContainer inputContainer, Integer index) {
 		this.container = container;
