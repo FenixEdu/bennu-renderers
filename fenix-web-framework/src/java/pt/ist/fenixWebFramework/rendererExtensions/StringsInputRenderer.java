@@ -3,11 +3,11 @@ package pt.ist.fenixWebFramework.rendererExtensions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.TreeMap;
 
 import pt.ist.fenixWebFramework.renderers.InputRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlActionLink;
@@ -118,7 +118,7 @@ public class StringsInputRenderer extends InputRenderer {
 	    Map<Integer, String> map = (Map<Integer, String>) getInputContext().getViewState().getLocalAttribute(STATE_MAP_NAME);
 
 	    if (map == null && create) {
-		map = new Hashtable<Integer, String>();
+		map = new TreeMap<Integer, String>();
 		getInputContext().getViewState().setLocalAttribute(STATE_MAP_NAME, map);
 	    }
 
