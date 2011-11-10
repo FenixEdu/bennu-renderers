@@ -164,7 +164,7 @@ public class StringsInputRenderer extends InputRenderer {
 		map = getStringsMap(true);
 
 		int index = 0;
-		for (String string : strings) {
+		for (String string : strings.getUnmodifiableList()) {
 		    map.put(index++, string);
 		}
 	    }
@@ -224,6 +224,7 @@ public class StringsInputRenderer extends InputRenderer {
 
 	    textInput.setName(getLocalName("text/" + index));
 	    textInput.setValue(value);
+	    textInput.setController(new UpdateStringController(index));
 
 	    PresentationContext context = getInputContext().createSubContext(getInputContext().getMetaObject());
 	    context.setProperties(new Properties());
@@ -253,6 +254,23 @@ public class StringsInputRenderer extends InputRenderer {
 
 		HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getControlledComponent();
 		component.setValue(value);
+	    }
+	}
+
+	private class UpdateStringController extends HtmlController {
+	    private final Integer index;
+
+	    private UpdateStringController(Integer index) {
+		super();
+		this.index = index;
+	    }
+
+	    @Override
+	    public void execute(IViewState viewState) {
+		Map<Integer, String> map = getStringsMap(true);
+
+		HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getControlledComponent();
+		map.put(this.index, component.getValue());
 	    }
 	}
 
