@@ -37,7 +37,7 @@ public class DateTimeInputRendererWithPicker extends DateTimeInputRenderer {
 
 	    MetaSlotKey key = (MetaSlotKey) getInputContext().getMetaObject().getKey();
 
-	    HtmlInlineContainer container = getCalendarScript(key.toString() + "_date");
+	    HtmlInlineContainer container = getCalendarScript(HtmlComponent.getValidIdOrName(key.toString() + "_date"));
 
 	    HtmlBlockContainer component = new HtmlBlockContainer();
 	    component.addChild(originalComponent);
