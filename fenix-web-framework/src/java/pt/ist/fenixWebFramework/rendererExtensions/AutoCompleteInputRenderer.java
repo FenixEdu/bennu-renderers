@@ -1,5 +1,9 @@
 package pt.ist.fenixWebFramework.rendererExtensions;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -22,6 +26,7 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
+import pt.ist.fenixframework.DomainObject;
 
 /**
  * This renderer allows you to search for a domain object by providing a list of
@@ -263,6 +268,10 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 	return new AutoCompleteLayout();
     }
 
+    protected Converter createConverter() {
+	return new AutoCompleteConverter();
+    }
+
     protected class AutoCompleteLayout extends Layout {
 	public AutoCompleteLayout() {
 	    
@@ -289,7 +298,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		valueField.setValue(oid == null ? null : oid.toString());
 	    }
 
-	    valueField.setConverter(new AutoCompleteConverter());
+	    valueField.setConverter(createConverter());
 
 	    HtmlHiddenField oldValueField = new HtmlHiddenField();
 	    oldValueField.setId(key.toString() + "_OldValue");
