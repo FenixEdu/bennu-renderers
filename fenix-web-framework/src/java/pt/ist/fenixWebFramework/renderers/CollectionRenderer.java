@@ -19,6 +19,8 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlImage;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
+import pt.ist.fenixWebFramework.renderers.components.HtmlLink.Target;
+import pt.ist.fenixWebFramework.renderers.components.HtmlLinkWithPreprendedComment;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTable;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTableCell;
@@ -797,6 +799,20 @@ public class CollectionRenderer extends OutputRenderer {
 	getTableLink(name).setContextRelative(Boolean.parseBoolean(value));
     }
 
+    public String getHasContext(String name) {
+	return Boolean.toString(getTableLink(name).getHasContext());
+    }
+
+    /**
+     * The hasContext property indicates if the specified link should use
+     * context information
+     * 
+     * @property
+     */
+    public void setHasContext(String name, String value) {
+	getTableLink(name).setHasContext(Boolean.parseBoolean(value));
+    }
+
     /**
      * The confirmationTitleKey property indicates the key of the confirmation
      * title to show
@@ -837,6 +853,47 @@ public class CollectionRenderer extends OutputRenderer {
 
     public String getConfirmationBundle(String name) {
 	return getTableLink(name).getConfirmationBundle();
+    }
+
+    public String getConfirmationArgs(String name) {
+	return getTableLink(name).getConfirmationArgs();
+    }
+
+    /**
+     * The confirmationArgs property indicates the arguments for a link
+     * confirmation.
+     * 
+     * @property
+     */
+    public void setConfirmationArgs(String name, String value) {
+	getTableLink(name).setConfirmationArgs(value);
+    }
+
+    public String getBlankTarget(String name) {
+	return Boolean.toString(getTableLink(name).getBlankTarget());
+    }
+
+    /**
+     * The blankTarget property set blank target for a link.
+     * 
+     * @property
+     */
+    public void setBlankTarget(String name, String value) {
+	getTableLink(name).setBlankTarget(Boolean.parseBoolean(value));
+    }
+
+    public String getTarget(String name) {
+	return getTableLink(name).getTarget();
+    }
+
+    /**
+     * The target property indicates the arguments for a link target. Using
+     * setBlankTarget will override this value.
+     * 
+     * @property
+     */
+    public void setTarget(String name, String value) {
+	getTableLink(name).setTarget(value);
     }
 
     protected int getNumberOfLinkColumns() {
@@ -1551,6 +1608,8 @@ public class CollectionRenderer extends OutputRenderer {
 
 	private Boolean contextRelative;
 
+	private Boolean hasContext = false;
+
 	private String custom;
 
 	private String visibleIf;
@@ -1559,11 +1618,19 @@ public class CollectionRenderer extends OutputRenderer {
 
 	private String confirmationKey;
 
+	private String confirmationBundle;
+
+	private String confirmationArgs;
+
 	private String confirmationTitleKey;
 
 	private String icon;
 
 	private String counter;
+
+	private Boolean blankTarget = false;
+
+	private String target;
 
 	public String getConfirmationTitleKey() {
 	    return confirmationTitleKey;
@@ -1572,8 +1639,6 @@ public class CollectionRenderer extends OutputRenderer {
 	public void setConfirmationTitleKey(String confirmationTitle) {
 	    this.confirmationTitleKey = confirmationTitle;
 	}
-
-	private String confirmationBundle;
 
 	public TableLink() {
 	    super();
@@ -1702,6 +1767,14 @@ public class CollectionRenderer extends OutputRenderer {
 	    return this.contextRelative != null;
 	}
 
+	public Boolean getHasContext() {
+	    return hasContext;
+	}
+
+	public void setHasContext(Boolean hasContext) {
+	    this.hasContext = hasContext;
+	}
+
 	public String getCustom() {
 	    return this.custom;
 	}
@@ -1724,6 +1797,30 @@ public class CollectionRenderer extends OutputRenderer {
 
 	public void setConfirmationBundle(String confirmationBundle) {
 	    this.confirmationBundle = confirmationBundle;
+	}
+
+	public String getConfirmationArgs() {
+	    return confirmationArgs;
+	}
+
+	public void setConfirmationArgs(String confirmationArgs) {
+	    this.confirmationArgs = confirmationArgs;
+	}
+
+	public Boolean getBlankTarget() {
+	    return blankTarget;
+	}
+
+	public void setBlankTarget(Boolean blankTarget) {
+	    this.blankTarget = blankTarget;
+	}
+
+	public String getTarget() {
+	    return target;
+	}
+
+	public void setTarget(String target) {
+	    this.target = target;
 	}
 
 	public String getIcon() {
@@ -1774,10 +1871,18 @@ public class CollectionRenderer extends OutputRenderer {
 	    if (getCustom() != null) {
 		return new HtmlText(RenderUtils.getFormattedProperties(getCustom(), object), false);
 	    } else {
-		HtmlLink link = new HtmlLink();
+		final HtmlLink link = getHasContext() ? new HtmlLinkWithPreprendedComment(
+			pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX)
+			: new HtmlLink();
 
 		if (isContextRelativeSet()) {
 		    link.setContextRelative(isContextRelative());
+		}
+
+		if (getBlankTarget().booleanValue()) {
+		    link.setTarget(Target.BLANK);
+		} else if (getTarget() != null && !getTarget().isEmpty()) {
+		    link.setTarget(getTarget());
 		}
 
 		if (getIcon() != null && !getIcon().equals("none")) {
@@ -1804,11 +1909,20 @@ public class CollectionRenderer extends OutputRenderer {
 		}
 
 		if (getConfirmationKey() != null) {
+		    String arguments = getConfirmationArgs() != null ? getConfirmationArgs() : "";
+		    String[] argumentsArray = arguments.split(",");
+		    String[] formattedArgsArray = new String[argumentsArray.length];
+
+		    for (int i = 0; i < argumentsArray.length; i++) {
+			formattedArgsArray[i] = RenderUtils.getFormattedProperties(argumentsArray[i], object);
+		    }
+
 		    if (link.getId() == null) {
 			link.setId(getName() + "-" + object.hashCode());
 		    }
 		    final String confirmationMessage = getConfirmationBundle() != null ? RenderUtils.getResourceString(
-			    getConfirmationBundle(), getConfirmationKey()) : RenderUtils.getResourceString(getConfirmationKey());
+			    getConfirmationBundle(), getConfirmationKey(), formattedArgsArray) : RenderUtils
+			    .getResourceString(getConfirmationKey());
 
 		    final String confirmationTitle = getConfirmationBundle() != null ? RenderUtils.getResourceString(
 			    getConfirmationBundle(), getConfirmationTitleKey()) : RenderUtils

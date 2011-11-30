@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.commons.lang.StringUtils;
 
-import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriterFilter.RequestRewriter;
-
 public class ResponseWrapper extends HttpServletResponseWrapper {
 
     protected final HttpServletResponse httpServletResponse;

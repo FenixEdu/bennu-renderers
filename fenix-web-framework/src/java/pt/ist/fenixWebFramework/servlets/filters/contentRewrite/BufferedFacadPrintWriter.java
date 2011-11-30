@@ -2,8 +2,6 @@ package pt.ist.fenixWebFramework.servlets.filters.contentRewrite;
 
 import java.io.PrintWriter;
 
-import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriterFilter.RequestRewriter;
-
 public class BufferedFacadPrintWriter extends PrintWriter {
 
     final StringBuilder stringBuilder = new StringBuilder();

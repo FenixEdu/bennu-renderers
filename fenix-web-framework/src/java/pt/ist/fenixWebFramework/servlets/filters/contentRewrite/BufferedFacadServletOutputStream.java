@@ -6,8 +6,6 @@ import java.io.OutputStream;
 
 import javax.servlet.ServletOutputStream;
 
-import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriterFilter.RequestRewriter;
-
 public class BufferedFacadServletOutputStream extends ServletOutputStream {
 
     final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
