@@ -85,13 +85,6 @@ public class DateInputRendererWithPicker extends DateInputRenderer {
 	return container;
     }
 
-    private void addSingleScript(HtmlInlineContainer container, HtmlLink link, String scriptName) {
-	link.setUrl("/javaScript/" + scriptName);
-	HtmlScript script = new HtmlScript("text/javascript", link.calculateUrl(), true);
-	container.addChild(script);
-    }
-
-
     protected String getInputFormatForCalendar() {
 	Locale locale = getLocale();
 	SimpleDateFormat format = new SimpleDateFormat(getFormat(), locale);
