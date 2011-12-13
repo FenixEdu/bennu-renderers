@@ -78,7 +78,7 @@ public class DomainMetaObject extends SimpleMetaObject {
     public void commit() {
 	List<ObjectChange> changes = new ArrayList<ObjectChange>();
 
-	ObjectKey key = new ObjectKey(getOid());
+	ObjectKey key = new ObjectKey(getOid(), getType());
 
 	for (MetaSlot slot : getAllSlots()) {
 	    if (slot.isSetterIgnored()) {
@@ -108,6 +108,7 @@ public class DomainMetaObject extends SimpleMetaObject {
 	final List<ObjectChange> changes;
 
 	Object result = null;
+
 
 	public ServicePredicateWithResult(final List<ObjectChange> changes) {
 	    this.changes = changes;
@@ -272,8 +273,12 @@ public class DomainMetaObject extends SimpleMetaObject {
 
     }
 
+    protected ServicePredicateWithResult getServiceToCall(final List<ObjectChange> changes) {
+	return new ServicePredicateWithResult(changes);
+    }
+
     protected Object callService(final List<ObjectChange> changes) {
-	final ServicePredicateWithResult servicePredicate = new ServicePredicateWithResult(changes);
+	final ServicePredicateWithResult servicePredicate = getServiceToCall(changes);
 	ServiceManager.execute(servicePredicate);
 	final Object result = servicePredicate.getResult();
 	return result;

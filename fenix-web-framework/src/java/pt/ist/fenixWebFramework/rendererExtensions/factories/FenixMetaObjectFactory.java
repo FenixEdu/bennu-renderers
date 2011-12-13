@@ -48,27 +48,24 @@ public class FenixMetaObjectFactory extends DefaultMetaObjectFactory {
     }
 
     private MetaObject createCreationMetaObject(Class type, Schema schema) {
-	throw new Error("creation.of.domain.objects.not.supported");
-//	CreationDomainMetaObject metaObject = new CreationDomainMetaObject(type);
-//
-//	metaObject.setSchema(schema);
-//
-//	addSlotDescriptions(schema, metaObject);
-//	setInstanceCreator(schema.getType(), schema, metaObject);
-//	addCompositeSlotSetters(schema, metaObject);
-//
-//	return metaObject;
+	CreationDomainMetaObject metaObject = new CreationDomainMetaObject(type);
+
+	metaObject.setSchema(schema);
+
+	addSlotDescriptions(schema, metaObject);
+	setInstanceCreator(schema.getType(), schema, metaObject);
+	addCompositeSlotSetters(schema, metaObject);
+
+	return metaObject;
     }
 
     @Override
     public MetaSlot createMetaSlot(MetaObject metaObject, SchemaSlotDescription slotDescription) {
 	MetaSlot metaSlot;
 
-/*	if (metaObject instanceof CreationDomainMetaObject) { // CreationMetaObject
-	    // extends
-	    // DomainMetaObject
+	if (metaObject instanceof CreationDomainMetaObject) {
 	    metaSlot = new MetaSlotWithDefault(metaObject, slotDescription.getSlotName());
-	} else */ if (metaObject instanceof DomainMetaObject) {
+	} else if (metaObject instanceof DomainMetaObject) {
 	    metaSlot = new MetaSlot(metaObject, slotDescription.getSlotName());
 	} else {
 	    metaSlot = super.createMetaSlot(metaObject, slotDescription);
