@@ -78,7 +78,13 @@ public class CreationDomainMetaObject extends DomainMetaObject {
 		    return (DomainObject) objectClass.newInstance();
 		}
 	    } catch (Exception e) {
-		throw new RuntimeException(e);
+		if (e.getCause() instanceof Error) {
+		    throw (Error) e.getCause();
+		} else if (e.getCause() instanceof RuntimeException) {
+		    throw (RuntimeException) e.getCause();
+		}
+
+		throw new Error(e);
 	    }
 	}
 
