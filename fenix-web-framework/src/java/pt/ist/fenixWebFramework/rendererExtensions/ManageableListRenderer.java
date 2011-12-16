@@ -154,7 +154,7 @@ public class ManageableListRenderer extends InputRenderer {
 	    this.hiddenValues = new HtmlMultipleHiddenField();
 	    this.hiddenValues.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 
-	    // HACK: severe dependecy with fénix project
+	    // HACK: severe dependecy with fenix project
 	    this.hiddenValues.setConverter(new DomainObjectKeyArrayConverter());
 	}
 

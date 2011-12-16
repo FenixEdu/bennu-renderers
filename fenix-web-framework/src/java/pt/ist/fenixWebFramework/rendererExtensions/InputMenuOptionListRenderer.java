@@ -2,49 +2,28 @@ package pt.ist.fenixWebFramework.rendererExtensions;
 
 import java.util.Collection;
 
-import pt.ist.fenixWebFramework.rendererExtensions.converters.DomainObjectKeyConverter;
 import pt.ist.fenixWebFramework.renderers.MenuOptionListRenderer;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
-import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
-import pt.ist.fenixWebFramework.renderers.converters.EnumConverter;
-import pt.ist.fenixframework.DomainObject;
 
 /**
- * Fenix extension to the {@link pt.ist.fenixWebFramework.renderers.MenuOptionListRenderer}.
+ * Fenix extension to the
+ * {@link pt.ist.fenixWebFramework.renderers.MenuOptionListRenderer}.
  * 
  * {@inheritDoc}
  * 
  * @author cfgi
  */
 public class InputMenuOptionListRenderer extends MenuOptionListRenderer {
-    private String choiceType;
-
     private String filterClass;
-
-    public String getChoiceType() {
-	return this.choiceType;
-    }
-
-    /**
-     * This property is really an abbreviation for a data provider that
-     * read all objects of a given type from the database. As such the
-     * class name given must be the name of a subclass of 
-     * {@link net.sourceforge.fenixedu.domain.DomainObject}.
-     * 
-     * @property
-     */
-    public void setChoiceType(String choiceType) {
-	this.choiceType = choiceType;
-    }
 
     public String getFilterClass() {
 	return this.filterClass;
     }
 
     /**
-     * This property allows you to indicate a {@linkplain DataFilter data filter}
-     * that will remove values, from the collection returned by data provider,
-     * not valid in a specific context.
+     * This property allows you to indicate a {@linkplain DataFilter data
+     * filter} that will remove values, from the collection returned by data
+     * provider, not valid in a specific context.
      * 
      * @property
      */
@@ -55,67 +34,13 @@ public class InputMenuOptionListRenderer extends MenuOptionListRenderer {
     // HACK: duplicated code, id=inputChoices.selectPossibilitiesAndConverter
     @Override
     protected Converter getConverter() {
-	if (getProviderClass() != null) {
-	    return super.getConverter();
-	} else {
-	    try {
-		Class choiceTypeClass = Class.forName(getChoiceType());
-
-		if (DomainObject.class.isAssignableFrom(choiceTypeClass)) {
-		    return new DomainObjectKeyConverter();
-		} else if (Enum.class.isAssignableFrom(choiceTypeClass)) {
-		    return new EnumConverter();
-		} else {
-		    return null;
-		}
-	    } catch (ClassNotFoundException e) {
-		throw new RuntimeException("could not retrieve class named '" + getChoiceType() + "'");
-	    }
-	}
+	return super.getConverter();
     }
 
     // HACK: duplicated code, id=inputChoices.selectPossibilitiesAndConverter
     @Override
     protected Collection getPossibleObjects() {
-	if (getProviderClass() != null) {
-	    return super.getPossibleObjects();
-	} else {
-	    PresentationContext parentContext = getInputContext().getParentContext();
-	    Object object = parentContext == null ? getInputContext().getMetaObject().getObject() : parentContext.getMetaObject()
-		    .getObject();
-
-	    String choiceType = getChoiceType();
-	    String filterClassName = getFilterClass();
-
-	    // try {
-	    if (true)
-		throw new Error("no.mechanism.available.for.reading.all.domain.objects.of.a.givin.type");
-	    return null;
-	    // Collection allChoices = readAllChoicesByType(choiceType);
-	    //
-	    // if (getFilterClass() != null) {
-	    // Class filterClass = Class.forName(filterClassName);
-	    // DataFilter filter = (DataFilter) filterClass.newInstance();
-	    //
-	    // List result = new ArrayList();
-	    // for (Object choice : allChoices) {
-	    // if (filter.acccepts(object, choice)) {
-	    // result.add(object);
-	    // }
-	    // }
-	    //
-	    // return RenderUtils.sortCollectionWithCriteria(result,
-	    // getSortBy());
-	    // }
-	    // else {
-	    // return RenderUtils.sortCollectionWithCriteria(allChoices,
-	    // getSortBy());
-	    // }
-	    // }
-	    // catch (Exception e) {
-	    // throw new RuntimeException("could not filter choices", e);
-	    // }
-	}
+	return super.getPossibleObjects();
     }
 
 }

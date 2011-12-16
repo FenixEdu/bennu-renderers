@@ -611,7 +611,7 @@ public class TreeRenderer extends OutputRenderer {
     }
 
     @Override
-    protected Layout getLayout(Object object, Class type) {
+    public Layout getLayout(Object object, Class type) {
 	return new TreeLayout();
     }
 

@@ -2,15 +2,12 @@ package pt.ist.fenixWebFramework.rendererExtensions;
 
 import java.util.Collection;
 
-import pt.ist.fenixWebFramework.rendererExtensions.converters.DomainObjectKeyConverter;
 import pt.ist.fenixWebFramework.renderers.CheckBoxOptionListRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
-import pt.ist.fenixWebFramework.renderers.converters.EnumArrayConverter;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
-import pt.ist.fenixframework.DomainObject;
 
 /**
  * This is the Fenix extension to the
@@ -21,8 +18,6 @@ import pt.ist.fenixframework.DomainObject;
  * @author cfgi
  */
 public class InputCheckBoxListRenderer extends CheckBoxOptionListRenderer {
-    private String choiceType;
-
     private String filterClass;
 
     private String emptyMessageKey;
@@ -74,23 +69,6 @@ public class InputCheckBoxListRenderer extends CheckBoxOptionListRenderer {
 	this.emptyMessageKey = emptyMessageKey;
     }
 
-    public String getChoiceType() {
-	return this.choiceType;
-    }
-
-    /**
-     * This property is an abbreviation for a data provider that provides all
-     * objects of a given type. The class named given must be a
-     * {@link net.sourceforge.fenixedu.domain.DomainObject} beacuse this
-     * renderers tries to read all objects using the
-     * <tt>ReadAllDomainObjects</tt> service.
-     * 
-     * @property
-     */
-    public void setChoiceType(String choiceType) {
-	this.choiceType = choiceType;
-    }
-
     public String getFilterClass() {
 	return this.filterClass;
     }
@@ -110,65 +88,13 @@ public class InputCheckBoxListRenderer extends CheckBoxOptionListRenderer {
     // HACK: duplicated code, id=inputChoices.selectPossibilitiesAndConverter
     @Override
     protected Converter getConverter() {
-
-	if (getProviderClass() != null) {
 	    return super.getConverter();
-	} else {
-	    try {
-		Class choiceTypeClass = Class.forName(getChoiceType());
-
-		if (DomainObject.class.isAssignableFrom(choiceTypeClass)) {
-		    return new DomainObjectKeyConverter();
-		} else if (Enum.class.isAssignableFrom(choiceTypeClass)) {
-		    return new EnumArrayConverter(choiceTypeClass);
-		} else {
-		    return null;
-		}
-	    } catch (ClassNotFoundException e) {
-		throw new RuntimeException("could not retrieve class named '" + getChoiceType() + "'");
-	    }
-	}
     }
 
     // HACK: duplicated code, id=inputChoices.selectPossibilitiesAndConverter
     @Override
     protected Collection getPossibleObjects() {
-
-	if (getProviderClass() != null) {
 	    return super.getPossibleObjects();
-	} else {
-	    Object object = getInputContext().getParentContext().getMetaObject().getObject();
-
-	    String choiceType = getChoiceType();
-	    String filterClassName = getFilterClass();
-
-	    // try {
-	    if (true)
-		throw new Error("no.mechanism.available.for.reading.all.domain.objects.of.a.givin.type");
-	    return null;
-	    // Collection allChoices = readAllChoicesByType(choiceType);
-	    //
-	    // if (getFilterClass() != null) {
-	    // Class filterClass = Class.forName(filterClassName);
-	    // DataFilter filter = (DataFilter) filterClass.newInstance();
-	    //
-	    // List result = new ArrayList();
-	    // for (Object choice : allChoices) {
-	    // if (filter.acccepts(object, choice)) {
-	    // result.add(object);
-	    // }
-	    // }
-	    //
-	    // return RenderUtils.sortCollectionWithCriteria(result,
-	    // getSortBy());
-	    // } else {
-	    // return RenderUtils.sortCollectionWithCriteria(allChoices,
-	    // getSortBy());
-	    // }
-	    // } catch (Exception e) {
-	    // throw new RuntimeException("could not filter choices", e);
-	    // }
-	}
 
     }
 
