@@ -1,6 +1,7 @@
 package pt.ist.fenixWebFramework.rendererExtensions.factories;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import pt.ist.fenixWebFramework.rendererExtensions.util.ObjectChange;
@@ -30,6 +31,14 @@ public class CreationDomainMetaObject extends DomainMetaObject {
 
     public void setType(Class type) {
 	this.type = type;
+    }
+
+    @Override
+    protected Object callService(List<ObjectChange> changes) {
+	Object result = super.callService(changes);
+	setObject(((Collection) result).iterator().next());
+
+	return result;
     }
 
     @Override
