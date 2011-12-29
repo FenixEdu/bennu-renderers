@@ -4,7 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Properties;
 
 import org.w3c.dom.Document;
@@ -15,11 +16,14 @@ import org.w3c.tidy.TidyMessageListener;
 import pt.ist.fenixWebFramework.renderers.components.converters.ConversionException;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+
 public abstract class TidyConverter extends Converter {
 
     public static final String TIDY_PROPERTIES = "HtmlEditor-Tidy.properties";
 
-    private static final String ENCODING = "iso-8859-1";
+    private static final String ENCODING = "ISO-8859-1";
 
     @Override
     public Object convert(Class type, Object value) {
@@ -36,7 +40,6 @@ public abstract class TidyConverter extends Converter {
 
 	TidyErrorsListener errorListener = new TidyErrorsListener();
 	tidy.setMessageListener(errorListener);
-
 	Document document = tidy.parseDOM(inStream, null);
 
 	if (errorListener.isBogus()) {
@@ -44,13 +47,23 @@ public abstract class TidyConverter extends Converter {
 	}
 
 	parseDocument(outStream, tidy, document);
+	return filterOutput(getDocumentAsString(document));
+    }
 
+    public String getDocumentAsString(Document doc) {
+	OutputFormat format = new OutputFormat(doc);
+	format.setIndenting(false);
+	format.setOmitXMLDeclaration(true);
+	format.setVersion("1.0");
+	Writer out = new StringWriter();
+	XMLSerializer serializer = new XMLSerializer(out, format);
 	try {
-	    return filterOutput(new String(outStream.toByteArray(), ENCODING));
-	} catch (UnsupportedEncodingException e) {
+	    serializer.serialize(doc);
+	} catch (Exception e) {
 	    e.printStackTrace();
 	    throw new ConversionException("tidy.converter.ending.notSupported.critical");
 	}
+	return out.toString();
     }
 
     protected String filterOutput(String output) {

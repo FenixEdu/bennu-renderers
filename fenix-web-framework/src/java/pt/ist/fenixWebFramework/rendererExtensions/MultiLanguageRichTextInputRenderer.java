@@ -9,6 +9,8 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlHiddenField;
+import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
+import pt.ist.fenixWebFramework.renderers.components.HtmlParagraphContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlRadioButton;
 import pt.ist.fenixWebFramework.renderers.components.HtmlRadioButtonList;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
@@ -21,8 +23,10 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 /**
- * This renderer has the same behaviour than {@link net.sourceforge.fenixedu.presentationTier.renderers.MultiLanguageTextInputRenderer}
- * but uses a rich-text editor in place of a textarea for browsers that support it.
+ * This renderer has the same behaviour than
+ * {@link net.sourceforge.fenixedu.presentationTier.renderers.MultiLanguageTextInputRenderer}
+ * but uses a rich-text editor in place of a textarea for browsers that support
+ * it.
  * 
  * @author cfgi
  */
@@ -34,14 +38,16 @@ public class MultiLanguageRichTextInputRenderer extends MultiLanguageTextInputRe
     private HtmlRadioButton useEditor;
     private HtmlRadioButton removeEditor;
     private final List<TinyMceEditor> editors = new ArrayList<TinyMceEditor>();
+    private Boolean mathJaxEnabled = Boolean.TRUE;
 
     public boolean isSafe() {
 	return safe;
     }
 
     /**
-     * If this property is set to <tt>true</tt> then the input will be filtered and any
-     * unsupported HTML will be removed or escaped to the corresponding entities. 
+     * If this property is set to <tt>true</tt> then the input will be filtered
+     * and any unsupported HTML will be removed or escaped to the corresponding
+     * entities.
      * 
      * @property
      */
@@ -54,16 +60,16 @@ public class MultiLanguageRichTextInputRenderer extends MultiLanguageTextInputRe
     }
 
     /**
-     * Allows you to choose a configuration for the editor. The given name
-     * is used to fetch the properties from a file located in {@value TinyMceEditor#CONFIG_PATH} with
-     * the same name and ending in ".properties".
+     * Allows you to choose a configuration for the editor. The given name is
+     * used to fetch the properties from a file located in
+     * {@value TinyMceEditor#CONFIG_PATH} with the same name and ending in
+     * ".properties".
      * 
      * @property
      */
     public void setConfig(String config) {
 	this.config = config;
     }
-
 
     public boolean isShowEditorOptions() {
 	return showEditorOptions;
@@ -76,6 +82,14 @@ public class MultiLanguageRichTextInputRenderer extends MultiLanguageTextInputRe
      */
     public void setShowEditorOptions(boolean showEditorOptions) {
 	this.showEditorOptions = showEditorOptions;
+    }
+
+    public Boolean getMathJaxEnabled() {
+	return mathJaxEnabled;
+    }
+
+    public void setMathJaxEnabled(Boolean mathJaxEnabled) {
+	this.mathJaxEnabled = mathJaxEnabled;
     }
 
     protected String getLocalName(String name, String category) {
@@ -97,11 +111,11 @@ public class MultiLanguageRichTextInputRenderer extends MultiLanguageTextInputRe
 	    script.setContentType("text/javascript");
 	    script.setConditional(true);
 	    script.setScript("\n" + "function fenix_removeEditor(editors) {\n" + "	for (var i in editors) {\n"
-			    + "		var editorId = tinyMCE.get(editors[i]);\n" + "		if (! editorId) continue;\n"
-			    + "		tinyMCE.get(editorId.id).remove();\n" + "	}\n" + "}\n" + "function fenix_addEditor(editors) {\n"
-			    + "	for (var i in editors) {\n" + "		var id = editors[i];\n" + "		var editorId = tinyMCE.get(id);\n"
-			    + "		if (editorId) continue;\n" + "		var element = document.getElementById(id);\n" + "		if (element) {\n"
-			    + "			tinyMCE.execCommand('mceAddControl', false, id);\n" + "               }\n" + "	}\n" + "}\n");
+		    + "		var editorId = tinyMCE.get(editors[i]);\n" + "		if (! editorId) continue;\n"
+		    + "		tinyMCE.get(editorId.id).remove();\n" + "	}\n" + "}\n" + "function fenix_addEditor(editors) {\n"
+		    + "	for (var i in editors) {\n" + "		var id = editors[i];\n" + "		var editorId = tinyMCE.get(id);\n"
+		    + "		if (editorId) continue;\n" + "		var element = document.getElementById(id);\n" + "		if (element) {\n"
+		    + "			tinyMCE.execCommand('mceAddControl', false, id);\n" + "               }\n" + "	}\n" + "}\n");
 
 	    HtmlRadioButtonList radioList = new HtmlRadioButtonList();
 	    radioList.setName(getLocalName("controls", "editor"));
@@ -121,7 +135,6 @@ public class MultiLanguageRichTextInputRenderer extends MultiLanguageTextInputRe
 
 	return container;
     }
-
 
     @Override
     protected HtmlComponent renderComponent(Layout layout, Object object, Class type) {
@@ -197,6 +210,41 @@ public class MultiLanguageRichTextInputRenderer extends MultiLanguageTextInputRe
 	public void execute(IViewState viewState) {
 	    updateEditorSelectors();
 	}
-
     }
+
+    protected Layout getLayout(Object object, Class type) {
+	Layout superLayout = super.getLayout(object, type);
+	return getMathJaxEnabled().booleanValue() ? getLayoutWithMathJaxMessage() : superLayout;
+    }
+
+    private Layout getLayoutWithMathJaxMessage() {
+	Layout layout = new MultiLanguageStringInputLayout() {
+	    public HtmlComponent createComponent(Object object, Class type) {
+		HtmlBlockContainer container = (HtmlBlockContainer) super.createComponent(object, type);
+		HtmlBlockContainer pContainer = new HtmlBlockContainer();
+
+		HtmlParagraphContainer p = new HtmlParagraphContainer();
+		final String message = RenderUtils.getResourceString("renderers.rich-text.editor.mathjax.message");
+		final String usage = RenderUtils.getResourceString("renderers.rich-text.editor.mathjax.message.usage");
+		final String moreinfo = RenderUtils.getResourceString("renderers.rich-text.editor.mathjax.message.moreinfo");
+		final String mathJaxURL = RenderUtils.getResourceString("renderers.rich-text.editor.mathjax.url");
+
+		p.addChild(new HtmlText(message));
+		pContainer.addChild(p);
+		pContainer.addChild(new HtmlText(usage, false));
+		p = new HtmlParagraphContainer();
+		p.addChild(new HtmlText(moreinfo));
+		final HtmlLink link = new HtmlLink();
+		link.setUrl(mathJaxURL);
+		link.setText(mathJaxURL);
+		p.addChild(link);
+		pContainer.addChild(p);
+
+		container.addChild(pContainer);
+		return container;
+	    }
+	};
+	return layout;
+    }
+
 }
