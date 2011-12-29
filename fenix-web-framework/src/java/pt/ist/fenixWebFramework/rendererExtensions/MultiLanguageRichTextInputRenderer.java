@@ -235,8 +235,11 @@ public class MultiLanguageRichTextInputRenderer extends MultiLanguageTextInputRe
 		p = new HtmlParagraphContainer();
 		p.addChild(new HtmlText(moreinfo));
 		final HtmlLink link = new HtmlLink();
+		link.setModuleRelative(false);
+		link.setContextRelative(false);
 		link.setUrl(mathJaxURL);
 		link.setText(mathJaxURL);
+		link.setTarget("_blank");
 		p.addChild(link);
 		pContainer.addChild(p);
 
