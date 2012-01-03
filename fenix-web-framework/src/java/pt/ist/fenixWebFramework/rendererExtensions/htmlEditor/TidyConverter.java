@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Properties;
 
@@ -47,7 +48,14 @@ public abstract class TidyConverter extends Converter {
 	}
 
 	parseDocument(outStream, tidy, document);
-	return filterOutput(getDocumentAsString(document));
+	final String documentAsString = getDocumentAsString(document);
+	try {
+	    return filterOutput(new String(documentAsString.getBytes(), ENCODING));
+	} catch (UnsupportedEncodingException e) {
+	    e.printStackTrace();
+	    throw new ConversionException("tidy.converter.ending.notSupported.critical");
+	}
+	// return filterOutput(documentAsString);
     }
 
     public String getDocumentAsString(Document doc) {
@@ -55,6 +63,7 @@ public abstract class TidyConverter extends Converter {
 	format.setIndenting(false);
 	format.setOmitXMLDeclaration(true);
 	format.setVersion("1.0");
+	format.setEncoding(ENCODING);
 	Writer out = new StringWriter();
 	XMLSerializer serializer = new XMLSerializer(out, format);
 	try {
