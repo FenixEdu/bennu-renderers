@@ -22,9 +22,13 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public abstract class TidyConverter extends Converter {
 
-    public static final String TIDY_PROPERTIES = "HtmlEditor-Tidy.properties";
+    private static final String TIDY_PROPERTIES = "HtmlEditor-Tidy.properties";
 
     private static final String ENCODING = "ISO-8859-1";
+
+    public String getTidyProperties() {
+	return TIDY_PROPERTIES;
+    }
 
     @Override
     public Object convert(Class type, Object value) {
@@ -84,7 +88,7 @@ public abstract class TidyConverter extends Converter {
 
 	Properties properties = new Properties();
 	try {
-	    properties.load(getClass().getResourceAsStream(TIDY_PROPERTIES));
+	    properties.load(getClass().getResourceAsStream(getTidyProperties()));
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}

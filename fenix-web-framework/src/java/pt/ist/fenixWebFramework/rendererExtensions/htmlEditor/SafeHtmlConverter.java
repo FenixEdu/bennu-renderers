@@ -22,10 +22,16 @@ import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessorImpl;
 
 public class SafeHtmlConverter extends TidyConverter {
 
+    private static final String TIDY_PROPERTIES = "HtmlEditor-Tidy-MathJax.properties";
+
     /**
      * Default serial id.
      */
     private static final long serialVersionUID = 1L;
+
+    public String getTidyProperties() {
+	return TIDY_PROPERTIES;
+    }
 
     @Override
     protected void parseDocument(OutputStream outStream, Tidy tidy, Document document) {
@@ -166,7 +172,8 @@ public class SafeHtmlConverter extends TidyConverter {
 	    return false;
 	}
 
-	if (value.toLowerCase().startsWith("javascript:")) { // javascript: doSomething()
+	if (value.toLowerCase().startsWith("javascript:")) { // javascript:
+							     // doSomething()
 	    return false;
 	}
 
