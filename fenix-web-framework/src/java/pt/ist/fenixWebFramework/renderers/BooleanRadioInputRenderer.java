@@ -14,6 +14,7 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 
 /**
  * The <code>BooleanRadioInputRender</code> provides a way of doing the
@@ -32,6 +33,15 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  */
 public class BooleanRadioInputRenderer extends InputRenderer {
     
+    /**
+     * this field is a format {@link FormatRenderer} that must evaluate to true
+     * of false, if true the slot will be rendered read-only, if false it won't
+     * 
+     * @author joantune - João Antunes
+     */
+    private String readOnlyIf;
+    private String readOnlyIfNot;
+
     private String trueLabel;
     private String falseLabel;
     private String bundle;
@@ -46,12 +56,45 @@ public class BooleanRadioInputRenderer extends InputRenderer {
         setStyle("white-space: nowrap;");
     }
 
+    public String getReadOnlyIf() {
+	return readOnlyIf;
+    }
+
+    /**
+     * This property is a formatted property (like
+     * {@link ConditionalFormatRenderer}) that is evaluated. If it is true, the
+     * slot will be considered read only, if false it won't
+     * 
+     * @author joantune - João Antunes
+     * @property
+     */
+    public void setReadOnlyIf(String readOnlyIf) {
+	this.readOnlyIf = readOnlyIf;
+    }
+
     public String getEachClasses() {
         return eachClasses;
     }
 
+    public String getReadOnlyIfNot() {
+	return readOnlyIfNot;
+    }
+
+    /**
+     * This property is a formatted property (like
+     * {@link ConditionalFormatRenderer}) that is evaluated. If it is false, the
+     * slot will be considered read only, if true it won't
+     * 
+     * @author joantune - João Antunes
+     * @property
+     */
+    public void setReadOnlyIfNot(String readOnlyIfNot) {
+	this.readOnlyIfNot = readOnlyIfNot;
+    }
+
     /**
      * This property will set the class for each list item
+     * 
      * @property
      */
     public void setEachClasses(String eachClasses) {
@@ -116,9 +159,47 @@ public class BooleanRadioInputRenderer extends InputRenderer {
 
             @Override
             public HtmlComponent createComponent(Object object, Class type) {
+        	
                 Boolean booleanObject = (Boolean) object;                
+
+		if (getReadOnlyIf() != null || getReadOnlyIfNot() != null) {
+		    //let's get its parent to assert what to do regarding the read only
+		    Object parentObject = null;
+		    if (getContext().getParentContext() != null) {
+			parentObject = getContext().getParentContext().getMetaObject().getObject();
+		    }
+		    
+		    Boolean useReadOnlyIfResult = null;
+		    Boolean useReadOnlyIfNotResult = null;
+		    try {
+			if (getReadOnlyIf() != null) {
+			    useReadOnlyIfResult = (Boolean) RendererPropertyUtils.getProperty(parentObject, getReadOnlyIf(),
+				    false);
+			}
+			if (getReadOnlyIfNot() != null) {
+			    useReadOnlyIfNotResult = (Boolean) RendererPropertyUtils.getProperty(parentObject,
+				    getReadOnlyIfNot(), false);
+			}
+		    }
+		    catch (ClassCastException e) {
+			e.printStackTrace();
+		    }
+
+		    if ((useReadOnlyIfNotResult != null || useReadOnlyIfResult != null)) {
+			if ((useReadOnlyIfNotResult != null && !useReadOnlyIfNotResult)
+				|| (useReadOnlyIfResult != null && useReadOnlyIfResult)) {
+			    if (booleanObject == null) {
+				return new HtmlText("");
+			    }
+			    return new HtmlText(String.valueOf(booleanObject));
+			}
+		    }
+
+		}
+
                 HtmlRadioButtonList radioList = new HtmlRadioButtonList();
                 
+
                 Boolean booleanTrue = Boolean.TRUE;                
                 MetaObject booleanMetaObject = MetaObjectFactory.createObject(booleanTrue, null);
                 PresentationContext newContext = getContext().createSubContext(booleanMetaObject);
