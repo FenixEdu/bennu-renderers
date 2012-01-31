@@ -1,5 +1,7 @@
 package pt.ist.fenixWebFramework.rendererExtensions.validators;
 
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.fenixWebFramework.rendererExtensions.AutoCompleteInputRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
@@ -13,13 +15,10 @@ public class RequiredAutoCompleteSelectionValidator extends HtmlValidator {
 
     public RequiredAutoCompleteSelectionValidator() {
 	super();
-	setMessage("renderers.validator.autoComplete.required");
     }
 
     public RequiredAutoCompleteSelectionValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator);
-
-	setMessage("renderers.validator.autoComplete.required");
     }
 
     @Override
@@ -47,7 +46,7 @@ public class RequiredAutoCompleteSelectionValidator extends HtmlValidator {
 		"function(element) { return $(element).prevAll(\"input[name$=_AutoComplete]\").attr('value').length > 0 ");
 	if (this.isAllowsCustom()) {
 	    validatorBuilder.append("|| ($(element).prevAll(\"input[name$=_AutoComplete]\").attr('value') == 'custom')");
-	}else {
+	} else {
 	    validatorBuilder.append("&& ($(element).prevAll(\"input[name$=_AutoComplete]\").attr('value') != 'custom')");
 	}
 	validatorBuilder.append("; }");
@@ -63,6 +62,14 @@ public class RequiredAutoCompleteSelectionValidator extends HtmlValidator {
     @Override
     protected String getValidatableId(HtmlFormComponent formComponent) {
 	return RenderUtils.escapeId(formComponent.getId().replace("_AutoComplete", ""));
+    }
+
+    @Override
+    public String getMessage() {
+	if (StringUtils.isEmpty(super.getMessage())) {
+	    setMessage("renderers.validator.autoComplete.required");
+	}
+	return super.getMessage();
     }
 
     public boolean isAllowsCustom() {
