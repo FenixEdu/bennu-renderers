@@ -25,5 +25,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/fenix-framework"/>
 	<classpathentry kind="lib" path="lib/fenix-framework-r51892.jar"/>
 	<classpathentry kind="lib" path="lib/libphonenumber-4.3.jar"/>
+	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="output" path="output"/>
 </classpath>

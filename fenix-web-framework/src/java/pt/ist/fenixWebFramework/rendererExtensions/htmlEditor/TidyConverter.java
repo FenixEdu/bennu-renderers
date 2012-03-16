@@ -9,6 +9,8 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Properties;
 
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
 import org.w3c.tidy.Tidy;
 import org.w3c.tidy.TidyMessage;
@@ -16,9 +18,6 @@ import org.w3c.tidy.TidyMessageListener;
 
 import pt.ist.fenixWebFramework.renderers.components.converters.ConversionException;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
-
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public abstract class TidyConverter extends Converter {
 
@@ -112,6 +111,7 @@ public abstract class TidyConverter extends Converter {
 	    this.bogus = bogus;
 	}
 
+	@Override
 	public void messageReceived(TidyMessage message) {
 	    if (message.getLevel().equals(TidyMessage.Level.ERROR)) {
 		setBogus(true);
