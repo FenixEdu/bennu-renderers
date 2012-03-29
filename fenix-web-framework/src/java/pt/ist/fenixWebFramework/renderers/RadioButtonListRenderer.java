@@ -1,7 +1,6 @@
 package pt.ist.fenixWebFramework.renderers;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -12,7 +11,6 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlRadioButton;
 import pt.ist.fenixWebFramework.renderers.components.HtmlRadioButtonList;
 import pt.ist.fenixWebFramework.renderers.components.converters.BiDirectionalConverter;
-import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
@@ -38,7 +36,7 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  * <input type="radio" name="option"/><em>&lt;object C presentation&gt;</em>
  * </form>
  */
-public class RadioButtonListRenderer extends InputRenderer {
+public class RadioButtonListRenderer extends SelectionRenderer {
     private String format;
 
     private String eachClasses;
@@ -48,12 +46,6 @@ public class RadioButtonListRenderer extends InputRenderer {
     private String eachSchema;
 
     private String eachLayout;
-
-    private String providerClass;
-
-    private DataProvider provider;
-
-    private String sortBy;
 
     private boolean saveOptions;
 
@@ -130,42 +122,6 @@ public class RadioButtonListRenderer extends InputRenderer {
 	this.eachSchema = eachSchema;
     }
 
-    public String getProviderClass() {
-	return this.providerClass;
-    }
-
-    /**
-     * The class name of a {@link DataProvider data provider}. The data provider
-     * is responsible for providing a collection of objects. This collection
-     * represents all the possible options for the slot beeing edited.
-     * Additionally the data provider can also provide a custom converter for
-     * the object encoded values.
-     * 
-     * <p>
-     * If the object in the slot is part of the collections of objects it will
-     * be selected.
-     * 
-     * @property
-     */
-    public void setProviderClass(String providerClass) {
-	this.providerClass = providerClass;
-    }
-
-    public String getSortBy() {
-	return this.sortBy;
-    }
-
-    /**
-     * With this property you can set the criteria used to sort the collection
-     * beeing presented. The accepted syntax for the criteria can be seen in
-     * {@link RenderUtils#sortCollectionWithCriteria(Collection, String)}.
-     * 
-     * @property
-     */
-    public void setSortBy(String sortBy) {
-	this.sortBy = sortBy;
-    }
-
     public boolean isSaveOptions() {
 	return saveOptions;
     }
@@ -205,49 +161,6 @@ public class RadioButtonListRenderer extends InputRenderer {
     @Override
     protected Layout getLayout(Object object, Class type) {
 	return new RadioButtonListLayout();
-    }
-
-    protected DataProvider getProvider() {
-	if (this.provider == null) {
-	    String className = getProviderClass();
-
-	    try {
-		Class providerCass = Class.forName(className);
-		this.provider = (DataProvider) providerCass.newInstance();
-	    } catch (Exception e) {
-		throw new RuntimeException("could not get a data provider instance", e);
-	    }
-	}
-
-	return this.provider;
-    }
-
-    protected Converter getConverter() {
-	DataProvider provider = getProvider();
-
-	return provider.getConverter();
-    }
-
-    protected Collection getPossibleObjects() {
-	Object object = getInputContext().getParentContext().getMetaObject().getObject();
-	Object value = getInputContext().getMetaObject().getObject();
-
-	if (getProviderClass() != null) {
-	    try {
-		DataProvider provider = getProvider();
-		Collection collection = (Collection) provider.provide(object, value);
-
-		if (getSortBy() == null) {
-		    return collection;
-		} else {
-		    return RenderUtils.sortCollectionWithCriteria(collection, getSortBy());
-		}
-	    } catch (Exception e) {
-		throw new RuntimeException("exception while executing data provider", e);
-	    }
-	} else {
-	    throw new RuntimeException("a data provider must be supplied");
-	}
     }
 
     class RadioButtonListLayout extends Layout {
@@ -315,7 +228,7 @@ public class RadioButtonListRenderer extends InputRenderer {
 		savePossibleMetaObjects(possibleMetaObjects);
 	    }
 
-	    listComponent.setConverter(new OptionConverter(possibleMetaObjects, getConverter()));
+	    listComponent.setConverter(new SingleSelectOptionConverter(possibleMetaObjects, getConverter()));
 	    listComponent.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 
 	    return listComponent;
@@ -346,41 +259,8 @@ public class RadioButtonListRenderer extends InputRenderer {
 	protected String getObjectLabel(Object object) {
 	    if (getFormat() != null) {
 		return RenderUtils.getFormattedProperties(getFormat(), object);
-	    } else {
-		return String.valueOf(object);
 	    }
-	}
-
-    }
-
-    private static class OptionConverter extends Converter {
-
-	private final List<MetaObject> metaObjects;
-	private final Converter converter;
-
-	public OptionConverter(List<MetaObject> metaObjects, Converter converter) {
-	    this.metaObjects = metaObjects;
-	    this.converter = converter;
-	}
-
-	@Override
-	public Object convert(Class type, Object value) {
-	    String textValue = (String) value;
-
-	    if (textValue == null || textValue.length() == 0) {
-		return null;
-	    } else {
-		if (this.converter != null) {
-		    return this.converter.convert(type, value);
-		} else {
-		    for (MetaObject metaObject : this.metaObjects) {
-			if (textValue.equals(metaObject.getKey().toString())) {
-			    return metaObject.getObject();
-			}
-		    }
-		    return null;
-		}
-	    }
+	    return String.valueOf(object);
 	}
     }
 }

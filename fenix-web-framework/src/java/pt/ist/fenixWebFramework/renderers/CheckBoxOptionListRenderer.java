@@ -4,25 +4,22 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.collections.Predicate;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlCheckBox;
 import pt.ist.fenixWebFramework.renderers.components.HtmlCheckBoxList;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlListItem;
-import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectKey;
-import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
-import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
-
-import org.apache.commons.collections.Predicate;
 
 /**
  * This renderer can be used as the input for a list of objects. The list of
@@ -42,7 +39,7 @@ import org.apache.commons.collections.Predicate;
  * 
  * @author cfgi
  */
-public class CheckBoxOptionListRenderer extends InputRenderer {
+public class CheckBoxOptionListRenderer extends SelectionRenderer {
     private String eachClasses;
 
     private String eachStyle;
@@ -50,12 +47,6 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
     private String eachSchema;
 
     private String eachLayout;
-
-    private String providerClass;
-
-    private DataProvider provider;
-
-    private String sortBy;
 
     private boolean saveOptions;
 
@@ -124,44 +115,6 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
      */
     public void setEachSchema(String eachSchema) {
 	this.eachSchema = eachSchema;
-    }
-
-    public String getProviderClass() {
-	return this.providerClass;
-    }
-
-    /**
-     * The class name of a {@link DataProvider data provider}. The data provider
-     * is responsible for providing a collection of objects. This collection
-     * represents all the possible options for the slot beeing edited.
-     * Additionally the data provider can also provide a custom converter for
-     * the object encoded values.
-     * 
-     * <p>
-     * Those objects that are already part of the slot's value will make the
-     * associated checkbox to be checked. In the example above, the slot
-     * contained as value a collection with at least object B but didn't
-     * contained object A or C.
-     * 
-     * @property
-     */
-    public void setProviderClass(String providerClass) {
-	this.providerClass = providerClass;
-    }
-
-    public String getSortBy() {
-	return this.sortBy;
-    }
-
-    /**
-     * With this property you can set the criteria used to sort the collection
-     * beeing presented. The accepted syntax for the criteria can be seen in
-     * {@link RenderUtils#sortCollectionWithCriteria(Collection, String)}.
-     * 
-     * @property
-     */
-    public void setSortBy(String sortBy) {
-	this.sortBy = sortBy;
     }
 
     public boolean isSelectAllShown() {
@@ -262,51 +215,9 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
 	return new CheckBoxListLayout();
     }
 
-    protected DataProvider getProvider() {
-	if (this.provider == null) {
-	    String className = getProviderClass();
-
-	    try {
-		Class providerCass = (Class<DataProvider>) Class.forName(className);
-		this.provider = (DataProvider) providerCass.newInstance();
-	    } catch (Exception e) {
-		throw new RuntimeException("could not get a data provider instance", e);
-	    }
-	}
-
-	return this.provider;
-    }
-
-    protected Converter getConverter() {
-	DataProvider provider = getProvider();
-
-	return provider.getConverter();
-    }
-
-    protected Collection getPossibleObjects() {
-	Object object = ((MetaSlot) getInputContext().getMetaObject()).getMetaObject().getObject();
-	Object value = getInputContext().getMetaObject().getObject();
-
-	if (getProviderClass() != null) {
-	    try {
-		DataProvider provider = getProvider();
-		Collection collection = (Collection) provider.provide(object, value);
-
-		if (getSortBy() == null) {
-		    return collection;
-		} else {
-		    return RenderUtils.sortCollectionWithCriteria(collection, getSortBy());
-		}
-	    } catch (Exception e) {
-		throw new RuntimeException("exception while executing data provider", e);
-	    }
-	} else {
-	    throw new RuntimeException("a data provider must be supplied");
-	}
-    }
-
     protected class CheckBoxListLayout extends Layout {
 
+	@Override
 	public HtmlComponent createComponent(Object object, Class type) {
 	    Collection collection = (Collection) object;
 
@@ -362,6 +273,7 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
 	    }
 
 	    List<HtmlComponent> components = listComponent.getChildren(new Predicate() {
+		@Override
 		public boolean evaluate(Object arg0) {
 		    return arg0 instanceof HtmlListItem;
 		}
@@ -377,7 +289,7 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
 	    // TODO: make providers only provide a converter for a single object
 	    // make a wrapper converter that calls that converter for each value
 	    // this allows converters to be used to menus and checkboxes
-	    listComponent.setConverter(new OptionConverter(possibleMetaObjects, getConverter()));
+	    listComponent.setConverter(new MultipleSelectOptionConverter(possibleMetaObjects, getConverter()));
 	    listComponent.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 
 	    return listComponent;
@@ -397,43 +309,4 @@ public class CheckBoxOptionListRenderer extends InputRenderer {
 
     }
 
-    private static class OptionConverter extends Converter {
-
-	private List<MetaObject> metaObjects;
-
-	private Converter converter;
-
-	public OptionConverter(List<MetaObject> metaObjects, Converter converter) {
-	    this.metaObjects = metaObjects;
-	    this.converter = converter;
-	}
-
-	@Override
-	public Object convert(Class type, Object value) {
-	    String[] textValues = (String[]) value;
-
-	    if (textValues == null || textValues.length == 0) {
-		return new ArrayList();
-	    } else {
-		if (this.converter != null) {
-		    return this.converter.convert(type, value);
-		} else {
-		    List<Object> result = new ArrayList<Object>();
-
-		    for (MetaObject metaObject : this.metaObjects) {
-			for (int i = 0; i < textValues.length; i++) {
-			    String textValue = textValues[i];
-
-			    if (textValue.equals(metaObject.getKey().toString())) {
-				result.add(metaObject.getObject());
-			    }
-			}
-		    }
-
-		    return result;
-		}
-	    }
-	}
-
-    }
 }

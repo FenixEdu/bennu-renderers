@@ -2,10 +2,8 @@ package pt.ist.fenixWebFramework.renderers;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.lang.StringUtils;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlCheckBox;
@@ -15,7 +13,6 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMultipleHiddenField;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.controllers.HtmlController;
-import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.layouts.TabularLayout;
@@ -66,21 +63,14 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  * 
  * @author pcma
  */
-public class TabularOptionInputRenderer extends InputRenderer {
-
-    private String providerClass;
-    private DataProvider provider;
+public class TabularOptionInputRenderer extends SelectionRenderer {
     private String classes;
+
     private String emptyMessageKey;
+
     private String emptyMessageBundle;
 
     private String columnClasses;
-
-    private String sortBy;
-
-    public String getSortBy() {
-	return sortBy;
-    }
 
     /**
      * Selects column classes
@@ -94,73 +84,6 @@ public class TabularOptionInputRenderer extends InputRenderer {
 
     public void setColumnClasses(String columnClasses) {
 	this.columnClasses = columnClasses;
-    }
-
-    /**
-     * Selects the sorting criteria to apply to the collection of objects before
-     * presenting them.
-     * 
-     * @property
-     * @see pt.ist.fenixWebFramework.renderers.utils.RenderUtils#sortCollectionWithCriteria(Collection,
-     *      String)
-     */
-    public void setSortBy(String sort) {
-	sortBy = sort;
-    }
-
-    public String getProviderClass() {
-	return providerClass;
-    }
-
-    /**
-     * Chooses the class of the provider that will be used to determine the list
-     * of options.
-     * 
-     * @property
-     */
-    public void setProviderClass(String providerClass) {
-	this.providerClass = providerClass;
-    }
-
-    protected DataProvider getProvider() {
-	if (this.provider == null) {
-	    String className = getProviderClass();
-
-	    try {
-		Class providerCass = Class.forName(className);
-		this.provider = (DataProvider) providerCass.newInstance();
-	    } catch (Exception e) {
-		throw new RuntimeException("could not get a data provider instance", e);
-	    }
-	}
-
-	return this.provider;
-    }
-
-    protected Converter getConverter() {
-	DataProvider provider = getProvider();
-
-	return provider.getConverter();
-    }
-
-    protected Collection getPossibleObjects() {
-	Object object = getInputContext().getParentContext().getMetaObject().getObject();
-	Object value = getInputContext().getMetaObject().getObject();
-
-	if (getProviderClass() != null) {
-	    try {
-		DataProvider provider = getProvider();
-		Collection collection = (Collection) provider.provide(object, value);
-		if (getSortBy() != null) {
-		    Collections.sort((List) collection, new BeanComparator(getSortBy()));
-		}
-		return collection;
-	    } catch (Exception e) {
-		throw new RuntimeException("exception while executing data provider", e);
-	    }
-	} else {
-	    throw new RuntimeException("a data provider must be supplied");
-	}
     }
 
     @Override
@@ -231,12 +154,12 @@ public class TabularOptionInputRenderer extends InputRenderer {
     public class CheckableTabularLayout extends TabularLayout {
 
 	protected List<MetaObject> metaObjects;
-	protected Collection objectsReceived;
+	protected Collection<?> objectsReceived;
 	protected HtmlMultipleHiddenField hiddenField;
 
 	protected List<HtmlCheckBox> checkboxes = new ArrayList<HtmlCheckBox>();
 
-	public CheckableTabularLayout(List<MetaObject> metaObjects, Collection collection, HtmlMultipleHiddenField hiddenField) {
+	public CheckableTabularLayout(List<MetaObject> metaObjects, Collection<?> collection, HtmlMultipleHiddenField hiddenField) {
 	    this.metaObjects = metaObjects;
 	    this.objectsReceived = collection;
 	    this.hiddenField = hiddenField;
@@ -301,9 +224,8 @@ public class TabularOptionInputRenderer extends InputRenderer {
 		MetaObject metaObject = metaObjects.get(0);
 		return metaObject.getSlots().size() + 1; // +1 due to the
 		// checkbox
-	    } else {
-		return 0;
 	    }
+	    return 0;
 	}
 
 	@Override
@@ -327,11 +249,10 @@ public class TabularOptionInputRenderer extends InputRenderer {
 		    checkBox.setChecked(true);
 		}
 		return checkBox;
-	    } else {
-		MetaSlot slot = getSlotUsingName(metaObjects.get(rowIndex), columnIndex - 1);
-		slot.setReadOnly(true);
-		return renderSlot(slot);
 	    }
+	    MetaSlot slot = getSlotUsingName(metaObjects.get(rowIndex), columnIndex - 1);
+	    slot.setReadOnly(true);
+	    return renderSlot(slot);
 	}
 
 	protected MetaSlot getSlotUsingName(MetaObject object, int columnIndex) {

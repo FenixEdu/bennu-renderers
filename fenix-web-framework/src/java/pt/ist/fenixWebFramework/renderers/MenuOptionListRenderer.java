@@ -1,7 +1,6 @@
 package pt.ist.fenixWebFramework.renderers;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -10,14 +9,11 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenu;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenuOption;
 import pt.ist.fenixWebFramework.renderers.components.converters.BiDirectionalConverter;
-import pt.ist.fenixWebFramework.renderers.components.converters.ConversionException;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
-import pt.ist.fenixWebFramework.renderers.model.MetaObjectKey;
-import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
@@ -41,18 +37,12 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  * 
  * @author cfgi
  */
-public class MenuOptionListRenderer extends InputRenderer {
+public class MenuOptionListRenderer extends SelectionRenderer {
     private String format;
 
     private String eachSchema;
 
     private String eachLayout;
-
-    private String providerClass;
-
-    private DataProvider provider;
-
-    private String sortBy;
 
     private boolean saveOptions;
 
@@ -100,35 +90,6 @@ public class MenuOptionListRenderer extends InputRenderer {
      */
     public void setEachSchema(String eachSchema) {
 	this.eachSchema = eachSchema;
-    }
-
-    public String getProviderClass() {
-	return this.providerClass;
-    }
-
-    /**
-     * The class name of a {@linkplain DataProvider data provider}. The provider
-     * is responsible for constructing a collection will all possible values.
-     * 
-     * @property
-     */
-    public void setProviderClass(String providerClass) {
-	this.providerClass = providerClass;
-    }
-
-    public String getSortBy() {
-	return this.sortBy;
-    }
-
-    /**
-     * With this property you can set the criteria used to sort the collection
-     * beeing presented. The accepted syntax for the criteria can be seen in
-     * {@link RenderUtils#sortCollectionWithCriteria(Collection, String)}.
-     * 
-     * @property
-     */
-    public void setSortBy(String sortBy) {
-	this.sortBy = sortBy;
     }
 
     public String getBundle() {
@@ -203,48 +164,6 @@ public class MenuOptionListRenderer extends InputRenderer {
 	return new MenuOptionLayout();
     }
 
-    protected DataProvider getProvider() {
-	if (this.provider == null) {
-	    String className = getProviderClass();
-
-	    try {
-		Class<?> providerCass = Class.forName(className);
-		this.provider = (DataProvider) providerCass.newInstance();
-	    } catch (Exception e) {
-		throw new RuntimeException("could not get a data provider instance", e);
-	    }
-	}
-
-	return this.provider;
-    }
-
-    protected Converter getConverter() {
-	DataProvider provider = getProvider();
-	return provider == null ? null : provider.getConverter();
-    }
-
-    protected Collection<?> getPossibleObjects() {
-	Object object = ((MetaSlot) getInputContext().getMetaObject()).getMetaObject().getObject();
-	Object value = getInputContext().getMetaObject().getObject();
-
-	if (getProviderClass() != null) {
-	    try {
-		DataProvider provider = getProvider();
-		Collection<?> collection = (Collection<?>) provider.provide(object, value);
-
-		if (getSortBy() == null) {
-		    return collection;
-		} else {
-		    return RenderUtils.sortCollectionWithCriteria(collection, getSortBy());
-		}
-	    } catch (Exception e) {
-		throw new RuntimeException("exception while executing data provider", e);
-	    }
-	} else {
-	    throw new RuntimeException("a data provider must be supplied");
-	}
-    }
-
     class MenuOptionLayout extends Layout {
 
 	@Override
@@ -277,8 +196,7 @@ public class MenuOptionListRenderer extends InputRenderer {
 		if (getConverter() instanceof BiDirectionalConverter) {
 		    option.setValue(((BiDirectionalConverter) getConverter()).deserialize(obj));
 		} else {
-		    MetaObjectKey key = metaObject.getKey();
-		    option.setValue(key.toString());
+		    option.setValue(metaObject.getKey().toString());
 		}
 
 		if (StringUtils.isEmpty(getEachLayout())) {
@@ -300,8 +218,7 @@ public class MenuOptionListRenderer extends InputRenderer {
 		savePossibleMetaObjects(possibleMetaObjects);
 	    }
 
-	    Converter converter = getConverter();
-	    menu.setConverter(new OptionConverter(possibleMetaObjects, converter));
+	    menu.setConverter(new SingleSelectOptionConverter(possibleMetaObjects, getConverter()));
 
 	    menu.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 	    return menu;
@@ -332,55 +249,18 @@ public class MenuOptionListRenderer extends InputRenderer {
 	private String getDefaultTitle() {
 	    if (getDefaultText() == null) {
 		return RenderUtils.getResourceString("renderers.menu.default.title");
-	    } else {
-		if (isKey()) {
-		    return RenderUtils.getResourceString(getBundle(), getDefaultText());
-		} else {
-		    return getDefaultText();
-		}
 	    }
+	    if (isKey()) {
+		return RenderUtils.getResourceString(getBundle(), getDefaultText());
+	    }
+	    return getDefaultText();
 	}
 
 	protected String getObjectLabel(Object object) {
 	    if (getFormat() != null) {
 		return RenderUtils.getFormattedProperties(getFormat(), object);
-	    } else {
-		return String.valueOf(object);
 	    }
+	    return String.valueOf(object);
 	}
-
-    }
-
-    private static class OptionConverter extends Converter {
-
-	private final List<MetaObject> metaObjects;
-	private final Converter converter;
-
-	public OptionConverter(List<MetaObject> metaObjects, Converter converter) {
-	    this.metaObjects = metaObjects;
-	    this.converter = converter;
-	}
-
-	@Override
-	public Object convert(Class type, Object value) {
-	    String textValue = (String) value;
-
-	    if (textValue == null || textValue.length() == 0) {
-		return null;
-	    } else {
-		if (this.converter != null) {
-		    return this.converter.convert(type, value);
-		} else {
-		    for (MetaObject metaObject : this.metaObjects) {
-			if (textValue.equals(metaObject.getKey().toString())) {
-			    return metaObject.getObject();
-			}
-		    }
-
-		    throw new ConversionException("renderers.menuOption.convert.invalid.value");
-		}
-	    }
-	}
-
     }
 }
