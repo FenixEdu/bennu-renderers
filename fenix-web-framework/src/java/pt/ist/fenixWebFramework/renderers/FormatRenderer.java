@@ -13,6 +13,8 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  */
 public class FormatRenderer extends OutputRenderer {
 
+    private boolean useParent;
+
     private String format;
     
     private Boolean escaped;
@@ -61,17 +63,49 @@ public class FormatRenderer extends OutputRenderer {
 	this.escaped = escaped;
     }
 
+    public boolean isUseParent() {
+	return this.useParent;
+    }
+
+    /**
+     * This property can be used when presenting an object's slot. If this
+     * property is true the object that will be considered when replacing the
+     * properties in the link will be the parent object, that is, the object
+     * that contains the slot being presented.
+     * 
+     * <p>
+     * Off course, if this property is false (the default) the object that will
+     * be considered is the object initialy being presented.
+     * 
+     * @property
+     */
+    public void setUseParent(boolean useParent) {
+	this.useParent = useParent;
+    }
+
     private class FormatLayout extends Layout {
 
         @Override
         public HtmlComponent createComponent(Object object, Class type) {
-            if (object == null) {
+	    Object usedObject = getTargetObject(object);
+	    if (usedObject == null) {
                 return new HtmlText();
             }
             
-            String formatedObject = RenderUtils.getFormattedProperties(getFormat(), object);
+	    String formatedObject = RenderUtils.getFormattedProperties(getFormat(), usedObject);
 	    return getEscaped() != null ? new HtmlText(formatedObject, getEscaped()) : new HtmlText(formatedObject);
         }
 
+	protected Object getTargetObject(Object object) {
+	    if (isUseParent()) {
+		if (getContext().getParentContext() != null) {
+		    return getContext().getParentContext().getMetaObject().getObject();
+		} else {
+		    return null;
+		}
+	    } else {
+		return object;
+	    }
+	}
     }
 }
