@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.CharEncoding;
 import org.joda.time.DateTime;
 
 import pt.ist.fenixWebFramework.security.User;
@@ -17,6 +18,8 @@ import pt.ist.fenixWebFramework.security.UserView;
 import pt.ist.fenixWebFramework.servlets.json.JsonObject;
 
 public class JsonServlet extends HttpServlet {
+
+    private static final String JAVASCRIPT_LIBRARY_ENCODING = CharEncoding.UTF_8;
 
     public static final String PURGE_METHOD = "purge";
     public static final String REQUEST_OBJECT_METHOD = "request";
@@ -45,7 +48,7 @@ public class JsonServlet extends HttpServlet {
     }
 
     private void serve(HttpServletRequest req, HttpServletResponse resp) {
-	resp.setContentType("text/html");
+	resp.setContentType("application/json; charset=" + JAVASCRIPT_LIBRARY_ENCODING);
 	String token = req.getParameter(TOKEN_PARAMETER_NAME);
 	if (token != null) {
 	    JsonObject object = tokenMap.get(token);

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
 
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
@@ -20,7 +21,8 @@ import pt.ist.fenixWebFramework.servlets.json.JsonObject;
 
 public abstract class AutoCompleteServlet extends HttpServlet {
 
-    private static final String JAVASCRIPT_LIBRARY_ENCODING = "UTF-8";
+    private static final String JAVASCRIPT_LIBRARY_ENCODING = CharEncoding.UTF_8;
+
     private static final int DEFAULT_MAX_COUNT = 20;
 
     @Override
@@ -35,7 +37,7 @@ public abstract class AutoCompleteServlet extends HttpServlet {
 
     private void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-	request.setCharacterEncoding("UTF-8");
+	request.setCharacterEncoding(JAVASCRIPT_LIBRARY_ENCODING);
 
 	String value = new String(request.getParameter("value").getBytes(), JAVASCRIPT_LIBRARY_ENCODING);
 	Map<String, String> argsMap = getArgsMap(request.getParameter("args"));
@@ -48,7 +50,7 @@ public abstract class AutoCompleteServlet extends HttpServlet {
 	String valueField = request.getParameter("valueField");
 	String styleClass = request.getParameter("styleClass");
 
-	response.setContentType("text/html");
+	response.setContentType("application/json; charset=" + JAVASCRIPT_LIBRARY_ENCODING);
 	response.getWriter().write(getResponseHtml(result, labelField, format, valueField, styleClass, maxCount));
     }
 
