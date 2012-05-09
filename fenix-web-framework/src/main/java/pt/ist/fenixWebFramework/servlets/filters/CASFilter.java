@@ -13,6 +13,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.CharEncoding;
+
 import pt.ist.fenixWebFramework.Config.CasConfig;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 
@@ -23,11 +25,13 @@ import pt.ist.fenixWebFramework.FenixWebFramework;
  */
 public class CASFilter implements Filter {
 
-    protected static final String URL_ENCODING = "UTF-8";
+    protected static final String URL_ENCODING = CharEncoding.UTF_8;
 
+    @Override
     public void init(final FilterConfig config) throws ServletException {
     }
 
+    @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
     		throws ServletException, IOException {
 	final String serverName = servletRequest.getServerName();
@@ -73,6 +77,7 @@ public class CASFilter implements Filter {
 	response.sendRedirect(casLoginString);
     }
 
+    @Override
     public void destroy() {
     }
 

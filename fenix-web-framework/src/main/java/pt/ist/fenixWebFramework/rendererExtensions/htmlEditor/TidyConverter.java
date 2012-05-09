@@ -9,6 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Properties;
 
+import org.apache.commons.lang.CharEncoding;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
@@ -23,7 +24,7 @@ public abstract class TidyConverter extends Converter {
 
     private static final String TIDY_PROPERTIES = "HtmlEditor-Tidy.properties";
 
-    private static final String ENCODING = "ISO-8859-1";
+    private static final String ENCODING = CharEncoding.ISO_8859_1;
 
     public String getTidyProperties() {
 	return TIDY_PROPERTIES;

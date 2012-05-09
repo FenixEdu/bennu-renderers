@@ -16,9 +16,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.CharEncoding;
+
 import pt.ist.fenixWebFramework.FenixWebFramework;
 
 public class RequestChecksumFilter implements Filter {
+
+    private static final String ENCODING = CharEncoding.ISO_8859_1;
 
     public static interface ChecksumPredicate {
 	public boolean shouldFilter(HttpServletRequest request);
@@ -30,12 +34,15 @@ public class RequestChecksumFilter implements Filter {
 	predicates.add(predicate);
     }
 
+    @Override
     public void init(FilterConfig config) {
     }
 
+    @Override
     public void destroy() {
     }
 
+    @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
 	    throws IOException, ServletException {
 	if (FenixWebFramework.getConfig().getFilterRequestWithDigest()) {
@@ -153,13 +160,13 @@ public class RequestChecksumFilter implements Filter {
     }
 
     private boolean isValidChecksum(final HttpServletRequest httpServletRequest, final String checksum) {
-	final String uri = decodeURL(httpServletRequest.getRequestURI(), "ISO-8859-1");
+	final String uri = decodeURL(httpServletRequest.getRequestURI(), ENCODING);
 
-	return isValidChecksum(uri, decodeURL(httpServletRequest.getQueryString(), "ISO-8859-1"), checksum) ||
+	return isValidChecksum(uri, decodeURL(httpServletRequest.getQueryString(), ENCODING), checksum) ||
 
 	isValidChecksum(uri, httpServletRequest.getQueryString(), checksum) ||
 
-	isValidChecksumIgnoringPath(uri, checksum, decodeURL(httpServletRequest.getQueryString(), "ISO-8859-1")) ||
+	isValidChecksumIgnoringPath(uri, checksum, decodeURL(httpServletRequest.getQueryString(), ENCODING)) ||
 
 	isValidChecksumIgnoringPath(uri, checksum, httpServletRequest.getQueryString());
 
