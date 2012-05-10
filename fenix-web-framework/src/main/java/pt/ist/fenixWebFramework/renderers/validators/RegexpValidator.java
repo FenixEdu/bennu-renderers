@@ -44,10 +44,13 @@ public class RegexpValidator extends HtmlValidator {
 	return RenderUtils.getFormatedResourceString(getBundle(), message, new Object[] { getRegexp() });
     }
 
+    public String getValue() {
+	return getComponent().getValue();
+    }
+
     @Override
     public void performValidation() {
-	String text = getComponent().getValue();
-
+	String text = getValue();
 	setValid(text.matches(getRegexp()));
     }
 
@@ -58,8 +61,8 @@ public class RegexpValidator extends HtmlValidator {
 
     @Override
     protected String getSpecificValidatorScript() {
-	return "function(element) { var text = $(element).attr('value');"
-		+ "return text.length == 0 || text.match('" + getRegexp() + "');}";
+	return "function(element) { var text = $(element).attr('value');" + "return text.length == 0 || text.match('"
+		+ getRegexp() + "');}";
     }
 
 }
