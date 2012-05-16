@@ -241,16 +241,21 @@ public class IntervalAsDatesInputRenderer extends InputRenderer {
 
 	@Override
 	public void execute(IViewState viewState) {
-	    try {
+	    final String startValue = startDateField.getValue();
+	    final String endValue = endDateField.getValue();
+	    if ((startValue == null || startValue.isEmpty())
+		    && (endValue == null || endValue.isEmpty())) {
+		this.valueField.setValue(null);
+	    } else {
+		try {
+		    Date startDate = dateFormat.parse(startValue);
+		    Date endDate = dateFormat.parse(endValue);
 
-		Date startDate = dateFormat.parse(startDateField.getValue());
-		Date endDate = dateFormat.parse(endDateField.getValue());
-
-		String value = String.format("%s;%s", startDate.getTime(), endDate.getTime());
-
-		this.valueField.setValue(value);
-	    } catch (Exception e) {
-		this.valueField.setValue(DateTimeConverter.INVALID);
+		    String value = String.format("%s;%s", startDate.getTime(), endDate.getTime());
+		    this.valueField.setValue(value);
+		} catch (Exception e) {
+		    this.valueField.setValue(DateTimeConverter.INVALID);
+		}
 	    }
 	}
 
