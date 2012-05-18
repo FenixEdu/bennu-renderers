@@ -78,26 +78,14 @@ public class GenericChecksumRewriter extends RequestRewriter {
 	super(httpServletRequest);
     }
 
-    private static final char[] OPEN_A = "<a ".toCharArray();
-    private static final char[] OPEN_FORM = "<form ".toCharArray();
-    private static final char[] OPEN_IMG = "<img ".toCharArray();
-    private static final char[] OPEN_AREA = "<area ".toCharArray();
-    private static final char[] CLOSE = ">".toCharArray();
-    private static final char[] PREFIX_JAVASCRIPT = "javascript:".toCharArray();
-    private static final char[] PREFIX_MAILTO = "mailto:".toCharArray();
-    private static final char[] PREFIX_HTTP = "http://".toCharArray();
-    private static final char[] PREFIX_HTTPS = "https://".toCharArray();
-    private static final char[] CARDINAL = "#".toCharArray();
-    private static final char[] QUESTION_MARK = "?".toCharArray();
-
     @Override
     public StringBuilder rewrite(StringBuilder source) {
-	if (isRedirectRequest(httpServletRequest)) {
+	int iOffset = 0;
+	if (isRedirectRequest(httpServletRequest) || !hasOpenHtml(source, iOffset)) {
 	    return source;
 	}
-	final StringBuilder response = new StringBuilder();
 
-	int iOffset = 0;
+	final StringBuilder response = new StringBuilder();
 
 	while (true) {
 
@@ -319,6 +307,7 @@ public class GenericChecksumRewriter extends RequestRewriter {
 	return uri.indexOf("redirect.do", offset) >= 0;
     }
 
+    @Override
     protected boolean isPrefixed(final StringBuilder source, final int indexOfTagOpen) {
 	return (indexOfTagOpen >= LENGTH_OF_NO_CHECKSUM_PREFIX && match(source, indexOfTagOpen - LENGTH_OF_NO_CHECKSUM_PREFIX,
 		indexOfTagOpen, NO_CHECKSUM_PREFIX))
@@ -327,6 +316,7 @@ public class GenericChecksumRewriter extends RequestRewriter {
 
     }
 
+    @Override
     protected boolean match(final StringBuilder source, final int iStart, int iEnd, final String string) {
 	if (iEnd - iStart != string.length()) {
 	    return false;
@@ -339,6 +329,7 @@ public class GenericChecksumRewriter extends RequestRewriter {
 	return true;
     }
 
+    @Override
     protected int continueToNextToken(final StringBuilder response, final StringBuilder source, final int iOffset,
 	    final int indexOfTag) {
 	final int nextOffset = indexOfTag + 1;

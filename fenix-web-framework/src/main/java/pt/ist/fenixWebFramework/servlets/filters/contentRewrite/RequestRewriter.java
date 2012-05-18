@@ -17,13 +17,11 @@ public abstract class RequestRewriter {
 
     public static final char[] END_BLOCK_HAS_CONTEXT_PREFIX = ("<!-- " + BLOCK_END_HAS_CONTEXT_STRING + " -->").toCharArray();
 
-    protected static final char[] LINK_IDENTIFIER = "<a".toCharArray();
-
-    protected static final char[] FORM_IDENTIFIER = "<form".toCharArray();
-
-    protected static final char[] IMG_IDENTIFIER = "<img".toCharArray();
-
-    protected static final char[] AREA_IDENTIFIER = "<area".toCharArray();
+    protected static final char[] OPEN_HTML = "<html ".toCharArray();
+    protected static final char[] OPEN_A = "<a ".toCharArray();
+    protected static final char[] OPEN_FORM = "<form ".toCharArray();
+    protected static final char[] OPEN_IMG = "<img ".toCharArray();
+    protected static final char[] OPEN_AREA = "<area ".toCharArray();
 
     protected static final int LENGTH_OF_HAS_CONTENT_PREFIX = HAS_CONTEXT_PREFIX.length();
 
@@ -42,8 +40,8 @@ public abstract class RequestRewriter {
     protected static final char[] CLOSE = ">".toCharArray();
     protected static final char[] PREFIX_JAVASCRIPT = "javascript:".toCharArray();
     protected static final char[] PREFIX_MAILTO = "mailto:".toCharArray();
-    protected static final char[] PREFIX_HTTP = "http:".toCharArray();
-    protected static final char[] PREFIX_HTTPS = "https:".toCharArray();
+    protected static final char[] PREFIX_HTTP = "http://".toCharArray();
+    protected static final char[] PREFIX_HTTPS = "https://".toCharArray();
     protected static final char[] CARDINAL = "#".toCharArray();
     protected static final char[] QUESTION_MARK = "?".toCharArray();
 
@@ -52,19 +50,18 @@ public abstract class RequestRewriter {
     protected abstract String getContextAttributeName();
 
     public StringBuilder rewrite(final StringBuilder source) {
-	if (contextPath == null || contextPath.length() == 0) {
+	int iOffset = 0;
+	if (contextPath == null || contextPath.length() == 0 || !hasOpenHtml(source, iOffset)) {
 	    return source;
 	}
 
 	final StringBuilder response = new StringBuilder();
 
-	int iOffset = 0;
-
 	while (true) {
-	    final int indexOfAopen = indexOf(source, LINK_IDENTIFIER, iOffset);
-	    final int indexOfFormOpen = indexOf(source, FORM_IDENTIFIER, iOffset);
-	    final int indexOfImgOpen = indexOf(source, IMG_IDENTIFIER, iOffset);
-	    final int indexOfAreaOpen = indexOf(source, AREA_IDENTIFIER, iOffset);
+	    final int indexOfAopen = indexOf(source, OPEN_A, iOffset);
+	    final int indexOfFormOpen = indexOf(source, OPEN_FORM, iOffset);
+	    final int indexOfImgOpen = indexOf(source, OPEN_IMG, iOffset);
+	    final int indexOfAreaOpen = indexOf(source, OPEN_AREA, iOffset);
 	    final int indexOfBlockHasContextopen = indexOf(source, BLOCK_HAS_CONTEXT_PREFIX, iOffset);
 
 	    if (firstIsMinValue(indexOfAopen, indexOfFormOpen, indexOfImgOpen, indexOfAreaOpen, indexOfBlockHasContextopen)) {
@@ -92,7 +89,7 @@ public abstract class RequestRewriter {
 				    } else {
 					response.append(source, iOffset, indexOfHrefBodyEnd);
 				    }
-
+				    
 				    final int indexOfQmark = indexOf(source, QUESTION_MARK, indexOfHrefBodyStart);
 				    if (indexOfQmark == -1 || indexOfQmark > indexOfHrefBodyEnd) {
 					response.append('?');
@@ -100,11 +97,11 @@ public abstract class RequestRewriter {
 					response.append("&amp;");
 				    }
 				    appendContextParameter(response);
-
+				    
 				    if (hasCardinal) {
 					response.append(source, indexOfCardinal, indexOfHrefBodyEnd);
 				    }
-
+				    
 				    iOffset = continueToNextToken(response, source, indexOfHrefBodyEnd, indexOfAclose);
 				    continue;
 				}
@@ -212,6 +209,10 @@ public abstract class RequestRewriter {
 	}
 
 	return response;
+    }
+
+    protected static boolean hasOpenHtml(final StringBuilder source, final int iOffset) {
+	return indexOf(source, OPEN_HTML, iOffset) >= 0;
     }
 
     private void appendContextParameter(final StringBuilder response) {
