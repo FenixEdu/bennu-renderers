@@ -81,7 +81,7 @@ public class GenericChecksumRewriter extends RequestRewriter {
     @Override
     public StringBuilder rewrite(StringBuilder source) {
 	int iOffset = 0;
-	if (isRedirectRequest(httpServletRequest) || !hasOpenHtml(source, iOffset)) {
+	if (isRedirectRequest(httpServletRequest)) {
 	    return source;
 	}
 

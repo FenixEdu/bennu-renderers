@@ -17,7 +17,6 @@ public abstract class RequestRewriter {
 
     public static final char[] END_BLOCK_HAS_CONTEXT_PREFIX = ("<!-- " + BLOCK_END_HAS_CONTEXT_STRING + " -->").toCharArray();
 
-    protected static final char[] OPEN_HTML = "<html ".toCharArray();
     protected static final char[] OPEN_A = "<a ".toCharArray();
     protected static final char[] OPEN_FORM = "<form ".toCharArray();
     protected static final char[] OPEN_IMG = "<img ".toCharArray();
@@ -51,7 +50,7 @@ public abstract class RequestRewriter {
 
     public StringBuilder rewrite(final StringBuilder source) {
 	int iOffset = 0;
-	if (contextPath == null || contextPath.length() == 0 || !hasOpenHtml(source, iOffset)) {
+	if (contextPath == null || contextPath.length() == 0) {
 	    return source;
 	}
 
@@ -209,10 +208,6 @@ public abstract class RequestRewriter {
 	}
 
 	return response;
-    }
-
-    protected static boolean hasOpenHtml(final StringBuilder source, final int iOffset) {
-	return indexOf(source, OPEN_HTML, iOffset) >= 0;
     }
 
     private void appendContextParameter(final StringBuilder response) {
