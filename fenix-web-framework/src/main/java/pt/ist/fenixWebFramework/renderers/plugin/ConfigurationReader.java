@@ -33,6 +33,7 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
+import pt.ist.fenixWebFramework.renderers.validators.RequiredValidator;
 import pt.utl.ist.fenix.tools.util.Pair;
 
 public class ConfigurationReader {
@@ -205,12 +206,13 @@ public class ConfigurationReader {
 		    String bundle = slotElement.getAttributeValue("bundle");
 		    String slotSchema = slotElement.getAttributeValue("schema");
 		    String validatorName = slotElement.getAttributeValue("validator");
+		    String requiredValue = slotElement.getAttributeValue("required");
 		    String defaultValue = slotElement.getAttributeValue("default");
 		    String converterName = slotElement.getAttributeValue("converter");
 		    String readOnlyValue = slotElement.getAttributeValue("read-only");
 		    String hiddenValue = slotElement.getAttributeValue("hidden");
 		    String helpLabelValue = slotElement.getAttributeValue("help");
-		    
+
 		    String description = slotElement.getAttributeValue("description");
 		    String descriptionFormat = slotElement.getAttributeValue("descriptionFormat");
 
@@ -230,6 +232,12 @@ public class ConfigurationReader {
 			    continue;
 			}
 
+		    }
+
+		    boolean required = requiredValue == null ? false : Boolean.parseBoolean(requiredValue);
+		    if (required) {
+			Class validator = RequiredValidator.class;
+			validators.add(new Pair<Class<HtmlValidator>, Properties>(validator, new Properties()));
 		    }
 
 		    List validatorElements = slotElement.getChildren("validator");
@@ -291,7 +299,7 @@ public class ConfigurationReader {
 		    slotDescription.setReadOnly(readOnly);
 		    slotDescription.setHidden(hidden);
 		    slotDescription.setHelpLabel(helpLabelValue);
-		    
+
 		    slotDescription.setDescription(description);
 		    slotDescription.setDescriptionFormat(descriptionFormat);
 
@@ -531,6 +539,7 @@ public class ConfigurationReader {
 		build.setExpandEntities(true);
 		build.setEntityResolver(new EntityResolver() {
 
+		    @Override
 		    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 			if (systemId == null) {
 			    return null;
@@ -539,14 +548,14 @@ public class ConfigurationReader {
 			if (isNixSystem) {
 			    final URL url = new URL(systemId);
 			    final InputStream inputStream = url.openStream();
-			    return new InputSource(inputStream);			    
+			    return new InputSource(inputStream);
 			} else {
 			    String entityPath = systemId.substring("file://".length());
 
 			    // relative to configuration file
 			    File file = new File(context.getRealPath(configFile));
 
-			    // remove home path automatically appended 
+			    // remove home path automatically appended
 			    String currentPath = new File(System.getProperty("user.dir")).getCanonicalPath();
 			    currentPath = currentPath.replace(" ", "%20");
 
