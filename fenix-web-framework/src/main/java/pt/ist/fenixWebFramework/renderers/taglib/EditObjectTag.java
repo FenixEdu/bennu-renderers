@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
+
+import org.apache.struts.taglib.TagUtils;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
@@ -31,9 +33,7 @@ import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
-
-import org.apache.struts.taglib.TagUtils;
-
+import pt.ist.fenixWebFramework.renderers.validators.RequiredValidator;
 import pt.utl.ist.fenix.tools.util.Pair;
 
 public class EditObjectTag extends BaseRenderObjectTag implements ValidatorContainerTag {
@@ -104,6 +104,7 @@ public class EditObjectTag extends BaseRenderObjectTag implements ValidatorConta
 	this.converter = converter;
     }
 
+    @Override
     public void addValidator(final String name) {
 	this.validators.put(name, new Properties());
     }
@@ -222,8 +223,8 @@ public class EditObjectTag extends BaseRenderObjectTag implements ValidatorConta
 	if (hasParentForm()) {
 	    addViewStateToParentForm(viewState);
 	} else {
-	    HtmlHiddenField htmlViewStateField = new HtmlHiddenField(LifeCycleConstants.VIEWSTATE_PARAM_NAME, ViewState
-		    .encodeToBase64(viewState));
+	    HtmlHiddenField htmlViewStateField = new HtmlHiddenField(LifeCycleConstants.VIEWSTATE_PARAM_NAME,
+		    ViewState.encodeToBase64(viewState));
 	    hiddenFields.add(htmlViewStateField);
 	}
 
@@ -496,6 +497,7 @@ public class EditObjectTag extends BaseRenderObjectTag implements ValidatorConta
 	return null;
     }
 
+    @Override
     public void addValidatorProperty(String validator, String name, String value) {
 	this.validators.get(validator).setProperty(name, value);
     }
@@ -507,9 +509,19 @@ public class EditObjectTag extends BaseRenderObjectTag implements ValidatorConta
     protected void setValidators(Map<String, Properties> validators) {
 	this.validators = validators;
     }
-    
+
     public void setValidator(String validatorName) {
 	this.validators.clear();
 	this.validators.put(validatorName, new Properties());
+    }
+
+    public boolean isRequired() {
+	return validators.containsKey(RequiredValidator.class.getName());
+    }
+
+    public void setRequired(boolean required) {
+	if (required) {
+	    validators.put(RequiredValidator.class.getName(), new Properties());
+	}
     }
 }
