@@ -214,7 +214,8 @@ public class MultiLanguageRichTextInputRenderer extends MultiLanguageTextInputRe
 
     protected Layout getLayout(Object object, Class type) {
 	Layout superLayout = super.getLayout(object, type);
-	return getMathJaxEnabled().booleanValue() ? getLayoutWithMathJaxMessage() : superLayout;
+	final Layout layout = getMathJaxEnabled().booleanValue() ? getLayoutWithMathJaxMessage() : superLayout;
+	return layout;
     }
 
     private Layout getLayoutWithMathJaxMessage() {
@@ -223,14 +224,20 @@ public class MultiLanguageRichTextInputRenderer extends MultiLanguageTextInputRe
 		HtmlBlockContainer container = (HtmlBlockContainer) super.createComponent(object, type);
 		HtmlBlockContainer pContainer = new HtmlBlockContainer();
 
-		HtmlParagraphContainer p = new HtmlParagraphContainer();
+		final String noEditorMessage = RenderUtils.getResourceString("renderers.rich-text.editor.no.editor.warning");
 		final String message = RenderUtils.getResourceString("renderers.rich-text.editor.mathjax.message");
 		final String usage = RenderUtils.getResourceString("renderers.rich-text.editor.mathjax.message.usage");
 		final String moreinfo = RenderUtils.getResourceString("renderers.rich-text.editor.mathjax.message.moreinfo");
 		final String mathJaxURL = RenderUtils.getResourceString("renderers.rich-text.editor.mathjax.url");
 
+		HtmlParagraphContainer p = new HtmlParagraphContainer();
+		p.addChild(new HtmlText(String.format("<b>%s</b>", noEditorMessage), false));
+		pContainer.addChild(p);
+
+		p = new HtmlParagraphContainer();
 		p.addChild(new HtmlText(message));
 		pContainer.addChild(p);
+
 		pContainer.addChild(new HtmlText(usage, false));
 		p = new HtmlParagraphContainer();
 		p.addChild(new HtmlText(moreinfo));
