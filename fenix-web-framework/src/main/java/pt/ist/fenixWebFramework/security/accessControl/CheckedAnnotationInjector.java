@@ -8,8 +8,8 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -74,8 +74,8 @@ public class CheckedAnnotationInjector {
 	    final String methodCallSuffix, final String outputFolder, final ClassPool classPool,
 	    final Map<String, Set<String[]>> linesByClass) {
 	for (final Entry<String, Set<String[]>> entry : linesByClass.entrySet()) {
-	    process(methodCallPrefix, methodCallStaticPrefix, methodCallSuffix, outputFolder, classPool, entry.getKey(), entry
-		    .getValue());
+	    process(methodCallPrefix, methodCallStaticPrefix, methodCallSuffix, outputFolder, classPool, entry.getKey(),
+		    entry.getValue());
 	}
     }
 
@@ -104,10 +104,16 @@ public class CheckedAnnotationInjector {
 	    final String[] strings) throws CannotCompileException {
 	final String methodName = strings[1];
 	final String annParamValue = strings[2];
+	boolean found = false;
 	for (final CtMethod ctMethod : classToInject.getDeclaredMethods()) {
 	    if (ctMethod.getName().equals(methodName)) {
 		inject(methodCallPrefix, methodCallStaticPrefix, methodCallSuffix, ctMethod, annParamValue);
+		found = true;
 	    }
+	}
+	if (!found) {
+	    System.out.printf("[CheckedAnnotationInjector] can't inject method %s in %s. Method not found.\n", methodName,
+		    classToInject.getName());
 	}
     }
 
