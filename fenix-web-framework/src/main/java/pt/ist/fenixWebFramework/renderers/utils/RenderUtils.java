@@ -43,11 +43,10 @@ public class RenderUtils {
     public static String RESOURCE_LABEL_PREFIX = "label";
     public static String COMPONENT_REGISTRY_NAME = RenderUtils.class.getName() + "/component/registry";
 
-/**
-    public static String getSlotLabel(Class objectType, String slotName, String key) {
-	return getSlotLabel(objectType, slotName, null, key);
-    }
-*/
+    /**
+     * public static String getSlotLabel(Class objectType, String slotName,
+     * String key) { return getSlotLabel(objectType, slotName, null, key); }
+     */
 
     public static String getSlotLabel(Class objectType, String slotName, String bundle, String key, String... args) {
 	String label = null;
@@ -107,10 +106,9 @@ public class RenderUtils {
 
 	    clazzIter = clazzIter.getSuperclass();
 	}
-	
+
 	return null;
     }
-
 
     public static String getResourceString(String key) {
 	return getResourceString(null, key);
@@ -121,7 +119,7 @@ public class RenderUtils {
     }
 
     public static String getEnumString(Enum enumerate, String bundle) {
-	Enum e = (Enum) enumerate;
+	Enum e = enumerate;
 	String description = null;
 
 	Class enumClass = e.getClass();
@@ -225,7 +223,7 @@ public class RenderUtils {
     }
 
     public static MessageResources getMessageResources() {
-	return (MessageResources) getMessageResources(null);
+	return getMessageResources(null);
     }
 
     public static MessageResources getMessageResources(String bundle) {
@@ -521,6 +519,7 @@ public class RenderUtils {
 	    final boolean ascending) {
 	return new Comparator<Object>() {
 
+	    @Override
 	    public int compare(Object o1, Object o2) {
 		int slotComparison;
 
@@ -546,9 +545,13 @@ public class RenderUtils {
 
 	    private int compareSlots(Object o1, Object o2, String slot) {
 		try {
-		    if (PropertyUtils.getProperty(o1, slot) == null) {
+		    Object slotObj1 = PropertyUtils.getProperty(o1, slot);
+		    Object slotObj2 = PropertyUtils.getProperty(o2, slot);
+		    if (slotObj1 == null && slotObj2 == null) {
+			return 0;
+		    } else if (slotObj1 == null) {
 			return 1;
-		    } else if (PropertyUtils.getProperty(o2, slot) == null) {
+		    } else if (slotObj2 == null) {
 			return -1;
 		    } else if (String.class.isAssignableFrom(PropertyUtils.getPropertyType(o1, slot))) {
 			return new BeanComparator(slot, Collator.getInstance()).compare(o1, o2);
