@@ -10,10 +10,12 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.ServletException;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -28,7 +30,6 @@ import org.apache.struts.config.ModuleConfig;
 
 import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.FenixWebFramework;
-import pt.ist.fenixWebFramework.struts.annotations.ActionAnnotationProcessor;
 import pt.ist.fenixWebFramework.struts.annotations.ExceptionHandling;
 import pt.ist.fenixWebFramework.struts.annotations.Exceptions;
 import pt.ist.fenixWebFramework.struts.annotations.Forward;
@@ -37,7 +38,8 @@ import pt.ist.fenixWebFramework.struts.annotations.Input;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixWebFramework.struts.tiles.FenixDefinitionsFactory;
 import pt.ist.fenixWebFramework.struts.tiles.PartialTileDefinition;
-import pt.utl.ist.fenix.tools.util.FileUtils;
+import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
+import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
 
 /**
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
@@ -61,9 +63,11 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 
     private static final Set<Class<?>> actionClasses = new HashSet<Class<?>>();
 
+    @Override
     public void destroy() {
     }
 
+    @Override
     public void init(ActionServlet servlet, ModuleConfig config) throws ServletException {
 
 	if (!initialized) {
@@ -141,8 +145,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 			: appConfig.getExceptionHandlerClassname());
 	    }
 
-	    String key = (exception.key() == null ? EXCEPTION_KEY_DEFAULT_PREFIX + exClass.getSimpleName() : exception
-		    .key());
+	    String key = (exception.key() == null ? EXCEPTION_KEY_DEFAULT_PREFIX + exClass.getSimpleName() : exception.key());
 
 	    exceptionConfig.setKey(key);
 	    exceptionConfig.setHandler(exceptionHandler);
@@ -277,23 +280,34 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
     }
 
     private void loadActionsFromFile(final Set<Class<?>> actionClasses) {
-	final InputStream inputStream = getClass().getResourceAsStream("/.actionAnnotationLog");
-	if (inputStream != null) {
-	    try {
-		final String contents = FileUtils.readFile(inputStream);
-		for (final String classname : contents.split(ActionAnnotationProcessor.ENTRY_SEPERATOR)) {
-		    try {
-			ClassLoader loader = Thread.currentThread().getContextClassLoader();
-			Class<?> type = loader.loadClass(classname);
-			actionClasses.add(type);
-		    } catch (final ClassNotFoundException e) {
-			e.printStackTrace();
+	try {
+	    ClassLoader loader = Thread.currentThread().getContextClassLoader();
+	    Properties properties = new Properties();
+	    try (InputStream stream = loader.getResourceAsStream("/configuration.properties")) {
+		if (stream == null) {
+		    throw new RuntimeException();
+		}
+		properties.load(stream);
+	    }
+
+	    for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(properties.getProperty("app.name"))
+		    .getArtifacts()) {
+		try (InputStream stream = loader.getResourceAsStream(artifact.getName() + "/.actionAnnotationLog")) {
+		    if (stream != null) {
+			List<String> classnames = IOUtils.readLines(stream);
+			for (String classname : classnames) {
+			    try {
+				Class<?> type = loader.loadClass(classname);
+				actionClasses.add(type);
+			    } catch (final ClassNotFoundException e) {
+				e.printStackTrace();
+			    }
+			}
 		    }
 		}
-	    } catch (final IOException e) {
-		e.printStackTrace();
 	    }
+	} catch (IOException | FenixFrameworkProjectException e) {
+	    e.printStackTrace();
 	}
     }
-
 }

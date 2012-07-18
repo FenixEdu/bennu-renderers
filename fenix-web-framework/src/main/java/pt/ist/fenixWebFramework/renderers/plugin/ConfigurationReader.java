@@ -1,7 +1,5 @@
 package pt.ist.fenixWebFramework.renderers.plugin;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -14,13 +12,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.apache.log4j.Logger;
-import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.exceptions.NoRendererException;
@@ -34,59 +28,15 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 import pt.ist.fenixWebFramework.renderers.validators.RequiredValidator;
+import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
+import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
 import pt.utl.ist.fenix.tools.util.Pair;
 
 public class ConfigurationReader {
     private static final Logger logger = Logger.getLogger(ConfigurationReader.class);
 
-    private static String schemas;
-
-    private static String config;
-
-    public String getSchemas() {
-	return ConfigurationReader.schemas;
-    }
-
-    public void setSchemas(String schemas) {
-	ConfigurationReader.schemas = schemas;
-    }
-
-    public String getConfig() {
-	return ConfigurationReader.config;
-    }
-
-    public void setConfig(String config) {
-	ConfigurationReader.config = config;
-    }
-
-    public ConfigurationReader() {
-	super();
-    }
-
-    public ConfigurationReader(String config, String schemas) {
-	super();
-
-	setConfig(config);
-	setSchemas(schemas);
-    }
-
-    public void readAll(ServletContext context) throws ServletException {
-	RenderKit.reset();
-
-	RendererPropertyUtils.initCache();
-
-	readConfiguration(context);
-	readSchemas(context);
-
-	RendererPropertyUtils.destroyCache();
-
-	if (LogLevel.INFO) {
-	    logger.info("configuration read");
-	}
-    }
-
-    public void readSchemas(ServletContext context) throws ServletException {
-	Element root = readConfigRootElement(context, "schemas", getSchemas());
+    public static void readSchemas(ServletContext context, URL schemaConfig) throws ServletException {
+	Element root = readConfigRootElement(context, schemaConfig);
 
 	if (root != null) {
 	    List schemaElements = root.getChildren("schema");
@@ -357,7 +307,7 @@ public class ConfigurationReader {
 	}
     }
 
-    private Signature parseSignature(Schema schema, String signature) {
+    private static Signature parseSignature(Schema schema, String signature) {
 
 	String name;
 	String parameters;
@@ -432,7 +382,7 @@ public class ConfigurationReader {
 	return programmaticSignature;
     }
 
-    private Properties getPropertiesFromElement(Element element) {
+    private static Properties getPropertiesFromElement(Element element) {
 	Properties properties = new Properties();
 
 	List propertyElements = element.getChildren("property");
@@ -454,8 +404,8 @@ public class ConfigurationReader {
 	return properties;
     }
 
-    public void readConfiguration(ServletContext context) throws ServletException {
-	Element root = readConfigRootElement(context, "config", getConfig());
+    public static void readRenderers(ServletContext context, URL renderConfig) throws ServletException {
+	Element root = readConfigRootElement(context, renderConfig);
 
 	if (root != null) {
 	    List renderers = root.getChildren();
@@ -502,7 +452,7 @@ public class ConfigurationReader {
 	}
     }
 
-    private boolean hasRenderer(String layout, Class objectClass, RenderMode mode) {
+    private static boolean hasRenderer(String layout, Class objectClass, RenderMode mode) {
 	try {
 	    return RenderKit.getInstance().getExactRendererDescription(mode, objectClass, layout) != null;
 	} catch (NoRendererException e) {
@@ -510,7 +460,7 @@ public class ConfigurationReader {
 	}
     }
 
-    private Class getClassForType(String type, boolean prefixedLangPackage) throws ClassNotFoundException {
+    private static Class getClassForType(String type, boolean prefixedLangPackage) throws ClassNotFoundException {
 	String[] primitiveTypesNames = { "void", "boolean", "byte", "short", "int", "long", "char", "float", "double" };
 	Class[] primitiveTypesClass = { Void.TYPE, Boolean.TYPE, Byte.TYPE, Short.TYPE, Integer.TYPE, Long.TYPE, Character.TYPE,
 		Float.TYPE, Double.TYPE };
@@ -523,84 +473,53 @@ public class ConfigurationReader {
 
 	if (!prefixedLangPackage && type.indexOf(".") == -1) {
 	    return Class.forName("java.lang." + type);
-	} else {
-	    return Class.forName(type);
+	}
+	return Class.forName(type);
+    }
+
+    private static Element readConfigRootElement(final ServletContext context, URL config) throws ServletException {
+	try {
+	    SAXBuilder build = new SAXBuilder();
+	    build.setExpandEntities(true);
+	    return build.build(config).getRootElement();
+	} catch (JDOMException | IOException e) {
+	    throw new ServletException(e);
 	}
     }
 
-    private Element readConfigRootElement(final ServletContext context, String name, final String configFile)
-	    throws ServletException {
-	final boolean isNixSystem = !System.getProperty("os.name").toLowerCase().contains("win");
+    public static void readAll(ServletContext context) throws ServletException {
+	RenderKit.reset();
 
-	if (configFile != null) {
+	RendererPropertyUtils.initCache();
 
-	    try {
-		SAXBuilder build = new SAXBuilder();
-		build.setExpandEntities(true);
-		build.setEntityResolver(new EntityResolver() {
-
-		    @Override
-		    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-			if (systemId == null) {
-			    return null;
-			}
-
-			if (isNixSystem) {
-			    final URL url = new URL(systemId);
-			    final InputStream inputStream = url.openStream();
-			    return new InputSource(inputStream);
-			} else {
-			    String entityPath = systemId.substring("file://".length());
-
-			    // relative to configuration file
-			    File file = new File(context.getRealPath(configFile));
-
-			    // remove home path automatically appended
-			    String currentPath = new File(System.getProperty("user.dir")).getCanonicalPath();
-			    currentPath = currentPath.replace(" ", "%20");
-
-			    if (File.separatorChar != '/') {
-				currentPath = "/" + currentPath.replace(File.separatorChar, '/');
-			    }
-
-			    if (currentPath != null && entityPath.startsWith(currentPath + "/")) {
-				entityPath = entityPath.substring(currentPath.length() + 1);
-			    }
-
-			    File entityFile = new File(file.getParentFile(), entityPath);
-			    FileInputStream fileInputStream = new FileInputStream(entityFile);
-
-			    return new InputSource(fileInputStream);
-			}
-		    }
-
-		});
-		final Document document;
-		if (isNixSystem) {
-		    final String realPath = context.getRealPath(configFile);
-		    if (realPath == null) {
-			throw new ServletException("Could not load " + name + ": " + configFile);
-		    }
-		    final File file = new File(realPath);
-		    final URL url = file.toURI().toURL();
-		    document = build.build(url);
-		} else {
-		    final InputStream input = context.getResourceAsStream(configFile);
-		    document = build.build(input);
+	try {
+	    Properties properties = new Properties();
+	    try (InputStream stream = ConfigurationReader.class.getResourceAsStream("/configuration.properties")) {
+		if (stream == null) {
+		    logger.error("configuration.properties not found found in classpath");
+		    throw new RuntimeException();
 		}
+		properties.load(stream);
+	    }
 
-		return document.getRootElement();
-	    } catch (JDOMException e) {
-		e.printStackTrace();
-	    } catch (IOException e) {
-		e.printStackTrace();
+	    for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(properties.getProperty("app.name"))
+		    .getArtifacts()) {
+		URL renderConfig = context.getResource("/WEB-INF/" + artifact.getName() + "/renderers-config.xml");
+		if (renderConfig != null) {
+		    ConfigurationReader.readRenderers(context, renderConfig);
+		}
+		URL schemaConfig = context.getResource("/WEB-INF/" + artifact.getName() + "/schemas-config.xml");
+		if (schemaConfig != null) {
+		    ConfigurationReader.readSchemas(context, schemaConfig);
+		}
 	    }
-	} else {
-	    if (LogLevel.WARN) {
-		logger.warn("parameter[" + name + "] no configuration file was provided");
-	    }
+	} catch (IOException | FenixFrameworkProjectException e) {
+	    throw new ServletException(e);
 	}
 
-	return null;
+	RendererPropertyUtils.destroyCache();
+	if (LogLevel.INFO) {
+	    logger.info("configuration read");
+	}
     }
 }

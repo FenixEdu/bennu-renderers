@@ -11,11 +11,9 @@ import org.apache.struts.action.ActionMapping;
 public class ReloadConfigurationAction extends Action {
 
     @Override
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        ConfigurationReader reader = new ConfigurationReader();
-        
-        reader.readAll(getServlet().getServletContext());
-        
-        return mapping.findForward("success");
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+	    throws Exception {
+	ConfigurationReader.readAll(getServlet().getServletContext());
+	return mapping.findForward("success");
     }
 }
