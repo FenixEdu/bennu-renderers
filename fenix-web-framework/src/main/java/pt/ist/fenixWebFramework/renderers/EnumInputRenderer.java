@@ -32,11 +32,11 @@ import pt.utl.ist.fenix.tools.util.Pair;
  * <tt>ENUMERATION_RESOURCES</tt> using the enum's name.
  * 
  * <p>
- * Example:<br/> Choose a {@link java.lang.annotation.ElementType element type}:
- * <select> <option>Type</option> <option>Field</option>
- * <option>Parameter</option> <option>Constructor</option> <option>Local
- * Variable</option> <option>Annotation</option> <option>Package</option>
- * </select>
+ * Example:<br/>
+ * Choose a {@link java.lang.annotation.ElementType element type}: <select>
+ * <option>Type</option> <option>Field</option> <option>Parameter</option>
+ * <option>Constructor</option> <option>Local Variable</option>
+ * <option>Annotation</option> <option>Package</option> </select>
  * 
  * @author cfgi
  */
@@ -61,6 +61,8 @@ public class EnumInputRenderer extends InputRenderer {
     private boolean readOnly;
 
     private boolean disabled;
+
+    private String onChange;
 
     public String getBundle() {
 	return this.bundle;
@@ -139,6 +141,18 @@ public class EnumInputRenderer extends InputRenderer {
      */
     public void setKey(boolean key) {
 	this.key = key;
+    }
+
+    /**
+     * 
+     * @return Javascript code to be executed when the value is changed.
+     */
+    public String getOnChange() {
+	return onChange;
+    }
+
+    public void setOnChange(String onChange) {
+	this.onChange = onChange;
     }
 
     @Override
@@ -269,6 +283,9 @@ public class EnumInputRenderer extends InputRenderer {
 	    String defaultOptionTitle = getDefaultTitle();
 	    menu.createDefaultOption(defaultOptionTitle).setSelected(enumerate == null);
 	}
+
+	if (getOnChange() != null && !getOnChange().trim().isEmpty())
+	    menu.setOnChange(getOnChange());
 
 	return menu;
     }
