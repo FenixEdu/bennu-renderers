@@ -1227,7 +1227,9 @@ public class CollectionRenderer extends OutputRenderer {
 		HtmlLabel label = new HtmlLabel();
 		MetaSlot metaSlot = getObject(0).getSlots().get(columnIndex - (isCheckable() ? 1 : 0));
 		label.setFor(metaSlot.getKey().toString());
-		label.setTitle(metaSlot.getTitle());
+		if (StringUtils.isEmpty(getHeaderToolTip(columnIndex))) {
+		    label.setTitle(metaSlot.getTitle());
+		}
 		HtmlText text = new HtmlText();
 		text.setEscaped(false);
 		if (!metaSlot.isReadOnly()) {
