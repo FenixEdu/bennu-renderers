@@ -1227,7 +1227,9 @@ public class CollectionRenderer extends OutputRenderer {
 		HtmlLabel label = new HtmlLabel();
 		MetaSlot metaSlot = getObject(0).getSlots().get(columnIndex - (isCheckable() ? 1 : 0));
 		label.setFor(metaSlot.getKey().toString());
-		label.setTitle(metaSlot.getTitle());
+		if (StringUtils.isEmpty(getHeaderToolTip(columnIndex))) {
+		    label.setTitle(metaSlot.getTitle());
+		}
 		HtmlText text = new HtmlText();
 		text.setEscaped(false);
 		if (!metaSlot.isReadOnly()) {
@@ -1364,8 +1366,8 @@ public class CollectionRenderer extends OutputRenderer {
 	private boolean canApplyConditionalClasses(MetaObject metaObject, ColumnCss columnCss) {
 	    Boolean useIf = ((columnCss.getUseIf() != null) && (Boolean) RendererPropertyUtils.getProperty(
 		    metaObject.getObject(), columnCss.getUseIf(), false));
-	    Boolean useIfNot = ((columnCss.getUseIfNot() != null) && (Boolean) RendererPropertyUtils.getProperty(metaObject
-		    .getObject(), columnCss.getUseIfNot(), false));
+	    Boolean useIfNot = ((columnCss.getUseIfNot() != null) && (Boolean) RendererPropertyUtils.getProperty(
+		    metaObject.getObject(), columnCss.getUseIfNot(), false));
 	    return useIf || !useIfNot;
 	}
 
@@ -1928,17 +1930,17 @@ public class CollectionRenderer extends OutputRenderer {
 			    getConfirmationBundle(), getConfirmationTitleKey()) : RenderUtils
 			    .getResourceString(getConfirmationTitleKey());
 
-				    HtmlInlineContainer container = new HtmlInlineContainer();
+		    HtmlInlineContainer container = new HtmlInlineContainer();
 		    container.addChild(link);
 		    String scriptText = "linkConfirmationHook('" + link.getId() + "','"
 			    + (confirmationMessage != null ? confirmationMessage : "") + "', '"
 			    + (confirmationTitle != null ? confirmationTitle : "") + "');";
 
-				    HtmlScript script = new HtmlScript();
+		    HtmlScript script = new HtmlScript();
 		    script.setContentType("text/javascript");
 		    script.setScript(scriptText);
 
-				    container.addChild(script);
+		    container.addChild(script);
 		    return container;
 		}
 
