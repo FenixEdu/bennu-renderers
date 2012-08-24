@@ -18,6 +18,10 @@ public class HtmlInputComponent extends HtmlSimpleValueComponent {
     
     private String onChange;
 
+    private String onFocus;
+
+    private String onBlur;
+
     public HtmlInputComponent(String type) {
         super();
         
@@ -72,6 +76,22 @@ public class HtmlInputComponent extends HtmlSimpleValueComponent {
         this.onChange = onChange;
     }
 
+    public String getOnFocus() {
+	return onFocus;
+    }
+
+    public void setOnFocus(String onFocus) {
+	this.onFocus = onFocus;
+    }
+
+    public String getOnBlur() {
+	return onBlur;
+    }
+
+    public void setOnBlur(String onBlur) {
+	this.onBlur = onBlur;
+    }
+
     @Override
     public HtmlTag getOwnTag(PageContext context) {
         HtmlTag tag = super.getOwnTag(context);
@@ -89,6 +109,8 @@ public class HtmlInputComponent extends HtmlSimpleValueComponent {
         tag.setAttribute("accesskey", getAccessKey());
         tag.setAttribute("size", getSize());
         tag.setAttribute("onchange", getOnChange());
+	tag.setAttribute("onfocus", getOnFocus());
+	tag.setAttribute("onblur", getOnBlur());
         
         return tag;
     }
