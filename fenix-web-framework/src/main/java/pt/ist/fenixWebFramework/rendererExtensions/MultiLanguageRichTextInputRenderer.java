@@ -172,7 +172,7 @@ public class MultiLanguageRichTextInputRenderer extends MultiLanguageTextInputRe
     @Override
     protected Converter getConverter() {
 	if (isSafe()) {
-	    return new MultiLanguageStringSafeHtmlConverter();
+	    return new MultiLanguageStringSafeHtmlConverter(getMathJaxEnabled());
 	} else {
 	    return super.getConverter();
 	}

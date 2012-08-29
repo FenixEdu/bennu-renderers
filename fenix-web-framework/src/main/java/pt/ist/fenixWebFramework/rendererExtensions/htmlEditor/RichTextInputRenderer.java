@@ -46,9 +46,10 @@ public class RichTextInputRenderer extends InputRenderer {
     }
 
     /**
-     * Allows you to choose a configuration for the editor. The given name
-     * is used to fetch the properties from a file located in {@value TinyMceEditor#CONFIG_PATH} with
-     * the same name and ending in ".properties".
+     * Allows you to choose a configuration for the editor. The given name is
+     * used to fetch the properties from a file located in
+     * {@value TinyMceEditor#CONFIG_PATH} with the same name and ending in
+     * ".properties".
      * 
      * @property
      */
@@ -113,8 +114,9 @@ public class RichTextInputRenderer extends InputRenderer {
     }
 
     /**
-     * If this property is set to <tt>true</tt> then the input will be filtered and any
-     * unsupported HTML will be removed or escaped to the corresponding entities. 
+     * If this property is set to <tt>true</tt> then the input will be filtered
+     * and any unsupported HTML will be removed or escaped to the corresponding
+     * entities.
      * 
      * @property
      */
@@ -162,7 +164,7 @@ public class RichTextInputRenderer extends InputRenderer {
 		editor.setId(editor.getName());
 
 		if (isSafe()) {
-		    editor.setConverter(new SafeHtmlConverter());
+		    editor.setConverter(new JsoupSafeHtmlConverter());
 		}
 
 		if (isShowEditorOptions()) {
