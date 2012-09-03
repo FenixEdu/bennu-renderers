@@ -57,7 +57,7 @@ public class TabularNonNullValuesRenderer extends OutputRenderer{
 		return new TabularNonNullValuesLayout();
 	}
 	
-	private class TabularNonNullValuesLayout extends TabularLayout {
+	protected class TabularNonNullValuesLayout extends TabularLayout {
 
 		private MetaObject metaObject;
 		private List<MetaSlot> slots;
@@ -80,7 +80,7 @@ public class TabularNonNullValuesRenderer extends OutputRenderer{
 				return getComponent(rowIndex, columnIndex);
 			}
 			else {
-				return (columnIndex==0) ? new HtmlText(addLabel(slots.get(rowIndex+indexSkipped).getLabel())) : renderSlot(this.metaObject.getSlots().get(rowIndex+indexSkipped));
+				return (columnIndex==0) ? new HtmlText(addLabel(slots.get(rowIndex+indexSkipped).getLabel()),false) : renderSlot(this.metaObject.getSlots().get(rowIndex+indexSkipped));
 			}
 			
 			
