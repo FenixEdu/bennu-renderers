@@ -1,6 +1,5 @@
 package pt.ist.fenixWebFramework.rendererExtensions.htmlEditor;
 
-
 import javax.servlet.http.HttpServletRequest;
 
 import pt.ist.fenixWebFramework.rendererExtensions.components.HtmlEditor;
@@ -12,12 +11,10 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlTextArea;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 
-
-
 /**
- * An javascript html editor for doing the input of html text.
- * This renderer abstracts the javascript html editor available in
- * Fenix and binds it to the slot beeing edited.
+ * An javascript html editor for doing the input of html text. This renderer
+ * abstracts the javascript html editor available in Fenix and binds it to the
+ * slot beeing edited.
  * 
  * @author cfgi
  */
@@ -42,9 +39,8 @@ public class HtmlEditorRenderer extends InputRenderer {
     }
 
     /**
-     * The number of columns of the fall back textarea, that
-     * is, the text area that is shown when the html editor is not
-     * supported by the browser.
+     * The number of columns of the fall back textarea, that is, the text area
+     * that is shown when the html editor is not supported by the browser.
      * 
      * @property
      */
@@ -96,9 +92,10 @@ public class HtmlEditorRenderer extends InputRenderer {
     }
 
     /**
-     * If this property is set to <tt>true</tt> then the input will be filtered and any
-     * unsupported HTML will be removed or escaped to the corresponding entities. The idea
-     * is that a piece of code like
+     * If this property is set to <tt>true</tt> then the input will be filtered
+     * and any unsupported HTML will be removed or escaped to the corresponding
+     * entities. The idea is that a piece of code like
+     * 
      * <pre>
      * &lt;p onmouseover=&quot;doSomething();&quot;&gt;
      *     &lt;table style="..."/&gt;
@@ -171,7 +168,7 @@ public class HtmlEditorRenderer extends InputRenderer {
 	    editor.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 
 	    if (isSafe()) {
-		editor.setConverter(new SafeHtmlConverter());
+		editor.setConverter(new JsoupSafeHtmlConverter());
 	    }
 
 	    HtmlSubmitButton submitButton = getInputContext().getForm().getSubmitButton();
@@ -188,7 +185,7 @@ public class HtmlEditorRenderer extends InputRenderer {
 	    textArea.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 
 	    if (isSafe()) {
-		textArea.setConverter(new SafeHtmlConverter());
+		textArea.setConverter(new JsoupSafeHtmlConverter());
 	    }
 
 	    textArea.setValue((String) object);
