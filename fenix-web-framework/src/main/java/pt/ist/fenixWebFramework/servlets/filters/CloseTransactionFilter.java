@@ -34,6 +34,7 @@ public class CloseTransactionFilter implements Filter {
 	    chain.doFilter(request, response);
 	} finally {
 	    Transaction.forceFinish();
+	    RequestInfo.clear();
 	}
     }
 

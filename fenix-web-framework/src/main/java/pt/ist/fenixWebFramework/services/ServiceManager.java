@@ -169,6 +169,7 @@ public class ServiceManager {
 	String currentManager = isInServiceVar.get();
 	if (currentManager.equals(manager)) {
 	    isInServiceVar.remove();
+	    ServiceInfo.clearCurrentServiceInfo();
 	}
     }
 
