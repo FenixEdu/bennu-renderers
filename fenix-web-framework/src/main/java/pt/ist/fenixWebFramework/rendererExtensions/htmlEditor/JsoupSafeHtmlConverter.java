@@ -28,6 +28,7 @@ public class JsoupSafeHtmlConverter extends Converter {
 	    "rem", "root", "scalarproduct", "sdev", "sec", "sech", "selector", "semantics", "sep", "set", "setdiff", "sin",
 	    "sinh", "subset", "sum", "tan", "tanh", "tendsto", "times", "transpose", "true", "union", "uplimit", "variance",
 	    "vector", "vectorproduct", "xor" };
+
     private static final String[] MATHJAX_ATTRS = { "accent", "accentunder", "actiontype", "align", "alignmentscope", "alt",
 	    "axis", "background", "background-color", "base", "bevelled", "class", "close", "closure", "color", "columnalign",
 	    "columnalignment", "columnlines", "columnspacing", "columnspan", "columnwidth", "css-color-name", "css-fontfamily",
@@ -42,11 +43,14 @@ public class JsoupSafeHtmlConverter extends Converter {
 	    "selection", "separator", "separators", "side", "stretchy", "style", "subscriptshift", "superscriptshift",
 	    "symmetric", "type", "v-unit", "width", "xlink:href", "xml:space", "xmlns", "xref", "xsi:schemaLocation" };
 
-    private static Whitelist whitelistSimple = Whitelist.relaxed();
+    private static Whitelist whitelistSimple = Whitelist.relaxed().addAttributes(":all", "style");
+
     private static Whitelist whiteListMathJax = whitelistSimple.addTags(MATHJAX_TAGS);
+
     private static final String ENCODING = CharEncoding.ISO_8859_1;
 
     static {
+
 	for (String elem : MATHJAX_TAGS) {
 	    whiteListMathJax = whiteListMathJax.addAttributes(elem, MATHJAX_ATTRS);
 	}
