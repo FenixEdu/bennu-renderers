@@ -43,7 +43,7 @@ public class JsoupSafeHtmlConverter extends Converter {
 	    "selection", "separator", "separators", "side", "stretchy", "style", "subscriptshift", "superscriptshift",
 	    "symmetric", "type", "v-unit", "width", "xlink:href", "xml:space", "xmlns", "xref", "xsi:schemaLocation" };
 
-    private static Whitelist whitelistSimple = Whitelist.relaxed().addAttributes(":all", "style");
+    private static Whitelist whitelistSimple = Whitelist.relaxed().addTags("span").addAttributes(":all", "style");
 
     private static Whitelist whiteListMathJax = whitelistSimple.addTags(MATHJAX_TAGS);
 
