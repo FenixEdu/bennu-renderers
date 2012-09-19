@@ -1,6 +1,5 @@
 package pt.ist.fenixWebFramework.rendererExtensions.htmlEditor;
 
-import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,6 +9,7 @@ import org.jsoup.safety.Whitelist;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
 public class JsoupSafeHtmlConverter extends Converter {
+
     private static final String[] MATHJAX_TAGS = { "abs", "and", "annotation", "annotation-xml", "apply", "approx", "arccos",
 	    "arccosh", "arccot", "arccoth", "arccsc", "arccsch", "arcsec", "arcsech", "arcsin", "arcsinh", "arctan", "arctanh",
 	    "arg", "bvar", "card", "cartesianproduct", "ceiling", "ci", "cn", "codomain", "complexes", "compose", "condition",
@@ -43,14 +43,22 @@ public class JsoupSafeHtmlConverter extends Converter {
 	    "selection", "separator", "separators", "side", "stretchy", "style", "subscriptshift", "superscriptshift",
 	    "symmetric", "type", "v-unit", "width", "xlink:href", "xml:space", "xmlns", "xref", "xsi:schemaLocation" };
 
+    private static final String[] TABLE_ATTRS = { "align", "bgcolor", "border", "cellpadding", "cellspacing", "frame", "rules",
+	    "summary", "width" };
+    private static final String[] TBODY_TR_ATTRS = { "align", "bgcolor", "char", "charoff", "valign" };
+    private static final String[] TH_TD_ATTRS = { "abbr", "align", "axis", "bgcolor", "char", "charoff", "colspan", "height",
+	    "nowrap", "rowspan", "scope", "valign", "width" };
+
     private static Whitelist whitelistSimple = Whitelist.relaxed().addTags("span").addAttributes(":all", "style");
 
-    private static Whitelist whiteListMathJax = whitelistSimple.addTags(MATHJAX_TAGS);
-
-    private static final String ENCODING = CharEncoding.ISO_8859_1;
+    private static Whitelist whiteListMathJax;
 
     static {
+	whitelistSimple = whitelistSimple.addAttributes("table", TABLE_ATTRS);
+	whitelistSimple = whitelistSimple.addAttributes("tr", TBODY_TR_ATTRS).addAttributes("tbody", TBODY_TR_ATTRS);
+	whitelistSimple = whitelistSimple.addAttributes("th", TH_TD_ATTRS).addAttributes("td", TH_TD_ATTRS);
 
+	whiteListMathJax = whitelistSimple.addTags(MATHJAX_TAGS);
 	for (String elem : MATHJAX_TAGS) {
 	    whiteListMathJax = whiteListMathJax.addAttributes(elem, MATHJAX_ATTRS);
 	}
