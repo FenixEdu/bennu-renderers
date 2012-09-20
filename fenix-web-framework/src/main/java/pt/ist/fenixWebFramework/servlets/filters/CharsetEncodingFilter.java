@@ -20,6 +20,7 @@ public class CharsetEncodingFilter implements Filter {
 	if (defaultCharset != null && !defaultCharset.isEmpty() && Charset.forName(defaultCharset) != null) {
 	    CharsetEncodingFilter.defaultCharset = defaultCharset;
 	}
+	System.out.println("Charset :" + defaultCharset);
     }
 
     @Override
@@ -29,9 +30,7 @@ public class CharsetEncodingFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
 	    ServletException {
-	if (request.getCharacterEncoding() == null) {
-	    request.setCharacterEncoding(defaultCharset);
-	}
+	request.setCharacterEncoding(defaultCharset);
 	filterChain.doFilter(request, response);
     }
 
