@@ -20,7 +20,7 @@ public class CharsetEncodingFilter implements Filter {
 	if (defaultCharset != null && !defaultCharset.isEmpty() && Charset.forName(defaultCharset) != null) {
 	    CharsetEncodingFilter.defaultCharset = defaultCharset;
 	}
-	System.out.println("Charset :" + defaultCharset);
+	System.out.println("Charset :" + CharsetEncodingFilter.defaultCharset);
     }
 
     @Override
