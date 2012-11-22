@@ -16,7 +16,7 @@
 			<plugin>
 				<groupId>dml</groupId>
 				<artifactId>dml-maven-plugin</artifactId>
-				<version>1.1.0</version>
+				<version>1.1.2</version>
 				<executions>
 					<execution>
 						<goals>
@@ -152,6 +152,11 @@
   			<artifactId>jsoup</artifactId>
   			<version>1.6.3</version>
 		</dependency>
+		<dependency>
+				<groupId>jfree</groupId>
+					<artifactId>jfreechart</artifactId>
+						<version>0.9.18</version>
+					</dependency>
 	</dependencies>
 
 	<repositories>
