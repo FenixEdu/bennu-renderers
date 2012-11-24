@@ -22,7 +22,7 @@ import pt.ist.fenixWebFramework.FenixWebFramework;
 
 public class RequestChecksumFilter implements Filter {
 
-    private static final String ENCODING = CharEncoding.ISO_8859_1;
+    private static final String ENCODING = CharEncoding.UTF_8;
 
     public static interface ChecksumPredicate {
 	public boolean shouldFilter(HttpServletRequest request);
