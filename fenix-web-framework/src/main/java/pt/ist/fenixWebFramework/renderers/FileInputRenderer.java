@@ -36,6 +36,7 @@ public class FileInputRenderer extends InputRenderer {
     private String fileNameSlot;
     private String fileSizeSlot;
     private String fileContentTypeSlot;
+    private String onChangeEvent;
 
     public String getSize() {
 	return this.size;
@@ -93,6 +94,22 @@ public class FileInputRenderer extends InputRenderer {
     public void setFileSizeSlot(String fileSizeSlot) {
 	this.fileSizeSlot = fileSizeSlot;
     }
+    
+    public String getOnChangeEvent() {
+	return this.onChangeEvent;
+    }
+
+    /**
+     * JavaScript statement to call when <b>Change</b> event is triggered.
+     * This can be used, for example, to model a behavior such like having
+     * this <code><b>input</b></code> element only allowing the submit
+     * <code><b>button</b></code> to be enabled when a valid input is selected.
+     * 
+     * @property
+     */
+    public void setOnChangeEvent(String onChangeEvent) {
+	this.onChangeEvent = onChangeEvent;
+    }
 
     @Override
     protected Layout getLayout(Object object, Class type) {
@@ -108,6 +125,9 @@ public class FileInputRenderer extends InputRenderer {
 		file.setController(new UpdateFilePropertiesController(((MetaSlot) getInputContext().getMetaObject())
 			.getMetaObject(), getFileNameSlot(), getFileSizeSlot(), getFileContentTypeSlot()));
 		file.setConverter(new FileConverter(file));
+		if (getOnChangeEvent() != null) {
+		    file.setAttribute("onchange", getOnChangeEvent());
+		}
 		return file;
 	    }
 
