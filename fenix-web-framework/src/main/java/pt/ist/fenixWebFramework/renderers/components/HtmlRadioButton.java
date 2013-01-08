@@ -56,7 +56,7 @@ public class HtmlRadioButton extends HtmlInputComponent {
     }
 
     public void setUserValue(String userValue) {
-        super.setValue(userValue);
+        super.setValue(userValue == null ? "" : userValue);
     }
 
     @Override

@@ -6,12 +6,11 @@ import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public class DomainObjectKeyConverter extends Converter {
-    public static final String NULL_VALUE_MARKER = "NULL_VALUE_MARKER";
 
     @Override
     public Object convert(Class type, Object value) {
 
-	if (value == null || value.equals("") || value.equals(NULL_VALUE_MARKER)) {
+	if (value == null || value.equals("")) {
 	    return null;
 	}
 	int index = ((String) value).indexOf(":");

@@ -218,7 +218,7 @@ public class RadioButtonListRenderer extends SelectionRenderer {
 	    if (!StringUtils.isEmpty(getNullOptionKey())) {
 		HtmlLabel label = new HtmlLabel();
 		label.setText(RenderUtils.getResourceString(getNullOptionBundle(), getNullOptionKey()));
-		HtmlRadioButton addOption = listComponent.addOption(label, DomainObjectKeyConverter.NULL_VALUE_MARKER);
+		HtmlRadioButton addOption = listComponent.addOption(label, null);
 		if (object == null) {
 		    addOption.setChecked(true);
 		}
