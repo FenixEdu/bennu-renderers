@@ -37,7 +37,8 @@ public class UrlValidator extends HtmlValidator {
     @Override
     public void performValidation() {
 	if (hasValue()) {
-	    org.apache.commons.validator.UrlValidator urlValidator = new org.apache.commons.validator.UrlValidator(validSchemes);
+	    org.apache.commons.validator.routines.UrlValidator urlValidator = new org.apache.commons.validator.routines.UrlValidator(
+		    validSchemes);
 	    setValid(urlValidator.isValid(buildUrlForValidation()));
 	} else {
 	    setValid(!isRequired());
