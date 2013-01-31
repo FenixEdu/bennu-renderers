@@ -12,13 +12,14 @@ import java.io.InputStream;
  */
 public interface UploadedFile {
 
-    public String getName();
-    public String getContentType();
-    public long getSize();
-    
-    public InputStream getInputStream() throws IOException;
+	public String getName();
 
-    public byte[] getFileData() throws FileNotFoundException, IOException;
+	public String getContentType();
+
+	public long getSize();
+
+	public InputStream getInputStream() throws IOException;
+
+	public byte[] getFileData() throws FileNotFoundException, IOException;
 
 }
-

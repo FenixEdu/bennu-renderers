@@ -7,127 +7,125 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlScript extends HtmlComponent {
 
-    private String charset;
-    private String contentType;
-    private String source;
-    private boolean defer;
-    private boolean conditional;
+	private String charset;
+	private String contentType;
+	private String source;
+	private boolean defer;
+	private boolean conditional;
 
-    private CharSequence script;
-    
-    public HtmlScript() {
-        super();
-    }
+	private CharSequence script;
 
-    public HtmlScript(String contentType, String source) {
-        super();
-    
-        this.contentType = contentType;
-        this.source = source;
-    }
+	public HtmlScript() {
+		super();
+	}
 
-    public HtmlScript(String contentType, String source, boolean conditional) {
-        this(contentType, source);
-    
-        this.conditional = conditional;
-    }
+	public HtmlScript(String contentType, String source) {
+		super();
 
-    public String getCharset() {
-        return this.charset;
-    }
+		this.contentType = contentType;
+		this.source = source;
+	}
 
-    public void setCharset(String charset) {
-        this.charset = charset;
-    }
+	public HtmlScript(String contentType, String source, boolean conditional) {
+		this(contentType, source);
 
-    public String getContentType() {
-        return this.contentType;
-    }
+		this.conditional = conditional;
+	}
 
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
+	public String getCharset() {
+		return this.charset;
+	}
 
-    public boolean isDefer() {
-        return this.defer;
-    }
+	public void setCharset(String charset) {
+		this.charset = charset;
+	}
 
-    public void setDefer(boolean defer) {
-        this.defer = defer;
-    }
+	public String getContentType() {
+		return this.contentType;
+	}
 
-    public boolean isConditional() {
-        return conditional;
-    }
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
 
-    public void setConditional(boolean conditional) {
-        this.conditional = conditional;
-    }
+	public boolean isDefer() {
+		return this.defer;
+	}
 
-    public String getSource() {
-        return this.source;
-    }
+	public void setDefer(boolean defer) {
+		this.defer = defer;
+	}
 
-    public void setSource(String source) {
-        this.source = source;
-    }
+	public boolean isConditional() {
+		return conditional;
+	}
 
-    public CharSequence getScript() {
-        return this.script;
-    }
+	public void setConditional(boolean conditional) {
+		this.conditional = conditional;
+	}
 
-    public void setScript(CharSequence script) {
-        this.script = script;
-    }
+	public String getSource() {
+		return this.source;
+	}
 
-    @Override
-    public HtmlTag getOwnTag(PageContext context) {
-        HtmlTag tag = super.getOwnTag(context);
+	public void setSource(String source) {
+		this.source = source;
+	}
 
-        if (isConditional() && wasIncluded(context)) {
-            tag.setName(null);
-            return tag;
-        }
-        
-        tag.setName("script");
-        tag.setAttribute("charset", getCharset());
-        tag.setAttribute("type", getContentType());
-        tag.setAttribute("src", getSource());
-        
-        if (isDefer()) {
-            tag.setAttribute("defer", "defer");
-        }
+	public CharSequence getScript() {
+		return this.script;
+	}
 
-        if (getScript() != null) {
-            tag.setText(getScript().toString());
-        }
-        
-        return tag;
-    }
+	public void setScript(CharSequence script) {
+		this.script = script;
+	}
 
-    private boolean wasIncluded(PageContext context) {
-        String includeId = null;
-        
-        if (getSource() != null) {
-            includeId = getSource();
-        }
-        else if (getScript() != null) {
-            includeId = String.valueOf(getScript().hashCode());
-        }
+	@Override
+	public HtmlTag getOwnTag(PageContext context) {
+		HtmlTag tag = super.getOwnTag(context);
 
-        if (includeId == null) {
-            return false;
-        }
-        
-        ServletRequest request = context.getRequest();
-        String conditionalName = getClass().getName() + "/included/" + includeId;
-        
-        if (request.getAttribute(conditionalName) != null) {
-            return true;
-        }
-        else {
-            request.setAttribute(conditionalName, true);
-            return false;
-        }
-    }
+		if (isConditional() && wasIncluded(context)) {
+			tag.setName(null);
+			return tag;
+		}
+
+		tag.setName("script");
+		tag.setAttribute("charset", getCharset());
+		tag.setAttribute("type", getContentType());
+		tag.setAttribute("src", getSource());
+
+		if (isDefer()) {
+			tag.setAttribute("defer", "defer");
+		}
+
+		if (getScript() != null) {
+			tag.setText(getScript().toString());
+		}
+
+		return tag;
+	}
+
+	private boolean wasIncluded(PageContext context) {
+		String includeId = null;
+
+		if (getSource() != null) {
+			includeId = getSource();
+		} else if (getScript() != null) {
+			includeId = String.valueOf(getScript().hashCode());
+		}
+
+		if (includeId == null) {
+			return false;
+		}
+
+		ServletRequest request = context.getRequest();
+		String conditionalName = getClass().getName() + "/included/" + includeId;
+
+		if (request.getAttribute(conditionalName) != null) {
+			return true;
+		} else {
+			request.setAttribute(conditionalName, true);
+			return false;
+		}
+	}
 }

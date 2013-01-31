@@ -11,68 +11,68 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
  * Renderers wrapper round the request. This wrapper allows all elements
- * of the framework to use {@link javax.servlet.ServletRequest#getParameter(java.lang.String)}
- * and the like regardlessly of the request nature.
+ * of the framework to use {@link javax.servlet.ServletRequest#getParameter(java.lang.String)} and the like regardlessly of the
+ * request nature.
  * 
  * @author cfgi
  */
 public class RenderersRequestWrapper extends HttpServletRequestWrapper {
 
-    private Hashtable<String, List<String>> parameters;
-    
-    public RenderersRequestWrapper(HttpServletRequest request) {
-        super(request);
-        
-        this.parameters = new Hashtable<String, List<String>>();
-    }
+	private Hashtable<String, List<String>> parameters;
 
-    public void addParameter(String name, String value) {
-        ensureParameterPresent(name);
-        addParameterValue(name, value);
-    }
+	public RenderersRequestWrapper(HttpServletRequest request) {
+		super(request);
 
-    private void ensureParameterPresent(String name) {
-        if (! parameterExists(name)) {
-            this.parameters.put(name, new ArrayList<String>());
-        }
-    }
+		this.parameters = new Hashtable<String, List<String>>();
+	}
 
-    private boolean parameterExists(String name) {
-        return this.parameters.containsKey(name);
-    }
+	public void addParameter(String name, String value) {
+		ensureParameterPresent(name);
+		addParameterValue(name, value);
+	}
 
-    private void addParameterValue(String name, String value) {
-        this.parameters.get(name).add(value);
-    }
+	private void ensureParameterPresent(String name) {
+		if (!parameterExists(name)) {
+			this.parameters.put(name, new ArrayList<String>());
+		}
+	}
 
-    @Override
-    public String getParameter(String name) {
-        if (! parameterExists(name)) {
-            return null;
-        }
-        
-        return this.parameters.get(name).get(0);
-    }
+	private boolean parameterExists(String name) {
+		return this.parameters.containsKey(name);
+	}
 
-    @Override
-    public Map<String, String[]> getParameterMap() {
-        Map<String, String[]> resultMap = new Hashtable<String, String[]>();
-        
-        for (String parameter : this.parameters.keySet()) {
-            resultMap.put(parameter, parameters.get(parameter).toArray(new String[0]));
-        }
-        
-        return resultMap;
-    }
+	private void addParameterValue(String name, String value) {
+		this.parameters.get(name).add(value);
+	}
 
-    @Override
-    public Enumeration getParameterNames() {
-        return this.parameters.keys();
-    }
+	@Override
+	public String getParameter(String name) {
+		if (!parameterExists(name)) {
+			return null;
+		}
 
-    @Override
-    public String[] getParameterValues(String name) {
-        return getParameterMap().get(name);
-    }
-    
+		return this.parameters.get(name).get(0);
+	}
+
+	@Override
+	public Map<String, String[]> getParameterMap() {
+		Map<String, String[]> resultMap = new Hashtable<String, String[]>();
+
+		for (String parameter : this.parameters.keySet()) {
+			resultMap.put(parameter, parameters.get(parameter).toArray(new String[0]));
+		}
+
+		return resultMap;
+	}
+
+	@Override
+	public Enumeration getParameterNames() {
+		return this.parameters.keys();
+	}
+
+	@Override
+	public String[] getParameterValues(String name) {
+		return getParameterMap().get(name);
+	}
+
 }

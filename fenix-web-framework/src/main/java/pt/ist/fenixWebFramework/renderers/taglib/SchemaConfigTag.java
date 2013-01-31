@@ -11,76 +11,76 @@ import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
 
 public class SchemaConfigTag extends BodyTagSupport {
 
-    private BaseRenderObjectTag parent = null;
+	private BaseRenderObjectTag parent = null;
 
-    private String type;
+	private String type;
 
-    private String bundle;
-    
-    private List<SchemaSlotDescription> slots;
+	private String bundle;
 
-    public SchemaConfigTag() {
-    }
+	private List<SchemaSlotDescription> slots;
 
-    @Override
-    public int doStartTag() throws JspException {
-	this.slots = new ArrayList<SchemaSlotDescription>();
-	this.parent = (BaseRenderObjectTag) findAncestorWithClass(this, BaseRenderObjectTag.class);
-
-	if (this.parent == null) {
-	    throw new RuntimeException("layout tag can only be used inside a renderer tag");
+	public SchemaConfigTag() {
 	}
 
-	return EVAL_BODY_INCLUDE;
-    }
+	@Override
+	public int doStartTag() throws JspException {
+		this.slots = new ArrayList<SchemaSlotDescription>();
+		this.parent = (BaseRenderObjectTag) findAncestorWithClass(this, BaseRenderObjectTag.class);
 
-    @Override
-    public int doEndTag() throws JspException {
-	Schema anonymousSchema = null;
-	try {
-	    anonymousSchema = new Schema(null, Class.forName(getType()));
-	} catch (ClassNotFoundException e) {
-	    e.printStackTrace();
-	}
-	for (SchemaSlotDescription slot : getSlots()) {
-	    anonymousSchema.addSlotDescription(slot);
+		if (this.parent == null) {
+			throw new RuntimeException("layout tag can only be used inside a renderer tag");
+		}
+
+		return EVAL_BODY_INCLUDE;
 	}
 
-	this.parent.setAnonymousSchema(anonymousSchema);
+	@Override
+	public int doEndTag() throws JspException {
+		Schema anonymousSchema = null;
+		try {
+			anonymousSchema = new Schema(null, Class.forName(getType()));
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		for (SchemaSlotDescription slot : getSlots()) {
+			anonymousSchema.addSlotDescription(slot);
+		}
 
-	release();
-	return EVAL_PAGE;
-    }
+		this.parent.setAnonymousSchema(anonymousSchema);
 
-    @Override
-    public void release() {
-	this.parent = null;
-	this.slots = null;
-	super.release();
-    }
+		release();
+		return EVAL_PAGE;
+	}
 
-    public String getType() {
-	return type;
-    }
+	@Override
+	public void release() {
+		this.parent = null;
+		this.slots = null;
+		super.release();
+	}
 
-    public void setType(String type) {
-	this.type = type;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public List<SchemaSlotDescription> getSlots() {
-	return slots;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public void addSlots(SchemaSlotDescription slot) {
-	this.slots.add(slot);
-    }
-    
-    public String getBundle() {
-        return bundle;
-    }
+	public List<SchemaSlotDescription> getSlots() {
+		return slots;
+	}
 
-    public void setBundle(String bundle) {
-        this.bundle = bundle;
-    }
+	public void addSlots(SchemaSlotDescription slot) {
+		this.slots.add(slot);
+	}
+
+	public String getBundle() {
+		return bundle;
+	}
+
+	public void setBundle(String bundle) {
+		this.bundle = bundle;
+	}
 
 }

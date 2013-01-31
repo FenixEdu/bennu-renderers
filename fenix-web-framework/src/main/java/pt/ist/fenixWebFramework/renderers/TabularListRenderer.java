@@ -12,7 +12,7 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 /**
  * This renderer allows you to present a collection of objects as a
- * list but at the same time allows you to add control links to 
+ * list but at the same time allows you to add control links to
  * each item like you can in {@link pt.ist.fenixWebFramework.renderers.CollectionRenderer}.
  * A table is used to accomplish this. Each object will be presented
  * in a row but the left column will contain the entire presentation of the object
@@ -21,181 +21,180 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  * <p>
  * Example:
  * <table border="1">
- *  <thead>
- *      <th>List title</th>
- *      <th></th>
- *      <th></th>
- *  </thead> 
- *  <tr>
- *      <td><em>&lt;object A presentation&gt;</em></td>
- *      <td><a href="#">Edit</a></td>
- *      <td><a href="#">Delete</a></td>
- *  </tr>
- *  <tr>
- *      <td><em>&lt;object B presentation&gt;</em></td>
- *      <td><a href="#">Edit</a></td>
- *      <td><a href="#">Delete</a></td>
- *  </tr>
- *  <tr>
- *      <td><em>&lt;object C presentation&gt;</em></td>
- *      <td><a href="#">Edit</a></td>
- *      <td><a href="#">Delete</a></td>
- *  </tr>
+ * <thead>
+ * <th>List title</th>
+ * <th></th>
+ * <th></th>
+ * </thead>
+ * <tr>
+ * <td><em>&lt;object A presentation&gt;</em></td>
+ * <td><a href="#">Edit</a></td>
+ * <td><a href="#">Delete</a></td>
+ * </tr>
+ * <tr>
+ * <td><em>&lt;object B presentation&gt;</em></td>
+ * <td><a href="#">Edit</a></td>
+ * <td><a href="#">Delete</a></td>
+ * </tr>
+ * <tr>
+ * <td><em>&lt;object C presentation&gt;</em></td>
+ * <td><a href="#">Edit</a></td>
+ * <td><a href="#">Delete</a></td>
+ * </tr>
  * </table>
  * 
  * @author cfgi
  */
 public class TabularListRenderer extends CollectionRenderer {
 
-    private String subSchema;
-    
-    private String subLayout;
-    
-    private String listTitle;
-    
-    private boolean listTitleKey;
-    
-    private String listTitleBundle;
-    
-    private Boolean displayHeaders = Boolean.TRUE;
-    
-    public TabularListRenderer() {
-        super();
-        
-        this.listTitleKey = false;
-    }
-    
-    public String getSubLayout() {
-        return this.subLayout;
-    }
+	private String subSchema;
 
-    /**
-     * With this property you can choose the layout to be used
-     * in each object's presentation. 
-     * 
-     * @property
-     */
-    public void setSubLayout(String subLayout) {
-        this.subLayout = subLayout;
-    }
+	private String subLayout;
 
-    public String getSubSchema() {
-        return this.subSchema;
-    }
+	private String listTitle;
 
-    /**
-     * With this property you can choose if you want to
-     * display headers or not in the table
-     * @property
-     */
-    public boolean getDisplayHeaders() {
-        return displayHeaders;
-    }
+	private boolean listTitleKey;
 
-    public void setDisplayHeaders(boolean displayHeaders) {
-        this.displayHeaders = displayHeaders;
-    }
-    
-    /**
-     * Specifies the schema that will be used when presenting
-     * each sub object.
-     * 
-     * @property
-     */
-    public void setSubSchema(String subSchema) {
-        this.subSchema = subSchema;
-    }
+	private String listTitleBundle;
 
-    public String getListTitle() {
-        return this.listTitle;
-    }
+	private Boolean displayHeaders = Boolean.TRUE;
 
-    /**
-     * Allows you to set the title of this listing.
-     * 
-     * @property
-     */
-    public void setListTitle(String listTitle) {
-        this.listTitle = listTitle;
-    }
+	public TabularListRenderer() {
+		super();
 
-    public boolean isListTitleKey() {
-        return this.listTitleKey;
-    }
+		this.listTitleKey = false;
+	}
 
-    /**
-     * Indicates the the value of the property {@link #setListTitle(String) listTitle} is a resource key. 
-     * 
-     * @property
-     */
-    public void setListTitleKey(boolean listTitleKey) {
-        this.listTitleKey = listTitleKey;
-    }
+	public String getSubLayout() {
+		return this.subLayout;
+	}
 
-    public String getListTitleBundle() {
-        return this.listTitleBundle;
-    }
+	/**
+	 * With this property you can choose the layout to be used
+	 * in each object's presentation.
+	 * 
+	 * @property
+	 */
+	public void setSubLayout(String subLayout) {
+		this.subLayout = subLayout;
+	}
 
-    /**
-     * The name of the resource bundle to use for the list title.
-     * 
-     * @property
-     */
-    public void setListTitleBundle(String listTitleBundle) {
-        this.listTitleBundle = listTitleBundle;
-    }
+	public String getSubSchema() {
+		return this.subSchema;
+	}
 
-    @Override
-    protected Layout getLayout(Object object, Class type) {
-    	Collection sortedCollection = RenderUtils.sortCollectionWithCriteria((Collection) object,
-                getSortBy());
-    	
-    	return new TabularListRendererLayout((Collection) sortedCollection);
-    }
-    
-    public class TabularListRendererLayout extends CollectionTabularLayout {
+	/**
+	 * With this property you can choose if you want to
+	 * display headers or not in the table
+	 * 
+	 * @property
+	 */
+	@Override
+	public boolean getDisplayHeaders() {
+		return displayHeaders;
+	}
 
-        public TabularListRendererLayout(Collection object) {
-            super(object);
-        }
+	@Override
+	public void setDisplayHeaders(boolean displayHeaders) {
+		this.displayHeaders = displayHeaders;
+	}
 
-        @Override
-        protected int getNumberOfColumns() {
-            return 1 + getNumberOfLinks() + (isCheckable() ? 1 : 0);
-        }
+	/**
+	 * Specifies the schema that will be used when presenting
+	 * each sub object.
+	 * 
+	 * @property
+	 */
+	public void setSubSchema(String subSchema) {
+		this.subSchema = subSchema;
+	}
 
-        @Override
-        protected boolean hasHeader() {
-            return (displayHeaders) ? getListTitle() != null : false;
-        }
-        
-        @Override
-        protected HtmlComponent getHeaderComponent(int columnIndex) {
-            if (columnIndex == (isCheckable() ? 1 : 0)) {
-                String description;
-                
-                if (isListTitleKey()) {
-                    description = RenderUtils.getResourceString(getListTitleBundle(), getListTitle());
-                }
-                else {
-                    description = getListTitle();
-                }
-                
-                return new HtmlText(description);
-            }
-            else {
-                return new HtmlText();
-            }
-        }
+	public String getListTitle() {
+		return this.listTitle;
+	}
 
-        @Override
-        protected HtmlComponent generateObjectComponent(int columnIndex, MetaObject object) {
-            Schema schema = RenderKit.getInstance().findSchema(getSubSchema());
-            String layout = getSubLayout();
-            
-            return renderValue(object.getObject(), schema, layout);
-        }
-    }
+	/**
+	 * Allows you to set the title of this listing.
+	 * 
+	 * @property
+	 */
+	public void setListTitle(String listTitle) {
+		this.listTitle = listTitle;
+	}
 
+	public boolean isListTitleKey() {
+		return this.listTitleKey;
+	}
+
+	/**
+	 * Indicates the the value of the property {@link #setListTitle(String) listTitle} is a resource key.
+	 * 
+	 * @property
+	 */
+	public void setListTitleKey(boolean listTitleKey) {
+		this.listTitleKey = listTitleKey;
+	}
+
+	public String getListTitleBundle() {
+		return this.listTitleBundle;
+	}
+
+	/**
+	 * The name of the resource bundle to use for the list title.
+	 * 
+	 * @property
+	 */
+	public void setListTitleBundle(String listTitleBundle) {
+		this.listTitleBundle = listTitleBundle;
+	}
+
+	@Override
+	protected Layout getLayout(Object object, Class type) {
+		Collection sortedCollection = RenderUtils.sortCollectionWithCriteria((Collection) object, getSortBy());
+
+		return new TabularListRendererLayout(sortedCollection);
+	}
+
+	public class TabularListRendererLayout extends CollectionTabularLayout {
+
+		public TabularListRendererLayout(Collection object) {
+			super(object);
+		}
+
+		@Override
+		protected int getNumberOfColumns() {
+			return 1 + getNumberOfLinks() + (isCheckable() ? 1 : 0);
+		}
+
+		@Override
+		protected boolean hasHeader() {
+			return (displayHeaders) ? getListTitle() != null : false;
+		}
+
+		@Override
+		protected HtmlComponent getHeaderComponent(int columnIndex) {
+			if (columnIndex == (isCheckable() ? 1 : 0)) {
+				String description;
+
+				if (isListTitleKey()) {
+					description = RenderUtils.getResourceString(getListTitleBundle(), getListTitle());
+				} else {
+					description = getListTitle();
+				}
+
+				return new HtmlText(description);
+			} else {
+				return new HtmlText();
+			}
+		}
+
+		@Override
+		protected HtmlComponent generateObjectComponent(int columnIndex, MetaObject object) {
+			Schema schema = RenderKit.getInstance().findSchema(getSubSchema());
+			String layout = getSubLayout();
+
+			return renderValue(object.getObject(), schema, layout);
+		}
+	}
 
 }

@@ -19,376 +19,381 @@ import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumR
 
 public class AjaxTableRenderer extends CollectionRenderer {
 
-    private String ajaxSourceUrl;
+	private String ajaxSourceUrl;
 
-    private java.util.Map<String, String> extraParameter = new java.util.HashMap<String, String>();
+	private java.util.Map<String, String> extraParameter = new java.util.HashMap<String, String>();
 
-    public AjaxTableRenderer() {
-	super();
-    }
-
-    @Override
-    protected Layout getLayout(Object object, Class type) {
-	Collection sortedCollection = RenderUtils.sortCollectionWithCriteria((Collection) object, getSortBy());
-
-	return new AjaxTabularLayout(sortedCollection);
-    }
-
-    public class AjaxTabularLayout extends CollectionTabularLayout {
-
-	public AjaxTabularLayout(Collection object) {
-	    super(object);
+	public AjaxTableRenderer() {
+		super();
 	}
 
 	@Override
-	public HtmlComponent createComponent(Object object, Class type) {
+	protected Layout getLayout(Object object, Class type) {
+		Collection sortedCollection = RenderUtils.sortCollectionWithCriteria((Collection) object, getSortBy());
 
-	    HtmlInlineContainer container = new HtmlInlineContainer();
+		return new AjaxTabularLayout(sortedCollection);
+	}
 
-	    addAjaxDataTableScript(container);
+	public class AjaxTabularLayout extends CollectionTabularLayout {
 
-	    int columnNumber = getNumberOfColumns();
-
-	    initializeAjaxDataTable(container, columnNumber);
-
-	    HtmlTable table = new HtmlTable();
-	    container.addChild(table);
-
-	    setTable(table);
-
-	    if (hasHeader()) {
-		HtmlTableHeader header = table.createHeader();
-
-		HtmlTableRow firstRow = header.createRow();
-		HtmlTableRow secondRow = null;
-
-		if (hasHeaderGroups()) {
-		    secondRow = header.createRow();
+		public AjaxTabularLayout(Collection object) {
+			super(object);
 		}
 
-		String lastGroup = null;
-		HtmlTableCell lastGroupCell = null;
+		@Override
+		public HtmlComponent createComponent(Object object, Class type) {
 
-		for (int columnIndex = 0; columnIndex < columnNumber; columnIndex++) {
-		    String group = getHeaderGroup(columnIndex);
+			HtmlInlineContainer container = new HtmlInlineContainer();
 
-		    if (hasHeaderGroups() && group != null) {
-			if (lastGroup != null && lastGroup.equals(group)) {
-			    if (lastGroupCell.getColspan() == null) {
-				lastGroupCell.setColspan(2);
-			    } else {
-				lastGroupCell.setColspan(lastGroupCell.getColspan() + 1);
-			    }
-			} else {
-			    HtmlTableCell cell = firstRow.createCell();
-			    cell.setBody(new HtmlText(group));
+			addAjaxDataTableScript(container);
 
-			    lastGroup = group;
-			    lastGroupCell = cell;
+			int columnNumber = getNumberOfColumns();
+
+			initializeAjaxDataTable(container, columnNumber);
+
+			HtmlTable table = new HtmlTable();
+			container.addChild(table);
+
+			setTable(table);
+
+			if (hasHeader()) {
+				HtmlTableHeader header = table.createHeader();
+
+				HtmlTableRow firstRow = header.createRow();
+				HtmlTableRow secondRow = null;
+
+				if (hasHeaderGroups()) {
+					secondRow = header.createRow();
+				}
+
+				String lastGroup = null;
+				HtmlTableCell lastGroupCell = null;
+
+				for (int columnIndex = 0; columnIndex < columnNumber; columnIndex++) {
+					String group = getHeaderGroup(columnIndex);
+
+					if (hasHeaderGroups() && group != null) {
+						if (lastGroup != null && lastGroup.equals(group)) {
+							if (lastGroupCell.getColspan() == null) {
+								lastGroupCell.setColspan(2);
+							} else {
+								lastGroupCell.setColspan(lastGroupCell.getColspan() + 1);
+							}
+						} else {
+							HtmlTableCell cell = firstRow.createCell();
+							cell.setBody(new HtmlText(group));
+
+							lastGroup = group;
+							lastGroupCell = cell;
+						}
+
+						HtmlTableCell cell = secondRow.createCell();
+						cell.setBody(getHeaderComponent(columnIndex));
+					} else {
+						lastGroup = null;
+						lastGroupCell = null;
+
+						HtmlTableCell cell = firstRow.createCell();
+						cell.setBody(getHeaderComponent(columnIndex));
+
+						if (hasHeaderGroups()) {
+							cell.setRowspan(2);
+						}
+					}
+				}
 			}
 
-			HtmlTableCell cell = secondRow.createCell();
-			cell.setBody(getHeaderComponent(columnIndex));
-		    } else {
-			lastGroup = null;
-			lastGroupCell = null;
+			return container;
+		}
 
-			HtmlTableCell cell = firstRow.createCell();
-			cell.setBody(getHeaderComponent(columnIndex));
+		private void initializeAjaxDataTable(HtmlInlineContainer container, int columnNumber) {
+			HtmlScript script = new HtmlScript();
 
-			if (hasHeaderGroups()) {
-			    cell.setRowspan(2);
+			String scriptValue = "\n";
+			scriptValue += "var oTable;\n";
+			scriptValue += "$(document).ready(function() {\n";
+			scriptValue += "	oTable = $(\".ajax-table\").dataTable({\n";
+			scriptValue += getAjaxTableLanguageConfiguration() + ",\n";
+			scriptValue += "'bProcessing': true,\n";
+			scriptValue += "'bServerSide': true,\n";
+			scriptValue += "'aaSorting': [[1,'desc']],\n";
+			scriptValue += "'iDisplayLength': 100,\n";
+			scriptValue += "'sAjaxSource': \"" + getAjaxSourceUrlWithChecksum() + "\",\n";
+			scriptValue += "'fnServerData': function(sSource, aoData, fnCallback){\n";
+			for (java.util.Map.Entry<String, String> entry : getExtraParameter().entrySet()) {
+				scriptValue += "aoData.push({'name' : '" + entry.getKey() + "', 'value' : '" + entry.getValue() + "' });\n";
 			}
-		    }
+
+			scriptValue += "$.ajax({\n";
+			scriptValue += "'dataType': 'json',\n";
+			scriptValue += "'type': 'POST',\n";
+			scriptValue += "'url': sSource,\n";
+			scriptValue += "'data': aoData,\n";
+			scriptValue += "'success': fnCallback\n";
+			scriptValue += "});\n";
+			scriptValue += "},\n";
+
+			scriptValue += "'fnRowCallback': function(nRow, aData, iDisplayIndex) {\n";
+			scriptValue += "		return rowCallBackImpl(nRow, aData, iDisplayIndex);\n";
+			scriptValue += "},\n";
+
+			scriptValue += "'aoColumns': [\n";
+			for (int i = 0; i < (columnNumber - (getSortedLinksSize() > 0 ? 1 : 0)); i++) {
+				scriptValue += String.format("{ \"sClass\": \"%s\" },\n", getColumnClassesFor(i));
+			}
+
+			if (AjaxTableRenderer.this.getSortedLinksSize() > 0) {
+				scriptValue += "/*Links */ { \n";
+				scriptValue += "\t'bSortable': false,\n";
+				scriptValue += String.format("\t\"sClass\" : \"%s\",", getColumnClassesFor(columnNumber - 1));
+				scriptValue += "\t'fnRender': function(oObj) {\n";
+				scriptValue += "var links='';\n";
+
+				for (int i = 0; i < getSortedLinksSize(); i++) {
+					TableLink link = getTableLink(i);
+
+					String value = "";
+
+					if (link.getIcon() != null && !link.getIcon().equals("none")) {
+						HtmlLink forImage = new HtmlLink();
+						forImage.setModuleRelative(false);
+						forImage.setContextRelative(true);
+						forImage.setUrl("/images/" + link.getIcon() + ".gif");
+
+						value = String.format("<img src='%s' alt='%s' />", forImage.calculateUrl(), link.getLinkText(link, null));
+					} else {
+						value = link.getLinkText(link, null);
+					}
+
+					scriptValue +=
+							"if(oObj.aData[" + (columnNumber - 1) + "].split(',')[" + i + "] != 'permission_not_granted')\n";
+					scriptValue +=
+							"links += \"<\" + \"a href='\" + oObj.aData[" + (columnNumber - 1) + "].split(',')[" + i + "] + \"'>"
+									+ value + "</a>";
+
+					if (AjaxTableRenderer.this.getSortedLinksSize() > 1 && i < (AjaxTableRenderer.this.getSortedLinksSize() - 1)) {
+						scriptValue += " ";
+					}
+
+					scriptValue += "\"\n";
+				}
+
+				scriptValue += "return links;\n";
+
+			}
+
+			scriptValue += "}\n"; /* Close fnRender function */
+			scriptValue += "},\n"; /* Close Links aoColumn */
+
+			scriptValue += "{ /* Active */\n";
+			scriptValue += "\t'bSortable': false,\n";
+			scriptValue += "\t'sClass' : 'width0'\n";
+			// scriptValue += "\t'fnRender': function(oObj) {\n";
+			// scriptValue += "\t return \"\"";
+			// scriptValue += "\t}\n";
+			scriptValue += "}\n"; /* Close Active aoColumn */
+
+			scriptValue += "]\n"; /* Close aoColumns array */
+			scriptValue += "});\n";
+			scriptValue += "}\n";
+			scriptValue += ");\n";
+
+			script.setScript(scriptValue);
+
+			container.addChild(script);
 		}
-	    }
 
-	    return container;
-	}
+		private Object getColumnClassesFor(int i) {
+			String[] columnClasses = getColumnClasses().split(",");
+			if (i < columnClasses.length) {
+				return columnClasses[i];
+			}
 
-	private void initializeAjaxDataTable(HtmlInlineContainer container, int columnNumber) {
-	    HtmlScript script = new HtmlScript();
-
-	    String scriptValue = "\n";
-	    scriptValue += "var oTable;\n";
-	    scriptValue += "$(document).ready(function() {\n";
-	    scriptValue += "	oTable = $(\".ajax-table\").dataTable({\n";
-	    scriptValue += getAjaxTableLanguageConfiguration() + ",\n";
-	    scriptValue += "'bProcessing': true,\n";
-	    scriptValue += "'bServerSide': true,\n";
-	    scriptValue += "'aaSorting': [[1,'desc']],\n";
-	    scriptValue += "'iDisplayLength': 100,\n";
-	    scriptValue += "'sAjaxSource': \"" + getAjaxSourceUrlWithChecksum() + "\",\n";
-	    scriptValue += "'fnServerData': function(sSource, aoData, fnCallback){\n";
-	    for (java.util.Map.Entry<String, String> entry : getExtraParameter().entrySet())
-		scriptValue += "aoData.push({'name' : '" + entry.getKey() + "', 'value' : '" + entry.getValue() + "' });\n";
-
-	    scriptValue += "$.ajax({\n";
-	    scriptValue += "'dataType': 'json',\n";
-	    scriptValue += "'type': 'POST',\n";
-	    scriptValue += "'url': sSource,\n";
-	    scriptValue += "'data': aoData,\n";
-	    scriptValue += "'success': fnCallback\n";
-	    scriptValue += "});\n";
-	    scriptValue += "},\n";
-
-	    scriptValue += "'fnRowCallback': function(nRow, aData, iDisplayIndex) {\n";
-	    scriptValue += "		return rowCallBackImpl(nRow, aData, iDisplayIndex);\n";
-	    scriptValue += "},\n";
-
-	    scriptValue += "'aoColumns': [\n";
-	    for (int i = 0; i < (columnNumber - (getSortedLinksSize() > 0 ? 1 : 0)); i++) {
-		scriptValue += String.format("{ \"sClass\": \"%s\" },\n", getColumnClassesFor(i));
-	    }
-
-	    if (AjaxTableRenderer.this.getSortedLinksSize() > 0) {
-		scriptValue += "/*Links */ { \n";
-		scriptValue += "\t'bSortable': false,\n";
-		scriptValue += String.format("\t\"sClass\" : \"%s\",", getColumnClassesFor(columnNumber - 1));
-		scriptValue += "\t'fnRender': function(oObj) {\n";
-		scriptValue += "var links='';\n";
-
-		for (int i = 0; i < getSortedLinksSize(); i++) {
-		    TableLink link = getTableLink(i);
-
-		    String value = "";
-
-		    if (link.getIcon() != null && !link.getIcon().equals("none")) {
-			HtmlLink forImage = new HtmlLink();
-			forImage.setModuleRelative(false);
-			forImage.setContextRelative(true);
-			forImage.setUrl("/images/" + link.getIcon() + ".gif");
-
-			value = String.format("<img src='%s' alt='%s' />", forImage.calculateUrl(), link.getLinkText(link, null));
-		    } else {
-			value = link.getLinkText(link, null);
-		    }
-
-		    scriptValue += "if(oObj.aData[" + (columnNumber - 1) + "].split(',')[" + i
-			    + "] != 'permission_not_granted')\n";
-		    scriptValue += "links += \"<\" + \"a href='\" + oObj.aData[" + (columnNumber - 1) + "].split(',')[" + i
-			    + "] + \"'>" + value + "</a>";
-
-		    if (AjaxTableRenderer.this.getSortedLinksSize() > 1 && i < (AjaxTableRenderer.this.getSortedLinksSize() - 1)) {
-			scriptValue += " ";
-		    }
-
-		    scriptValue += "\"\n";
+			return "";
 		}
 
-		scriptValue += "return links;\n";
+		private String getAjaxTableLanguageConfiguration() {
+			ResourceBundle bundle = ResourceBundle.getBundle("resources/RendererResources");
 
-	    }
+			String sProcessing = bundle.getString("label.renderers.ajax.table.sProcessing");
+			String sLengthMenu = bundle.getString("label.renderers.ajax.table.sLengthMenu");
+			String sZeroRecords = bundle.getString("label.renderers.ajax.table.sZeroRecords");
+			String sInfo = bundle.getString("label.renderers.ajax.table.sInfo");
+			String sInfoEmpty = bundle.getString("label.renderers.ajax.table.sInfoEmpty");
+			String sInfoFiltered = bundle.getString("label.renderers.ajax.table.sInfoFiltered");
+			String sInfoPostFix = bundle.getString("label.renderers.ajax.table.sInfoPostFix");
+			String sSearch = bundle.getString("label.renderers.ajax.table.sSearch");
+			String sFirst = bundle.getString("label.renderers.ajax.table.sFirst");
+			String sPrevious = bundle.getString("label.renderers.ajax.table.sPrevious");
+			String sNext = bundle.getString("label.renderers.ajax.table.sNext");
+			String sLast = bundle.getString("label.renderers.ajax.table.sLast");
 
-	    scriptValue += "}\n"; /* Close fnRender function */
-	    scriptValue += "},\n"; /* Close Links aoColumn */
+			String returnValue = "";
+			returnValue += "'oLanguage': {\n";
+			returnValue += "\t'sProcessing': '" + sProcessing + "',\n";
+			returnValue += "\t'sLengthMenu': '" + sLengthMenu + "',\n";
+			returnValue += "\t'sZeroRecords': '" + sZeroRecords + "',\n";
+			returnValue += "\t'sInfo': '" + sInfo + "',\n";
+			returnValue += "\t'sInfoEmpty': '" + sInfoEmpty + "',\n";
+			returnValue += "\t'sInfoFiltered': '" + sInfoFiltered + "',\n";
+			returnValue += "\t'sInfoPostFix': '" + sInfoPostFix + "',\n";
+			returnValue += "\t'sSearch': '" + sSearch + "',\n";
+			returnValue += "\t'oPaginate': {\n";
+			returnValue += "\t\t'sFirst': '" + sFirst + "',\n";
+			returnValue += "\t\t'sPrevious': '" + sPrevious + "',\n";
+			returnValue += "\t\t'sNext': '" + sNext + "',\n";
+			returnValue += "\t\t'sLast': '" + sLast + "'\n";
+			returnValue += "\t}\n";
+			returnValue += "}";
 
-	    scriptValue += "{ /* Active */\n";
-	    scriptValue += "\t'bSortable': false,\n";
-	    scriptValue += "\t'sClass' : 'width0'\n";
-	    // scriptValue += "\t'fnRender': function(oObj) {\n";
-	    // scriptValue += "\t return \"\"";
-	    // scriptValue += "\t}\n";
-	    scriptValue += "}\n"; /* Close Active aoColumn */
+			return returnValue;
+		}
 
-	    scriptValue += "]\n"; /* Close aoColumns array */
-	    scriptValue += "});\n";
-	    scriptValue += "}\n";
-	    scriptValue += ");\n";
+		private void addAjaxDataTableScript(HtmlInlineContainer container) {
+			HtmlLink link = new HtmlLink();
+			link.setModuleRelative(false);
+			link.setContextRelative(true);
 
-	    script.setScript(scriptValue);
+			link.setUrl("/javaScript/dataTables/media/js/jquery.dataTables.js");
 
-	    container.addChild(script);
+			HtmlScript script = new HtmlScript("text/javascript", link.calculateUrl(), true);
+
+			container.addChild(script);
+		}
+
+		@Override
+		public void applyStyle(HtmlComponent component) {
+
+			HtmlInlineContainer container = (HtmlInlineContainer) component;
+
+			HtmlTable table = (HtmlTable) container.getChildren().get(2);
+
+			table.setClasses(getClasses() + " ajax-table");
+			table.setStyle(getStyle());
+			table.setTitle(getTitle());
+
+			table.setCaption(getCaption());
+			table.setSummary(getSummary());
+
+			// header
+			if (getHeaderClasses() != null) {
+				// decompose header cell classes
+				String[] headerClasses = null;
+				if (getHeaderClasses() != null) {
+					headerClasses = getHeaderClasses().split(",", -1);
+				}
+
+				HtmlTableHeader header = table.getHeader();
+				if (header != null) {
+					for (HtmlTableRow row : header.getRows()) {
+						int cellIndex = 0;
+						for (HtmlTableCell cell : row.getCells()) {
+							String choosenCellClass = headerClasses[cellIndex % headerClasses.length];
+							cell.setClasses(choosenCellClass);
+
+							cellIndex++;
+						}
+					}
+				}
+			}
+
+			// decompose row and cell classes
+			String[] rowClasses = null;
+			if (getRowClasses() != null) {
+				rowClasses = getRowClasses().split(",", -1);
+			}
+
+			String[] cellClasses = null;
+			if (getColumnClasses() != null) {
+				cellClasses = getColumnClasses().split(",", -1);
+			}
+
+			// check if additional styling is needed
+			if (rowClasses == null && cellClasses == null) {
+				return;
+			}
+
+			// apply style by rows and columns
+			int rowIndex = 0;
+			for (HtmlTableRow row : table.getRows()) {
+				if (rowClasses != null) {
+					String chooseRowClass = rowClasses[rowIndex % rowClasses.length];
+					if (!chooseRowClass.equals("")) {
+						row.setClasses(chooseRowClass);
+					}
+				}
+
+				if (cellClasses != null) {
+					int cellIndex = 0;
+					for (HtmlTableCell cell : row.getCells()) {
+						String chooseCellClass = cellClasses[cellIndex % cellClasses.length];
+						if (!chooseCellClass.equals("")) {
+							cell.setClasses(chooseCellClass);
+						}
+
+						cellIndex++;
+					}
+				}
+
+				rowIndex++;
+			}
+		}
+
+		@Override
+		protected void setExtraComponentOptions(Object object, HtmlComponent component, Class type) {
+			HtmlInlineContainer container = (HtmlInlineContainer) component;
+			HtmlTable table = (HtmlTable) container.getChildren().get(2);
+
+			table.setRenderCompliantTable(getRenderCompliantTable());
+		}
+
 	}
 
-	private Object getColumnClassesFor(int i) {
-	    String[] columnClasses = getColumnClasses().split(",");
-	    if (i < columnClasses.length) {
-		return columnClasses[i];
-	    }
-
-	    return "";
+	public String getAjaxSourceUrl() {
+		return this.ajaxSourceUrl;
 	}
 
-	private String getAjaxTableLanguageConfiguration() {
-	    ResourceBundle bundle = ResourceBundle.getBundle("resources/RendererResources");
-
-	    String sProcessing = bundle.getString("label.renderers.ajax.table.sProcessing");
-	    String sLengthMenu = bundle.getString("label.renderers.ajax.table.sLengthMenu");
-	    String sZeroRecords = bundle.getString("label.renderers.ajax.table.sZeroRecords");
-	    String sInfo = bundle.getString("label.renderers.ajax.table.sInfo");
-	    String sInfoEmpty = bundle.getString("label.renderers.ajax.table.sInfoEmpty");
-	    String sInfoFiltered = bundle.getString("label.renderers.ajax.table.sInfoFiltered");
-	    String sInfoPostFix = bundle.getString("label.renderers.ajax.table.sInfoPostFix");
-	    String sSearch = bundle.getString("label.renderers.ajax.table.sSearch");
-	    String sFirst = bundle.getString("label.renderers.ajax.table.sFirst");
-	    String sPrevious = bundle.getString("label.renderers.ajax.table.sPrevious");
-	    String sNext = bundle.getString("label.renderers.ajax.table.sNext");
-	    String sLast = bundle.getString("label.renderers.ajax.table.sLast");
-
-	    String returnValue = "";
-	    returnValue += "'oLanguage': {\n";
-	    returnValue += "\t'sProcessing': '" + sProcessing + "',\n";
-	    returnValue += "\t'sLengthMenu': '" + sLengthMenu + "',\n";
-	    returnValue += "\t'sZeroRecords': '" + sZeroRecords + "',\n";
-	    returnValue += "\t'sInfo': '" + sInfo + "',\n";
-	    returnValue += "\t'sInfoEmpty': '" + sInfoEmpty + "',\n";
-	    returnValue += "\t'sInfoFiltered': '" + sInfoFiltered + "',\n";
-	    returnValue += "\t'sInfoPostFix': '" + sInfoPostFix + "',\n";
-	    returnValue += "\t'sSearch': '" + sSearch + "',\n";
-	    returnValue += "\t'oPaginate': {\n";
-	    returnValue += "\t\t'sFirst': '" + sFirst + "',\n";
-	    returnValue += "\t\t'sPrevious': '" + sPrevious + "',\n";
-	    returnValue += "\t\t'sNext': '" + sNext + "',\n";
-	    returnValue += "\t\t'sLast': '" + sLast + "'\n";
-	    returnValue += "\t}\n";
-	    returnValue += "}";
-
-	    return returnValue;
+	public void setAjaxSourceUrl(String value) {
+		this.ajaxSourceUrl = value;
 	}
 
-	private void addAjaxDataTableScript(HtmlInlineContainer container) {
-	    HtmlLink link = new HtmlLink();
-	    link.setModuleRelative(false);
-	    link.setContextRelative(true);
+	public String getAjaxSourceUrlWithChecksum() {
+		HtmlLink link = new HtmlLink();
+		link.setUrl(getAjaxSourceUrl());
+		link.setModuleRelative(false);
+		link.setContextRelative(true);
 
-	    link.setUrl("/javaScript/dataTables/media/js/jquery.dataTables.js");
+		String urlParametersBoundaryCharacter = "&";
+		if (link.calculateUrl().indexOf("?") == -1) {
+			urlParametersBoundaryCharacter = "?";
+		}
 
-	    HtmlScript script = new HtmlScript("text/javascript", link.calculateUrl(), true);
+		return link.calculateUrl()
+				+ String.format(urlParametersBoundaryCharacter + "%s=%s", GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME,
+						GenericChecksumRewriter.calculateChecksum(link.calculateUrl()));
+	}
 
-	    container.addChild(script);
+	public java.util.Map<String, String> getExtraParameter() {
+		return this.extraParameter;
+	}
+
+	public void setExtraParameter(String key, String value) {
+		this.extraParameter.put(key, value);
+	}
+
+	/**
+	 * The counter isnt used in this kind of tables
+	 * 
+	 * @property
+	 */
+	@Override
+	public void setCounter(String name, String value) {
+		/* Do nothing */
 	}
 
 	@Override
-	public void applyStyle(HtmlComponent component) {
-
-	    HtmlInlineContainer container = (HtmlInlineContainer) component;
-
-	    HtmlTable table = (HtmlTable) container.getChildren().get(2);
-
-	    table.setClasses(getClasses() + " ajax-table");
-	    table.setStyle(getStyle());
-	    table.setTitle(getTitle());
-
-	    table.setCaption(getCaption());
-	    table.setSummary(getSummary());
-
-	    // header
-	    if (getHeaderClasses() != null) {
-		// decompose header cell classes
-		String[] headerClasses = null;
-		if (getHeaderClasses() != null) {
-		    headerClasses = getHeaderClasses().split(",", -1);
-		}
-
-		HtmlTableHeader header = table.getHeader();
-		if (header != null) {
-		    for (HtmlTableRow row : header.getRows()) {
-			int cellIndex = 0;
-			for (HtmlTableCell cell : row.getCells()) {
-			    String choosenCellClass = headerClasses[cellIndex % headerClasses.length];
-			    cell.setClasses(choosenCellClass);
-
-			    cellIndex++;
-			}
-		    }
-		}
-	    }
-
-	    // decompose row and cell classes
-	    String[] rowClasses = null;
-	    if (getRowClasses() != null) {
-		rowClasses = getRowClasses().split(",", -1);
-	    }
-
-	    String[] cellClasses = null;
-	    if (getColumnClasses() != null) {
-		cellClasses = getColumnClasses().split(",", -1);
-	    }
-
-	    // check if additional styling is needed
-	    if (rowClasses == null && cellClasses == null) {
-		return;
-	    }
-
-	    // apply style by rows and columns
-	    int rowIndex = 0;
-	    for (HtmlTableRow row : table.getRows()) {
-		if (rowClasses != null) {
-		    String chooseRowClass = rowClasses[rowIndex % rowClasses.length];
-		    if (!chooseRowClass.equals("")) {
-			row.setClasses(chooseRowClass);
-		    }
-		}
-
-		if (cellClasses != null) {
-		    int cellIndex = 0;
-		    for (HtmlTableCell cell : row.getCells()) {
-			String chooseCellClass = cellClasses[cellIndex % cellClasses.length];
-			if (!chooseCellClass.equals("")) {
-			    cell.setClasses(chooseCellClass);
-			}
-
-			cellIndex++;
-		    }
-		}
-
-		rowIndex++;
-	    }
+	public String getCounter(String name) {
+		return null;
 	}
-
-	@Override
-	protected void setExtraComponentOptions(Object object, HtmlComponent component, Class type) {
-	    HtmlInlineContainer container = (HtmlInlineContainer) component;
-	    HtmlTable table = (HtmlTable) container.getChildren().get(2);
-
-	    table.setRenderCompliantTable(getRenderCompliantTable());
-	}
-
-    }
-
-    public String getAjaxSourceUrl() {
-	return this.ajaxSourceUrl;
-    }
-
-    public void setAjaxSourceUrl(String value) {
-	this.ajaxSourceUrl = value;
-    }
-
-    public String getAjaxSourceUrlWithChecksum() {
-	HtmlLink link = new HtmlLink();
-	link.setUrl(getAjaxSourceUrl());
-	link.setModuleRelative(false);
-	link.setContextRelative(true);
-
-	String urlParametersBoundaryCharacter = "&";
-	if (link.calculateUrl().indexOf("?") == -1)
-	    urlParametersBoundaryCharacter = "?";
-
-	return link.calculateUrl()
-		+ String.format(urlParametersBoundaryCharacter + "%s=%s", GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME,
-			GenericChecksumRewriter.calculateChecksum(link.calculateUrl()));
-    }
-
-    public java.util.Map<String, String> getExtraParameter() {
-	return this.extraParameter;
-    }
-
-    public void setExtraParameter(String key, String value) {
-	this.extraParameter.put(key, value);
-    }
-
-    /**
-     * The counter isnt used in this kind of tables
-     * 
-     * @property
-     */
-    public void setCounter(String name, String value) {
-	/* Do nothing */
-    }
-
-    public String getCounter(String name) {
-	return null;
-    }
 
 }

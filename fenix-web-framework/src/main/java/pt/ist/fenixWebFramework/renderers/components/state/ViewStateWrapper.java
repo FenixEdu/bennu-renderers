@@ -12,216 +12,265 @@ import pt.ist.fenixWebFramework.renderers.model.UserIdentity;
 
 public class ViewStateWrapper implements IViewState {
 
-    private IViewState viewState;
-    
-    private String attributesPrefix;
-    
-    public ViewStateWrapper(IViewState viewState, String attributesPrefix) {
-        this.viewState = viewState;
-        this.attributesPrefix = attributesPrefix;
-    }
+	private IViewState viewState;
 
-    public String getPrefix() {
-        return this.attributesPrefix;
-    }
+	private String attributesPrefix;
 
-    public IViewState getWrappedViewState() {
-        return this.viewState;
-    }
-    
-    public Object getAttribute(String name) {
-        return this.viewState.getAttribute(name);
-    }
+	public ViewStateWrapper(IViewState viewState, String attributesPrefix) {
+		this.viewState = viewState;
+		this.attributesPrefix = attributesPrefix;
+	}
 
-    public void removeAttribute(String name) {
-        viewState.removeAttribute(name);
-    }
+	public String getPrefix() {
+		return this.attributesPrefix;
+	}
 
-    public void setAttribute(String name, Object value) {
-        this.viewState.setAttribute(name, value);
-    }
+	public IViewState getWrappedViewState() {
+		return this.viewState;
+	}
 
-    public void setLocalAttribute(String name, Object value) {
-        viewState.setAttribute(attributesPrefix + "/" + name, value);
-    }
+	@Override
+	public Object getAttribute(String name) {
+		return this.viewState.getAttribute(name);
+	}
 
-    public Object getLocalAttribute(String name) {
-        return viewState.getAttribute(attributesPrefix + "/" + name);
-    }
+	@Override
+	public void removeAttribute(String name) {
+		viewState.removeAttribute(name);
+	}
 
-    public void removeLocalAttribute(String name) {
-        viewState.removeAttribute(attributesPrefix + "/" + name);
-    }
+	@Override
+	public void setAttribute(String name, Object value) {
+		this.viewState.setAttribute(name, value);
+	}
 
-    public String getId() {
-        return viewState.getId();
-    }
+	@Override
+	public void setLocalAttribute(String name, Object value) {
+		viewState.setAttribute(attributesPrefix + "/" + name, value);
+	}
 
-    public boolean isPostBack() {
-        return this.viewState.isPostBack();
-    }
+	@Override
+	public Object getLocalAttribute(String name) {
+		return viewState.getAttribute(attributesPrefix + "/" + name);
+	}
 
-    public void setPostBack(boolean isPostBack) {
-        viewState.setPostBack(isPostBack);
-    }
+	@Override
+	public void removeLocalAttribute(String name) {
+		viewState.removeAttribute(attributesPrefix + "/" + name);
+	}
 
-    public boolean isCanceled() {
-        return this.viewState.isCanceled();
-    }
-    
-    public void cancel() {
-        this.viewState.cancel();
-    }
+	@Override
+	public String getId() {
+		return viewState.getId();
+	}
 
-    public HtmlComponent getComponent() {
-        return viewState.getComponent();
-    }
+	@Override
+	public boolean isPostBack() {
+		return this.viewState.isPostBack();
+	}
 
-    public void setComponent(HtmlComponent component) {
-        viewState.setComponent(component);
-    }
+	@Override
+	public void setPostBack(boolean isPostBack) {
+		viewState.setPostBack(isPostBack);
+	}
 
-    public boolean isVisible() {
-        return this.viewState.isVisible();
-    }
+	@Override
+	public boolean isCanceled() {
+		return this.viewState.isCanceled();
+	}
 
-    public void setVisible(boolean isVisible) {
-        this.viewState.setVisible(isVisible);
-    }
+	@Override
+	public void cancel() {
+		this.viewState.cancel();
+	}
 
-    public void setValid(boolean isValid) {
-        viewState.setValid(isValid);
-    }
+	@Override
+	public HtmlComponent getComponent() {
+		return viewState.getComponent();
+	}
 
-    public boolean skipUpdate() {
-        return viewState.skipUpdate();
-    }
+	@Override
+	public void setComponent(HtmlComponent component) {
+		viewState.setComponent(component);
+	}
 
-    public void setSkipUpdate(boolean skipUpdate) {
-        viewState.setSkipUpdate(skipUpdate);
-    }
+	@Override
+	public boolean isVisible() {
+		return this.viewState.isVisible();
+	}
 
-    public void setSkipValidation(boolean skipValidation) {
-        this.viewState.setSkipValidation(skipValidation);
-    }
+	@Override
+	public void setVisible(boolean isVisible) {
+		this.viewState.setVisible(isVisible);
+	}
 
-    public boolean skipValidation() {
-        return this.viewState.skipValidation();
-    }
-    
-    public boolean isValid() {
-        return viewState.isValid();
-    }
+	@Override
+	public void setValid(boolean isValid) {
+		viewState.setValid(isValid);
+	}
 
-    public void setUpdateComponentTree(boolean updateTree) {
-        viewState.setUpdateComponentTree(updateTree);
-    }
+	@Override
+	public boolean skipUpdate() {
+		return viewState.skipUpdate();
+	}
 
-    public boolean getUpdateComponentTree() {
-        return viewState.getUpdateComponentTree();
-    }
+	@Override
+	public void setSkipUpdate(boolean skipUpdate) {
+		viewState.setSkipUpdate(skipUpdate);
+	}
 
-    public void addDestination(String name, ViewDestination destination) {
-        viewState.addDestination(name, destination);
-    }
+	@Override
+	public void setSkipValidation(boolean skipValidation) {
+		this.viewState.setSkipValidation(skipValidation);
+	}
 
-    public ViewDestination getDestination(String name) {
-        return viewState.getDestination(name);
-    }
+	@Override
+	public boolean skipValidation() {
+		return this.viewState.skipValidation();
+	}
 
-    public void setInputDestination(ViewDestination destination) {
-        viewState.setInputDestination(destination);
-    }
+	@Override
+	public boolean isValid() {
+		return viewState.isValid();
+	}
 
-    public ViewDestination getInputDestination() {
-        return viewState.getInputDestination();
-    }
+	@Override
+	public void setUpdateComponentTree(boolean updateTree) {
+		viewState.setUpdateComponentTree(updateTree);
+	}
 
-    public void setCurrentDestination(String name) {
-        viewState.setCurrentDestination(name);
-    }
+	@Override
+	public boolean getUpdateComponentTree() {
+		return viewState.getUpdateComponentTree();
+	}
 
-    public void setCurrentDestination(ViewDestination destination) {
-        viewState.setCurrentDestination(destination);
-    }
+	@Override
+	public void addDestination(String name, ViewDestination destination) {
+		viewState.addDestination(name, destination);
+	}
 
-    public ViewDestination getCurrentDestination() {
-        return viewState.getCurrentDestination();
-    }
+	@Override
+	public ViewDestination getDestination(String name) {
+		return viewState.getDestination(name);
+	}
 
-    public HttpServletRequest getRequest() {
-        return viewState.getRequest();
-    }
+	@Override
+	public void setInputDestination(ViewDestination destination) {
+		viewState.setInputDestination(destination);
+	}
 
-    public void setRequest(HttpServletRequest request) {
-        viewState.setRequest(request);
-    }
+	@Override
+	public ViewDestination getInputDestination() {
+		return viewState.getInputDestination();
+	}
 
-    public UserIdentity getUser() {
-        return viewState.getUser();
-    }
+	@Override
+	public void setCurrentDestination(String name) {
+		viewState.setCurrentDestination(name);
+	}
 
-    public void setUser(UserIdentity user) {
-        viewState.setUser(user);
-    }
+	@Override
+	public void setCurrentDestination(ViewDestination destination) {
+		viewState.setCurrentDestination(destination);
+	}
 
-    public String getLayout() {
-        return viewState.getLayout();
-    }
+	@Override
+	public ViewDestination getCurrentDestination() {
+		return viewState.getCurrentDestination();
+	}
 
-    public void setLayout(String layout) {
-        viewState.setLayout(layout);
-    }
+	@Override
+	public HttpServletRequest getRequest() {
+		return viewState.getRequest();
+	}
 
-    public Properties getProperties() {
-        return viewState.getProperties();
-    }
+	@Override
+	public void setRequest(HttpServletRequest request) {
+		viewState.setRequest(request);
+	}
 
-    public void setProperties(Properties properties) {
-        viewState.setProperties(properties);
-    }
+	@Override
+	public UserIdentity getUser() {
+		return viewState.getUser();
+	}
 
-    public Class getContextClass() {
-        return viewState.getContextClass();
-    }
+	@Override
+	public void setUser(UserIdentity user) {
+		viewState.setUser(user);
+	}
 
-    public void setContextClass(Class contextClass) {
-        viewState.setContextClass(contextClass);
-    }
+	@Override
+	public String getLayout() {
+		return viewState.getLayout();
+	}
 
-    public void setMetaObject(MetaObject object) {
-        viewState.setMetaObject(object);
-    }
+	@Override
+	public void setLayout(String layout) {
+		viewState.setLayout(layout);
+	}
 
-    public MetaObject getMetaObject() {
-        return viewState.getMetaObject();
-    }
+	@Override
+	public Properties getProperties() {
+		return viewState.getProperties();
+	}
 
-    public void setContext(PresentationContext context) {
-        this.viewState.setContext(context);
-    }
+	@Override
+	public void setProperties(Properties properties) {
+		viewState.setProperties(properties);
+	}
 
-    public PresentationContext getContext() {
-        return this.viewState.getContext();
-    }
+	@Override
+	public Class getContextClass() {
+		return viewState.getContextClass();
+	}
 
-    public void addHiddenSlot(HiddenSlot slot) {
-        this.viewState.addHiddenSlot(slot);
-    }
+	@Override
+	public void setContextClass(Class contextClass) {
+		viewState.setContextClass(contextClass);
+	}
 
-    public List<HiddenSlot> getHiddenSlots() {
-        return this.viewState.getHiddenSlots();
-    }
+	@Override
+	public void setMetaObject(MetaObject object) {
+		viewState.setMetaObject(object);
+	}
 
-    public void addMessage(Message message) {
-        this.viewState.addMessage(message);
-    }
+	@Override
+	public MetaObject getMetaObject() {
+		return viewState.getMetaObject();
+	}
 
-    public List<Message> getMessages() {
-        return this.viewState.getMessages();
-    }
+	@Override
+	public void setContext(PresentationContext context) {
+		this.viewState.setContext(context);
+	}
 
-    public List<Message> setMessages(List<Message> messages) {
-        return this.viewState.setMessages(messages);
-    }
+	@Override
+	public PresentationContext getContext() {
+		return this.viewState.getContext();
+	}
+
+	@Override
+	public void addHiddenSlot(HiddenSlot slot) {
+		this.viewState.addHiddenSlot(slot);
+	}
+
+	@Override
+	public List<HiddenSlot> getHiddenSlots() {
+		return this.viewState.getHiddenSlots();
+	}
+
+	@Override
+	public void addMessage(Message message) {
+		this.viewState.addMessage(message);
+	}
+
+	@Override
+	public List<Message> getMessages() {
+		return this.viewState.getMessages();
+	}
+
+	@Override
+	public List<Message> setMessages(List<Message> messages) {
+		return this.viewState.setMessages(messages);
+	}
 }

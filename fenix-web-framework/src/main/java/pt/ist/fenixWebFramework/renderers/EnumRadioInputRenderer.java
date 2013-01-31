@@ -13,35 +13,35 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlText;
  * one of the values.
  * 
  * <p>
- * Example: 
+ * Example:
  * <ul>
- *  <li><input type="radio" name="same"/>Male</li>
- *  <li><input type="radio" name="same" checked="checked"/>Female</li>
+ * <li><input type="radio" name="same"/>Male</li>
+ * <li><input type="radio" name="same" checked="checked"/>Female</li>
  * </ul>
  * 
  * @author cfgi
  */
 public class EnumRadioInputRenderer extends EnumInputRenderer {
 
-    @Override
-    protected void addEnumElement(Enum enumerate, HtmlSimpleValueComponent holder, Enum oneEnum, String description) {
-	HtmlRadioButtonList radioList = (HtmlRadioButtonList) holder;
-	
-	HtmlText descriptionComponent = new HtmlText(description);
-	HtmlLabel label = new HtmlLabel();
-	label.setBody(descriptionComponent);
-	
-	HtmlRadioButton radioButton = radioList.addOption(label, oneEnum.toString());
-	label.setFor(radioButton);
-	
-	if (oneEnum.equals(enumerate)) {
-            radioButton.setChecked(true);
-        }
-    }
+	@Override
+	protected void addEnumElement(Enum enumerate, HtmlSimpleValueComponent holder, Enum oneEnum, String description) {
+		HtmlRadioButtonList radioList = (HtmlRadioButtonList) holder;
 
-    @Override
-    protected HtmlSimpleValueComponent createInputContainerComponent(Enum enumerate) {
-	return new HtmlRadioButtonList();
-    }
-    
+		HtmlText descriptionComponent = new HtmlText(description);
+		HtmlLabel label = new HtmlLabel();
+		label.setBody(descriptionComponent);
+
+		HtmlRadioButton radioButton = radioList.addOption(label, oneEnum.toString());
+		label.setFor(radioButton);
+
+		if (oneEnum.equals(enumerate)) {
+			radioButton.setChecked(true);
+		}
+	}
+
+	@Override
+	protected HtmlSimpleValueComponent createInputContainerComponent(Enum enumerate) {
+		return new HtmlRadioButtonList();
+	}
+
 }

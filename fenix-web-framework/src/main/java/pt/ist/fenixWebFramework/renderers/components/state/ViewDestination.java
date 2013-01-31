@@ -6,77 +6,77 @@ import org.apache.struts.action.ActionForward;
 
 public class ViewDestination implements Serializable {
 
-    private String path;
+	private String path;
 
-    private boolean redirect;
+	private boolean redirect;
 
-    private String module;
-    
-    public ViewDestination(String path, String module, boolean redirect) {
-        this.path = path;
-        this.module = module;
-        this.redirect = redirect;
-    }
+	private String module;
 
-    public String getPath() {
-        return this.path;
-    }
+	public ViewDestination(String path, String module, boolean redirect) {
+		this.path = path;
+		this.module = module;
+		this.redirect = redirect;
+	}
 
-    public String getModule() {
-        return this.module;
-    }
-    
-    public boolean getRedirect() {
-        return this.redirect;
-    }
+	public String getPath() {
+		return this.path;
+	}
 
-    public void setModule(String module) {
-        this.module = module;
-    }
+	public String getModule() {
+		return this.module;
+	}
 
-    public void setPath(String path) {
-        this.path = path;
-    }
+	public boolean getRedirect() {
+		return this.redirect;
+	}
 
-    public void setRedirect(boolean redirect) {
-        this.redirect = redirect;
-    }
+	public void setModule(String module) {
+		this.module = module;
+	}
 
-    public ActionForward getActionForward() {
-        ActionForward forward = new ActionForward();
+	public void setPath(String path) {
+		this.path = path;
+	}
 
-        forward.setPath(getPath());
-        forward.setModule(getModule());
-        forward.setRedirect(getRedirect());
+	public void setRedirect(boolean redirect) {
+		this.redirect = redirect;
+	}
 
-        return forward;
-    }
-    
-    @Override
-    public boolean equals(Object other) {
-        if (! (other instanceof ViewDestination)) {
-            return false;
-        }
+	public ActionForward getActionForward() {
+		ActionForward forward = new ActionForward();
 
-        ViewDestination otherDestination = (ViewDestination) other;
+		forward.setPath(getPath());
+		forward.setModule(getModule());
+		forward.setRedirect(getRedirect());
 
-        if (getPath() != null && ! getPath().equals(otherDestination.getPath())) {
-            return false;
-        }
-        
-        if (getModule() != null && ! getModule().equals(otherDestination.getModule())) {
-            return false;
-        }
-        
-        return true;
-    }
+		return forward;
+	}
 
-    @Override
-    public int hashCode() {
-        String path = getPath();
-        String module = getModule();
-        
-        return (path != null ? path.hashCode() : 0) + (module != null ? module.hashCode() : 0); 
-    }
-    
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof ViewDestination)) {
+			return false;
+		}
+
+		ViewDestination otherDestination = (ViewDestination) other;
+
+		if (getPath() != null && !getPath().equals(otherDestination.getPath())) {
+			return false;
+		}
+
+		if (getModule() != null && !getModule().equals(otherDestination.getModule())) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		String path = getPath();
+		String module = getModule();
+
+		return (path != null ? path.hashCode() : 0) + (module != null ? module.hashCode() : 0);
+	}
+
 }

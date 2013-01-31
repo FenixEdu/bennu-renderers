@@ -12,19 +12,19 @@ import java.lang.annotation.Target;
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
  * 
  */
-@Target( { ElementType.TYPE })
+@Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Forward {
 
-    String name();
+	String name();
 
-    String path();
+	String path();
 
-    boolean redirect() default false;
+	boolean redirect() default false;
 
-    boolean contextRelative() default false;
+	boolean contextRelative() default false;
 
-    boolean useTile() default true;
+	boolean useTile() default true;
 
-    Tile tileProperties() default @Tile();
+	Tile tileProperties() default @Tile();
 }

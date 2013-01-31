@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
-@Target( { METHOD, CONSTRUCTOR })
+@Target({ METHOD, CONSTRUCTOR })
 public @interface Checked {
-    String value();
+	String value();
 }

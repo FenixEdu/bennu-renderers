@@ -12,11 +12,11 @@ import java.lang.annotation.Target;
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
  * 
  */
-@Target( { ElementType.TYPE })
+@Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Forwards {
 
-    Forward[] value();
+	Forward[] value();
 
-    Tile tileProperties() default @Tile();
+	Tile tileProperties() default @Tile();
 }

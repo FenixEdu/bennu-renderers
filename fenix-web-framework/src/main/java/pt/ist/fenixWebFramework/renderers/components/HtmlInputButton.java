@@ -2,32 +2,32 @@ package pt.ist.fenixWebFramework.renderers.components;
 
 public abstract class HtmlInputButton extends HtmlInputComponent {
 
-    private boolean pressed;
-    
-    public HtmlInputButton(String type) {
-        super(type);
+	private boolean pressed;
 
-        setPressed(false);
-    }
+	public HtmlInputButton(String type) {
+		super(type);
 
-    public void setText(String text) {
-        super.setValue(text);
-    }
-    
-    public String getText() {
-        return getValue();
-    }
-    
-    @Override
-    public void setValue(String value) {
-        setPressed(value != null);
-    }
+		setPressed(false);
+	}
 
-    public boolean isPressed() {
-        return pressed;
-    }
+	public void setText(String text) {
+		super.setValue(text);
+	}
 
-    public void setPressed(boolean pressed) {
-        this.pressed = pressed;
-    }
+	public String getText() {
+		return getValue();
+	}
+
+	@Override
+	public void setValue(String value) {
+		setPressed(value != null);
+	}
+
+	public boolean isPressed() {
+		return pressed;
+	}
+
+	public void setPressed(boolean pressed) {
+		this.pressed = pressed;
+	}
 }

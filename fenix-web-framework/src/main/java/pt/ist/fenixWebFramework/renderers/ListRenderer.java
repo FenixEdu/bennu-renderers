@@ -128,9 +128,8 @@ public class ListRenderer extends OutputRenderer {
 
 	/**
 	 * Allows you to choose the order in wich the elements will be presented.-
-	 * See
-	 * {@link pt.ist.fenixWebFramework.renderers.utils.RenderUtils#sortCollectionWithCriteria(Collection, String)}
-	 * for more details.
+	 * See {@link pt.ist.fenixWebFramework.renderers.utils.RenderUtils#sortCollectionWithCriteria(Collection, String)} for more
+	 * details.
 	 * 
 	 * @property
 	 */
@@ -186,8 +185,7 @@ public class ListRenderer extends OutputRenderer {
 
 	@Override
 	protected Layout getLayout(Object object, Class type) {
-		Collection sortedCollection = RenderUtils.sortCollectionWithCriteria(
-				(Collection) object, getSortBy());
+		Collection sortedCollection = RenderUtils.sortCollectionWithCriteria((Collection) object, getSortBy());
 
 		return new ListRendererLayout(sortedCollection);
 	}
@@ -238,12 +236,13 @@ public class ListRenderer extends OutputRenderer {
 			}
 		}
 
-		protected void applyConditionalClasses(Object object,
-				HtmlComponent component, CssStyler cssStyler) {
-			Boolean useIf = ((cssStyler.getUseIf() != null) && (Boolean) RendererPropertyUtils
-					.getProperty(object, cssStyler.getUseIf(), false));
-			Boolean useIfNot = ((cssStyler.getUseIfNot() != null) && !(Boolean) RendererPropertyUtils
-					.getProperty(object, cssStyler.getUseIfNot(), false));
+		protected void applyConditionalClasses(Object object, HtmlComponent component, CssStyler cssStyler) {
+			Boolean useIf =
+					((cssStyler.getUseIf() != null) && (Boolean) RendererPropertyUtils.getProperty(object, cssStyler.getUseIf(),
+							false));
+			Boolean useIfNot =
+					((cssStyler.getUseIfNot() != null) && !(Boolean) RendererPropertyUtils.getProperty(object,
+							cssStyler.getUseIfNot(), false));
 			if (useIf || useIfNot) {
 				component.setClasses(cssStyler.getStyleClass());
 			}

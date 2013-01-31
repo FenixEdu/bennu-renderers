@@ -6,15 +6,15 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 
 public abstract class HtmlController implements Serializable {
-    private HtmlComponent controlledComponent;
-    
-    public HtmlComponent getControlledComponent() {
-        return controlledComponent;
-    }
-    
-    public void setControlledComponent(HtmlComponent controlledComponent) {
-        this.controlledComponent = controlledComponent;
-    }
+	private HtmlComponent controlledComponent;
 
-    public abstract void execute(IViewState viewState);
+	public HtmlComponent getControlledComponent() {
+		return controlledComponent;
+	}
+
+	public void setControlledComponent(HtmlComponent controlledComponent) {
+		this.controlledComponent = controlledComponent;
+	}
+
+	public abstract void execute(IViewState viewState);
 }

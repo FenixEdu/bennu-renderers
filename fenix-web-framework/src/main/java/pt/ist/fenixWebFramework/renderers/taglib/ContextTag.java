@@ -15,57 +15,57 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 
 public class ContextTag extends TagSupport {
 
-    private List<IViewState> viewStates;
-    private MetaObject metaObject;
-    
-    public ContextTag() {
-        super();
-        
-        this.viewStates = new ArrayList<IViewState>();
-    }
+	private List<IViewState> viewStates;
+	private MetaObject metaObject;
 
-    @Override
-    public void release() {
-        super.release();
-        
-        this.viewStates = new ArrayList<IViewState>();
-        this.metaObject = null;
-    }
+	public ContextTag() {
+		super();
 
-    @Override
-    public int doStartTag() throws JspException {
-        return EVAL_BODY_INCLUDE;
-    }
-    
-    @Override
-    public int doEndTag() throws JspException {
-        try {
-            if (! this.viewStates.isEmpty()) {
-                HtmlHiddenField hidden = new HtmlHiddenField(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME, encodeViewStates());
-        
-                hidden.draw(this.pageContext);
-            }
-        } catch (IOException e) {
-            throw new JspException(e);
-        }
-        
-        release();
-        return EVAL_PAGE;
-    }
+		this.viewStates = new ArrayList<IViewState>();
+	}
 
-    private String encodeViewStates() throws IOException {
-        return ViewState.encodeListToBase64(this.viewStates);
-    }
+	@Override
+	public void release() {
+		super.release();
 
-    public void addViewState(IViewState viewState) {
-        this.viewStates.add(viewState);
-    }
+		this.viewStates = new ArrayList<IViewState>();
+		this.metaObject = null;
+	}
 
-    public void setMetaObject(MetaObject metaObject) {
-        this.metaObject = metaObject;
-    }
+	@Override
+	public int doStartTag() throws JspException {
+		return EVAL_BODY_INCLUDE;
+	}
 
-    public MetaObject getMetaObject() {
-        return this.metaObject;
-    }
+	@Override
+	public int doEndTag() throws JspException {
+		try {
+			if (!this.viewStates.isEmpty()) {
+				HtmlHiddenField hidden = new HtmlHiddenField(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME, encodeViewStates());
+
+				hidden.draw(this.pageContext);
+			}
+		} catch (IOException e) {
+			throw new JspException(e);
+		}
+
+		release();
+		return EVAL_PAGE;
+	}
+
+	private String encodeViewStates() throws IOException {
+		return ViewState.encodeListToBase64(this.viewStates);
+	}
+
+	public void addViewState(IViewState viewState) {
+		this.viewStates.add(viewState);
+	}
+
+	public void setMetaObject(MetaObject metaObject) {
+		this.metaObject = metaObject;
+	}
+
+	public MetaObject getMetaObject() {
+		return this.metaObject;
+	}
 }

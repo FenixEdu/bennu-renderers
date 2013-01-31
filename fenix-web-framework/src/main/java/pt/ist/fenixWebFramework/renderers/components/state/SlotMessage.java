@@ -4,20 +4,20 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 
 public class SlotMessage extends Message {
 
-    private MetaSlot slot;
-    
-    protected SlotMessage(Type type, MetaSlot slot, String message) {
-        super(type, message);
-        
-        setSlot(slot);
-    }
+	private MetaSlot slot;
 
-    public MetaSlot getSlot() {
-        return this.slot;
-    }
+	protected SlotMessage(Type type, MetaSlot slot, String message) {
+		super(type, message);
 
-    protected void setSlot(MetaSlot slot) {
-        this.slot = slot;
-    }
-    
+		setSlot(slot);
+	}
+
+	public MetaSlot getSlot() {
+		return this.slot;
+	}
+
+	protected void setSlot(MetaSlot slot) {
+		this.slot = slot;
+	}
+
 }

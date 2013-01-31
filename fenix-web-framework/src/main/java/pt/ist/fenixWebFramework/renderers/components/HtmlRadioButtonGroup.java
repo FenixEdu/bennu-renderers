@@ -9,74 +9,73 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlRadioButtonGroup extends HtmlSimpleValueComponent {
 
-    private List<HtmlRadioButton> radioButtons;
+	private List<HtmlRadioButton> radioButtons;
 
-    public HtmlRadioButtonGroup() {
-        super();
-        
-        this.radioButtons = new ArrayList<HtmlRadioButton>();
-    }
+	public HtmlRadioButtonGroup() {
+		super();
 
-    public List<HtmlRadioButton> getRadioButtons() {
-        return this.radioButtons;
-    }
+		this.radioButtons = new ArrayList<HtmlRadioButton>();
+	}
 
-    @Override
-    public void setValue(String value) {
-        super.setValue(value);
-        
-        for (HtmlRadioButton radio : getRadioButtons()) {
-            if (value != null && value.equals(radio.getValue())) {
-                radio.setChecked(true);
-            }
-            else {
-                radio.setChecked(false);
-            }
-        }
-    }
+	public List<HtmlRadioButton> getRadioButtons() {
+		return this.radioButtons;
+	}
 
-    public HtmlRadioButton createRadioButton() {
-        HtmlRadioButton radio = new HtmlRadioButton() {
+	@Override
+	public void setValue(String value) {
+		super.setValue(value);
 
-            @Override
-            public void setChecked(boolean checked) {
-                HtmlRadioButtonGroup.this.setChecked(this, checked);
-                
-                super.setChecked(checked);
-            }
-            
-        };
-        
-        getRadioButtons().add(radio);
-        radio.setName(getName());
-        
-        return radio;
-    }
+		for (HtmlRadioButton radio : getRadioButtons()) {
+			if (value != null && value.equals(radio.getValue())) {
+				radio.setChecked(true);
+			} else {
+				radio.setChecked(false);
+			}
+		}
+	}
 
-    protected void setChecked(HtmlRadioButton button, boolean checked) {
-        if (! checked) {
-            return;
-        }
+	public HtmlRadioButton createRadioButton() {
+		HtmlRadioButton radio = new HtmlRadioButton() {
 
-        for (HtmlRadioButton radio : getRadioButtons()) {
-            if (radio.equals(button)) {
-                continue;
-            }
-            
-            radio.setChecked(false);
-        }
-    }
+			@Override
+			public void setChecked(boolean checked) {
+				HtmlRadioButtonGroup.this.setChecked(this, checked);
 
-    @Override
-    public HtmlTag getOwnTag(PageContext context) {
-        for (HtmlRadioButton radio : getRadioButtons()) {
-            radio.setName(getName());
-            
-            if (getTargetSlot() != null) {
-                radio.setTargetSlot(getTargetSlot());
-            }
-        }
+				super.setChecked(checked);
+			}
 
-        return new HtmlText().getOwnTag(context);
-    }
+		};
+
+		getRadioButtons().add(radio);
+		radio.setName(getName());
+
+		return radio;
+	}
+
+	protected void setChecked(HtmlRadioButton button, boolean checked) {
+		if (!checked) {
+			return;
+		}
+
+		for (HtmlRadioButton radio : getRadioButtons()) {
+			if (radio.equals(button)) {
+				continue;
+			}
+
+			radio.setChecked(false);
+		}
+	}
+
+	@Override
+	public HtmlTag getOwnTag(PageContext context) {
+		for (HtmlRadioButton radio : getRadioButtons()) {
+			radio.setName(getName());
+
+			if (getTargetSlot() != null) {
+				radio.setTargetSlot(getTargetSlot());
+			}
+		}
+
+		return new HtmlText().getOwnTag(context);
+	}
 }

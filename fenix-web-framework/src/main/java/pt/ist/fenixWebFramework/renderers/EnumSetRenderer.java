@@ -26,8 +26,7 @@ public class EnumSetRenderer extends OutputRenderer {
 
 		for (Object enumSetObject : enumSetArray) {
 
-			String thisDescription = RenderUtils
-					.getEnumString((Enum) enumSetObject);
+			String thisDescription = RenderUtils.getEnumString((Enum) enumSetObject);
 
 			if (description.length() != 0) {
 				description.append(", ");

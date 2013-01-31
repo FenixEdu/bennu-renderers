@@ -18,45 +18,48 @@ import pt.ist.fenixWebFramework.security.UserView;
 
 public class SetUserViewFilter implements Filter {
 
-    public static final String USER_SESSION_ATTRIBUTE = "USER_SESSION_ATTRIBUTE";
+	public static final String USER_SESSION_ATTRIBUTE = "USER_SESSION_ATTRIBUTE";
 
-    public void init(FilterConfig config) {
-    }
-
-    public void destroy() {
-    }
-
-    protected HttpSession getHttpSession(final ServletRequest servletRequest) {
-	if (servletRequest instanceof HttpServletRequest) {
-	    final HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-	    return httpServletRequest.getSession(false);
+	@Override
+	public void init(FilterConfig config) {
 	}
-	return null;
-    }
 
-    protected <T extends User> T getUserView(final ServletRequest servletRequest) {
-	final HttpSession httpSession = getHttpSession(servletRequest);
-	return (T) (httpSession == null ? null : httpSession.getAttribute(USER_SESSION_ATTRIBUTE));
-    }
+	@Override
+	public void destroy() {
+	}
 
-    public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
-	    throws IOException, ServletException {
-	final User user = getUserView(servletRequest);
-	if (user != null) {
-	    final DateTime lastLogoutDateTime = user.getLastLogoutDateTime();
-	    if (lastLogoutDateTime == null || user.getUserCreationDateTime().isAfter(lastLogoutDateTime)) {
-		UserView.setUser(user);
-	    } else {
-		UserView.setUser(null);
-	    }
-	} else {
-	    UserView.setUser(null);
+	protected HttpSession getHttpSession(final ServletRequest servletRequest) {
+		if (servletRequest instanceof HttpServletRequest) {
+			final HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+			return httpServletRequest.getSession(false);
+		}
+		return null;
 	}
-	try {
-	    filterChain.doFilter(servletRequest, servletResponse);
-	} finally {
-	    UserView.setUser(null);
+
+	protected <T extends User> T getUserView(final ServletRequest servletRequest) {
+		final HttpSession httpSession = getHttpSession(servletRequest);
+		return (T) (httpSession == null ? null : httpSession.getAttribute(USER_SESSION_ATTRIBUTE));
 	}
-    }
+
+	@Override
+	public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
+			throws IOException, ServletException {
+		final User user = getUserView(servletRequest);
+		if (user != null) {
+			final DateTime lastLogoutDateTime = user.getLastLogoutDateTime();
+			if (lastLogoutDateTime == null || user.getUserCreationDateTime().isAfter(lastLogoutDateTime)) {
+				UserView.setUser(user);
+			} else {
+				UserView.setUser(null);
+			}
+		} else {
+			UserView.setUser(null);
+		}
+		try {
+			filterChain.doFilter(servletRequest, servletResponse);
+		} finally {
+			UserView.setUser(null);
+		}
+	}
 
 }

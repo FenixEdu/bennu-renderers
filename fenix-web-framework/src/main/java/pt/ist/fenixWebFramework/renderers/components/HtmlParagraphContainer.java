@@ -6,17 +6,17 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlParagraphContainer extends HtmlContainer {
 
-    public HtmlParagraphContainer() {
-	super();
-    }
+	public HtmlParagraphContainer() {
+		super();
+	}
 
-    @Override
-    public HtmlTag getOwnTag(PageContext context) {
-	HtmlTag tag = super.getOwnTag(context);
+	@Override
+	public HtmlTag getOwnTag(PageContext context) {
+		HtmlTag tag = super.getOwnTag(context);
 
-	tag.setName("p");
+		tag.setName("p");
 
-	return tag;
-    }
+		return tag;
+	}
 
 }

@@ -48,8 +48,7 @@ import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
  * </tr>
  * <tr>
  * <th>Gender</th>
- * <td><select> <option>-- Please Select --</option> <option>Female</option>
- * <option>Male</option> </select></td>
+ * <td><select> <option>-- Please Select --</option> <option>Female</option> <option>Male</option> </select></td>
  * <td>You must select a gender.</td>
  * </tr>
  * </table>
@@ -57,390 +56,389 @@ import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
  * @author cfgi
  */
 public class StandardInputRenderer extends InputRenderer {
-    private String rowClasses;
+	private String rowClasses;
 
-    private String columnClasses;
+	private String columnClasses;
 
-    private String validatorClasses;
+	private String validatorClasses;
 
-    private boolean hideValidators;
+	private boolean hideValidators;
 
-    private String labelTerminator;
+	private String labelTerminator;
 
-    private boolean displayLabel = Boolean.TRUE;
+	private boolean displayLabel = Boolean.TRUE;
 
-    private boolean requiredMarkShown = FenixWebFramework.getConfig().getRequiredMarkShown();
+	private boolean requiredMarkShown = FenixWebFramework.getConfig().getRequiredMarkShown();
 
-    private boolean requiredMessageShown = true;
+	private boolean requiredMessageShown = true;
 
-    private boolean optionalMarkShown = false;
+	private boolean optionalMarkShown = false;
 
-    private String helpNoJavascriptClasses;
+	private String helpNoJavascriptClasses;
 
-    private String helpClosedClasses;
+	private String helpClosedClasses;
 
-    private String helpOpenClasses;
+	private String helpOpenClasses;
 
-    private String helpTextClasses;
+	private String helpTextClasses;
 
-    private String helpImageIcon;
+	private String helpImageIcon;
 
-    public boolean isDisplayLabel() {
-	return displayLabel;
-    }
+	public boolean isDisplayLabel() {
+		return displayLabel;
+	}
 
-    public void setDisplayLabel(boolean displayLabel) {
-	this.displayLabel = displayLabel;
-    }
+	public void setDisplayLabel(boolean displayLabel) {
+		this.displayLabel = displayLabel;
+	}
 
-    public StandardInputRenderer() {
-	super();
+	public StandardInputRenderer() {
+		super();
 
-	this.hideValidators = false;
-    }
+		this.hideValidators = false;
+	}
 
-    public String getColumnClasses() {
-	return columnClasses;
-    }
+	public String getColumnClasses() {
+		return columnClasses;
+	}
 
-    /**
-     * The classes to be used in each column of the generated table. See
-     * {@link CollectionRenderer#setColumnClasses(String)} for more details.
-     * Remember that the first column contains labels, the second column slot's
-     * editors, and the third the validator messages.
-     * 
-     * @property
-     */
-    public void setColumnClasses(String columnClasses) {
-	this.columnClasses = columnClasses;
-    }
+	/**
+	 * The classes to be used in each column of the generated table. See {@link CollectionRenderer#setColumnClasses(String)} for
+	 * more details.
+	 * Remember that the first column contains labels, the second column slot's
+	 * editors, and the third the validator messages.
+	 * 
+	 * @property
+	 */
+	public void setColumnClasses(String columnClasses) {
+		this.columnClasses = columnClasses;
+	}
 
-    public String getRowClasses() {
-	return rowClasses;
-    }
+	public String getRowClasses() {
+		return rowClasses;
+	}
 
-    /**
-     * The classes to be used in each row of the table. See
-     * {@link CollectionRenderer#setRowClasses(String)} for more details.
-     * 
-     * @property
-     */
-    public void setRowClasses(String rowClasses) {
-	this.rowClasses = rowClasses;
-    }
+	/**
+	 * The classes to be used in each row of the table. See {@link CollectionRenderer#setRowClasses(String)} for more details.
+	 * 
+	 * @property
+	 */
+	public void setRowClasses(String rowClasses) {
+		this.rowClasses = rowClasses;
+	}
 
-    public boolean isHideValidators() {
-	return this.hideValidators;
-    }
+	public boolean isHideValidators() {
+		return this.hideValidators;
+	}
 
-    /**
-     * Allows you to suppress the inclusion of the validator messages in the
-     * standard layout. This is specilly usefull if you want to show all
-     * messages in one place in the page.
-     * 
-     * @property
-     */
-    public void setHideValidators(boolean hideValidators) {
-	this.hideValidators = hideValidators;
-    }
+	/**
+	 * Allows you to suppress the inclusion of the validator messages in the
+	 * standard layout. This is specilly usefull if you want to show all
+	 * messages in one place in the page.
+	 * 
+	 * @property
+	 */
+	public void setHideValidators(boolean hideValidators) {
+		this.hideValidators = hideValidators;
+	}
 
-    public String getValidatorClasses() {
-	return this.validatorClasses;
-    }
+	public String getValidatorClasses() {
+		return this.validatorClasses;
+	}
 
-    /**
-     * Configure the html classes to apply to the validator messages.
-     * 
-     * @property
-     */
-    public void setValidatorClasses(String validatorClasses) {
-	this.validatorClasses = validatorClasses;
-    }
+	/**
+	 * Configure the html classes to apply to the validator messages.
+	 * 
+	 * @property
+	 */
+	public void setValidatorClasses(String validatorClasses) {
+		this.validatorClasses = validatorClasses;
+	}
 
-    public String getLabelTerminator() {
-	return this.labelTerminator;
-    }
+	public String getLabelTerminator() {
+		return this.labelTerminator;
+	}
 
-    /**
-     * Chooses the suffix to be added to each label. If the label already
-     * contains that suffix then nothing will be added. See
-     * {@link StandardObjectRenderer#setLabelTerminator(String)}.
-     * 
-     * @property
-     */
-    public void setLabelTerminator(String labelTerminator) {
-	this.labelTerminator = labelTerminator;
-    }
-
-    @Override
-    protected Layout getLayout(Object object, Class type) {
-	return new ObjectInputTabularLayout(getContext().getMetaObject());
-    }
-
-    class ObjectInputTabularLayout extends TabularLayout {
-	public Logger logger = Logger.getLogger(ObjectInputTabularLayout.class);
-
-	protected Map<Integer, Validatable> inputComponents;
-
-	protected MetaObject object;
-
-	public ObjectInputTabularLayout(MetaObject object) {
-	    this.object = object;
-	    this.inputComponents = new HashMap<Integer, Validatable>();
+	/**
+	 * Chooses the suffix to be added to each label. If the label already
+	 * contains that suffix then nothing will be added. See {@link StandardObjectRenderer#setLabelTerminator(String)}.
+	 * 
+	 * @property
+	 */
+	public void setLabelTerminator(String labelTerminator) {
+		this.labelTerminator = labelTerminator;
 	}
 
 	@Override
-	protected int getNumberOfColumns() {
-	    return 3;
+	protected Layout getLayout(Object object, Class type) {
+		return new ObjectInputTabularLayout(getContext().getMetaObject());
 	}
 
-	@Override
-	protected int getNumberOfRows() {
-	    return this.object.getSlots().size();
-	}
+	class ObjectInputTabularLayout extends TabularLayout {
+		public Logger logger = Logger.getLogger(ObjectInputTabularLayout.class);
 
-	@Override
-	protected HtmlComponent getHeaderComponent(int columnIndex) {
-	    return new HtmlText();
-	}
+		protected Map<Integer, Validatable> inputComponents;
 
-	@Override
-	protected boolean isHeader(int rowIndex, int columnIndex) {
-	    return columnIndex == 0;
-	}
+		protected MetaObject object;
 
-	@Override
-	protected HtmlComponent getComponent(int rowIndex, int columnIndex) {
-	    HtmlComponent component;
-
-	    switch (columnIndex) {
-	    case 0:
-		MetaSlot slot = this.object.getSlots().get(rowIndex);
-		if (displayLabel) {
-
-		    if (slot.isReadOnly()) {
-			component = new HtmlText(addLabelTerminator(slot.getLabel()), false);
-		    } else {
-			HtmlLabel label = new HtmlLabel();
-			label.setFor(slot.getKey().toString());
-			StringBuilder buffer = new StringBuilder();
-
-			if (slot.isRequired()) {
-			    if (isRequiredMarkShown()) {
-				buffer.append(RenderUtils.getResourceString("RENDERER_RESOURCES",
-					"renderers.validator.required.mark"));
-				buffer.append(" ");
-			    }
-			}
-
-			buffer.append(slot.getLabel());
-
-			if (!slot.isRequired() && isOptionalMarkShown()) {
-			    buffer.append(" ");
-			    buffer.append(RenderUtils
-				    .getResourceString("RENDERER_RESOURCES", "renderers.validator.optional.mark"));
-			}
-
-			label.setText(addLabelTerminator(buffer.toString()));
-			label.setTitle(slot.getTitle());
-
-			component = label;
-		    }
-		} else {
-		    component = null;
-		}
-		break;
-	    case 1:
-		slot = this.object.getSlots().get(rowIndex);
-
-		HtmlComponent renderedSlot = renderSlot(slot);
-
-		if (!slot.isReadOnly()) {
-		    Validatable validatable = findValidatableComponent(renderedSlot);
-
-		    if (validatable != null) {
-			HtmlFormComponent formComponent = (HtmlFormComponent) validatable;
-			if (formComponent.getId() == null) {
-			    formComponent.setId(slot.getKey().toString());
-			}
-			if (FenixWebFramework.getConfig().isJavascriptValidationEnabled() && !isHideValidators()) {
-			    HtmlChainValidator chainValidator = getChainValidator(formComponent, slot);
-			    for (HtmlValidator validator : chainValidator.getSupportedJavascriptValidators()) {
-				HtmlInlineContainer container = new HtmlInlineContainer();
-				container.addChild(renderedSlot);
-				container.addChild(validator.bindJavascript(formComponent));
-				renderedSlot = container;
-			    }
-			}
-			inputComponents.put(rowIndex, validatable);
-		    }
+		public ObjectInputTabularLayout(MetaObject object) {
+			this.object = object;
+			this.inputComponents = new HashMap<Integer, Validatable>();
 		}
 
-		component = slot.hasHelp() ? renderHelpOnComponent(renderedSlot, slot.getBundle(), slot.getHelpLabel(),
-			slot.getName()) : renderedSlot;
-
-		break;
-	    case 2:
-		if (isHideValidators()) {
-		    component = new HtmlText();
-		} else {
-		    Validatable inputComponent = inputComponents.get(rowIndex);
-
-		    if (inputComponent != null) {
-			HtmlChainValidator chainValidator = getChainValidator(inputComponent, this.object.getSlots()
-				.get(rowIndex));
-
-			if (chainValidator != null && !chainValidator.isEmpty()) {
-			    chainValidator.setClasses(getValidatorClasses());
-			    component = chainValidator;
-			} else {
-			    component = new HtmlText();
-			}
-		    } else {
-			component = new HtmlText();
-		    }
+		@Override
+		protected int getNumberOfColumns() {
+			return 3;
 		}
 
-		break;
-	    default:
-		component = new HtmlText();
-		break;
-	    }
+		@Override
+		protected int getNumberOfRows() {
+			return this.object.getSlots().size();
+		}
 
-	    return component;
+		@Override
+		protected HtmlComponent getHeaderComponent(int columnIndex) {
+			return new HtmlText();
+		}
+
+		@Override
+		protected boolean isHeader(int rowIndex, int columnIndex) {
+			return columnIndex == 0;
+		}
+
+		@Override
+		protected HtmlComponent getComponent(int rowIndex, int columnIndex) {
+			HtmlComponent component;
+
+			switch (columnIndex) {
+			case 0:
+				MetaSlot slot = this.object.getSlots().get(rowIndex);
+				if (displayLabel) {
+
+					if (slot.isReadOnly()) {
+						component = new HtmlText(addLabelTerminator(slot.getLabel()), false);
+					} else {
+						HtmlLabel label = new HtmlLabel();
+						label.setFor(slot.getKey().toString());
+						StringBuilder buffer = new StringBuilder();
+
+						if (slot.isRequired()) {
+							if (isRequiredMarkShown()) {
+								buffer.append(RenderUtils.getResourceString("RENDERER_RESOURCES",
+										"renderers.validator.required.mark"));
+								buffer.append(" ");
+							}
+						}
+
+						buffer.append(slot.getLabel());
+
+						if (!slot.isRequired() && isOptionalMarkShown()) {
+							buffer.append(" ");
+							buffer.append(RenderUtils
+									.getResourceString("RENDERER_RESOURCES", "renderers.validator.optional.mark"));
+						}
+
+						label.setText(addLabelTerminator(buffer.toString()));
+						label.setTitle(slot.getTitle());
+
+						component = label;
+					}
+				} else {
+					component = null;
+				}
+				break;
+			case 1:
+				slot = this.object.getSlots().get(rowIndex);
+
+				HtmlComponent renderedSlot = renderSlot(slot);
+
+				if (!slot.isReadOnly()) {
+					Validatable validatable = findValidatableComponent(renderedSlot);
+
+					if (validatable != null) {
+						HtmlFormComponent formComponent = (HtmlFormComponent) validatable;
+						if (formComponent.getId() == null) {
+							formComponent.setId(slot.getKey().toString());
+						}
+						if (FenixWebFramework.getConfig().isJavascriptValidationEnabled() && !isHideValidators()) {
+							HtmlChainValidator chainValidator = getChainValidator(formComponent, slot);
+							for (HtmlValidator validator : chainValidator.getSupportedJavascriptValidators()) {
+								HtmlInlineContainer container = new HtmlInlineContainer();
+								container.addChild(renderedSlot);
+								container.addChild(validator.bindJavascript(formComponent));
+								renderedSlot = container;
+							}
+						}
+						inputComponents.put(rowIndex, validatable);
+					}
+				}
+
+				component =
+						slot.hasHelp() ? renderHelpOnComponent(renderedSlot, slot.getBundle(), slot.getHelpLabel(),
+								slot.getName()) : renderedSlot;
+
+				break;
+			case 2:
+				if (isHideValidators()) {
+					component = new HtmlText();
+				} else {
+					Validatable inputComponent = inputComponents.get(rowIndex);
+
+					if (inputComponent != null) {
+						HtmlChainValidator chainValidator =
+								getChainValidator(inputComponent, this.object.getSlots().get(rowIndex));
+
+						if (chainValidator != null && !chainValidator.isEmpty()) {
+							chainValidator.setClasses(getValidatorClasses());
+							component = chainValidator;
+						} else {
+							component = new HtmlText();
+						}
+					} else {
+						component = new HtmlText();
+					}
+				}
+
+				break;
+			default:
+				component = new HtmlText();
+				break;
+			}
+
+			return component;
+		}
+
+		@Override
+		protected void costumizeCell(HtmlTableCell cell, int rowIndex, int columnIndex) {
+			super.costumizeCell(cell, rowIndex, columnIndex);
+
+			if (columnIndex == 0) {
+				cell.setScope("row");
+			}
+		}
+
+		// duplicated code id=standard-renderer.label.addTerminator
+		protected String addLabelTerminator(String label) {
+			if (getLabelTerminator() == null) {
+				return label;
+			}
+
+			if (label == null) {
+				return null;
+			}
+
+			if (label.endsWith(getLabelTerminator())) {
+				return label;
+			}
+
+			return label + getLabelTerminator();
+		}
+
+		protected HtmlComponent renderHelpOnComponent(HtmlComponent renderedSlot, String bundle, String helpLabel, String slotName) {
+
+			String id = slotName + ":" + System.currentTimeMillis();
+
+			HtmlBlockContainer container = new HtmlBlockContainer();
+
+			HtmlBlockContainer helpContainer = new HtmlBlockContainer();
+			helpContainer.setId(id);
+			helpContainer.setClasses(getHelpNoJavascriptClasses());
+			helpContainer.setOnMouseOver(getScript(id, getHelpOpenClasses()));
+			helpContainer.setOnMouseOut(getScript(id, getHelpClosedClasses()));
+
+			HtmlImage htmlImage = new HtmlImage();
+			htmlImage.setSource(getHelpImageIcon());
+			htmlImage.setDescription("help icon");
+
+			helpContainer.addChild(htmlImage);
+
+			HtmlBlockContainer textContainer = new HtmlBlockContainer();
+			textContainer.setClasses(getHelpTextClasses());
+			textContainer.addChild(new HtmlText(RenderUtils.getResourceString(bundle, helpLabel), false));
+			helpContainer.addChild(textContainer);
+
+			container.addChild(helpContainer);
+			HtmlScript script = new HtmlScript();
+			script.setContentType("text/javascript");
+			script.setScript(getScript(id, getHelpClosedClasses()));
+			container.addChild(script);
+
+			HtmlTable table = new HtmlTable();
+			HtmlTableRow row = table.createRow();
+			HtmlTableCell cell = row.createCell();
+			cell.setBody(renderedSlot);
+			HtmlTableCell anotherCell = row.createCell();
+			anotherCell.setBody(container);
+			return table;
+		}
+
+		protected String getScript(String id, String classes) {
+			return String.format("document.getElementById('%s').className='%s';", id, classes);
+		}
 	}
 
-	@Override
-	protected void costumizeCell(HtmlTableCell cell, int rowIndex, int columnIndex) {
-	    super.costumizeCell(cell, rowIndex, columnIndex);
-
-	    if (columnIndex == 0) {
-		cell.setScope("row");
-	    }
+	public boolean isOptionalMarkShown() {
+		return optionalMarkShown;
 	}
 
-	// duplicated code id=standard-renderer.label.addTerminator
-	protected String addLabelTerminator(String label) {
-	    if (getLabelTerminator() == null) {
-		return label;
-	    }
-
-	    if (label == null) {
-		return null;
-	    }
-
-	    if (label.endsWith(getLabelTerminator())) {
-		return label;
-	    }
-
-	    return label + getLabelTerminator();
+	public void setOptionalMarkShown(boolean optionalMarkShown) {
+		this.optionalMarkShown = optionalMarkShown;
 	}
 
-	protected HtmlComponent renderHelpOnComponent(HtmlComponent renderedSlot, String bundle, String helpLabel, String slotName) {
-
-	    String id = slotName + ":" + System.currentTimeMillis();
-
-	    HtmlBlockContainer container = new HtmlBlockContainer();
-
-	    HtmlBlockContainer helpContainer = new HtmlBlockContainer();
-	    helpContainer.setId(id);
-	    helpContainer.setClasses(getHelpNoJavascriptClasses());
-	    helpContainer.setOnMouseOver(getScript(id, getHelpOpenClasses()));
-	    helpContainer.setOnMouseOut(getScript(id, getHelpClosedClasses()));
-
-	    HtmlImage htmlImage = new HtmlImage();
-	    htmlImage.setSource(getHelpImageIcon());
-	    htmlImage.setDescription("help icon");
-
-	    helpContainer.addChild(htmlImage);
-
-	    HtmlBlockContainer textContainer = new HtmlBlockContainer();
-	    textContainer.setClasses(getHelpTextClasses());
-	    textContainer.addChild(new HtmlText(RenderUtils.getResourceString(bundle, helpLabel), false));
-	    helpContainer.addChild(textContainer);
-
-	    container.addChild(helpContainer);
-	    HtmlScript script = new HtmlScript();
-	    script.setContentType("text/javascript");
-	    script.setScript(getScript(id, getHelpClosedClasses()));
-	    container.addChild(script);
-
-	    HtmlTable table = new HtmlTable();
-	    HtmlTableRow row = table.createRow();
-	    HtmlTableCell cell = row.createCell();
-	    cell.setBody(renderedSlot);
-	    HtmlTableCell anotherCell = row.createCell();
-	    anotherCell.setBody(container);
-	    return table;
+	public boolean isRequiredMarkShown() {
+		return requiredMarkShown;
 	}
 
-	protected String getScript(String id, String classes) {
-	    return String.format("document.getElementById('%s').className='%s';", id, classes);
+	public void setRequiredMarkShown(boolean requiredMarkShown) {
+		this.requiredMarkShown = requiredMarkShown;
 	}
-    }
 
-    public boolean isOptionalMarkShown() {
-	return optionalMarkShown;
-    }
+	public boolean isRequiredMessageShown() {
+		return requiredMessageShown;
+	}
 
-    public void setOptionalMarkShown(boolean optionalMarkShown) {
-	this.optionalMarkShown = optionalMarkShown;
-    }
+	public void setRequiredMessageShown(boolean requiredMessageShown) {
+		this.requiredMessageShown = requiredMessageShown;
+	}
 
-    public boolean isRequiredMarkShown() {
-	return requiredMarkShown;
-    }
+	public String getHelpImageIcon() {
+		return helpImageIcon;
+	}
 
-    public void setRequiredMarkShown(boolean requiredMarkShown) {
-	this.requiredMarkShown = requiredMarkShown;
-    }
+	public void setHelpImageIcon(String helpImageIcon) {
+		this.helpImageIcon = helpImageIcon;
+	}
 
-    public boolean isRequiredMessageShown() {
-	return requiredMessageShown;
-    }
+	public String getHelpNoJavascriptClasses() {
+		return helpNoJavascriptClasses;
+	}
 
-    public void setRequiredMessageShown(boolean requiredMessageShown) {
-	this.requiredMessageShown = requiredMessageShown;
-    }
+	public void setHelpNoJavascriptClasses(String helpNoJavascript) {
+		this.helpNoJavascriptClasses = helpNoJavascript;
+	}
 
-    public String getHelpImageIcon() {
-	return helpImageIcon;
-    }
+	public String getHelpClosedClasses() {
+		return helpClosedClasses;
+	}
 
-    public void setHelpImageIcon(String helpImageIcon) {
-	this.helpImageIcon = helpImageIcon;
-    }
+	public void setHelpClosedClasses(String helpClosed) {
+		this.helpClosedClasses = helpClosed;
+	}
 
-    public String getHelpNoJavascriptClasses() {
-	return helpNoJavascriptClasses;
-    }
+	public String getHelpOpenClasses() {
+		return helpOpenClasses;
+	}
 
-    public void setHelpNoJavascriptClasses(String helpNoJavascript) {
-	this.helpNoJavascriptClasses = helpNoJavascript;
-    }
+	public void setHelpOpenClasses(String helpOpen) {
+		this.helpOpenClasses = helpOpen;
+	}
 
-    public String getHelpClosedClasses() {
-	return helpClosedClasses;
-    }
+	public String getHelpTextClasses() {
+		return helpTextClasses;
+	}
 
-    public void setHelpClosedClasses(String helpClosed) {
-	this.helpClosedClasses = helpClosed;
-    }
-
-    public String getHelpOpenClasses() {
-	return helpOpenClasses;
-    }
-
-    public void setHelpOpenClasses(String helpOpen) {
-	this.helpOpenClasses = helpOpen;
-    }
-
-    public String getHelpTextClasses() {
-	return helpTextClasses;
-    }
-
-    public void setHelpTextClasses(String helpTextClasses) {
-	this.helpTextClasses = helpTextClasses;
-    }
+	public void setHelpTextClasses(String helpTextClasses) {
+		this.helpTextClasses = helpTextClasses;
+	}
 
 }

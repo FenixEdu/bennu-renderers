@@ -9,38 +9,38 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlTableHeader extends HtmlComponent {
 
-    private List<HtmlTableRow> rows;
-    
-    public HtmlTableHeader() {
-        rows = new ArrayList<HtmlTableRow>();
-    }
+	private List<HtmlTableRow> rows;
 
-    public HtmlTableRow createRow() {
-        HtmlTableRow row = new HtmlTableHeaderRow();
-        
-        this.rows.add(row);
-        return row;
-    }
+	public HtmlTableHeader() {
+		rows = new ArrayList<HtmlTableRow>();
+	}
 
-    @Override
-    public List<HtmlComponent> getChildren() {
-        return new ArrayList<HtmlComponent>(rows);
-    }
+	public HtmlTableRow createRow() {
+		HtmlTableRow row = new HtmlTableHeaderRow();
 
-    public List<HtmlTableRow> getRows() {
-        return this.rows;
-    }
-    
-    @Override
-    public HtmlTag getOwnTag(PageContext context) {
-        HtmlTag tag = super.getOwnTag(context);
-        
-        tag.setName("thead");
-        
-        for (HtmlTableRow row : this.rows) {
-            tag.addChild(row.getOwnTag(context));
-        }
-                
-        return tag;
-    }
+		this.rows.add(row);
+		return row;
+	}
+
+	@Override
+	public List<HtmlComponent> getChildren() {
+		return new ArrayList<HtmlComponent>(rows);
+	}
+
+	public List<HtmlTableRow> getRows() {
+		return this.rows;
+	}
+
+	@Override
+	public HtmlTag getOwnTag(PageContext context) {
+		HtmlTag tag = super.getOwnTag(context);
+
+		tag.setName("thead");
+
+		for (HtmlTableRow row : this.rows) {
+			tag.addChild(row.getOwnTag(context));
+		}
+
+		return tag;
+	}
 }

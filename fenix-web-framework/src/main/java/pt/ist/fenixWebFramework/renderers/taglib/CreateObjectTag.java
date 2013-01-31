@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.servlet.jsp.JspException;
 
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.log4j.Logger;
+
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
@@ -12,155 +15,149 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
 
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.log4j.Logger;
-
 /**
  * @author cfgi
  */
 public class CreateObjectTag extends EditObjectTag {
-    
-    private static final Logger logger = Logger.getLogger(CreateObjectTag.class);
-    
-    private List<DefaultValue> defaultValues;
 
-    public CreateObjectTag() {
-        super();
-        
-        this.defaultValues = new ArrayList<DefaultValue>();
-    }
+	private static final Logger logger = Logger.getLogger(CreateObjectTag.class);
 
-    @Override
-    public void release() {
-        super.release();
-        
-        this.defaultValues = new ArrayList<DefaultValue>();
-    }
+	private List<DefaultValue> defaultValues;
 
-    @Override
-    protected MetaObject getNewMetaObject(Object targetObject, Schema schema) {
-        ContextTag parent = (ContextTag) findAncestorWithClass(this, ContextTag.class);
-        
-        if (parent == null || getSlot() == null) {
-            return MetaObjectFactory.createObject((Class) targetObject, schema);
-        }
+	public CreateObjectTag() {
+		super();
 
-        MetaObject metaObject = parent.getMetaObject();
-        if (metaObject == null) {
-            metaObject = MetaObjectFactory.createObject((Class) targetObject, schema);
-            parent.setMetaObject(metaObject);
-        }
-        else {
-            SchemaSlotDescription slotDescription = schema.getSlotDescription(getSlot());
+		this.defaultValues = new ArrayList<DefaultValue>();
+	}
 
-            if (slotDescription != null) { // when hidden values are given
-                MetaSlot slot = MetaObjectFactory.createSlot(metaObject, slotDescription);
-                metaObject.addSlot(slot);
-            }
-        }
-        
-        return metaObject;
-    }
+	@Override
+	public void release() {
+		super.release();
 
-    @Override
-    protected Object getTargetObject() throws JspException {
-        if (isPostBack()) {
-            return getViewState().getMetaObject().getType();
-        }
+		this.defaultValues = new ArrayList<DefaultValue>();
+	}
 
-        try {
-            return Class.forName(getType());
-        } catch (ClassNotFoundException e) {
-            throw new JspException("could not get class named " + getType(), e);
-        }
-    }
-    
-    @Override
-    protected MetaObject createMetaObject(Object targetObject, Schema schema) {
-        MetaObject metaObject = super.createMetaObject(targetObject, schema);
-        
-        if (getSlot() != null && metaObject instanceof MetaSlot) {
-            MetaSlot slot = (MetaSlot) metaObject;
-            
-            for (DefaultValue defaultValue : this.defaultValues) {
-                if (slot.getName().equals(defaultValue.getSlot())) {
-                    Object value = getConvertedValue(slot, defaultValue.getConverter(), defaultValue.getValue());
-                    slot.setObject(value);
-                }
-            }
-        }
-        else {
-            for (DefaultValue defaultValue : this.defaultValues) {
-                for (MetaSlot slot : metaObject.getSlots()) {
-                    if (slot.getName().equals(defaultValue.getSlot())) {
-                        Object value = getConvertedValue(slot, defaultValue.getConverter(), defaultValue.getValue());
-                        slot.setObject(value);
-                    }
-                }
-            }
-        }
-        
-        return metaObject;
-    }
+	@Override
+	protected MetaObject getNewMetaObject(Object targetObject, Schema schema) {
+		ContextTag parent = (ContextTag) findAncestorWithClass(this, ContextTag.class);
 
-    private Object getConvertedValue(MetaSlot slot, Class<Converter> converterClass, Object value) {
-        Class type = slot.getStaticType();
+		if (parent == null || getSlot() == null) {
+			return MetaObjectFactory.createObject((Class) targetObject, schema);
+		}
 
-        if (converterClass == null) {
-            if (value == null) {
-                return null;
-            }
-            
-            if (type.isAssignableFrom(value.getClass())) {
-                return value;
-            }
-            else {
-                if (value instanceof String) {
-                    return ConvertUtils.convert((String) value, type);
-                }
-                else {
-                    throw new RuntimeException("no converter given and default value '" + value + "' does not match type '" + type + "' of slot '" + slot.getName() + "'");
-                }
-            }
-        }
-        else {
-            try {
-                Converter converter = converterClass.newInstance();
-                return converter.convert(type, value);
-            } catch (Exception e) {
-                throw new RuntimeException("could not convert default value '" + value + "' using converter '" + converterClass + "'", e);
-            }
-        }
-    }
+		MetaObject metaObject = parent.getMetaObject();
+		if (metaObject == null) {
+			metaObject = MetaObjectFactory.createObject((Class) targetObject, schema);
+			parent.setMetaObject(metaObject);
+		} else {
+			SchemaSlotDescription slotDescription = schema.getSlotDescription(getSlot());
 
-    public void setDefaultValue(String slot, Object value, Class<Converter> converter) {
-        this.defaultValues.add(new DefaultValue(slot, value, converter));
-    }
-    
-    private static class DefaultValue {
-        private String slot;
-        private Object value;
-        private Class<Converter> converter;
-     
-        public DefaultValue(String slot, Object value, Class<Converter> converter) {
-            super();
-        
-            this.slot = slot;
-            this.value = value;
-            this.converter = converter;
-        }
+			if (slotDescription != null) { // when hidden values are given
+				MetaSlot slot = MetaObjectFactory.createSlot(metaObject, slotDescription);
+				metaObject.addSlot(slot);
+			}
+		}
 
-        public Class<Converter> getConverter() {
-            return this.converter;
-        }
+		return metaObject;
+	}
 
-        public String getSlot() {
-            return this.slot;
-        }
+	@Override
+	protected Object getTargetObject() throws JspException {
+		if (isPostBack()) {
+			return getViewState().getMetaObject().getType();
+		}
 
-        public Object getValue() {
-            return this.value;
-        }
-        
-    }
+		try {
+			return Class.forName(getType());
+		} catch (ClassNotFoundException e) {
+			throw new JspException("could not get class named " + getType(), e);
+		}
+	}
+
+	@Override
+	protected MetaObject createMetaObject(Object targetObject, Schema schema) {
+		MetaObject metaObject = super.createMetaObject(targetObject, schema);
+
+		if (getSlot() != null && metaObject instanceof MetaSlot) {
+			MetaSlot slot = (MetaSlot) metaObject;
+
+			for (DefaultValue defaultValue : this.defaultValues) {
+				if (slot.getName().equals(defaultValue.getSlot())) {
+					Object value = getConvertedValue(slot, defaultValue.getConverter(), defaultValue.getValue());
+					slot.setObject(value);
+				}
+			}
+		} else {
+			for (DefaultValue defaultValue : this.defaultValues) {
+				for (MetaSlot slot : metaObject.getSlots()) {
+					if (slot.getName().equals(defaultValue.getSlot())) {
+						Object value = getConvertedValue(slot, defaultValue.getConverter(), defaultValue.getValue());
+						slot.setObject(value);
+					}
+				}
+			}
+		}
+
+		return metaObject;
+	}
+
+	private Object getConvertedValue(MetaSlot slot, Class<Converter> converterClass, Object value) {
+		Class type = slot.getStaticType();
+
+		if (converterClass == null) {
+			if (value == null) {
+				return null;
+			}
+
+			if (type.isAssignableFrom(value.getClass())) {
+				return value;
+			} else {
+				if (value instanceof String) {
+					return ConvertUtils.convert((String) value, type);
+				} else {
+					throw new RuntimeException("no converter given and default value '" + value + "' does not match type '"
+							+ type + "' of slot '" + slot.getName() + "'");
+				}
+			}
+		} else {
+			try {
+				Converter converter = converterClass.newInstance();
+				return converter.convert(type, value);
+			} catch (Exception e) {
+				throw new RuntimeException("could not convert default value '" + value + "' using converter '" + converterClass
+						+ "'", e);
+			}
+		}
+	}
+
+	public void setDefaultValue(String slot, Object value, Class<Converter> converter) {
+		this.defaultValues.add(new DefaultValue(slot, value, converter));
+	}
+
+	private static class DefaultValue {
+		private String slot;
+		private Object value;
+		private Class<Converter> converter;
+
+		public DefaultValue(String slot, Object value, Class<Converter> converter) {
+			super();
+
+			this.slot = slot;
+			this.value = value;
+			this.converter = converter;
+		}
+
+		public Class<Converter> getConverter() {
+			return this.converter;
+		}
+
+		public String getSlot() {
+			return this.slot;
+		}
+
+		public Object getValue() {
+			return this.value;
+		}
+
+	}
 }

@@ -25,59 +25,59 @@ import pt.ist.fenixWebFramework.FenixWebFramework;
  */
 public class CASFilter implements Filter {
 
-    protected static final String URL_ENCODING = CharEncoding.UTF_8;
+	protected static final String URL_ENCODING = CharEncoding.UTF_8;
 
-    @Override
-    public void init(final FilterConfig config) throws ServletException {
-    }
-
-    @Override
-    public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
-    		throws ServletException, IOException {
-	final String serverName = servletRequest.getServerName();
-	final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
-	if (casConfig != null && casConfig.isCasEnabled()) {
-	    if (!isHttpResource(servletRequest, servletResponse)) {
-		throw new ServletException("CASFilter only applies to HTTP resources");
-	    }
-	    
-	    if (notHasTicket(servletRequest)) {
-		// send user to CAS to get a ticket
-		redirectToCAS(casConfig, (HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);
-		return;
-	    }
+	@Override
+	public void init(final FilterConfig config) throws ServletException {
 	}
 
-	filterChain.doFilter(servletRequest, servletResponse);
+	@Override
+	public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
+			throws ServletException, IOException {
+		final String serverName = servletRequest.getServerName();
+		final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
+		if (casConfig != null && casConfig.isCasEnabled()) {
+			if (!isHttpResource(servletRequest, servletResponse)) {
+				throw new ServletException("CASFilter only applies to HTTP resources");
+			}
 
-    }
+			if (notHasTicket(servletRequest)) {
+				// send user to CAS to get a ticket
+				redirectToCAS(casConfig, (HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);
+				return;
+			}
+		}
 
-    private boolean isHttpResource(final ServletRequest request, final ServletResponse response) {
-	return request instanceof HttpServletRequest && response instanceof HttpServletResponse;
-    }
+		filterChain.doFilter(servletRequest, servletResponse);
 
-    private boolean notHasTicket(final ServletRequest request) {
-	final String ticket = request.getParameter("ticket");
-	return ticket == null || ticket.equals("");
-    }
+	}
 
-    protected String encodeUrl(final String casUrl) throws UnsupportedEncodingException {
-	return URLEncoder.encode(casUrl, URL_ENCODING);
-    }
-    
-    /**
-     * Redirects the user to CAS, determining the service from the request.
-     */
-    protected void redirectToCAS(final CasConfig casConfig, final HttpServletRequest request, final HttpServletResponse response)
-    		throws IOException, ServletException {
-	final String serviceString = encodeUrl(casConfig.getServiceUrl());
-	final String casLoginUrl = casConfig.getCasLoginUrl();
-	final String casLoginString = casLoginUrl + "?service=" + serviceString;
-	response.sendRedirect(casLoginString);
-    }
+	private boolean isHttpResource(final ServletRequest request, final ServletResponse response) {
+		return request instanceof HttpServletRequest && response instanceof HttpServletResponse;
+	}
 
-    @Override
-    public void destroy() {
-    }
+	private boolean notHasTicket(final ServletRequest request) {
+		final String ticket = request.getParameter("ticket");
+		return ticket == null || ticket.equals("");
+	}
+
+	protected String encodeUrl(final String casUrl) throws UnsupportedEncodingException {
+		return URLEncoder.encode(casUrl, URL_ENCODING);
+	}
+
+	/**
+	 * Redirects the user to CAS, determining the service from the request.
+	 */
+	protected void redirectToCAS(final CasConfig casConfig, final HttpServletRequest request, final HttpServletResponse response)
+			throws IOException, ServletException {
+		final String serviceString = encodeUrl(casConfig.getServiceUrl());
+		final String casLoginUrl = casConfig.getCasLoginUrl();
+		final String casLoginString = casLoginUrl + "?service=" + serviceString;
+		response.sendRedirect(casLoginString);
+	}
+
+	@Override
+	public void destroy() {
+	}
 
 }

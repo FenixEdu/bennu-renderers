@@ -6,94 +6,95 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlMenuOption extends HtmlMenuEntry {
 
-    private boolean selected;
+	private boolean selected;
 
-    private String value;
-    
-    private String text;
-    
-    private HtmlComponent body;
-    
-    public HtmlMenuOption() {
-        super(null, false);
-    }
+	private String value;
 
-    public HtmlMenuOption(String text) {
-        super(null, false);
-        
-        this.text = text;
-    }
+	private String text;
 
-    public HtmlMenuOption(String text, String value) {
-        this(text);
-        
-        this.value = value;
-    }
+	private HtmlComponent body;
 
-    public HtmlMenuOption(HtmlComponent body) {
-        super(null, false);
-        
-        this.body = body;
-    }
+	public HtmlMenuOption() {
+		super(null, false);
+	}
 
-    public boolean isSelected() {
-        return selected;
-    }
+	public HtmlMenuOption(String text) {
+		super(null, false);
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
+		this.text = text;
+	}
 
-    @Override
-    public void setSelected(String value) {
-        setSelected(getValue() != null && getValue().equals(value));
-    }
+	public HtmlMenuOption(String text, String value) {
+		this(text);
 
-    public String getText() {
-        return text;
-    }
+		this.value = value;
+	}
 
-    public void setText(String text) {
-        this.text = text;
-    }
+	public HtmlMenuOption(HtmlComponent body) {
+		super(null, false);
 
-    public HtmlComponent getBody() {
-        return this.body;
-    }
+		this.body = body;
+	}
 
-    public void setBody(HtmlComponent body) {
-        this.body = body;
-    }
+	@Override
+	public boolean isSelected() {
+		return selected;
+	}
 
-    public String getValue() {
-        return value;
-    }
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+	@Override
+	public void setSelected(String value) {
+		setSelected(getValue() != null && getValue().equals(value));
+	}
 
-    @Override
-    public HtmlTag getOwnTag(PageContext context) {
-        HtmlTag tag = super.getOwnTag(context);
+	public String getText() {
+		return text;
+	}
 
-        tag.setName("option");
-    
-        if (getText() != null) {
-            tag.setText(getText());
-        }
-        
-        if (isSelected()) {
-            tag.setAttribute("selected", "selected");
-        }
-        
-        tag.setAttribute("value", HtmlText.escape(getValue() == null ? getText() : getValue()));
-        
-        if (getBody() != null) {
-            tag.addChild(getBody().getOwnTag(context));
-        }
-        
-        return tag;
-    }
-    
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public HtmlComponent getBody() {
+		return this.body;
+	}
+
+	public void setBody(HtmlComponent body) {
+		this.body = body;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	@Override
+	public HtmlTag getOwnTag(PageContext context) {
+		HtmlTag tag = super.getOwnTag(context);
+
+		tag.setName("option");
+
+		if (getText() != null) {
+			tag.setText(getText());
+		}
+
+		if (isSelected()) {
+			tag.setAttribute("selected", "selected");
+		}
+
+		tag.setAttribute("value", HtmlText.escape(getValue() == null ? getText() : getValue()));
+
+		if (getBody() != null) {
+			tag.addChild(getBody().getOwnTag(context));
+		}
+
+		return tag;
+	}
+
 }

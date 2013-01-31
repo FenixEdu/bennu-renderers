@@ -14,92 +14,92 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  */
 public class BooleanImageRenderer extends OutputRenderer {
 
-    private String trueIconPath;
-    private String falseIconPath;
-    private Boolean contextRelative;
-    private Boolean nullAsFalse;
+	private String trueIconPath;
+	private String falseIconPath;
+	private Boolean contextRelative;
+	private Boolean nullAsFalse;
 
-    public String getFalseIconPath() {
-	return this.falseIconPath;
-    }
+	public String getFalseIconPath() {
+		return this.falseIconPath;
+	}
 
-    /**
-     * The icon to be shown when presenting a <code>false</code> value.
-     * 
-     * @property
-     */
-    public void setFalseIconPath(String falseIconPath) {
-	this.falseIconPath = falseIconPath;
-    }
+	/**
+	 * The icon to be shown when presenting a <code>false</code> value.
+	 * 
+	 * @property
+	 */
+	public void setFalseIconPath(String falseIconPath) {
+		this.falseIconPath = falseIconPath;
+	}
 
-    public String getTrueIconPath() {
-	return this.trueIconPath;
-    }
+	public String getTrueIconPath() {
+		return this.trueIconPath;
+	}
 
-    /**
-     * The icon to be shown when presenting the <code>true</code> value.
-     * 
-     * @property
-     */
-    public void setTrueIconPath(String trueIconPath) {
-	this.trueIconPath = trueIconPath;
-    }
+	/**
+	 * The icon to be shown when presenting the <code>true</code> value.
+	 * 
+	 * @property
+	 */
+	public void setTrueIconPath(String trueIconPath) {
+		this.trueIconPath = trueIconPath;
+	}
 
-    public Boolean isContextRelative() {
-	return this.contextRelative;
-    }
+	public Boolean isContextRelative() {
+		return this.contextRelative;
+	}
 
-    /**
-     * This identifies the nature of the icon file path as being either context
-     * relative or not.
-     * 
-     * @property
-     */
-    public void setContextRelative(Boolean contextRelative) {
-	this.contextRelative = contextRelative;
-    }
+	/**
+	 * This identifies the nature of the icon file path as being either context
+	 * relative or not.
+	 * 
+	 * @property
+	 */
+	public void setContextRelative(Boolean contextRelative) {
+		this.contextRelative = contextRelative;
+	}
 
-    @Override
-    protected Layout getLayout(Object object, Class type) {
-	return new Layout() {
+	@Override
+	protected Layout getLayout(Object object, Class type) {
+		return new Layout() {
 
-	    @Override
-	    public HtmlComponent createComponent(Object object, Class type) {
-		Boolean booleanValue = (Boolean) object;
+			@Override
+			public HtmlComponent createComponent(Object object, Class type) {
+				Boolean booleanValue = (Boolean) object;
 
-		if (booleanValue == null) {
-		    if (!isNullAsFalse()) {
-			return new HtmlText();
-		    }
-		    booleanValue = false;
-		}
+				if (booleanValue == null) {
+					if (!isNullAsFalse()) {
+						return new HtmlText();
+					}
+					booleanValue = false;
+				}
 
-		StringBuilder pathBuilder = new StringBuilder();
-		if (contextRelative) {
-		    pathBuilder.append(RenderUtils.getContextRelativePath(""));
-		}
+				StringBuilder pathBuilder = new StringBuilder();
+				if (contextRelative) {
+					pathBuilder.append(RenderUtils.getContextRelativePath(""));
+				}
 
-		pathBuilder.append(getIconPath(booleanValue));
-		String fullPath = pathBuilder.toString();
+				pathBuilder.append(getIconPath(booleanValue));
+				String fullPath = pathBuilder.toString();
 
-		HtmlImage img = new HtmlImage();
-		img.setSource(fullPath);
+				HtmlImage img = new HtmlImage();
+				img.setSource(fullPath);
 
-		return img;
-	    }
+				return img;
+			}
 
-	    private String getIconPath(Boolean booleanValue) {
-		return booleanValue ? getTrueIconPath() : getFalseIconPath();
-	    }
+			private String getIconPath(Boolean booleanValue) {
+				return booleanValue ? getTrueIconPath() : getFalseIconPath();
+			}
 
-	};
-    }
+		};
+	}
 
-    public void setNullAsFalse(Boolean nullAsFalse) {
-	this.nullAsFalse = nullAsFalse;
-    }
+	public void setNullAsFalse(Boolean nullAsFalse) {
+		this.nullAsFalse = nullAsFalse;
+	}
 
-    public Boolean isNullAsFalse() {
-	return nullAsFalse;
-    }
+	public Boolean isNullAsFalse() {
+		return nullAsFalse;
+	}
 }

@@ -4,56 +4,57 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import pt.ist.fenixWebFramework.renderers.exceptions.NoRendererException;
-
 import org.apache.commons.collections.Predicate;
+
+import pt.ist.fenixWebFramework.renderers.exceptions.NoRendererException;
 
 public class RendererRegistry {
 
-    private ClassHierarchyTable<Map<String, RendererDescription>> renderersTable;
-    
-    public RendererRegistry() {
-        super();
+	private ClassHierarchyTable<Map<String, RendererDescription>> renderersTable;
 
-        this.renderersTable = new ClassHierarchyTable<Map<String, RendererDescription>>();
-    }
+	public RendererRegistry() {
+		super();
 
-    public void registerRenderer(Class type, String layout, Class renderer, Properties defaultProperties) {
-        Map<String, RendererDescription> layoutsTable = this.renderersTable.getUnspecific(type);
+		this.renderersTable = new ClassHierarchyTable<Map<String, RendererDescription>>();
+	}
 
-        if (layoutsTable == null) {
-            this.renderersTable.put(type, new HashMap<String, RendererDescription>());
-            layoutsTable = this.renderersTable.getUnspecific(type);
-        }
+	public void registerRenderer(Class type, String layout, Class renderer, Properties defaultProperties) {
+		Map<String, RendererDescription> layoutsTable = this.renderersTable.getUnspecific(type);
 
-        layoutsTable.put(layout, new RendererDescription(renderer, defaultProperties));
-    }
+		if (layoutsTable == null) {
+			this.renderersTable.put(type, new HashMap<String, RendererDescription>());
+			layoutsTable = this.renderersTable.getUnspecific(type);
+		}
 
-    public RendererDescription getRenderDescription(Class objectType, final String layout) {
-        Map<String, RendererDescription> layoutsTable = renderersTable.get(objectType, new Predicate() {
+		layoutsTable.put(layout, new RendererDescription(renderer, defaultProperties));
+	}
 
-            public boolean evaluate(Object table) {
-                Map layoutsTable = (Map) table;
-                
-                return layoutsTable.get(layout) != null;
-            }
-            
-        });
-        
-        if (layoutsTable == null) {
-            throw new NoRendererException(objectType, layout);
-        }
-        
-        return layoutsTable.get(layout);
-    }
-    
-    public RendererDescription getExactRenderDescription(Class objectType, String layout) {
-        Map<String, RendererDescription> layoutsTable = renderersTable.getUnspecific(objectType);
-        
-        if (layoutsTable == null) {
-            throw new NoRendererException(objectType, layout);
-        }
-        
-        return layoutsTable.get(layout);
-    }
+	public RendererDescription getRenderDescription(Class objectType, final String layout) {
+		Map<String, RendererDescription> layoutsTable = renderersTable.get(objectType, new Predicate() {
+
+			@Override
+			public boolean evaluate(Object table) {
+				Map layoutsTable = (Map) table;
+
+				return layoutsTable.get(layout) != null;
+			}
+
+		});
+
+		if (layoutsTable == null) {
+			throw new NoRendererException(objectType, layout);
+		}
+
+		return layoutsTable.get(layout);
+	}
+
+	public RendererDescription getExactRenderDescription(Class objectType, String layout) {
+		Map<String, RendererDescription> layoutsTable = renderersTable.getUnspecific(objectType);
+
+		if (layoutsTable == null) {
+			throw new NoRendererException(objectType, layout);
+		}
+
+		return layoutsTable.get(layout);
+	}
 }

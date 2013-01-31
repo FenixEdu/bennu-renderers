@@ -10,14 +10,14 @@ import org.apache.struts.action.ExceptionHandler;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExceptionHandling {
 
-    public Class<? extends Exception> type();
+	public Class<? extends Exception> type();
 
-    public String key() default "";
+	public String key() default "";
 
-    public Class<? extends ExceptionHandler> handler();
+	public Class<? extends ExceptionHandler> handler();
 
-    public String path() default "";
+	public String path() default "";
 
-    public String scope() default "";
+	public String scope() default "";
 
 }

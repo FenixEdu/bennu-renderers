@@ -6,81 +6,81 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlRadioButton extends HtmlInputComponent {
 
-    private String text;
-    
-    private boolean checked;
+	private String text;
 
-    public HtmlRadioButton() {
-        super("radio");
-        
-        this.checked = false;
-    }
-    
-    public HtmlRadioButton(boolean checked) {
-        this();
-        
-        this.checked = checked;
-    }
+	private boolean checked;
 
-    public HtmlRadioButton(String text) {
-        this();
-        
-        this.text = text;
-    }
-    
-    public HtmlRadioButton(String text, boolean checked) {
-        this();
-        
-        this.text = text;
-        this.checked = checked;
-    }
+	public HtmlRadioButton() {
+		super("radio");
 
-    public boolean isChecked() {
-        return checked;
-    }
+		this.checked = false;
+	}
 
-    public void setChecked(boolean checked) {
-        this.checked = checked;
-    }
+	public HtmlRadioButton(boolean checked) {
+		this();
 
-    public String getText() {
-        return text;
-    }
+		this.checked = checked;
+	}
 
-    public void setText(String text) {
-        this.text = text;
-    }
+	public HtmlRadioButton(String text) {
+		this();
 
-    public String getUserValue() {
-        return super.getValue();
-    }
+		this.text = text;
+	}
 
-    public void setUserValue(String userValue) {
-        super.setValue(userValue == null ? "" : userValue);
-    }
+	public HtmlRadioButton(String text, boolean checked) {
+		this();
 
-    @Override
-    public void setValue(String value) {
-        setChecked(String.valueOf(getUserValue()).equals(value));
-    }
+		this.text = text;
+		this.checked = checked;
+	}
 
-    @Override
-    public HtmlTag getOwnTag(PageContext context) {
-        HtmlTag tag =  super.getOwnTag(context);
-        
-        if (this.checked) {
-            tag.setAttribute("checked", this.checked);
-        }
+	public boolean isChecked() {
+		return checked;
+	}
 
-        if (this.text == null) {
-            return tag;
-        }
-        
-        HtmlTag span = new HtmlTag("span");
-        
-        span.addChild(tag);
-        span.addChild(new HtmlTag(null, this.text));
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
 
-        return span;
-    }
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public String getUserValue() {
+		return super.getValue();
+	}
+
+	public void setUserValue(String userValue) {
+		super.setValue(userValue == null ? "" : userValue);
+	}
+
+	@Override
+	public void setValue(String value) {
+		setChecked(String.valueOf(getUserValue()).equals(value));
+	}
+
+	@Override
+	public HtmlTag getOwnTag(PageContext context) {
+		HtmlTag tag = super.getOwnTag(context);
+
+		if (this.checked) {
+			tag.setAttribute("checked", this.checked);
+		}
+
+		if (this.text == null) {
+			return tag;
+		}
+
+		HtmlTag span = new HtmlTag("span");
+
+		span.addChild(tag);
+		span.addChild(new HtmlTag(null, this.text));
+
+		return span;
+	}
 }

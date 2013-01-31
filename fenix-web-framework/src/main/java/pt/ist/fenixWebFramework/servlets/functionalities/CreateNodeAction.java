@@ -5,14 +5,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target( { ElementType.METHOD } )
+@Target({ ElementType.METHOD })
 @Retention(RetentionPolicy.SOURCE)
 public @interface CreateNodeAction {
 
-    String bundle();
+	String bundle();
 
-    String key();
+	String key();
 
-    String groupKey();
+	String groupKey();
 
 }

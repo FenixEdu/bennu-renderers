@@ -8,39 +8,39 @@ import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class MultiLanguageStringSafeHtmlConverter extends Converter {
 
-    private final boolean mathJaxEnabled;
+	private final boolean mathJaxEnabled;
 
-    public MultiLanguageStringSafeHtmlConverter(final boolean mathJaxEnabled) {
-	this.mathJaxEnabled = mathJaxEnabled;
-    }
-
-    @Override
-    public Object convert(Class type, Object value) {
-	// SafeHtmlConverter safeConverter = new SafeHtmlConverter();
-	Converter safeConverter = new JsoupSafeHtmlConverter(mathJaxEnabled);
-	MultiLanguageStringConverter mlsConverter = new MultiLanguageStringConverter();
-
-	MultiLanguageString mls = (MultiLanguageString) mlsConverter.convert(type, value);
-
-	if (mls == null) {
-	    return null;
+	public MultiLanguageStringSafeHtmlConverter(final boolean mathJaxEnabled) {
+		this.mathJaxEnabled = mathJaxEnabled;
 	}
 
-	if (mls.getAllLanguages().isEmpty()) {
-	    return null;
+	@Override
+	public Object convert(Class type, Object value) {
+		// SafeHtmlConverter safeConverter = new SafeHtmlConverter();
+		Converter safeConverter = new JsoupSafeHtmlConverter(mathJaxEnabled);
+		MultiLanguageStringConverter mlsConverter = new MultiLanguageStringConverter();
+
+		MultiLanguageString mls = (MultiLanguageString) mlsConverter.convert(type, value);
+
+		if (mls == null) {
+			return null;
+		}
+
+		if (mls.getAllLanguages().isEmpty()) {
+			return null;
+		}
+
+		for (Language language : mls.getAllLanguages()) {
+			String text = (String) safeConverter.convert(String.class, mls.getContent(language));
+
+			if (text == null) {
+				mls.removeContent(language);
+			} else {
+				mls.setContent(language, text);
+			}
+		}
+
+		return mls;
 	}
-
-	for (Language language : mls.getAllLanguages()) {
-	    String text = (String) safeConverter.convert(String.class, mls.getContent(language));
-
-	    if (text == null) {
-		mls.removeContent(language);
-	    } else {
-		mls.setContent(language, text);
-	    }
-	}
-
-	return mls;
-    }
 
 }

@@ -4,41 +4,41 @@ import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 
 public class MetaSlotWithDefault extends MetaSlot {
 
-    private boolean createValue;
-    
-    public MetaSlotWithDefault(MetaObject metaObject, String name) {
-        super(metaObject, name);
-        
-        this.createValue = true;
-    }
+	private boolean createValue;
 
-    @Override
-    public Object getObject() {
-        if (this.createValue) {
-            this.createValue = false;
-            
-            setObject(createDefault(getType(), getDefaultValue()));
-        }
-        
-        return super.getObject();
-    }
+	public MetaSlotWithDefault(MetaObject metaObject, String name) {
+		super(metaObject, name);
 
-    @Override
-    public void setObject(Object object) {
-        super.setObject(object);
-        this.createValue = false;
-    }
+		this.createValue = true;
+	}
 
-    @Override
-    public Class getType() {
-        Class type = getMetaObject().getType();
-        
-        return RendererPropertyUtils.getPropertyType(type, getName());
-    }
+	@Override
+	public Object getObject() {
+		if (this.createValue) {
+			this.createValue = false;
 
-    protected Object createDefault(Class type, String defaultValue) {
-        DefaultValues instance = DefaultValues.getInstance();
-        return instance.createValue(type, defaultValue);
-    }
-    
+			setObject(createDefault(getType(), getDefaultValue()));
+		}
+
+		return super.getObject();
+	}
+
+	@Override
+	public void setObject(Object object) {
+		super.setObject(object);
+		this.createValue = false;
+	}
+
+	@Override
+	public Class getType() {
+		Class type = getMetaObject().getType();
+
+		return RendererPropertyUtils.getPropertyType(type, getName());
+	}
+
+	protected Object createDefault(Class type, String defaultValue) {
+		DefaultValues instance = DefaultValues.getInstance();
+		return instance.createValue(type, defaultValue);
+	}
+
 }

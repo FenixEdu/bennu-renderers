@@ -1,12 +1,13 @@
 package pt.ist.fenixWebFramework.renderers.components;
 
 public class HtmlTableHeaderRow extends HtmlTableRow {
-    public HtmlTableCell createCell() {
-        HtmlTableCell cell = new HtmlTableCell(HtmlTableCell.CellType.HEADER);
-        
-        cell.setScope("col");
+	@Override
+	public HtmlTableCell createCell() {
+		HtmlTableCell cell = new HtmlTableCell(HtmlTableCell.CellType.HEADER);
 
-        addCell(cell);
-        return cell;
-    }
+		cell.setScope("col");
+
+		addCell(cell);
+		return cell;
+	}
 }

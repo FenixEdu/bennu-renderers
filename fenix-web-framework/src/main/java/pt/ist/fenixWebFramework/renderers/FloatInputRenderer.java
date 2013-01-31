@@ -12,9 +12,9 @@ import pt.ist.fenixWebFramework.renderers.converters.FloatNumberConverter;
  */
 public class FloatInputRenderer extends NumberInputRenderer {
 
-    @Override
-    protected Converter getConverter() {
-        return new FloatNumberConverter();
-    }
-    
+	@Override
+	protected Converter getConverter() {
+		return new FloatNumberConverter();
+	}
+
 }

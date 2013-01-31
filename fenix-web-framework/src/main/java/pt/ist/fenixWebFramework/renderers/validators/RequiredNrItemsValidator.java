@@ -1,9 +1,6 @@
 package pt.ist.fenixWebFramework.renderers.validators;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlCheckBoxList;
-import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
-import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
-import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 public class RequiredNrItemsValidator extends HtmlValidator {
@@ -27,16 +24,14 @@ public class RequiredNrItemsValidator extends HtmlValidator {
 		setValid(values.length >= getNrRequiredItems().intValue());
 
 	}
-	
-	private void defineMessage()
-	{
+
+	private void defineMessage() {
 		setKey(false);
 		if (getNrRequiredItems() == null) {
-			throw new RuntimeException(
-					"renderers.validator.nr.items.not.specified");
-		}
-		else {
-		setMessage(RenderUtils.getFormatedResourceString(getBundle(), "renderers.validator.invalid.nrItems",getNrRequiredItems()));
+			throw new RuntimeException("renderers.validator.nr.items.not.specified");
+		} else {
+			setMessage(RenderUtils.getFormatedResourceString(getBundle(), "renderers.validator.invalid.nrItems",
+					getNrRequiredItems()));
 		}
 	}
 

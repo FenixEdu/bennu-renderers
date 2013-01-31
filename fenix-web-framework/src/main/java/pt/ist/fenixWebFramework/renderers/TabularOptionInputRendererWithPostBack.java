@@ -18,8 +18,7 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
  * allows you to select the object in that row.
  * 
  * <p>
- * The list of options is given by a
- * {@link pt.ist.fenixWebFramework.renderers.DataProvider data provider}.
+ * The list of options is given by a {@link pt.ist.fenixWebFramework.renderers.DataProvider data provider}.
  * 
  * <p>
  * Example:
@@ -54,64 +53,64 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
  */
 public class TabularOptionInputRendererWithPostBack extends TabularOptionInputRenderer {
 
-    private String destination;
+	private String destination;
 
-    public String getDestination() {
-	return destination;
-    }
-
-    public void setDestination(String destination) {
-	this.destination = destination;
-    }
-
-    @Override
-    protected HtmlComponent renderComponent(Layout layout, Object object, Class type) {
-	HtmlComponent component = super.renderComponent(layout, object, type);
-
-	CheckableTabularLayout checkableLayout = (CheckableTabularLayout) layout;
-	List<HtmlCheckBox> checkboxes = checkableLayout.getCheckBoxes();
-
-	for (HtmlCheckBox checkbox : checkboxes) {
-	    checkbox.setOnClick("this.form.postback.value=1; this.form.submit();");
+	public String getDestination() {
+		return destination;
 	}
 
-	HtmlInlineContainer htmlInlineContainer = new HtmlInlineContainer();
-	HtmlHiddenField hiddenField = new HtmlHiddenField();
-	hiddenField.setName("postback");
-	htmlInlineContainer.addChild(hiddenField);
-	htmlInlineContainer.addChild(component);
-	hiddenField.setController(new PostBackController(getDestination()));
-	return htmlInlineContainer;
-    }
-
-    private static class PostBackController extends HtmlController {
-
-	private final String destination;
-
-	public PostBackController(String destination) {
-	    this.destination = destination;
+	public void setDestination(String destination) {
+		this.destination = destination;
 	}
 
 	@Override
-	public void execute(IViewState viewState) {
-	    HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getControlledComponent();
+	protected HtmlComponent renderComponent(Layout layout, Object object, Class type) {
+		HtmlComponent component = super.renderComponent(layout, object, type);
 
-	    if (component.getValue() != null && component.getValue().length() > 0) {
-		String destinationName = this.destination == null ? "postback" : this.destination;
-		ViewDestination destination = viewState.getDestination(destinationName);
+		CheckableTabularLayout checkableLayout = (CheckableTabularLayout) layout;
+		List<HtmlCheckBox> checkboxes = checkableLayout.getCheckBoxes();
 
-		if (destination != null) {
-		    viewState.setCurrentDestination(destination);
-		} else {
-		    viewState.setCurrentDestination("postBack");
+		for (HtmlCheckBox checkbox : checkboxes) {
+			checkbox.setOnClick("this.form.postback.value=1; this.form.submit();");
 		}
 
-		viewState.setSkipValidation(true);
-	    }
-
-	    component.setValue(null);
+		HtmlInlineContainer htmlInlineContainer = new HtmlInlineContainer();
+		HtmlHiddenField hiddenField = new HtmlHiddenField();
+		hiddenField.setName("postback");
+		htmlInlineContainer.addChild(hiddenField);
+		htmlInlineContainer.addChild(component);
+		hiddenField.setController(new PostBackController(getDestination()));
+		return htmlInlineContainer;
 	}
 
-    }
+	private static class PostBackController extends HtmlController {
+
+		private final String destination;
+
+		public PostBackController(String destination) {
+			this.destination = destination;
+		}
+
+		@Override
+		public void execute(IViewState viewState) {
+			HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getControlledComponent();
+
+			if (component.getValue() != null && component.getValue().length() > 0) {
+				String destinationName = this.destination == null ? "postback" : this.destination;
+				ViewDestination destination = viewState.getDestination(destinationName);
+
+				if (destination != null) {
+					viewState.setCurrentDestination(destination);
+				} else {
+					viewState.setCurrentDestination("postBack");
+				}
+
+				viewState.setSkipValidation(true);
+			}
+
+			component.setValue(null);
+		}
+
+	}
 
 }

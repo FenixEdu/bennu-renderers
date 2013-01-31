@@ -7,38 +7,38 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 
 public class ActionViewState extends ViewState {
 
-    private HtmlComponent component;
+	private HtmlComponent component;
 
-    public ActionViewState() {
-        super();
-    }
+	public ActionViewState() {
+		super();
+	}
 
-    public ActionViewState(String id) {
-        super(id);
-    }
-    
-    public ActionViewState(String id, Object object) {
-        this(id, object, (Schema) null);
-    }
+	public ActionViewState(String id) {
+		super(id);
+	}
 
-    public ActionViewState(String id, Object object, Schema schema) {
-        this(id);
-        
-        setMetaObject(MetaObjectFactory.createObject(object, schema));
-    }
+	public ActionViewState(String id, Object object) {
+		this(id, object, (Schema) null);
+	}
 
-    public ActionViewState(String id, Object object, String schemaName) {
-        this(id, object, RenderKit.getInstance().findSchema(schemaName));
-    }
+	public ActionViewState(String id, Object object, Schema schema) {
+		this(id);
 
-    @Override
-    public HtmlComponent getComponent() {
-        return this.component;
-    }
+		setMetaObject(MetaObjectFactory.createObject(object, schema));
+	}
 
-    @Override
-    public void setComponent(HtmlComponent component) {
-        this.component = component;
-    }
+	public ActionViewState(String id, Object object, String schemaName) {
+		this(id, object, RenderKit.getInstance().findSchema(schemaName));
+	}
+
+	@Override
+	public HtmlComponent getComponent() {
+		return this.component;
+	}
+
+	@Override
+	public void setComponent(HtmlComponent component) {
+		this.component = component;
+	}
 
 }

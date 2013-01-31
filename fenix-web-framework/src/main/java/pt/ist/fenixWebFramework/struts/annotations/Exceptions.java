@@ -12,10 +12,10 @@ import java.lang.annotation.Target;
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
  * 
  */
-@Target( { ElementType.TYPE })
+@Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Exceptions {
 
-    ExceptionHandling[] value();
+	ExceptionHandling[] value();
 
 }

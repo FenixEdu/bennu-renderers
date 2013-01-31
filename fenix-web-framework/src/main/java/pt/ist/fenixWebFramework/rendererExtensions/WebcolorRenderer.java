@@ -14,30 +14,30 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
  */
 public class WebcolorRenderer extends OutputRenderer {
 
-    @Override
-    protected Layout getLayout(Object object, Class type) {
-	return new Layout() {
+	@Override
+	protected Layout getLayout(Object object, Class type) {
+		return new Layout() {
 
-	    @Override
-	    public HtmlComponent createComponent(Object object, Class type) {
-		String value = (String) object;
+			@Override
+			public HtmlComponent createComponent(Object object, Class type) {
+				String value = (String) object;
 
-		if (value == null) {
-		    return new HtmlText();
-		}
+				if (value == null) {
+					return new HtmlText();
+				}
 
-		HtmlInlineContainer container = new HtmlInlineContainer();
+				HtmlInlineContainer container = new HtmlInlineContainer();
 
-		HtmlText color = new HtmlText("&nbsp;", false);
-		color.setStyle(String.format("border: 1px solid %1$s; background-color: %1$s; padding: 0px 7px;", value));
+				HtmlText color = new HtmlText("&nbsp;", false);
+				color.setStyle(String.format("border: 1px solid %1$s; background-color: %1$s; padding: 0px 7px;", value));
 
-		container.addChild(new HtmlText(value));
-		container.addChild(color);
+				container.addChild(new HtmlText(value));
+				container.addChild(color);
 
-		return container;
-	    }
+				return container;
+			}
 
-	};
-    }
+		};
+	}
 
 }

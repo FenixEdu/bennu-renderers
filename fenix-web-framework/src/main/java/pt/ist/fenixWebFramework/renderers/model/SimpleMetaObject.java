@@ -7,67 +7,71 @@ import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 
 public class SimpleMetaObject extends MetaObject {
 
-    private Object object;
-    private int code;
-    
-    private List<CompositeSlotSetter> compositeSetters;
+	private Object object;
+	private int code;
 
-    public SimpleMetaObject(Object object) {
-        super();
+	private List<CompositeSlotSetter> compositeSetters;
 
-        setObject(object);
-        this.compositeSetters = new ArrayList<CompositeSlotSetter>();
-    }
+	public SimpleMetaObject(Object object) {
+		super();
 
-    protected void setObject(Object object) {
-        this.object = object;
-        this.code = object == null ? 0 : object.hashCode();
-    }
-    
-    public Object getObject() {
-        return this.object;
-    }
+		setObject(object);
+		this.compositeSetters = new ArrayList<CompositeSlotSetter>();
+	}
 
-    public Class getType() {
-        return this.object.getClass();
-    }
+	protected void setObject(Object object) {
+		this.object = object;
+		this.code = object == null ? 0 : object.hashCode();
+	}
 
-    public MetaObjectKey getKey() {
-        return new MetaObjectKey(getType(), this.code);
-    }
+	@Override
+	public Object getObject() {
+		return this.object;
+	}
 
-    public void addCompositeSetter(CompositeSlotSetter compositeSetter) {
-        compositeSetter.setMetaObject(this);
-        this.compositeSetters.add(compositeSetter);
-    }
-    
-    protected List<CompositeSlotSetter> getCompositeSetters() {
-        return this.compositeSetters;
-    }
-    
-    public void commit() {
-        for (MetaSlot slot : getAllSlots()) {
-            if (slot.isSetterIgnored()) {
-                continue;
-            }
-            
-            if (slot.isCached()) {
-                Object value = slot.getObject();
-                
-                try {
-                    setProperty(slot, value);
-                } catch (Exception e) {
-                    throw new RuntimeException("could not write property '" + slot.getName() + "' in object " + getObject(), e);
-                } 
-            }
-        }
-        
-        for (CompositeSlotSetter compositeSetter : getCompositeSetters()) {
-            compositeSetter.executeSetter();
-        }
-    }
+	@Override
+	public Class getType() {
+		return this.object.getClass();
+	}
 
-    protected void setProperty(MetaSlot slot, Object value) {
-        RendererPropertyUtils.setProperty(getObject(), slot.getName(), value, false);
-    }
+	@Override
+	public MetaObjectKey getKey() {
+		return new MetaObjectKey(getType(), this.code);
+	}
+
+	public void addCompositeSetter(CompositeSlotSetter compositeSetter) {
+		compositeSetter.setMetaObject(this);
+		this.compositeSetters.add(compositeSetter);
+	}
+
+	protected List<CompositeSlotSetter> getCompositeSetters() {
+		return this.compositeSetters;
+	}
+
+	@Override
+	public void commit() {
+		for (MetaSlot slot : getAllSlots()) {
+			if (slot.isSetterIgnored()) {
+				continue;
+			}
+
+			if (slot.isCached()) {
+				Object value = slot.getObject();
+
+				try {
+					setProperty(slot, value);
+				} catch (Exception e) {
+					throw new RuntimeException("could not write property '" + slot.getName() + "' in object " + getObject(), e);
+				}
+			}
+		}
+
+		for (CompositeSlotSetter compositeSetter : getCompositeSetters()) {
+			compositeSetter.executeSetter();
+		}
+	}
+
+	protected void setProperty(MetaSlot slot, Object value) {
+		RendererPropertyUtils.setProperty(getObject(), slot.getName(), value, false);
+	}
 }

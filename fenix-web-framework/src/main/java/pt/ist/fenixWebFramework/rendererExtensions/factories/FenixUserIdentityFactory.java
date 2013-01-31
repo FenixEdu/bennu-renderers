@@ -9,10 +9,10 @@ import pt.ist.fenixWebFramework.security.UserView;
 
 public class FenixUserIdentityFactory extends UserIdentityFactory {
 
-    @Override
-    public UserIdentity createUserIdentity(HttpServletRequest request) {
-	final User user = UserView.getUser();
-        return new FenixUserIdentity(user);
-    }
+	@Override
+	public UserIdentity createUserIdentity(HttpServletRequest request) {
+		final User user = UserView.getUser();
+		return new FenixUserIdentity(user);
+	}
 
 }

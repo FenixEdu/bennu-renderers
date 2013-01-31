@@ -54,8 +54,8 @@ public class FlowRenderer extends OutputRenderer {
 	/**
 	 * This property selects if each slot should be presented as an inline
 	 * element or as a block element. By default slots are presented inline,
-	 * that is, they will be added inside <tt>span</tt> elements. If
-	 * <tt>eachInline</tt> is <tt>false</tt> then a <tt>div</tt> will be
+	 * that is, they will be added inside <tt>span</tt> elements. If <tt>eachInline</tt> is <tt>false</tt> then a <tt>div</tt>
+	 * will be
 	 * used.
 	 * 
 	 * @property
@@ -96,8 +96,7 @@ public class FlowRenderer extends OutputRenderer {
 
 	/**
 	 * Chooses the suffix to be added to each label. If the label already
-	 * contains that suffix then nothing will be added. See
-	 * {@link StandardObjectRenderer#setLabelTerminator(String)}.
+	 * contains that suffix then nothing will be added. See {@link StandardObjectRenderer#setLabelTerminator(String)}.
 	 * 
 	 * @property
 	 */

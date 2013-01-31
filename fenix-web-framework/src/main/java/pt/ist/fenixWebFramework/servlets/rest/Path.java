@@ -12,10 +12,10 @@ import java.lang.annotation.Target;
  * @author Shezad Anavarali Date: Sep 14, 2009
  * 
  */
-@Target( { ElementType.TYPE })
+@Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Path {
 
-    String value();
+	String value();
 
 }

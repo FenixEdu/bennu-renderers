@@ -13,101 +13,101 @@ import pt.ist.fenixWebFramework.renderers.model.UserIdentity;
 
 public interface IViewState extends Serializable {
 
-    public String getId();
+	public String getId();
 
-    public boolean isPostBack();   
-    
-    public void setPostBack(boolean isPostBack);
+	public boolean isPostBack();
 
-    public boolean isCanceled();
+	public void setPostBack(boolean isPostBack);
 
-    public void cancel();
-    
-    public HtmlComponent getComponent();
+	public boolean isCanceled();
 
-    public void setComponent(HtmlComponent component);
+	public void cancel();
 
-    public boolean isVisible();
-    
-    public void setVisible(boolean isVisible);
-    
-    public void setValid(boolean isValid);
+	public HtmlComponent getComponent();
 
-    public boolean skipUpdate();
+	public void setComponent(HtmlComponent component);
 
-    public void setSkipUpdate(boolean skipUpdate);
+	public boolean isVisible();
 
-    public boolean skipValidation();
+	public void setVisible(boolean isVisible);
 
-    public void setSkipValidation(boolean skipValidation);
+	public void setValid(boolean isValid);
 
-    public boolean isValid();
+	public boolean skipUpdate();
 
-    public void setUpdateComponentTree(boolean updateTree);
+	public void setSkipUpdate(boolean skipUpdate);
 
-    public boolean getUpdateComponentTree();
+	public boolean skipValidation();
 
-    public void addDestination(String name, ViewDestination destination);
+	public void setSkipValidation(boolean skipValidation);
 
-    public ViewDestination getDestination(String name);
+	public boolean isValid();
 
-    public void setInputDestination(ViewDestination destination);
+	public void setUpdateComponentTree(boolean updateTree);
 
-    public ViewDestination getInputDestination();
+	public boolean getUpdateComponentTree();
 
-    public void setCurrentDestination(String name);
+	public void addDestination(String name, ViewDestination destination);
 
-    public void setCurrentDestination(ViewDestination destination);
+	public ViewDestination getDestination(String name);
 
-    public ViewDestination getCurrentDestination();
+	public void setInputDestination(ViewDestination destination);
 
-    public void setMetaObject(MetaObject object);
-    
-    public MetaObject getMetaObject();
-    
-    public HttpServletRequest getRequest();
+	public ViewDestination getInputDestination();
 
-    public void setRequest(HttpServletRequest request);
+	public void setCurrentDestination(String name);
 
-    public UserIdentity getUser();
+	public void setCurrentDestination(ViewDestination destination);
 
-    public void setUser(UserIdentity user);
+	public ViewDestination getCurrentDestination();
 
-    public String getLayout();
+	public void setMetaObject(MetaObject object);
 
-    public void setLayout(String layout);
+	public MetaObject getMetaObject();
 
-    public Properties getProperties();
+	public HttpServletRequest getRequest();
 
-    public void setProperties(Properties properties);
+	public void setRequest(HttpServletRequest request);
 
-    public void setContext(PresentationContext context);
+	public UserIdentity getUser();
 
-    public PresentationContext getContext();
+	public void setUser(UserIdentity user);
 
-    public Class getContextClass();
+	public String getLayout();
 
-    public void setContextClass(Class contextClass);
+	public void setLayout(String layout);
 
-    public void setLocalAttribute(String name, Object value);
-    
-    public void setAttribute(String name, Object value);
+	public Properties getProperties();
 
-    public Object getLocalAttribute(String name);
-    
-    public Object getAttribute(String name);
+	public void setProperties(Properties properties);
 
-    public void removeLocalAttribute(String name);
-    
-    public void removeAttribute(String name);
+	public void setContext(PresentationContext context);
 
-    public void addHiddenSlot(HiddenSlot slot);
+	public PresentationContext getContext();
 
-    public List<HiddenSlot> getHiddenSlots();
-    
-    public List<Message> setMessages(List<Message> messages);
+	public Class getContextClass();
 
-    public List<Message> getMessages();
-    
-    public void addMessage(Message message);
+	public void setContextClass(Class contextClass);
+
+	public void setLocalAttribute(String name, Object value);
+
+	public void setAttribute(String name, Object value);
+
+	public Object getLocalAttribute(String name);
+
+	public Object getAttribute(String name);
+
+	public void removeLocalAttribute(String name);
+
+	public void removeAttribute(String name);
+
+	public void addHiddenSlot(HiddenSlot slot);
+
+	public List<HiddenSlot> getHiddenSlots();
+
+	public List<Message> setMessages(List<Message> messages);
+
+	public List<Message> getMessages();
+
+	public void addMessage(Message message);
 }

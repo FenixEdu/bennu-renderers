@@ -10,169 +10,168 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 
 /**
  * This renderer provides a basic presentation for an object. The object
- * is presented in a table that contains it's details. The table will have 
+ * is presented in a table that contains it's details. The table will have
  * two columns and a row for each one of the object's slots. In the left column
- * of each row the slot's label will be placed. In the right column the 
+ * of each row the slot's label will be placed. In the right column the
  * slot's value will be presented.
  * 
  * <p>
  * Example:
  * <table border="1">
- *  <tr>
- *      <th>Name</th>
- *      <td>Jane Doe</td>
- *  </tr>
- *  <tr>
- *      <th>Age</th>
- *      <td>20</td>
- *  </tr>
- *  <tr>
- *      <th>Gender</th>
- *      <td>Female</td>
- *  </tr>
+ * <tr>
+ * <th>Name</th>
+ * <td>Jane Doe</td>
+ * </tr>
+ * <tr>
+ * <th>Age</th>
+ * <td>20</td>
+ * </tr>
+ * <tr>
+ * <th>Gender</th>
+ * <td>Female</td>
+ * </tr>
  * </table>
  * 
  * @author cfgi
  */
 public class StandardObjectRenderer extends OutputRenderer {
-    private String caption;
+	private String caption;
 
-    private String rowClasses;
+	private String rowClasses;
 
-    private String columnClasses;
+	private String columnClasses;
 
-    private String labelTerminator;
-    
-    public String getCaption() {
-        return caption;
-    }
+	private String labelTerminator;
 
-    /**
-     * The caption of the generated table.
-     * 
-     * @property
-     */
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
+	public String getCaption() {
+		return caption;
+	}
 
-    public String getColumnClasses() {
-        return columnClasses;
-    }
+	/**
+	 * The caption of the generated table.
+	 * 
+	 * @property
+	 */
+	public void setCaption(String caption) {
+		this.caption = caption;
+	}
 
-    /**
-     * The classes to be used for each column in the generated table.
-     * See {@link CollectionRenderer#setColumnClasses(String)}.
-     * 
-     * @property
-     */
-    public void setColumnClasses(String columnClasses) {
-        this.columnClasses = columnClasses;
-    }
+	public String getColumnClasses() {
+		return columnClasses;
+	}
 
-    public String getRowClasses() {
-        return rowClasses;
-    }
+	/**
+	 * The classes to be used for each column in the generated table.
+	 * See {@link CollectionRenderer#setColumnClasses(String)}.
+	 * 
+	 * @property
+	 */
+	public void setColumnClasses(String columnClasses) {
+		this.columnClasses = columnClasses;
+	}
 
-    /**
-     * The classes to be used for each row in the table.
-     * See {@link CollectionRenderer#setRowClasses(String)}.
-     * 
-     * @property
-     */
-    public void setRowClasses(String rowClasses) {
-        this.rowClasses = rowClasses;
-    }
+	public String getRowClasses() {
+		return rowClasses;
+	}
 
-    public String getLabelTerminator() {
-        return this.labelTerminator;
-    }
+	/**
+	 * The classes to be used for each row in the table.
+	 * See {@link CollectionRenderer#setRowClasses(String)}.
+	 * 
+	 * @property
+	 */
+	public void setRowClasses(String rowClasses) {
+		this.rowClasses = rowClasses;
+	}
 
-    /**
-     * Chooses the suffix to be added to each label. If the label already contains
-     * that suffix then nothing will be added.
-     * <p>
-     * For example <code>labelTerminator=":"</code> would generate rows like
-     * <table border="1">
-     *  <tr>
-     *      <th>Name:</th>
-     *      <td>Jane Doe</td>
-     *  </tr>
-     * </table>
-     * 
-     * @property
-     */
-    public void setLabelTerminator(String labelTerminator) {
-        this.labelTerminator = labelTerminator;
-    }
+	public String getLabelTerminator() {
+		return this.labelTerminator;
+	}
 
-    @Override
-    protected Layout getLayout(Object object, Class type) {
-        return new ObjectTabularLayout(getContext().getMetaObject());
-    }
+	/**
+	 * Chooses the suffix to be added to each label. If the label already contains
+	 * that suffix then nothing will be added.
+	 * <p>
+	 * For example <code>labelTerminator=":"</code> would generate rows like
+	 * <table border="1">
+	 * <tr>
+	 * <th>Name:</th>
+	 * <td>Jane Doe</td>
+	 * </tr>
+	 * </table>
+	 * 
+	 * @property
+	 */
+	public void setLabelTerminator(String labelTerminator) {
+		this.labelTerminator = labelTerminator;
+	}
 
-    class ObjectTabularLayout extends TabularLayout {
-        private MetaObject object;
+	@Override
+	protected Layout getLayout(Object object, Class type) {
+		return new ObjectTabularLayout(getContext().getMetaObject());
+	}
 
-        public ObjectTabularLayout(MetaObject object) {
-            this.object = object;
-        }
+	class ObjectTabularLayout extends TabularLayout {
+		private MetaObject object;
 
-        @Override
-        protected int getNumberOfColumns() {
-            return 2;
-        }
+		public ObjectTabularLayout(MetaObject object) {
+			this.object = object;
+		}
 
-        @Override
-        protected int getNumberOfRows() {
-            return this.object.getSlots().size();
-        }
+		@Override
+		protected int getNumberOfColumns() {
+			return 2;
+		}
 
-        @Override
-        protected HtmlComponent getHeaderComponent(int columnIndex) {
-            return new HtmlText();
-        }
+		@Override
+		protected int getNumberOfRows() {
+			return this.object.getSlots().size();
+		}
 
-        @Override
-        protected boolean isHeader(int rowIndex, int columnIndex) {
-            return columnIndex == 0;
-        }
-        
-        @Override
-        protected HtmlComponent getComponent(int rowIndex, int columnIndex) {
-            if (columnIndex == 0) {
-                MetaSlot slot = this.object.getSlots().get(rowIndex);
-                return new HtmlText(addLabelTerminator(slot.getLabel()), false);
-            }
-            else {
-                return renderSlot(this.object.getSlots().get(rowIndex));
-            }
-        }
+		@Override
+		protected HtmlComponent getHeaderComponent(int columnIndex) {
+			return new HtmlText();
+		}
 
-        @Override
-        protected void costumizeCell(HtmlTableCell cell, int rowIndex, int columnIndex) {
-            super.costumizeCell(cell, rowIndex, columnIndex);
-            
-            if (columnIndex == 0) {
-                cell.setScope("row");
-            }
-        }
+		@Override
+		protected boolean isHeader(int rowIndex, int columnIndex) {
+			return columnIndex == 0;
+		}
 
-        // duplicated code id=standard-renderer.label.addTerminator
-        protected String addLabelTerminator(String label) {
-            if (getLabelTerminator() == null) {
-                return label;
-            }
-            
-            if (label == null) {
-                return null;
-            }
-            
-            if (label.endsWith(getLabelTerminator())) {
-                return label;
-            }
-            
-            return label + getLabelTerminator();
-        }
-    }
+		@Override
+		protected HtmlComponent getComponent(int rowIndex, int columnIndex) {
+			if (columnIndex == 0) {
+				MetaSlot slot = this.object.getSlots().get(rowIndex);
+				return new HtmlText(addLabelTerminator(slot.getLabel()), false);
+			} else {
+				return renderSlot(this.object.getSlots().get(rowIndex));
+			}
+		}
+
+		@Override
+		protected void costumizeCell(HtmlTableCell cell, int rowIndex, int columnIndex) {
+			super.costumizeCell(cell, rowIndex, columnIndex);
+
+			if (columnIndex == 0) {
+				cell.setScope("row");
+			}
+		}
+
+		// duplicated code id=standard-renderer.label.addTerminator
+		protected String addLabelTerminator(String label) {
+			if (getLabelTerminator() == null) {
+				return label;
+			}
+
+			if (label == null) {
+				return null;
+			}
+
+			if (label.endsWith(getLabelTerminator())) {
+				return label;
+			}
+
+			return label + getLabelTerminator();
+		}
+	}
 }

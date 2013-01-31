@@ -9,7 +9,6 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenu;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenuOption;
 import pt.ist.fenixWebFramework.renderers.components.converters.BiDirectionalConverter;
-import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
@@ -21,246 +20,244 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 /**
- * This renderer as a purpose similar to
- * {@link pt.ist.fenixWebFramework.renderers.CheckBoxOptionListRenderer} but is
+ * This renderer as a purpose similar to {@link pt.ist.fenixWebFramework.renderers.CheckBoxOptionListRenderer} but is
  * intended to collect only one value. All the possible values for the slot
  * beeing edited are presented in an html menu. The presentation of each object
  * must have in consideration that the object is beeing presented in an option
- * of the menu so it must be short and simple. If possible used the
- * <tt>format</tt> property to format the object. Nevertheless the usual
+ * of the menu so it must be short and simple. If possible used the <tt>format</tt> property to format the object. Nevertheless
+ * the usual
  * configuration is possible with <tt>eachLayout</tt> and <tt>eachSchema</tt>.
  * 
  * <p>
- * Example: <select> <option>&lt;object A presentation&gt;</option>
- * <option>&lt;object B presentation&gt;</option> <option>&lt;object C
- * presentation&gt;</option> </select>
+ * Example: <select> <option>&lt;object A presentation&gt;</option> <option>&lt;object B presentation&gt;</option>
+ * <option>&lt;object C presentation&gt;</option> </select>
  * 
  * @author cfgi
  */
 public class MenuOptionListRenderer extends SelectionRenderer {
-    private String format;
+	private String format;
 
-    private String eachSchema;
+	private String eachSchema;
 
-    private String eachLayout;
+	private String eachLayout;
 
-    private boolean saveOptions;
+	private boolean saveOptions;
 
-    private boolean nullOptionHidden;
-    private String defaultText;
-    private String bundle;
-    private boolean key;
+	private boolean nullOptionHidden;
+	private String defaultText;
+	private String bundle;
+	private boolean key;
 
-    public String getFormat() {
-	return this.format;
-    }
+	public String getFormat() {
+		return this.format;
+	}
 
-    /**
-     * This allows to specify a presentation format for each object. For more
-     * details about the format syntaxt check the {@see FormatRenderer}.
-     * 
-     * @property
-     */
-    public void setFormat(String format) {
-	this.format = format;
-    }
+	/**
+	 * This allows to specify a presentation format for each object. For more
+	 * details about the format syntaxt check the {@see FormatRenderer}.
+	 * 
+	 * @property
+	 */
+	public void setFormat(String format) {
+		this.format = format;
+	}
 
-    public String getEachLayout() {
-	return this.eachLayout;
-    }
+	public String getEachLayout() {
+		return this.eachLayout;
+	}
 
-    /**
-     * The layout to be used when presenting each object. This property will
-     * only be used if {@link #setFormat(String) format} is not specified.
-     * 
-     * @property
-     */
-    public void setEachLayout(String eachLayout) {
-	this.eachLayout = eachLayout;
-    }
+	/**
+	 * The layout to be used when presenting each object. This property will
+	 * only be used if {@link #setFormat(String) format} is not specified.
+	 * 
+	 * @property
+	 */
+	public void setEachLayout(String eachLayout) {
+		this.eachLayout = eachLayout;
+	}
 
-    public String getEachSchema() {
-	return this.eachSchema;
-    }
+	public String getEachSchema() {
+		return this.eachSchema;
+	}
 
-    /**
-     * The schema to be used when presenting each object.
-     * 
-     * @property
-     */
-    public void setEachSchema(String eachSchema) {
-	this.eachSchema = eachSchema;
-    }
+	/**
+	 * The schema to be used when presenting each object.
+	 * 
+	 * @property
+	 */
+	public void setEachSchema(String eachSchema) {
+		this.eachSchema = eachSchema;
+	}
 
-    public String getBundle() {
-	return this.bundle;
-    }
+	public String getBundle() {
+		return this.bundle;
+	}
 
-    /**
-     * The bundle used if <code>key</code> is <code>true</code>
-     * 
-     * @property
-     */
-    public void setBundle(String bundle) {
-	this.bundle = bundle;
-    }
+	/**
+	 * The bundle used if <code>key</code> is <code>true</code>
+	 * 
+	 * @property
+	 */
+	public void setBundle(String bundle) {
+		this.bundle = bundle;
+	}
 
-    public String getDefaultText() {
-	return this.defaultText;
-    }
+	public String getDefaultText() {
+		return this.defaultText;
+	}
 
-    /**
-     * The text or key of the default menu title.
-     * 
-     * @property
-     */
-    public void setDefaultText(String defaultText) {
-	this.defaultText = defaultText;
-    }
+	/**
+	 * The text or key of the default menu title.
+	 * 
+	 * @property
+	 */
+	public void setDefaultText(String defaultText) {
+		this.defaultText = defaultText;
+	}
 
-    public boolean isKey() {
-	return this.key;
-    }
+	public boolean isKey() {
+		return this.key;
+	}
 
-    /**
-     * Indicates the the default text is a key to a resource bundle.
-     * 
-     * @property
-     */
-    public void setKey(boolean key) {
-	this.key = key;
-    }
+	/**
+	 * Indicates the the default text is a key to a resource bundle.
+	 * 
+	 * @property
+	 */
+	public void setKey(boolean key) {
+		this.key = key;
+	}
 
-    public boolean isSaveOptions() {
-	return saveOptions;
-    }
+	public boolean isSaveOptions() {
+		return saveOptions;
+	}
 
-    /**
-     * Allows the possible object list to be persisted between requests, meaning
-     * that the provider is invoked only once.
-     * 
-     * @property
-     */
-    public void setSaveOptions(boolean saveOptions) {
-	this.saveOptions = saveOptions;
-    }
+	/**
+	 * Allows the possible object list to be persisted between requests, meaning
+	 * that the provider is invoked only once.
+	 * 
+	 * @property
+	 */
+	public void setSaveOptions(boolean saveOptions) {
+		this.saveOptions = saveOptions;
+	}
 
-    public boolean isNullOptionHidden() {
-	return this.nullOptionHidden;
-    }
+	public boolean isNullOptionHidden() {
+		return this.nullOptionHidden;
+	}
 
-    /**
-     * Don't show the default option, that is, the options meaning no value
-     * selected.
-     * 
-     * @property
-     */
-    public void setNullOptionHidden(boolean nullOptionHidden) {
-	this.nullOptionHidden = nullOptionHidden;
-    }
-
-    @Override
-    protected Layout getLayout(Object object, Class type) {
-	return new MenuOptionLayout();
-    }
-
-    class MenuOptionLayout extends Layout {
+	/**
+	 * Don't show the default option, that is, the options meaning no value
+	 * selected.
+	 * 
+	 * @property
+	 */
+	public void setNullOptionHidden(boolean nullOptionHidden) {
+		this.nullOptionHidden = nullOptionHidden;
+	}
 
 	@Override
-	public HtmlComponent createComponent(Object object, Class type) {
-	    HtmlMenu menu = new HtmlMenu();
+	protected Layout getLayout(Object object, Class type) {
+		return new MenuOptionLayout();
+	}
 
-	    if (!isNullOptionHidden()) {
-		String defaultOptionTitle = getDefaultTitle();
-		menu.createDefaultOption(defaultOptionTitle).setSelected(object == null);
-	    }
+	class MenuOptionLayout extends Layout {
 
-	    RenderKit kit = RenderKit.getInstance();
-	    Schema schema = kit.findSchema(getEachSchema());
+		@Override
+		public HtmlComponent createComponent(Object object, Class type) {
+			HtmlMenu menu = new HtmlMenu();
 
-	    List<MetaObject> possibleMetaObjects;
+			if (!isNullOptionHidden()) {
+				String defaultOptionTitle = getDefaultTitle();
+				menu.createDefaultOption(defaultOptionTitle).setSelected(object == null);
+			}
 
-	    if (hasSavedPossibleMetaObjects()) {
-		possibleMetaObjects = getPossibleMetaObjects();
-	    } else {
-		possibleMetaObjects = new ArrayList<MetaObject>();
-		for (Object possibility : getPossibleObjects()) {
-		    possibleMetaObjects.add(MetaObjectFactory.createObject(possibility, schema));
+			RenderKit kit = RenderKit.getInstance();
+			Schema schema = kit.findSchema(getEachSchema());
+
+			List<MetaObject> possibleMetaObjects;
+
+			if (hasSavedPossibleMetaObjects()) {
+				possibleMetaObjects = getPossibleMetaObjects();
+			} else {
+				possibleMetaObjects = new ArrayList<MetaObject>();
+				for (Object possibility : getPossibleObjects()) {
+					possibleMetaObjects.add(MetaObjectFactory.createObject(possibility, schema));
+				}
+			}
+
+			for (MetaObject metaObject : possibleMetaObjects) {
+				Object obj = metaObject.getObject();
+				HtmlMenuOption option = menu.createOption(null);
+
+				if (getConverter() instanceof BiDirectionalConverter) {
+					option.setValue(((BiDirectionalConverter) getConverter()).deserialize(obj));
+				} else {
+					option.setValue(metaObject.getKey().toString());
+				}
+
+				if (StringUtils.isEmpty(getEachLayout())) {
+					if (Enum.class.isAssignableFrom(obj.getClass()) && StringUtils.isEmpty(getFormat())) {
+						fillBodyWithRenderKit(kit, metaObject, obj, option);
+					} else {
+						option.setText(getObjectLabel(obj));
+					}
+				} else {
+					fillBodyWithRenderKit(kit, metaObject, obj, option);
+				}
+
+				if (obj.equals(object)) {
+					option.setSelected(true);
+				}
+			}
+
+			if (isSaveOptions()) {
+				savePossibleMetaObjects(possibleMetaObjects);
+			}
+
+			menu.setConverter(new SingleSelectOptionConverter(possibleMetaObjects, getConverter()));
+
+			menu.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
+			return menu;
 		}
-	    }
 
-	    for (MetaObject metaObject : possibleMetaObjects) {
-		Object obj = metaObject.getObject();
-		HtmlMenuOption option = menu.createOption(null);
+		private void fillBodyWithRenderKit(RenderKit kit, MetaObject metaObject, Object obj, HtmlMenuOption option) {
+			PresentationContext newContext = getContext().createSubContext(metaObject);
+			newContext.setLayout(getEachLayout());
+			newContext.setRenderMode(RenderMode.getMode("output"));
 
-		if (getConverter() instanceof BiDirectionalConverter) {
-		    option.setValue(((BiDirectionalConverter) getConverter()).deserialize(obj));
-		} else {
-		    option.setValue(metaObject.getKey().toString());
+			HtmlComponent component = kit.render(newContext, obj);
+			option.setBody(component);
 		}
 
-		if (StringUtils.isEmpty(getEachLayout())) {
-		    if (Enum.class.isAssignableFrom(obj.getClass()) && StringUtils.isEmpty(getFormat())) {
-			fillBodyWithRenderKit(kit, metaObject, obj, option);
-		    } else {
-			option.setText(getObjectLabel(obj));
-		    }
-		} else {
-		    fillBodyWithRenderKit(kit, metaObject, obj, option);
+		private boolean hasSavedPossibleMetaObjects() {
+			return getInputContext().getViewState().getLocalAttribute("options") != null;
 		}
 
-		if (obj.equals(object)) {
-		    option.setSelected(true);
+		private List<MetaObject> getPossibleMetaObjects() {
+			return (List<MetaObject>) getInputContext().getViewState().getLocalAttribute("options");
 		}
-	    }
 
-	    if (isSaveOptions()) {
-		savePossibleMetaObjects(possibleMetaObjects);
-	    }
+		private void savePossibleMetaObjects(List<MetaObject> possibleMetaObjects) {
+			getInputContext().getViewState().setLocalAttribute("options", possibleMetaObjects);
+		}
 
-	    menu.setConverter(new SingleSelectOptionConverter(possibleMetaObjects, getConverter()));
+		// TODO: duplicate code, id=menu.getDefaultTitle
+		private String getDefaultTitle() {
+			if (getDefaultText() == null) {
+				return RenderUtils.getResourceString("renderers.menu.default.title");
+			}
+			if (isKey()) {
+				return RenderUtils.getResourceString(getBundle(), getDefaultText());
+			}
+			return getDefaultText();
+		}
 
-	    menu.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
-	    return menu;
+		protected String getObjectLabel(Object object) {
+			if (getFormat() != null) {
+				return RenderUtils.getFormattedProperties(getFormat(), object);
+			}
+			return String.valueOf(object);
+		}
 	}
-
-	private void fillBodyWithRenderKit(RenderKit kit, MetaObject metaObject, Object obj, HtmlMenuOption option) {
-	    PresentationContext newContext = getContext().createSubContext(metaObject);
-	    newContext.setLayout(getEachLayout());
-	    newContext.setRenderMode(RenderMode.getMode("output"));
-
-	    HtmlComponent component = kit.render(newContext, obj);
-	    option.setBody(component);
-	}
-
-	private boolean hasSavedPossibleMetaObjects() {
-	    return getInputContext().getViewState().getLocalAttribute("options") != null;
-	}
-
-	private List<MetaObject> getPossibleMetaObjects() {
-	    return (List<MetaObject>) getInputContext().getViewState().getLocalAttribute("options");
-	}
-
-	private void savePossibleMetaObjects(List<MetaObject> possibleMetaObjects) {
-	    getInputContext().getViewState().setLocalAttribute("options", possibleMetaObjects);
-	}
-
-	// TODO: duplicate code, id=menu.getDefaultTitle
-	private String getDefaultTitle() {
-	    if (getDefaultText() == null) {
-		return RenderUtils.getResourceString("renderers.menu.default.title");
-	    }
-	    if (isKey()) {
-		return RenderUtils.getResourceString(getBundle(), getDefaultText());
-	    }
-	    return getDefaultText();
-	}
-
-	protected String getObjectLabel(Object object) {
-	    if (getFormat() != null) {
-		return RenderUtils.getFormattedProperties(getFormat(), object);
-	    }
-	    return String.valueOf(object);
-	}
-    }
 }

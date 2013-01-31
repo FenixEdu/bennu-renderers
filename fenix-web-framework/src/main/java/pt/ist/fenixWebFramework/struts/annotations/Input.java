@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
  * 
  */
-@Target( { ElementType.METHOD })
+@Target({ ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Input {
 

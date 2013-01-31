@@ -32,281 +32,280 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
  * Example:
  * <ul>
  * <li><input type="checkbox"/><em>&lt;object A presentation&gt;</em></li>
- * <li><input type="checkbox" checked="checked"/>
- * <em>&lt;object B presentation&gt;</em></li>
+ * <li><input type="checkbox" checked="checked"/> <em>&lt;object B presentation&gt;</em></li>
  * <li><input type="checkbox"/><em>&lt;object C presentation&gt;</em></li>
  * </ul>
  * 
  * @author cfgi
  */
 public class CheckBoxOptionListRenderer extends SelectionRenderer {
-    private String eachClasses;
+	private String eachClasses;
 
-    private String eachStyle;
+	private String eachStyle;
 
-    private String eachSchema;
+	private String eachSchema;
 
-    private String eachLayout;
+	private String eachLayout;
 
-    private boolean saveOptions;
+	private boolean saveOptions;
 
-    private boolean selectAllShown;
+	private boolean selectAllShown;
 
-    private String checkBoxClasses;
+	private String checkBoxClasses;
 
-    private String checkBoxStyle;
+	private String checkBoxStyle;
 
-    private String listItemClasses;
+	private String listItemClasses;
 
-    private String listItemStyle;
+	private String listItemStyle;
 
-    private boolean ordered;
+	private boolean ordered;
 
-    /**
-     * This property allows you to configure the class attribute for each
-     * object's presentation.
-     * 
-     * @property
-     */
-    public void setEachClasses(String classes) {
-	this.eachClasses = classes;
-    }
+	/**
+	 * This property allows you to configure the class attribute for each
+	 * object's presentation.
+	 * 
+	 * @property
+	 */
+	public void setEachClasses(String classes) {
+		this.eachClasses = classes;
+	}
 
-    public String getEachClasses() {
-	return this.eachClasses;
-    }
+	public String getEachClasses() {
+		return this.eachClasses;
+	}
 
-    /**
-     * Allows yout to configure the style attribute for each object's
-     * presentation.
-     * 
-     * @property
-     */
-    public void setEachStyle(String style) {
-	this.eachStyle = style;
-    }
+	/**
+	 * Allows yout to configure the style attribute for each object's
+	 * presentation.
+	 * 
+	 * @property
+	 */
+	public void setEachStyle(String style) {
+		this.eachStyle = style;
+	}
 
-    public String getEachStyle() {
-	return this.eachStyle;
-    }
+	public String getEachStyle() {
+		return this.eachStyle;
+	}
 
-    public String getEachLayout() {
-	return eachLayout;
-    }
+	public String getEachLayout() {
+		return eachLayout;
+	}
 
-    /**
-     * Allows you to choose the layout in wich each object is to be presented.
-     * 
-     * @property
-     */
-    public void setEachLayout(String eachLayout) {
-	this.eachLayout = eachLayout;
-    }
+	/**
+	 * Allows you to choose the layout in wich each object is to be presented.
+	 * 
+	 * @property
+	 */
+	public void setEachLayout(String eachLayout) {
+		this.eachLayout = eachLayout;
+	}
 
-    public String getEachSchema() {
-	return eachSchema;
-    }
+	public String getEachSchema() {
+		return eachSchema;
+	}
 
-    /**
-     * Allows you to specify the schema that should be used when presenting each
-     * individual object.
-     * 
-     * @property
-     */
-    public void setEachSchema(String eachSchema) {
-	this.eachSchema = eachSchema;
-    }
+	/**
+	 * Allows you to specify the schema that should be used when presenting each
+	 * individual object.
+	 * 
+	 * @property
+	 */
+	public void setEachSchema(String eachSchema) {
+		this.eachSchema = eachSchema;
+	}
 
-    public boolean isSelectAllShown() {
-	return this.selectAllShown;
-    }
+	public boolean isSelectAllShown() {
+		return this.selectAllShown;
+	}
 
-    /**
-     * Makes the renderer add and option that selects and unselects all the
-     * remaining options.
-     * 
-     * @property
-     */
-    public void setSelectAllShown(boolean selectAllShown) {
-	this.selectAllShown = selectAllShown;
-    }
+	/**
+	 * Makes the renderer add and option that selects and unselects all the
+	 * remaining options.
+	 * 
+	 * @property
+	 */
+	public void setSelectAllShown(boolean selectAllShown) {
+		this.selectAllShown = selectAllShown;
+	}
 
-    public boolean isSaveOptions() {
-	return saveOptions;
-    }
+	public boolean isSaveOptions() {
+		return saveOptions;
+	}
 
-    /**
-     * Allows the possible object list to be persisted between requests, meaning
-     * that the provider is invoked only once.
-     * 
-     * @property
-     */
-    public void setSaveOptions(boolean saveOptions) {
-	this.saveOptions = saveOptions;
-    }
+	/**
+	 * Allows the possible object list to be persisted between requests, meaning
+	 * that the provider is invoked only once.
+	 * 
+	 * @property
+	 */
+	public void setSaveOptions(boolean saveOptions) {
+		this.saveOptions = saveOptions;
+	}
 
-    public String getCheckBoxClasses() {
-	return checkBoxClasses;
-    }
+	public String getCheckBoxClasses() {
+		return checkBoxClasses;
+	}
 
-    /**
-     * Specifies the class applied to the input element
-     * 
-     * @property
-     */
-    public void setCheckBoxClasses(String checkBoxClasses) {
-	this.checkBoxClasses = checkBoxClasses;
-    }
+	/**
+	 * Specifies the class applied to the input element
+	 * 
+	 * @property
+	 */
+	public void setCheckBoxClasses(String checkBoxClasses) {
+		this.checkBoxClasses = checkBoxClasses;
+	}
 
-    public String getCheckBoxStyle() {
-	return checkBoxStyle;
-    }
+	public String getCheckBoxStyle() {
+		return checkBoxStyle;
+	}
 
-    /**
-     * Specifies the style applied to the input element
-     * 
-     * @property
-     */
-    public void setCheckBoxStyle(String checkBoxStyle) {
-	this.checkBoxStyle = checkBoxStyle;
-    }
+	/**
+	 * Specifies the style applied to the input element
+	 * 
+	 * @property
+	 */
+	public void setCheckBoxStyle(String checkBoxStyle) {
+		this.checkBoxStyle = checkBoxStyle;
+	}
 
-    public String getListItemClasses() {
-	return listItemClasses;
-    }
+	public String getListItemClasses() {
+		return listItemClasses;
+	}
 
-    /**
-     * Specifies the classes applied to the list element
-     * 
-     * @property
-     */
-    public void setListItemClasses(String listItemClasses) {
-	this.listItemClasses = listItemClasses;
-    }
+	/**
+	 * Specifies the classes applied to the list element
+	 * 
+	 * @property
+	 */
+	public void setListItemClasses(String listItemClasses) {
+		this.listItemClasses = listItemClasses;
+	}
 
-    public String getListItemStyle() {
-	return listItemStyle;
-    }
+	public String getListItemStyle() {
+		return listItemStyle;
+	}
 
-    /**
-     * Specifies the style applied to the list element
-     * 
-     * @property
-     */
-    public void setListItemStyle(String listItemStyle) {
-	this.listItemStyle = listItemStyle;
-    }
+	/**
+	 * Specifies the style applied to the list element
+	 * 
+	 * @property
+	 */
+	public void setListItemStyle(String listItemStyle) {
+		this.listItemStyle = listItemStyle;
+	}
 
-    public boolean isOrdered() {
-	return ordered;
-    }
+	public boolean isOrdered() {
+		return ordered;
+	}
 
-    /**
-     * Specifies if the generated list will be ordered
-     * 
-     * @property
-     */
-    public void setOrdered(boolean ordered) {
-	this.ordered = ordered;
-    }
-
-    @Override
-    protected Layout getLayout(Object object, Class type) {
-	return new CheckBoxListLayout();
-    }
-
-    protected class CheckBoxListLayout extends Layout {
+	/**
+	 * Specifies if the generated list will be ordered
+	 * 
+	 * @property
+	 */
+	public void setOrdered(boolean ordered) {
+		this.ordered = ordered;
+	}
 
 	@Override
-	public HtmlComponent createComponent(Object object, Class type) {
-	    Collection collection = (Collection) object;
+	protected Layout getLayout(Object object, Class type) {
+		return new CheckBoxListLayout();
+	}
 
-	    HtmlCheckBoxList listComponent = new HtmlCheckBoxList();
-	    listComponent.getList().setOrdered(isOrdered());
+	protected class CheckBoxListLayout extends Layout {
 
-	    Schema schema = RenderKit.getInstance().findSchema(getEachSchema());
-
-	    List<MetaObject> possibleMetaObjects;
-
-	    if (hasSavedPossibleMetaObjects()) {
-		possibleMetaObjects = getPossibleMetaObjects();
-	    } else {
-		possibleMetaObjects = new ArrayList<MetaObject>();
-
-		for (Object possibility : getPossibleObjects()) {
-		    possibleMetaObjects.add(MetaObjectFactory.createObject(possibility, schema));
-		}
-	    }
-
-	    for (MetaObject metaObject : possibleMetaObjects) {
-		Object obj = metaObject.getObject();
-		MetaObjectKey key = metaObject.getKey();
-
-		String layout = getEachLayout();
-
-		PresentationContext newContext = getContext().createSubContext(metaObject);
-		newContext.setLayout(layout);
-		newContext.setRenderMode(RenderMode.getMode("output"));
-
-		RenderKit kit = RenderKit.getInstance();
-		HtmlComponent component = kit.render(newContext, obj);
-
-		HtmlLabel label = new HtmlLabel();
-		label.setBody(component);
-		label.setStyle(eachStyle);
-		label.setClasses(eachClasses);
-
-		HtmlCheckBox checkBox = listComponent.addOption(label, key.toString());
-		label.setFor(checkBox);
-		checkBox.setClasses(getCheckBoxClasses());
-		checkBox.setStyle(getCheckBoxStyle());
-
-		if (collection != null && collection.contains(obj)) {
-		    checkBox.setChecked(true);
-		}
-	    }
-
-	    listComponent.setSelectAllShown(listComponent.getList().getItems().size() > 1 && isSelectAllShown());
-
-	    if (isSaveOptions()) {
-		savePossibleMetaObjects(possibleMetaObjects);
-	    }
-
-	    List<HtmlComponent> components = listComponent.getChildren(new Predicate() {
 		@Override
-		public boolean evaluate(Object arg0) {
-		    return arg0 instanceof HtmlListItem;
+		public HtmlComponent createComponent(Object object, Class type) {
+			Collection collection = (Collection) object;
+
+			HtmlCheckBoxList listComponent = new HtmlCheckBoxList();
+			listComponent.getList().setOrdered(isOrdered());
+
+			Schema schema = RenderKit.getInstance().findSchema(getEachSchema());
+
+			List<MetaObject> possibleMetaObjects;
+
+			if (hasSavedPossibleMetaObjects()) {
+				possibleMetaObjects = getPossibleMetaObjects();
+			} else {
+				possibleMetaObjects = new ArrayList<MetaObject>();
+
+				for (Object possibility : getPossibleObjects()) {
+					possibleMetaObjects.add(MetaObjectFactory.createObject(possibility, schema));
+				}
+			}
+
+			for (MetaObject metaObject : possibleMetaObjects) {
+				Object obj = metaObject.getObject();
+				MetaObjectKey key = metaObject.getKey();
+
+				String layout = getEachLayout();
+
+				PresentationContext newContext = getContext().createSubContext(metaObject);
+				newContext.setLayout(layout);
+				newContext.setRenderMode(RenderMode.getMode("output"));
+
+				RenderKit kit = RenderKit.getInstance();
+				HtmlComponent component = kit.render(newContext, obj);
+
+				HtmlLabel label = new HtmlLabel();
+				label.setBody(component);
+				label.setStyle(eachStyle);
+				label.setClasses(eachClasses);
+
+				HtmlCheckBox checkBox = listComponent.addOption(label, key.toString());
+				label.setFor(checkBox);
+				checkBox.setClasses(getCheckBoxClasses());
+				checkBox.setStyle(getCheckBoxStyle());
+
+				if (collection != null && collection.contains(obj)) {
+					checkBox.setChecked(true);
+				}
+			}
+
+			listComponent.setSelectAllShown(listComponent.getList().getItems().size() > 1 && isSelectAllShown());
+
+			if (isSaveOptions()) {
+				savePossibleMetaObjects(possibleMetaObjects);
+			}
+
+			List<HtmlComponent> components = listComponent.getChildren(new Predicate() {
+				@Override
+				public boolean evaluate(Object arg0) {
+					return arg0 instanceof HtmlListItem;
+				}
+			});
+
+			for (HtmlComponent component : components) {
+				HtmlListItem listItem = (HtmlListItem) component;
+
+				listItem.setStyle(getListItemStyle());
+				listItem.setClasses(getListItemClasses());
+			}
+
+			// TODO: make providers only provide a converter for a single object
+			// make a wrapper converter that calls that converter for each value
+			// this allows converters to be used to menus and checkboxes
+			listComponent.setConverter(new MultipleSelectOptionConverter(possibleMetaObjects, getConverter()));
+			listComponent.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
+
+			return listComponent;
 		}
-	    });
 
-	    for (HtmlComponent component : components) {
-		HtmlListItem listItem = (HtmlListItem) component;
+		private boolean hasSavedPossibleMetaObjects() {
+			return getInputContext().getViewState().getLocalAttribute("options") != null;
+		}
 
-		listItem.setStyle(getListItemStyle());
-		listItem.setClasses(getListItemClasses());
-	    }
+		private List<MetaObject> getPossibleMetaObjects() {
+			return (List<MetaObject>) getInputContext().getViewState().getLocalAttribute("options");
+		}
 
-	    // TODO: make providers only provide a converter for a single object
-	    // make a wrapper converter that calls that converter for each value
-	    // this allows converters to be used to menus and checkboxes
-	    listComponent.setConverter(new MultipleSelectOptionConverter(possibleMetaObjects, getConverter()));
-	    listComponent.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
+		private void savePossibleMetaObjects(List<MetaObject> possibleMetaObjects) {
+			getInputContext().getViewState().setLocalAttribute("options", possibleMetaObjects);
+		}
 
-	    return listComponent;
 	}
-
-	private boolean hasSavedPossibleMetaObjects() {
-	    return getInputContext().getViewState().getLocalAttribute("options") != null;
-	}
-
-	private List<MetaObject> getPossibleMetaObjects() {
-	    return (List<MetaObject>) getInputContext().getViewState().getLocalAttribute("options");
-	}
-
-	private void savePossibleMetaObjects(List<MetaObject> possibleMetaObjects) {
-	    getInputContext().getViewState().setLocalAttribute("options", possibleMetaObjects);
-	}
-
-    }
 
 }

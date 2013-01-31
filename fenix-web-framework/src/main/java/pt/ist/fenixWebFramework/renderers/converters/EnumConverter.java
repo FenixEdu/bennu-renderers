@@ -7,38 +7,38 @@ import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
 public class EnumConverter extends Converter {
 
-    private Class enumClass;
+	private Class enumClass;
 
-    public EnumConverter() {
-	super();
-    }
-
-    public EnumConverter(Class enumClass) {
-	super();
-
-	this.enumClass = enumClass;
-    }
-
-    @Override
-    public Object convert(Class type, Object value) {
-	Object[] enums;
-
-	if (this.enumClass == null) {
-	    enums = type.getEnumConstants();
-	} else {
-	    enums = this.enumClass.getEnumConstants();
-	    if (enums == null) {
-		enums = this.enumClass.getEnclosingClass().getEnumConstants();
-	    }
+	public EnumConverter() {
+		super();
 	}
 
-	for (int i = 0; i < enums.length; i++) {
-	    if (enums[i].toString().equals(value)) {
-		return enums[i];
-	    }
+	public EnumConverter(Class enumClass) {
+		super();
+
+		this.enumClass = enumClass;
 	}
 
-	return null;
-    }
+	@Override
+	public Object convert(Class type, Object value) {
+		Object[] enums;
+
+		if (this.enumClass == null) {
+			enums = type.getEnumConstants();
+		} else {
+			enums = this.enumClass.getEnumConstants();
+			if (enums == null) {
+				enums = this.enumClass.getEnclosingClass().getEnumConstants();
+			}
+		}
+
+		for (Object enum1 : enums) {
+			if (enum1.toString().equals(value)) {
+				return enum1;
+			}
+		}
+
+		return null;
+	}
 
 }

@@ -9,55 +9,54 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlListItem extends HtmlComponent {
 
-    private List<HtmlComponent> body;
-    
-    public HtmlListItem() {
-        super();
-        
-        this.body = new ArrayList<HtmlComponent>();
-    }
+	private List<HtmlComponent> body;
 
-    public void setBody(HtmlComponent body) {
-        this.body = new ArrayList<HtmlComponent>();
-        this.body.add(body);
-    }
-    
-    public HtmlComponent getBody() {
-        if (this.body.isEmpty()) {
-            return null;
-        }
-        else {
-            return this.body.get(0);
-        }
-    }
-    
-    public void addChild(HtmlComponent component) {
-        this.body.add(component);
-    }
+	public HtmlListItem() {
+		super();
 
-    @Override
-    public List<HtmlComponent> getChildren() {
-        List<HtmlComponent> children = super.getChildren();
-        
-        if (this.body != null) {
-            children.addAll(this.body);
-        }
-        
-        return children;
-    }
+		this.body = new ArrayList<HtmlComponent>();
+	}
 
-    @Override
-    public HtmlTag getOwnTag(PageContext context) {
-        HtmlTag tag = super.getOwnTag(context);
-        
-        tag.setName("li");
-        
-        for (HtmlComponent child : this.body) {
-            if (child != null) {
-        	tag.addChild(child.getOwnTag(context));
-            }
-        }
-        
-        return tag;
-    }
+	public void setBody(HtmlComponent body) {
+		this.body = new ArrayList<HtmlComponent>();
+		this.body.add(body);
+	}
+
+	public HtmlComponent getBody() {
+		if (this.body.isEmpty()) {
+			return null;
+		} else {
+			return this.body.get(0);
+		}
+	}
+
+	public void addChild(HtmlComponent component) {
+		this.body.add(component);
+	}
+
+	@Override
+	public List<HtmlComponent> getChildren() {
+		List<HtmlComponent> children = super.getChildren();
+
+		if (this.body != null) {
+			children.addAll(this.body);
+		}
+
+		return children;
+	}
+
+	@Override
+	public HtmlTag getOwnTag(PageContext context) {
+		HtmlTag tag = super.getOwnTag(context);
+
+		tag.setName("li");
+
+		for (HtmlComponent child : this.body) {
+			if (child != null) {
+				tag.addChild(child.getOwnTag(context));
+			}
+		}
+
+		return tag;
+	}
 }

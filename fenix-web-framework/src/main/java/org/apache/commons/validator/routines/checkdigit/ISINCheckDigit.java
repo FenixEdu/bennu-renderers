@@ -20,73 +20,73 @@ package org.apache.commons.validator.routines.checkdigit;
  * Modulus 10 <b>ISIN</b> (International Securities Identifying Number)
  * Check Digit calculation/validation.
  * <p>
- * ISIN Numbers are 12 character alphanumeric codes used
- * to identify Securities.
+ * ISIN Numbers are 12 character alphanumeric codes used to identify Securities.
  * <p>
- * Check digit calculation uses the <i>Modulus 10 Double Add Double</i> technique
- * with every second digit being weighted by 2. Alphabetic characters are
- * converted to numbers by their position in the alphabet starting with A being 10.
- * Weighted numbers greater than ten are treated as two separate numbers.
+ * Check digit calculation uses the <i>Modulus 10 Double Add Double</i> technique with every second digit being weighted by 2.
+ * Alphabetic characters are converted to numbers by their position in the alphabet starting with A being 10. Weighted numbers
+ * greater than ten are treated as two separate numbers.
  * <p>
- * See <a href="http://en.wikipedia.org/wiki/ISIN">Wikipedia - ISIN</a>
- * for more details.
- *
+ * See <a href="http://en.wikipedia.org/wiki/ISIN">Wikipedia - ISIN</a> for more details.
+ * 
  * @version $Revision: 909009 $ $Date: 2010-02-11 14:59:45 +0000 (Qui, 11 Fev 2010) $
  * @since Validator 1.4
  */
 public final class ISINCheckDigit extends ModulusCheckDigit {
 
-    /** Singleton ISIN Check Digit instance */
-    public static final CheckDigit ISIN_CHECK_DIGIT = new ISINCheckDigit();
+	/** Singleton ISIN Check Digit instance */
+	public static final CheckDigit ISIN_CHECK_DIGIT = new ISINCheckDigit();
 
-    /** weighting given to digits depending on their right position */
-    private static final int[] POSITION_WEIGHT = new int[] {2, 1};
+	/** weighting given to digits depending on their right position */
+	private static final int[] POSITION_WEIGHT = new int[] { 2, 1 };
 
-    /**
-     * Construct an ISIN Indetifier Check Digit routine.
-     */
-    public ISINCheckDigit() {
-        super(10);
-    }
+	/**
+	 * Construct an ISIN Indetifier Check Digit routine.
+	 */
+	public ISINCheckDigit() {
+		super(10);
+	}
 
-    /**
-     * Calculate the modulus for an ISIN code.
-     *
-     * @param code The code to calculate the modulus for.
-     * @param includesCheckDigit Whether the code includes the Check Digit or not.
-     * @return The modulus value
-     * @throws CheckDigitException if an error occurs calculating the modulus
-     * for the specified code
-     */
-    protected int calculateModulus(String code, boolean includesCheckDigit) throws CheckDigitException {
-        StringBuffer transformed = new  StringBuffer(code.length() * 2);
-        for (int i = 0; i < code.length(); i++) {
-            int charValue = Character.getNumericValue(code.charAt(i));
-            if (charValue < 0 || charValue > 35) {
-                throw new CheckDigitException("Invalid Character[" + 
-                        (i + 1) + "] = '" + charValue + "'");
-            }
-            transformed.append(charValue);
-        }
-        return super.calculateModulus(transformed.toString(), includesCheckDigit);
-    }
+	/**
+	 * Calculate the modulus for an ISIN code.
+	 * 
+	 * @param code The code to calculate the modulus for.
+	 * @param includesCheckDigit Whether the code includes the Check Digit or not.
+	 * @return The modulus value
+	 * @throws CheckDigitException if an error occurs calculating the modulus
+	 *             for the specified code
+	 */
+	@Override
+	protected int calculateModulus(String code, boolean includesCheckDigit) throws CheckDigitException {
+		StringBuffer transformed = new StringBuffer(code.length() * 2);
+		for (int i = 0; i < code.length(); i++) {
+			int charValue = Character.getNumericValue(code.charAt(i));
+			if (charValue < 0 || charValue > 35) {
+				throw new CheckDigitException("Invalid Character[" + (i + 1) + "] = '" + charValue + "'");
+			}
+			transformed.append(charValue);
+		}
+		return super.calculateModulus(transformed.toString(), includesCheckDigit);
+	}
 
-    /**
-     * <p>Calculates the <i>weighted</i> value of a charcter in the
-     * code at a specified position.</p>
-     *
-     * <p>For Luhn (from right to left) <b>odd</b> digits are weighted
-     * with a factor of <b>one</b> and <b>even</b> digits with a factor
-     * of <b>two</b>. Weighted values > 9, have 9 subtracted</p>
-     *
-     * @param charValue The numeric value of the character.
-     * @param leftPos The position of the character in the code, counting from left to right 
-     * @param rightPos The positionof the character in the code, counting from right to left
-     * @return The weighted value of the character.
-     */
-    protected int weightedValue(int charValue, int leftPos, int rightPos) {
-        int weight = POSITION_WEIGHT[rightPos % 2];
-        int weightedValue = (charValue * weight);
-        return ModulusCheckDigit.sumDigits(weightedValue);
-    }
+	/**
+	 * <p>
+	 * Calculates the <i>weighted</i> value of a charcter in the code at a specified position.
+	 * </p>
+	 * 
+	 * <p>
+	 * For Luhn (from right to left) <b>odd</b> digits are weighted with a factor of <b>one</b> and <b>even</b> digits with a
+	 * factor of <b>two</b>. Weighted values > 9, have 9 subtracted
+	 * </p>
+	 * 
+	 * @param charValue The numeric value of the character.
+	 * @param leftPos The position of the character in the code, counting from left to right
+	 * @param rightPos The positionof the character in the code, counting from right to left
+	 * @return The weighted value of the character.
+	 */
+	@Override
+	protected int weightedValue(int charValue, int leftPos, int rightPos) {
+		int weight = POSITION_WEIGHT[rightPos % 2];
+		int weightedValue = (charValue * weight);
+		return ModulusCheckDigit.sumDigits(weightedValue);
+	}
 }

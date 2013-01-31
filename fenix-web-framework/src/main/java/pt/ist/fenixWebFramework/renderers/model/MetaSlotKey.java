@@ -7,36 +7,36 @@ package pt.ist.fenixWebFramework.renderers.model;
  * identifiers that are unique to a certain slot.
  * 
  * @see pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent#setTargetSlot(MetaSlotKey)
- *
+ * 
  * @author cfgi
  */
 public class MetaSlotKey extends MetaObjectKey {
 
-    private String name;
+	private String name;
 
-    public MetaSlotKey(MetaObject metaObject, String name) {
-        super(metaObject.getKey());
-        
-        this.name = name;
-    }
+	public MetaSlotKey(MetaObject metaObject, String name) {
+		super(metaObject.getKey());
 
-    @Override
-    public boolean equals(Object other) {
-        if (! (other instanceof MetaSlotKey)) {
-            return false;
-        }
-        
-        MetaSlotKey otherSlotKey = (MetaSlotKey) other;
-        return super.equals(other) && this.name.equals(otherSlotKey.name);
-    }
+		this.name = name;
+	}
 
-    @Override
-    public int hashCode() {
-        return super.hashCode() + this.name.hashCode();
-    }
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof MetaSlotKey)) {
+			return false;
+		}
 
-    @Override
-    public String toString() {
-        return super.toString() + ":" + this.name;
-    }
+		MetaSlotKey otherSlotKey = (MetaSlotKey) other;
+		return super.equals(other) && this.name.equals(otherSlotKey.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode() + this.name.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + ":" + this.name;
+	}
 }

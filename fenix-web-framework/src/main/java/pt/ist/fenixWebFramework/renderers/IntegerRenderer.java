@@ -70,13 +70,10 @@ public class IntegerRenderer extends OutputRenderer {
 				}
 
 				// Apply Prefix&Suffix
-				String prefixString = RenderUtils.getResourceString(
-						getBundle(), prefix);
-				String suffixString = RenderUtils.getResourceString(
-						getBundle(), suffix);
+				String prefixString = RenderUtils.getResourceString(getBundle(), prefix);
+				String suffixString = RenderUtils.getResourceString(getBundle(), suffix);
 				if (prefixString != null || suffixString != null) {
-					StringBuilder strBuilder = prefixString == null ? new StringBuilder()
-							: new StringBuilder(prefixString);
+					StringBuilder strBuilder = prefixString == null ? new StringBuilder() : new StringBuilder(prefixString);
 					strBuilder.append(text);
 					strBuilder.append(suffixString);
 					text = strBuilder.toString();

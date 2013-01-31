@@ -10,76 +10,76 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlApplet extends HtmlComponent {
 
-    private final Map<String, String> properties = new HashMap<String, String>();
+	private final Map<String, String> properties = new HashMap<String, String>();
 
-    private String code;
-    private String archive;
-    private int width;
-    private int height;
+	private String code;
+	private String archive;
+	private int width;
+	private int height;
 
-    public HtmlApplet() {
-	super();
-    }
-
-    @Override
-    public HtmlTag getOwnTag(PageContext context) {
-	HtmlTag tag = super.getOwnTag(context);
-
-	tag.setName("applet");
-	tag.setAttribute("code", getCode());
-	tag.setAttribute("archive", getArchive());
-	tag.setAttribute("width", getWidth() + "px");
-	tag.setAttribute("height", getHeight() + "px");
-
-	for (Entry<String, String> entry : properties.entrySet()) {
-	    HtmlTag paramTag = new HtmlTag("param");
-
-	    paramTag.setAttribute("name", entry.getKey());
-	    paramTag.setAttribute("value", entry.getValue());
-
-	    tag.addChild(paramTag);
+	public HtmlApplet() {
+		super();
 	}
 
-	return tag;
-    }
+	@Override
+	public HtmlTag getOwnTag(PageContext context) {
+		HtmlTag tag = super.getOwnTag(context);
 
-    public void setProperty(String key, String value) {
-	properties.put(key, value);
-    }
+		tag.setName("applet");
+		tag.setAttribute("code", getCode());
+		tag.setAttribute("archive", getArchive());
+		tag.setAttribute("width", getWidth() + "px");
+		tag.setAttribute("height", getHeight() + "px");
 
-    public void removeProperty(String key) {
-	properties.remove(key);
-    }
+		for (Entry<String, String> entry : properties.entrySet()) {
+			HtmlTag paramTag = new HtmlTag("param");
 
-    public String getCode() {
-	return code;
-    }
+			paramTag.setAttribute("name", entry.getKey());
+			paramTag.setAttribute("value", entry.getValue());
 
-    public void setCode(String code) {
-	this.code = code;
-    }
+			tag.addChild(paramTag);
+		}
 
-    public String getArchive() {
-	return archive;
-    }
+		return tag;
+	}
 
-    public void setArchive(String archive) {
-	this.archive = archive;
-    }
+	public void setProperty(String key, String value) {
+		properties.put(key, value);
+	}
 
-    public int getWidth() {
-	return width;
-    }
+	public void removeProperty(String key) {
+		properties.remove(key);
+	}
 
-    public void setWidth(int width) {
-	this.width = width;
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public int getHeight() {
-	return height;
-    }
+	public void setCode(String code) {
+		this.code = code;
+	}
 
-    public void setHeight(int height) {
-	this.height = height;
-    }
+	public String getArchive() {
+		return archive;
+	}
+
+	public void setArchive(String archive) {
+		this.archive = archive;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
 }

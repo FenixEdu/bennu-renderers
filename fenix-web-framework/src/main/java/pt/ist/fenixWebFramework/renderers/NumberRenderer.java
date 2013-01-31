@@ -12,17 +12,17 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
  */
 public class NumberRenderer extends OutputRenderer {
 
-    @Override
-    protected Layout getLayout(Object object, Class type) {
-        return new Layout() {
+	@Override
+	protected Layout getLayout(Object object, Class type) {
+		return new Layout() {
 
-            @Override
-            public HtmlComponent createComponent(Object object, Class type) {
-                Number number = (Number) object;
-                
-                return new HtmlText(String.valueOf(number));
-            }
-            
-        };
-    }
+			@Override
+			public HtmlComponent createComponent(Object object, Class type) {
+				Number number = (Number) object;
+
+				return new HtmlText(String.valueOf(number));
+			}
+
+		};
+	}
 }

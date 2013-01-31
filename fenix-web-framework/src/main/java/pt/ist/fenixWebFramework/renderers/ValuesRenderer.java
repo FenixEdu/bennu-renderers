@@ -152,7 +152,7 @@ public class ValuesRenderer extends OutputRenderer {
 
 		public ValuesLayout(MetaObject object) {
 			super();
-			
+
 			this.slots = Collections.unmodifiableList(object.getSlots());
 			this.index = 0;
 			this.insertSeparator = false;
@@ -172,10 +172,9 @@ public class ValuesRenderer extends OutputRenderer {
 			if (this.insertSeparator) {
 				this.insertSeparator = false;
 				return new HtmlText(getHtmlSeparator(), false);
-			}
-			else {
+			} else {
 				MetaSlot slot = getNextSlot();
-				
+
 				if (hasMoreComponents() && getHtmlSeparator() != null) {
 					this.insertSeparator = true;
 				}
@@ -184,19 +183,16 @@ public class ValuesRenderer extends OutputRenderer {
 				String layout = slot.getLayout();
 
 				if (schema == null) {
-					schema = RenderKit.getInstance()
-							.findSchema(getEachSchema());
+					schema = RenderKit.getInstance().findSchema(getEachSchema());
 				}
 
 				if (layout == null) {
 					layout = getEachLayout();
 				}
 
-				return renderValue(slot.getObject(), slot.getType(), schema,
-						layout, slot.getProperties());
+				return renderValue(slot.getObject(), slot.getType(), schema, layout, slot.getProperties());
 			}
 		}
-
 
 		@Override
 		public HtmlComponent createComponent(Object object, Class type) {

@@ -17,60 +17,60 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  * @author cfgi
  */
 public class BooleanInputRenderer extends InputRenderer {
-    private boolean disabled;
+	private boolean disabled;
 
-    private String bundle;
+	private String bundle;
 
-    private String bodyText;
+	private String bodyText;
 
-    @Override
-    protected Layout getLayout(Object object, Class type) {
-	return new Layout() {
+	@Override
+	protected Layout getLayout(Object object, Class type) {
+		return new Layout() {
 
-	    @Override
-	    public HtmlComponent createComponent(Object object, Class type) {
-		HtmlCheckBox checkBox = new HtmlCheckBox();
-		checkBox.setChecked(object == null ? false : (Boolean) object);
-		checkBox.setText(RenderUtils.getResourceString(getBundle(), getBodyText()));
+			@Override
+			public HtmlComponent createComponent(Object object, Class type) {
+				HtmlCheckBox checkBox = new HtmlCheckBox();
+				checkBox.setChecked(object == null ? false : (Boolean) object);
+				checkBox.setText(RenderUtils.getResourceString(getBundle(), getBodyText()));
 
-		InputContext context = getInputContext();
-		checkBox.setTargetSlot((MetaSlotKey) context.getMetaObject().getKey());
+				InputContext context = getInputContext();
+				checkBox.setTargetSlot((MetaSlotKey) context.getMetaObject().getKey());
 
-		return checkBox;
-	    }
+				return checkBox;
+			}
 
-	    @Override
-	    public void applyStyle(HtmlComponent component) {
-		super.applyStyle(component);
+			@Override
+			public void applyStyle(HtmlComponent component) {
+				super.applyStyle(component);
 
-		HtmlCheckBox checkBox = (HtmlCheckBox) component;
-		checkBox.setDisabled(getDisabled());
-	    }
+				HtmlCheckBox checkBox = (HtmlCheckBox) component;
+				checkBox.setDisabled(getDisabled());
+			}
 
-	};
-    }
+		};
+	}
 
-    public boolean getDisabled() {
-	return disabled;
-    }
+	public boolean getDisabled() {
+		return disabled;
+	}
 
-    public void setDisabled(boolean disabled) {
-	this.disabled = disabled;
-    }
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
 
-    public String getBundle() {
-	return bundle;
-    }
+	public String getBundle() {
+		return bundle;
+	}
 
-    public void setBundle(String bundle) {
-	this.bundle = bundle;
-    }
+	public void setBundle(String bundle) {
+		this.bundle = bundle;
+	}
 
-    public String getBodyText() {
-	return bodyText;
-    }
+	public String getBodyText() {
+		return bodyText;
+	}
 
-    public void setBodyText(String bodyText) {
-	this.bodyText = bodyText;
-    }
+	public void setBodyText(String bodyText) {
+		this.bodyText = bodyText;
+	}
 }

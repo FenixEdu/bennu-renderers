@@ -7,40 +7,43 @@ import java.io.InputStream;
 import org.apache.commons.fileupload.FileItem;
 
 /**
- * This is a wrapper around a {@link org.apache.commons.fileupload.FileItem file item} 
- * from Commons Upload.
+ * This is a wrapper around a {@link org.apache.commons.fileupload.FileItem file item} from Commons Upload.
  * 
  * @author cfgi
  */
 public class CommonsFile implements UploadedFile {
 
-    private FileItem commonsFile;
-    
-    public CommonsFile(FileItem commonsFile) {
-        super();
-        
-        this.commonsFile = commonsFile;
-    }
+	private FileItem commonsFile;
 
-    public String getName() {
-        return this.commonsFile.getName();
-    }
+	public CommonsFile(FileItem commonsFile) {
+		super();
 
-    public String getContentType() {
-        return this.commonsFile.getContentType();
-    }
+		this.commonsFile = commonsFile;
+	}
 
-    public long getSize() {
-        return this.commonsFile.getSize();
-    }
+	@Override
+	public String getName() {
+		return this.commonsFile.getName();
+	}
 
-    public InputStream getInputStream() throws IOException {
-        return this.commonsFile.getInputStream();
-    }
+	@Override
+	public String getContentType() {
+		return this.commonsFile.getContentType();
+	}
 
-    public byte[] getFileData() throws FileNotFoundException, IOException {
-	return commonsFile.get();
-    }
+	@Override
+	public long getSize() {
+		return this.commonsFile.getSize();
+	}
+
+	@Override
+	public InputStream getInputStream() throws IOException {
+		return this.commonsFile.getInputStream();
+	}
+
+	@Override
+	public byte[] getFileData() throws FileNotFoundException, IOException {
+		return commonsFile.get();
+	}
 
 }
-

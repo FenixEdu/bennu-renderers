@@ -29,354 +29,353 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixframework.DomainObject;
 
 public class PagesRenderer extends InputRenderer {
-    
-    private String subSchema;
-    
-    private String objectsPerPage;
-    
-    private String paged;
-    
-    private boolean pagedValue = true;
-    
-    private int defaultObjectsPerPage = 100;
-    
-    private String buttonLabel;
-    
-    private boolean key = true;
-    
-    private String bundle;
 
-    
-    private CollectionRenderer renderer;
-    
-    private PageContainerBean pageContainerBean;
-    
-    public PagesRenderer() {
-	super();
-	this.renderer = new CollectionRenderer();
-    }
+	private String subSchema;
 
-    @Override
-    public HtmlComponent render(Object object, Class type) {
-	PageContainerBean bean = (PageContainerBean) object;
-	setPageContainerBean(bean);
-	
-	List<? extends DomainObject> objects = getPageObjects(bean.getObjects());
-	
-	Schema schema = RenderKit.getInstance().findSchema(getSubSchema());
-	MetaObject listMetaObject = MetaObjectFactory.createObject(objects, schema);
-	
-	PresentationContext context = getContext().createSubContext(listMetaObject);
-	context.setRenderMode(RenderMode.getMode("output"));
-	
-	HtmlTable table = (HtmlTable) RenderKit.getInstance().renderUsing(getRenderer(), context, objects, objects.getClass());
-	return decorateTable(table, objects);
-    }
+	private String objectsPerPage;
 
-    private List<? extends DomainObject> getPageObjects(List<? extends DomainObject> objects) {
-	if(!this.pagedValue) {
-	    return getPageContainerBean().getAllObjects();
-	}
-	return getPageContainerBean().getPageByPageSize(getDefaultObjectsPerPage());
-    }
+	private String paged;
 
-    private HtmlComponent decorateTable(HtmlTable table, List<? extends DomainObject> objects) {
-	MetaObject bean = getContext().getMetaObject();
-	
-	HtmlHiddenField page = new HtmlHiddenField();
-	HtmlHiddenField selected = new HtmlHiddenField();
+	private boolean pagedValue = true;
 
-	page.setValue(getCurrentPage());
-	
-	page.bind(bean, "page");
-	selected.bind(bean, "selected");
-	selected.setConverter(new DomainObjectKeyConverter());
-	
-	HtmlContainer container = new HtmlBlockContainer();
-	container.addChild(page);
-	container.addChild(selected);
-	
-	addPreviousNextButtons(container, page, "previous", "next");
-	
-	container.addChild(table);
-	
-	if(table.getHeader() != null) {
-	    for (HtmlTableRow row : table.getHeader().getRows()) {
-		row.createCell("");
-	    }
-	}
-	
-	String buttonText = getButtonText();
-	int i = 0;
-	for (HtmlTableRow row : table.getRows()) {
-	    HtmlTableCell cell = row.createCell();
-	    HtmlSubmitButton htmlSubmitButton = new HtmlSubmitButton();
-	    htmlSubmitButton.setName(getLocalName("select" + i));
-	    htmlSubmitButton.setText(buttonText);
-	    htmlSubmitButton.setController(new ButtonsController(MetaObjectFactory.createObject(objects.get(i), null), selected));
-	    cell.setBody(htmlSubmitButton);
-	    i++;
-	}
+	private int defaultObjectsPerPage = 100;
 
-	addPreviousNextButtons(container, page, "previousAfter", "nextAfter");
-		
-	return container;
-    }
+	private String buttonLabel;
 
-    private void addPreviousNextButtons(HtmlContainer container, HtmlHiddenField page, String previousName, String nextName) {
-	if(this.pagedValue && getPageContainerBean().getNumberOfPages(getDefaultObjectsPerPage()) > 0) {
-	    if(getPageContainerBean().hasPreviousPage(getDefaultObjectsPerPage())) {
-		HtmlSubmitButton previousButton = new HtmlSubmitButton();
-		previousButton.setText(RenderUtils.getResourceString(getBundle(), "pages.button.previous"));
-		previousButton.setName(getLocalName(previousName));
-		previousButton.setController(new PreviousController(page));
-		container.addChild(previousButton);
-	    }
+	private boolean key = true;
 
-	    container.addChild(new HtmlText(getPageContainerBean().getPage() + " / " + getPageContainerBean().getNumberOfPages(getDefaultObjectsPerPage())));
-	    
-	    if(getPageContainerBean().hasNextPage(getDefaultObjectsPerPage())) {
-		HtmlSubmitButton nextButton = new HtmlSubmitButton();
-		nextButton.setText(RenderUtils.getResourceString(getBundle(), "pages.button.next"));
-		nextButton.setName(getLocalName(nextName));
-		nextButton.setController(new NextController(page));
-		container.addChild(nextButton);
-	    }
-	}
-    }
+	private String bundle;
 
-    private String getButtonText() {
-	if(isKey()) {
-	    return RenderUtils.getResourceString(getBundle(), getButtonLabel());
-	} else {
-	    return getButtonLabel();
-	}
-    }
+	private CollectionRenderer renderer;
 
-    private String getLocalName(String string) {
-	return getContext().getViewState().getId() + "renderers.page." + string;
-    }
+	private PageContainerBean pageContainerBean;
 
-    public static class PreviousController extends HtmlSubmitButtonController {
-
-	private HtmlSimpleValueComponent component;
-	
-	public PreviousController(HtmlSimpleValueComponent component) {
-	    super();
-	    
-	    this.component = component;
+	public PagesRenderer() {
+		super();
+		this.renderer = new CollectionRenderer();
 	}
 
 	@Override
-	protected void buttonPressed(IViewState viewState, HtmlSubmitButton button) {
-	    viewState.setSkipUpdate(false);
-	    
-	    ViewDestination destination = viewState.getDestination("input");
-	    if (destination == null) {
-		destination = viewState.getInputDestination();
-	    }
-	    
-	    viewState.setCurrentDestination(destination);
+	public HtmlComponent render(Object object, Class type) {
+		PageContainerBean bean = (PageContainerBean) object;
+		setPageContainerBean(bean);
 
+		List<? extends DomainObject> objects = getPageObjects(bean.getObjects());
 
-	    Integer previous = getCurrentValue() - 1;
-	    this.component.setValue(previous.toString());
+		Schema schema = RenderKit.getInstance().findSchema(getSubSchema());
+		MetaObject listMetaObject = MetaObjectFactory.createObject(objects, schema);
+
+		PresentationContext context = getContext().createSubContext(listMetaObject);
+		context.setRenderMode(RenderMode.getMode("output"));
+
+		HtmlTable table = (HtmlTable) RenderKit.getInstance().renderUsing(getRenderer(), context, objects, objects.getClass());
+		return decorateTable(table, objects);
 	}
-	
-	public int getCurrentValue() {
-	    String value = this.component.getValue();
-	    
-	    if (value == null) {
-		return 0;
-	    }
-	    else {
-		return Integer.parseInt(value);
-	    }
-	}
-    }
-    
-    public static class NextController extends HtmlSubmitButtonController {
 
-	private HtmlSimpleValueComponent component;
-	
-	public NextController(HtmlSimpleValueComponent component) {
-	    super();
-	    this.component = component;
+	private List<? extends DomainObject> getPageObjects(List<? extends DomainObject> objects) {
+		if (!this.pagedValue) {
+			return getPageContainerBean().getAllObjects();
+		}
+		return getPageContainerBean().getPageByPageSize(getDefaultObjectsPerPage());
+	}
+
+	private HtmlComponent decorateTable(HtmlTable table, List<? extends DomainObject> objects) {
+		MetaObject bean = getContext().getMetaObject();
+
+		HtmlHiddenField page = new HtmlHiddenField();
+		HtmlHiddenField selected = new HtmlHiddenField();
+
+		page.setValue(getCurrentPage());
+
+		page.bind(bean, "page");
+		selected.bind(bean, "selected");
+		selected.setConverter(new DomainObjectKeyConverter());
+
+		HtmlContainer container = new HtmlBlockContainer();
+		container.addChild(page);
+		container.addChild(selected);
+
+		addPreviousNextButtons(container, page, "previous", "next");
+
+		container.addChild(table);
+
+		if (table.getHeader() != null) {
+			for (HtmlTableRow row : table.getHeader().getRows()) {
+				row.createCell("");
+			}
+		}
+
+		String buttonText = getButtonText();
+		int i = 0;
+		for (HtmlTableRow row : table.getRows()) {
+			HtmlTableCell cell = row.createCell();
+			HtmlSubmitButton htmlSubmitButton = new HtmlSubmitButton();
+			htmlSubmitButton.setName(getLocalName("select" + i));
+			htmlSubmitButton.setText(buttonText);
+			htmlSubmitButton.setController(new ButtonsController(MetaObjectFactory.createObject(objects.get(i), null), selected));
+			cell.setBody(htmlSubmitButton);
+			i++;
+		}
+
+		addPreviousNextButtons(container, page, "previousAfter", "nextAfter");
+
+		return container;
+	}
+
+	private void addPreviousNextButtons(HtmlContainer container, HtmlHiddenField page, String previousName, String nextName) {
+		if (this.pagedValue && getPageContainerBean().getNumberOfPages(getDefaultObjectsPerPage()) > 0) {
+			if (getPageContainerBean().hasPreviousPage(getDefaultObjectsPerPage())) {
+				HtmlSubmitButton previousButton = new HtmlSubmitButton();
+				previousButton.setText(RenderUtils.getResourceString(getBundle(), "pages.button.previous"));
+				previousButton.setName(getLocalName(previousName));
+				previousButton.setController(new PreviousController(page));
+				container.addChild(previousButton);
+			}
+
+			container.addChild(new HtmlText(getPageContainerBean().getPage() + " / "
+					+ getPageContainerBean().getNumberOfPages(getDefaultObjectsPerPage())));
+
+			if (getPageContainerBean().hasNextPage(getDefaultObjectsPerPage())) {
+				HtmlSubmitButton nextButton = new HtmlSubmitButton();
+				nextButton.setText(RenderUtils.getResourceString(getBundle(), "pages.button.next"));
+				nextButton.setName(getLocalName(nextName));
+				nextButton.setController(new NextController(page));
+				container.addChild(nextButton);
+			}
+		}
+	}
+
+	private String getButtonText() {
+		if (isKey()) {
+			return RenderUtils.getResourceString(getBundle(), getButtonLabel());
+		} else {
+			return getButtonLabel();
+		}
+	}
+
+	private String getLocalName(String string) {
+		return getContext().getViewState().getId() + "renderers.page." + string;
+	}
+
+	public static class PreviousController extends HtmlSubmitButtonController {
+
+		private HtmlSimpleValueComponent component;
+
+		public PreviousController(HtmlSimpleValueComponent component) {
+			super();
+
+			this.component = component;
+		}
+
+		@Override
+		protected void buttonPressed(IViewState viewState, HtmlSubmitButton button) {
+			viewState.setSkipUpdate(false);
+
+			ViewDestination destination = viewState.getDestination("input");
+			if (destination == null) {
+				destination = viewState.getInputDestination();
+			}
+
+			viewState.setCurrentDestination(destination);
+
+			Integer previous = getCurrentValue() - 1;
+			this.component.setValue(previous.toString());
+		}
+
+		public int getCurrentValue() {
+			String value = this.component.getValue();
+
+			if (value == null) {
+				return 0;
+			} else {
+				return Integer.parseInt(value);
+			}
+		}
+	}
+
+	public static class NextController extends HtmlSubmitButtonController {
+
+		private HtmlSimpleValueComponent component;
+
+		public NextController(HtmlSimpleValueComponent component) {
+			super();
+			this.component = component;
+		}
+
+		@Override
+		protected void buttonPressed(IViewState viewState, HtmlSubmitButton button) {
+			viewState.setSkipUpdate(false);
+
+			ViewDestination destination = viewState.getDestination("input");
+			if (destination == null) {
+				destination = viewState.getInputDestination();
+			}
+
+			viewState.setCurrentDestination(destination);
+
+			Integer next = getCurrentValue() + 1;
+			this.component.setValue(next.toString());
+		}
+
+		public int getCurrentValue() {
+			String value = this.component.getValue();
+
+			if (value == null) {
+				return 0;
+			} else {
+				return Integer.parseInt(value);
+			}
+		}
+	}
+
+	public static class ButtonsController extends HtmlSubmitButtonController {
+
+		private HtmlSimpleValueComponent component;
+		private MetaObject metaObject;
+
+		public ButtonsController(MetaObject metaObject, HtmlSimpleValueComponent component) {
+			this.component = component;
+			this.metaObject = metaObject;
+		}
+
+		@Override
+		protected void buttonPressed(IViewState viewState, HtmlSubmitButton button) {
+			viewState.setSkipUpdate(false);
+			this.component.setValue(this.metaObject.getKey().toString());
+		}
+
+	}
+
+	private String getCurrentPage() {
+		MetaObject metaObject = getContext().getMetaObject();
+		PageContainerBean bean = (PageContainerBean) metaObject.getObject();
+
+		return bean.getPage() == null ? null : bean.getPage().toString();
+	}
+
+	public String getSubSchema() {
+		return subSchema;
+	}
+
+	public void setSubSchema(String subSchema) {
+		this.subSchema = subSchema;
+	}
+
+	private Schema translateSchema(String name) {
+		return RenderKit.getInstance().findSchema(name);
 	}
 
 	@Override
-	protected void buttonPressed(IViewState viewState, HtmlSubmitButton button) {
-	    viewState.setSkipUpdate(false);
-	    
-	    ViewDestination destination = viewState.getDestination("input");
-	    if (destination == null) {
-		destination = viewState.getInputDestination();
-	    }
-	    
-	    viewState.setCurrentDestination(destination);
+	public String getClasses() {
+		return this.renderer.getClasses();
+	}
 
-	    Integer next = getCurrentValue() + 1;
-	    this.component.setValue(next.toString());
-	}
-	
-	public int getCurrentValue() {
-	    String value = this.component.getValue();
-	    
-	    if (value == null) {
-		return 0;
-	    }
-	    else {
-		return Integer.parseInt(value);
-	    }
-	}
-    }
-    
-    public static class ButtonsController extends HtmlSubmitButtonController {
-	
-	private HtmlSimpleValueComponent component;
-	private MetaObject metaObject;
-
-	public ButtonsController(MetaObject metaObject, HtmlSimpleValueComponent component) {
-	    this.component = component;
-	    this.metaObject = metaObject;
-	}
-	
 	@Override
-	protected void buttonPressed(IViewState viewState, HtmlSubmitButton button) {
-	    viewState.setSkipUpdate(false);
-	    this.component.setValue(this.metaObject.getKey().toString());
+	public void setClasses(String classes) {
+		this.renderer.setClasses(classes);
 	}
-	
-    }
 
-    private String getCurrentPage() {
-	MetaObject metaObject = getContext().getMetaObject();
-	PageContainerBean bean = (PageContainerBean) metaObject.getObject();
-	
-	return bean.getPage() == null ? null : bean.getPage().toString(); 
-    }
+	public String getColumnClasses() {
+		return this.renderer.getColumnClasses();
+	}
 
+	public void setColumnClasses(String columnClasses) {
+		this.renderer.setColumnClasses(columnClasses);
+	}
 
-    public String getSubSchema() {
-        return subSchema;
-    }
+	public String getHeaderClasses() {
+		return this.renderer.getHeaderClasses();
+	}
 
-    public void setSubSchema(String subSchema) {
-        this.subSchema = subSchema;
-    }
-    
-    private Schema translateSchema(String name) {
-	return RenderKit.getInstance().findSchema(name);
-    }
+	public void setHeaderClasses(String headerClasses) {
+		this.renderer.setHeaderClasses(headerClasses);
+	}
 
-    public String getClasses() {
-        return this.renderer.getClasses();
-    }
+	public String getRowClasses() {
+		return this.renderer.getRowClasses();
+	}
 
-    public void setClasses(String classes) {
-        this.renderer.setClasses(classes);
-    }
+	public void setRowClasses(String rowClasses) {
+		this.renderer.setRowClasses(rowClasses);
+	}
 
-    public String getColumnClasses() {
-        return this.renderer.getColumnClasses();
-    }
+	@Override
+	public String getStyle() {
+		return this.renderer.getStyle();
+	}
 
-    public void setColumnClasses(String columnClasses) {
-        this.renderer.setColumnClasses(columnClasses);
-    }
+	@Override
+	public void setStyle(String style) {
+		this.renderer.setStyle(style);
+	}
 
-    public String getHeaderClasses() {
-        return this.renderer.getHeaderClasses();
-    }
+	public String getObjectsPerPage() {
+		return objectsPerPage;
+	}
 
-    public void setHeaderClasses(String headerClasses) {
-        this.renderer.setHeaderClasses(headerClasses);
-    }
+	public void setObjectsPerPage(String objectsPerPage) {
+		this.objectsPerPage = objectsPerPage;
+		if (objectsPerPage != null && objectsPerPage.length() != 0) {
+			defaultObjectsPerPage = Integer.valueOf(objectsPerPage).intValue();
+		}
+	}
 
-    public String getRowClasses() {
-        return this.renderer.getRowClasses();
-    }
+	private int getDefaultObjectsPerPage() {
+		return defaultObjectsPerPage;
+	}
 
-    public void setRowClasses(String rowClasses) {
-        this.renderer.setRowClasses(rowClasses);
-    }
+	@Override
+	protected Layout getLayout(Object object, Class type) {
+		return null;
+	}
 
-    public String getStyle() {
-        return this.renderer.getStyle();
-    }
+	public String getPaged() {
+		return paged;
+	}
 
-    public void setStyle(String style) {
-        this.renderer.setStyle(style);
-    }
+	public void setPaged(String paged) {
+		this.paged = paged;
+		this.pagedValue = Boolean.valueOf(getPaged()).booleanValue();
+	}
 
-    public String getObjectsPerPage() {
-        return objectsPerPage;
-    }
+	public String getBundle() {
+		return bundle;
+	}
 
-    public void setObjectsPerPage(String objectsPerPage) {
-        this.objectsPerPage = objectsPerPage;
-        if(objectsPerPage != null && objectsPerPage.length() != 0) {
-            defaultObjectsPerPage = Integer.valueOf(objectsPerPage).intValue();
-        }
-    }
-    
-    private int getDefaultObjectsPerPage() {
-	return defaultObjectsPerPage;
-    }
+	public void setBundle(String bundle) {
+		this.bundle = bundle;
+	}
 
-    @Override
-    protected Layout getLayout(Object object, Class type) {
-	return null;
-    }
+	public String getButtonLabel() {
+		return buttonLabel;
+	}
 
-    public String getPaged() {
-        return paged;
-    }
+	public void setButtonLabel(String buttonLabel) {
+		this.buttonLabel = buttonLabel;
+	}
 
-    public void setPaged(String paged) {
-        this.paged = paged;
-        this.pagedValue = Boolean.valueOf(getPaged()).booleanValue();
-    }
+	public boolean isKey() {
+		return key;
+	}
 
-    public String getBundle() {
-        return bundle;
-    }
+	public void setKey(boolean key) {
+		this.key = key;
+	}
 
-    public void setBundle(String bundle) {
-        this.bundle = bundle;
-    }
+	public PageContainerBean getPageContainerBean() {
+		return pageContainerBean;
+	}
 
-    public String getButtonLabel() {
-        return buttonLabel;
-    }
+	public void setPageContainerBean(PageContainerBean pageContainerBean) {
+		this.pageContainerBean = pageContainerBean;
+	}
 
-    public void setButtonLabel(String buttonLabel) {
-        this.buttonLabel = buttonLabel;
-    }
+	public CollectionRenderer getRenderer() {
+		return renderer;
+	}
 
-    public boolean isKey() {
-        return key;
-    }
-
-    public void setKey(boolean key) {
-        this.key = key;
-    }
-
-    public PageContainerBean getPageContainerBean() {
-        return pageContainerBean;
-    }
-
-    public void setPageContainerBean(PageContainerBean pageContainerBean) {
-        this.pageContainerBean = pageContainerBean;
-    }
-
-    public CollectionRenderer getRenderer() {
-        return renderer;
-    }
-
-    public void setRenderer(CollectionRenderer renderer) {
-        this.renderer = renderer;
-    }
-    
+	public void setRenderer(CollectionRenderer renderer) {
+		this.renderer = renderer;
+	}
 
 }

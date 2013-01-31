@@ -12,54 +12,52 @@ import pt.ist.fenixWebFramework.renderers.model.UserIdentityFactory;
 
 public class EditRequest extends HttpServletRequestWrapper {
 
-    private List<IViewState> viewStates;
+	private List<IViewState> viewStates;
 
-    private String publicModuleName = "publico";
+	private String publicModuleName = "publico";
 
-    public EditRequest(HttpServletRequest request) {
-	super(request);
-    }
+	public EditRequest(HttpServletRequest request) {
+		super(request);
+	}
 
-    public List<IViewState> getAllViewStates() throws IOException, ClassNotFoundException {
-	if (this.viewStates == null) {
-	    String[] encodedViewStates = getParameterValues(LifeCycleConstants.VIEWSTATE_PARAM_NAME);
-	    if (encodedViewStates != null) {
-		this.viewStates = new ArrayList<IViewState>();
+	public List<IViewState> getAllViewStates() throws IOException, ClassNotFoundException {
+		if (this.viewStates == null) {
+			String[] encodedViewStates = getParameterValues(LifeCycleConstants.VIEWSTATE_PARAM_NAME);
+			if (encodedViewStates != null) {
+				this.viewStates = new ArrayList<IViewState>();
 
-		for (int i = 0; i < encodedViewStates.length; i++) {
-		    String encodedSingleViewState = encodedViewStates[i];
-
-		    IViewState viewState = ViewState.decodeFromBase64(encodedSingleViewState);
-		    this.viewStates.add(viewState);
+				for (String encodedSingleViewState : encodedViewStates) {
+					IViewState viewState = ViewState.decodeFromBase64(encodedSingleViewState);
+					this.viewStates.add(viewState);
+				}
+			} else {
+				this.viewStates = ViewState.decodeListFromBase64(getParameter(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME));
+			}
 		}
-	    } else {
-		this.viewStates = ViewState.decodeListFromBase64(getParameter(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME));
-	    }
+
+		String contextPath = ((HttpServletRequest) getRequest()).getContextPath();
+		String requestURI = ((HttpServletRequest) getRequest()).getRequestURI().toString();
+
+		UserIdentity userIdentity = UserIdentityFactory.create(this);
+		for (IViewState viewState : this.viewStates) {
+			viewState.setRequest(this);
+
+			checkUserIdentity(viewState, userIdentity, requestURI, contextPath);
+		}
+
+		return this.viewStates;
 	}
 
-	String contextPath = ((HttpServletRequest) getRequest()).getContextPath();
-	String requestURI = ((HttpServletRequest) getRequest()).getRequestURI().toString();
-
-	UserIdentity userIdentity = UserIdentityFactory.create(this);
-	for (IViewState viewState : this.viewStates) {
-	    viewState.setRequest(this);
-
-	    checkUserIdentity(viewState, userIdentity, requestURI, contextPath);
+	private void checkUserIdentity(IViewState viewState, UserIdentity userIdentity, String requestURI, String contextPath) {
+		if (!requestURI.startsWith(contextPath + "/" + publicModuleName + "/") && !viewState.getUser().equals(userIdentity)) {
+			throw new ViewStateUserChangedException();
+		}
 	}
 
-	return this.viewStates;
-    }
+	public static class ViewStateUserChangedException extends RuntimeException {
 
-    private void checkUserIdentity(IViewState viewState, UserIdentity userIdentity, String requestURI, String contextPath) {
-	if (!requestURI.startsWith(contextPath + "/" + publicModuleName + "/") && !viewState.getUser().equals(userIdentity)) {
-	    throw new ViewStateUserChangedException();
+		public ViewStateUserChangedException() {
+			super("viewstate.user.changed");
+		}
 	}
-    }
-
-    public static class ViewStateUserChangedException extends RuntimeException {
-
-	public ViewStateUserChangedException() {
-	    super("viewstate.user.changed");
-	}
-    }
 }

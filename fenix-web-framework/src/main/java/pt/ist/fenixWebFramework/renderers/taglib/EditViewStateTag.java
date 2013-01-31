@@ -13,50 +13,49 @@ import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 
 public class EditViewStateTag extends EditObjectTag {
 
-    @Override
-    public int doEndTag() throws JspException {
-        IViewState viewState = (IViewState) getTargetObject();
+	@Override
+	public int doEndTag() throws JspException {
+		IViewState viewState = (IViewState) getTargetObject();
 
-        if (viewState.getId() != null) {
-            setId(viewState.getId());
-        }
-        else {
-            setId(null);
-        }
-        
-        return super.doEndTag();
-    }
+		if (viewState.getId() != null) {
+			setId(viewState.getId());
+		} else {
+			setId(null);
+		}
 
-    @Override
-    protected Object getTargetObject() throws JspException {
-        if (!isPostBack()) {
-            return super.getTargetObject();
-        } else {
-            return getViewState();
-        }
-    }
+		return super.doEndTag();
+	}
 
-    @Override
-    protected PresentationContext createPresentationContext(Object object, String layout, Schema schema, Properties properties) {
-        IViewState viewState = (IViewState) object;
-        
-        viewState.setRequest((HttpServletRequest) pageContext.getRequest());
-        setViewStateDestinations(viewState);
-        
-        InputContext inputContext = new InputContext();
+	@Override
+	protected Object getTargetObject() throws JspException {
+		if (!isPostBack()) {
+			return super.getTargetObject();
+		} else {
+			return getViewState();
+		}
+	}
 
-        inputContext.setLayout(layout);
-        inputContext.setSchema(schema);
-        inputContext.setProperties(properties);
+	@Override
+	protected PresentationContext createPresentationContext(Object object, String layout, Schema schema, Properties properties) {
+		IViewState viewState = (IViewState) object;
 
-        inputContext.setViewState(viewState);
-        
-        return inputContext;
-    }
+		viewState.setRequest((HttpServletRequest) pageContext.getRequest());
+		setViewStateDestinations(viewState);
 
-    @Override
-    protected HtmlComponent renderObject(PresentationContext context, Object object) throws JspException {
-        return ((IViewState) object).getComponent();
-    }
-    
+		InputContext inputContext = new InputContext();
+
+		inputContext.setLayout(layout);
+		inputContext.setSchema(schema);
+		inputContext.setProperties(properties);
+
+		inputContext.setViewState(viewState);
+
+		return inputContext;
+	}
+
+	@Override
+	protected HtmlComponent renderObject(PresentationContext context, Object object) throws JspException {
+		return ((IViewState) object).getComponent();
+	}
+
 }

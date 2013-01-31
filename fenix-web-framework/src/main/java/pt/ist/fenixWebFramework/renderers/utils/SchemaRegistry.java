@@ -8,27 +8,27 @@ import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 
 public class SchemaRegistry {
 
-    private Map<String, Schema> schemasTable = null;
+	private Map<String, Schema> schemasTable = null;
 
-    public SchemaRegistry() {
-        super();
-        
-        schemasTable = new Hashtable<String, Schema>();
-    }
+	public SchemaRegistry() {
+		super();
 
-    public void registerSchema(Schema schema) {
-        schemasTable.put(schema.getName(), schema);
-    }
+		schemasTable = new Hashtable<String, Schema>();
+	}
 
-    public Schema getSchema(String schemaName) {
-        if (schemaName == null) {
-            return null;
-        }
-        
-        if (! schemasTable.containsKey(schemaName)) {
-            throw new NoSuchSchemaException(schemaName);
-        }
-        
-        return schemasTable.get(schemaName);
-    }
+	public void registerSchema(Schema schema) {
+		schemasTable.put(schema.getName(), schema);
+	}
+
+	public Schema getSchema(String schemaName) {
+		if (schemaName == null) {
+			return null;
+		}
+
+		if (!schemasTable.containsKey(schemaName)) {
+			throw new NoSuchSchemaException(schemaName);
+		}
+
+		return schemasTable.get(schemaName);
+	}
 }

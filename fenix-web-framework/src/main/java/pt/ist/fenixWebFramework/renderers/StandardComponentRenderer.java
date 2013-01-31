@@ -5,16 +5,16 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 
 public class StandardComponentRenderer extends OutputRenderer {
 
-    @Override
-    protected Layout getLayout(Object object, Class type) {
-        return new Layout() {
+	@Override
+	protected Layout getLayout(Object object, Class type) {
+		return new Layout() {
 
-            @Override
-            public HtmlComponent createComponent(Object object, Class type) {
-                return (HtmlComponent) object;
-            }
-            
-        };
-    }
+			@Override
+			public HtmlComponent createComponent(Object object, Class type) {
+				return (HtmlComponent) object;
+			}
+
+		};
+	}
 
 }

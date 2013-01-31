@@ -12,316 +12,352 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 public class HtmlCheckBoxList extends HtmlMultipleValueComponent {
 
-    private HtmlList list;
+	private HtmlList list;
 
-    private List<HtmlCheckBox> checkBoxes;
+	private List<HtmlCheckBox> checkBoxes;
 
-    private List<HtmlHiddenField> hiddenFields;
+	private List<HtmlHiddenField> hiddenFields;
 
-    private boolean selectAllShown;
+	private boolean selectAllShown;
 
-    public HtmlCheckBoxList() {
-	super();
+	public HtmlCheckBoxList() {
+		super();
 
-	this.list = new HtmlList();
-	this.checkBoxes = new ArrayList<HtmlCheckBox>();
-	this.hiddenFields = new ArrayList<HtmlHiddenField>();
-    }
+		this.list = new HtmlList();
+		this.checkBoxes = new ArrayList<HtmlCheckBox>();
+		this.hiddenFields = new ArrayList<HtmlHiddenField>();
+	}
 
-    public void addClass(String newClass) {
-	this.list.addClass(newClass);
-    }
+	@Override
+	public void addClass(String newClass) {
+		this.list.addClass(newClass);
+	}
 
-    public HtmlListItem createItem() {
-	return this.list.createItem();
-    }
+	public HtmlListItem createItem() {
+		return this.list.createItem();
+	}
 
-    public HtmlComponent getChild(Predicate predicate) {
-	return this.list.getChild(predicate);
-    }
+	@Override
+	public HtmlComponent getChild(Predicate predicate) {
+		return this.list.getChild(predicate);
+	}
 
-    public List<HtmlComponent> getChildren() {
-	return this.list.getChildren();
-    }
+	@Override
+	public List<HtmlComponent> getChildren() {
+		return this.list.getChildren();
+	}
 
-    public List<HtmlComponent> getChildren(Predicate predicate) {
-	return this.list.getChildren(predicate);
-    }
+	@Override
+	public List<HtmlComponent> getChildren(Predicate predicate) {
+		return this.list.getChildren(predicate);
+	}
 
-    public HtmlComponent getChildWithId(String id) {
-	return this.list.getChildWithId(id);
-    }
+	@Override
+	public HtmlComponent getChildWithId(String id) {
+		return this.list.getChildWithId(id);
+	}
 
-    public String getClasses() {
-	return this.list.getClasses();
-    }
+	@Override
+	public String getClasses() {
+		return this.list.getClasses();
+	}
 
-    public String getId() {
-	return this.list.getId();
-    }
+	@Override
+	public String getId() {
+		return this.list.getId();
+	}
 
-    public String getOnClick() {
-	return this.list.getOnClick();
-    }
+	@Override
+	public String getOnClick() {
+		return this.list.getOnClick();
+	}
 
-    public String getOnDblClick() {
-	return this.list.getOnDblClick();
-    }
+	@Override
+	public String getOnDblClick() {
+		return this.list.getOnDblClick();
+	}
 
-    public String getOnKeyDown() {
-	return this.list.getOnKeyDown();
-    }
+	@Override
+	public String getOnKeyDown() {
+		return this.list.getOnKeyDown();
+	}
 
-    public String getOnKeyPress() {
-	return this.list.getOnKeyPress();
-    }
+	@Override
+	public String getOnKeyPress() {
+		return this.list.getOnKeyPress();
+	}
 
-    public String getOnKeyUp() {
-	return this.list.getOnKeyUp();
-    }
+	@Override
+	public String getOnKeyUp() {
+		return this.list.getOnKeyUp();
+	}
 
-    public String getOnMouseDown() {
-	return this.list.getOnMouseDown();
-    }
+	@Override
+	public String getOnMouseDown() {
+		return this.list.getOnMouseDown();
+	}
 
-    public String getOnMouseMove() {
-	return this.list.getOnMouseMove();
-    }
+	@Override
+	public String getOnMouseMove() {
+		return this.list.getOnMouseMove();
+	}
 
-    public String getOnMouseOut() {
-	return this.list.getOnMouseOut();
-    }
+	@Override
+	public String getOnMouseOut() {
+		return this.list.getOnMouseOut();
+	}
 
-    public String getOnMouseOver() {
-	return this.list.getOnMouseOver();
-    }
+	@Override
+	public String getOnMouseOver() {
+		return this.list.getOnMouseOver();
+	}
 
-    public String getOnMouseUp() {
-	return this.list.getOnMouseUp();
-    }
+	@Override
+	public String getOnMouseUp() {
+		return this.list.getOnMouseUp();
+	}
 
-    public String getStyle() {
-	return this.list.getStyle();
-    }
+	@Override
+	public String getStyle() {
+		return this.list.getStyle();
+	}
 
-    public String getTitle() {
-	return this.list.getTitle();
-    }
+	@Override
+	public String getTitle() {
+		return this.list.getTitle();
+	}
 
-    public boolean isVisible() {
-	return this.list.isVisible();
-    }
+	@Override
+	public boolean isVisible() {
+		return this.list.isVisible();
+	}
 
-    public void setClasses(String classes) {
-	this.list.setClasses(classes);
-    }
+	@Override
+	public void setClasses(String classes) {
+		this.list.setClasses(classes);
+	}
 
-    public void setId(String id) {
-	this.list.setId(id);
-    }
+	@Override
+	public void setId(String id) {
+		this.list.setId(id);
+	}
 
-    public void setOnClick(String onclick) {
-	this.list.setOnClick(onclick);
-    }
+	@Override
+	public void setOnClick(String onclick) {
+		this.list.setOnClick(onclick);
+	}
 
-    public void setOnDblClick(String ondblclick) {
-	this.list.setOnDblClick(ondblclick);
-    }
+	@Override
+	public void setOnDblClick(String ondblclick) {
+		this.list.setOnDblClick(ondblclick);
+	}
 
-    public void setOnKeyDown(String onkeydown) {
-	this.list.setOnKeyDown(onkeydown);
-    }
+	@Override
+	public void setOnKeyDown(String onkeydown) {
+		this.list.setOnKeyDown(onkeydown);
+	}
 
-    public void setOnKeyPress(String onkeypress) {
-	this.list.setOnKeyPress(onkeypress);
-    }
+	@Override
+	public void setOnKeyPress(String onkeypress) {
+		this.list.setOnKeyPress(onkeypress);
+	}
 
-    public void setOnKeyUp(String onkeyup) {
-	this.list.setOnKeyUp(onkeyup);
-    }
+	@Override
+	public void setOnKeyUp(String onkeyup) {
+		this.list.setOnKeyUp(onkeyup);
+	}
 
-    public void setOnMouseDown(String onmousedown) {
-	this.list.setOnMouseDown(onmousedown);
-    }
+	@Override
+	public void setOnMouseDown(String onmousedown) {
+		this.list.setOnMouseDown(onmousedown);
+	}
 
-    public void setOnMouseMove(String onmousemove) {
-	this.list.setOnMouseMove(onmousemove);
-    }
+	@Override
+	public void setOnMouseMove(String onmousemove) {
+		this.list.setOnMouseMove(onmousemove);
+	}
 
-    public void setOnMouseOut(String onmouseout) {
-	this.list.setOnMouseOut(onmouseout);
-    }
+	@Override
+	public void setOnMouseOut(String onmouseout) {
+		this.list.setOnMouseOut(onmouseout);
+	}
 
-    public void setOnMouseOver(String onmouseover) {
-	this.list.setOnMouseOver(onmouseover);
-    }
+	@Override
+	public void setOnMouseOver(String onmouseover) {
+		this.list.setOnMouseOver(onmouseover);
+	}
 
-    public void setOnMouseUp(String onmouseup) {
-	this.list.setOnMouseUp(onmouseup);
-    }
+	@Override
+	public void setOnMouseUp(String onmouseup) {
+		this.list.setOnMouseUp(onmouseup);
+	}
 
-    public void setStyle(String style) {
-	this.list.setStyle(style);
-    }
+	@Override
+	public void setStyle(String style) {
+		this.list.setStyle(style);
+	}
 
-    public void setTitle(String title) {
-	this.list.setTitle(title);
-    }
+	@Override
+	public void setTitle(String title) {
+		this.list.setTitle(title);
+	}
 
-    public void setVisible(boolean visible) {
-	this.list.setVisible(visible);
-    }
+	@Override
+	public void setVisible(boolean visible) {
+		this.list.setVisible(visible);
+	}
 
-    public boolean isSelectAllShown() {
-	return this.selectAllShown;
-    }
+	public boolean isSelectAllShown() {
+		return this.selectAllShown;
+	}
 
-    public void setSelectAllShown(boolean selectAllShown) {
-	this.selectAllShown = selectAllShown;
-    }
+	public void setSelectAllShown(boolean selectAllShown) {
+		this.selectAllShown = selectAllShown;
+	}
 
-    public List<HtmlCheckBox> getCheckBoxes() {
-	return this.checkBoxes;
-    }
+	public List<HtmlCheckBox> getCheckBoxes() {
+		return this.checkBoxes;
+	}
 
-    protected List<HtmlHiddenField> getHiddenFields() {
-	return this.hiddenFields;
-    }
+	protected List<HtmlHiddenField> getHiddenFields() {
+		return this.hiddenFields;
+	}
 
-    public HtmlList getList() {
-	return this.list;
-    }
+	public HtmlList getList() {
+		return this.list;
+	}
 
-    @Override
-    public void setValues(String... values) {
-	super.setValues(values);
+	@Override
+	public void setValues(String... values) {
+		super.setValues(values);
 
-	outter: for (HtmlCheckBox checkBox : getCheckBoxes()) {
-	    for (String value : values) {
-		if (value.equals(checkBox.getValue())) {
-		    checkBox.setChecked(true);
-		    continue outter;
+		outter: for (HtmlCheckBox checkBox : getCheckBoxes()) {
+			for (String value : values) {
+				if (value.equals(checkBox.getValue())) {
+					checkBox.setChecked(true);
+					continue outter;
+				}
+			}
+
+			checkBox.setChecked(false);
 		}
-	    }
-
-	    checkBox.setChecked(false);
-	}
-    }
-
-    public HtmlCheckBox addOption(HtmlComponent component, String value) {
-	HtmlCheckBox checkBox = addOption(component);
-
-	checkBox.setUserValue(value);
-	return checkBox;
-    }
-
-    public HtmlHiddenField addHiddenOption(String value) {
-	HtmlHiddenField hiddenField = new HtmlHiddenField();
-
-	getHiddenFields().add(hiddenField);
-
-	hiddenField.setValue(value);
-	return hiddenField;
-    }
-
-    public HtmlCheckBox addOption(HtmlComponent component) {
-	HtmlCheckBox checkBox = new HtmlCheckBox();
-	getCheckBoxes().add(checkBox);
-
-	HtmlListItem item = this.list.createItem();
-	item.setBody(component);
-
-	return checkBox;
-    }
-
-    protected HtmlCheckBox addOption(HtmlComponent component, int index) {
-	HtmlCheckBox checkBox = new HtmlCheckBox();
-	getCheckBoxes().add(index, checkBox);
-
-	HtmlListItem item = this.list.createItem(index);
-	item.setBody(component);
-
-	return checkBox;
-    }
-
-    protected HtmlCheckBox addOption(HtmlCheckBox checkBox, int index) {
-	getCheckBoxes().add(index, checkBox);
-
-	HtmlListItem item = this.list.createItem(index);
-	item.setBody(new HtmlLabel(checkBox.getText()));
-	checkBox.setText("");
-
-	return checkBox;
-    }
-
-    @Override
-    public HtmlTag getOwnTag(PageContext context) {
-	int index = 0;
-	for (HtmlCheckBox checkBox : getCheckBoxes()) {
-	    checkBox.setName(getName());
-
-	    if (getTargetSlot() != null) {
-		checkBox.setTargetSlot(getTargetSlot());
-	    }
-
-	    checkBox.setId(checkBox.getName() + "/" + index++);
 	}
 
-	for (HtmlHiddenField hiddenField : getHiddenFields()) {
-	    hiddenField.setName(getName());
+	public HtmlCheckBox addOption(HtmlComponent component, String value) {
+		HtmlCheckBox checkBox = addOption(component);
 
-	    if (getTargetSlot() != null) {
-		hiddenField.setTargetSlot(getTargetSlot());
-	    }
+		checkBox.setUserValue(value);
+		return checkBox;
 	}
 
-	if (isSelectAllShown()) {
-	    StringBuilder selectAllScript = new StringBuilder();
-	    boolean allChecked = true;
+	public HtmlHiddenField addHiddenOption(String value) {
+		HtmlHiddenField hiddenField = new HtmlHiddenField();
 
-	    String checkAllId = getValidIdOrName(getName() + "/all");
+		getHiddenFields().add(hiddenField);
 
-	    for (HtmlCheckBox checkBox : getCheckBoxes()) {
-		if (!checkBox.isChecked()) {
-		    allChecked = false;
+		hiddenField.setValue(value);
+		return hiddenField;
+	}
+
+	public HtmlCheckBox addOption(HtmlComponent component) {
+		HtmlCheckBox checkBox = new HtmlCheckBox();
+		getCheckBoxes().add(checkBox);
+
+		HtmlListItem item = this.list.createItem();
+		item.setBody(component);
+
+		return checkBox;
+	}
+
+	protected HtmlCheckBox addOption(HtmlComponent component, int index) {
+		HtmlCheckBox checkBox = new HtmlCheckBox();
+		getCheckBoxes().add(index, checkBox);
+
+		HtmlListItem item = this.list.createItem(index);
+		item.setBody(component);
+
+		return checkBox;
+	}
+
+	protected HtmlCheckBox addOption(HtmlCheckBox checkBox, int index) {
+		getCheckBoxes().add(index, checkBox);
+
+		HtmlListItem item = this.list.createItem(index);
+		item.setBody(new HtmlLabel(checkBox.getText()));
+		checkBox.setText("");
+
+		return checkBox;
+	}
+
+	@Override
+	public HtmlTag getOwnTag(PageContext context) {
+		int index = 0;
+		for (HtmlCheckBox checkBox : getCheckBoxes()) {
+			checkBox.setName(getName());
+
+			if (getTargetSlot() != null) {
+				checkBox.setTargetSlot(getTargetSlot());
+			}
+
+			checkBox.setId(checkBox.getName() + "/" + index++);
 		}
 
-		selectAllScript.append("var checkbox = document.getElementById('" + checkBox.getId() + "'); if (!checkbox.disabled) checkbox.checked = this.checked; ");
+		for (HtmlHiddenField hiddenField : getHiddenFields()) {
+			hiddenField.setName(getName());
 
-		String eachScript = "if (! this.checked) document.getElementById('" + checkAllId + "').checked = false;";
-		checkBox.setOnClick(eachScript);
-		checkBox.setOnDblClick(eachScript);
-	    }
+			if (getTargetSlot() != null) {
+				hiddenField.setTargetSlot(getTargetSlot());
+			}
+		}
 
-	    HtmlCheckBox checkAllBox = addOption(
-		    new HtmlLabel(RenderUtils.getResourceString("renderers.checkboxlist.selectAll")), 0);
-	    checkAllBox.setId(checkAllId);
-	    checkAllBox.setChecked(allChecked);
-	    checkAllBox.setOnClick(selectAllScript.toString());
-	    checkAllBox.setOnDblClick(selectAllScript.toString());
+		if (isSelectAllShown()) {
+			StringBuilder selectAllScript = new StringBuilder();
+			boolean allChecked = true;
+
+			String checkAllId = getValidIdOrName(getName() + "/all");
+
+			for (HtmlCheckBox checkBox : getCheckBoxes()) {
+				if (!checkBox.isChecked()) {
+					allChecked = false;
+				}
+
+				selectAllScript.append("var checkbox = document.getElementById('" + checkBox.getId()
+						+ "'); if (!checkbox.disabled) checkbox.checked = this.checked; ");
+
+				String eachScript = "if (! this.checked) document.getElementById('" + checkAllId + "').checked = false;";
+				checkBox.setOnClick(eachScript);
+				checkBox.setOnDblClick(eachScript);
+			}
+
+			HtmlCheckBox checkAllBox =
+					addOption(new HtmlLabel(RenderUtils.getResourceString("renderers.checkboxlist.selectAll")), 0);
+			checkAllBox.setId(checkAllId);
+			checkAllBox.setChecked(allChecked);
+			checkAllBox.setOnClick(selectAllScript.toString());
+			checkAllBox.setOnDblClick(selectAllScript.toString());
+		}
+
+		for (int i = 0; i < this.list.getItems().size(); i++) {
+			HtmlListItem item = this.list.getItems().get(i);
+			HtmlInlineContainer container = new HtmlInlineContainer();
+
+			container.addChild(getCheckBoxes().get(i));
+			container.addChild(item.getBody());
+
+			item.setBody(container);
+		}
+
+		if (getHiddenFields().size() > 0) {
+			HtmlContainer container = new HtmlInlineContainer();
+
+			container.addChild(list);
+			for (HtmlHiddenField hiddenField : getHiddenFields()) {
+				container.addChild(hiddenField);
+			}
+
+			return container.getOwnTag(context);
+		} else {
+			return this.list.getOwnTag(context);
+		}
 	}
-
-	for (int i = 0; i < this.list.getItems().size(); i++) {
-	    HtmlListItem item = this.list.getItems().get(i);
-	    HtmlInlineContainer container = new HtmlInlineContainer();
-
-	    container.addChild(getCheckBoxes().get(i));
-	    container.addChild(item.getBody());
-
-	    item.setBody(container);
-	}
-
-	if (getHiddenFields().size() > 0) {
-	    HtmlContainer container = new HtmlInlineContainer();
-
-	    container.addChild(list);
-	    for (HtmlHiddenField hiddenField : getHiddenFields()) {
-		container.addChild(hiddenField);
-	    }
-
-	    return container.getOwnTag(context);
-	} else {
-	    return this.list.getOwnTag(context);
-	}
-    }
 }

@@ -33,16 +33,14 @@ public class EnumInputRendererWithPostBack extends EnumInputRenderer {
 	public HtmlComponent render(Object object, Class type) {
 		HtmlInlineContainer container = new HtmlInlineContainer();
 
-		String prefix = HtmlComponent
-				.getValidIdOrName(((MetaSlot) getInputContext().getMetaObject())
-						.getKey().toString().replaceAll("\\.", "_")
-						.replaceAll("\\:", "_"));
+		String prefix =
+				HtmlComponent.getValidIdOrName(((MetaSlot) getInputContext().getMetaObject()).getKey().toString()
+						.replaceAll("\\.", "_").replaceAll("\\:", "_"));
 
 		HtmlHiddenField hidden = new HtmlHiddenField(prefix + HIDDEN_NAME, "");
 
 		HtmlMenu menu = (HtmlMenu) super.render(object, type);
-		menu.setOnChange("this.form." + prefix + HIDDEN_NAME
-				+ ".value='true';this.form.submit();");
+		menu.setOnChange("this.form." + prefix + HIDDEN_NAME + ".value='true';this.form.submit();");
 		menu.setController(new PostBackController(hidden, getDestination()));
 
 		container.addChild(hidden);
@@ -64,12 +62,9 @@ public class EnumInputRendererWithPostBack extends EnumInputRenderer {
 
 		@Override
 		public void execute(IViewState viewState) {
-			if (hidden.getValue() != null
-					&& hidden.getValue().equalsIgnoreCase("true")) {
-				String destinationName = this.destination == null ? "postback"
-						: this.destination;
-				ViewDestination destination = viewState
-						.getDestination(destinationName);
+			if (hidden.getValue() != null && hidden.getValue().equalsIgnoreCase("true")) {
+				String destinationName = this.destination == null ? "postback" : this.destination;
+				ViewDestination destination = viewState.getDestination(destinationName);
 
 				if (destination != null) {
 					viewState.setCurrentDestination(destination);

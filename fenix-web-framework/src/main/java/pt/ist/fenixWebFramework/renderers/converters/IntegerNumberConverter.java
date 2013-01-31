@@ -5,39 +5,39 @@ import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
 public class IntegerNumberConverter extends Converter {
 
-    private int base;
-    
-    public IntegerNumberConverter() {
-        setBase(10);
-    }
-    
-    public IntegerNumberConverter(int base) {
-        this();
-        
-        setBase(base);
-    }
+	private int base;
 
-    public int getBase() {
-        return this.base;
-    }
+	public IntegerNumberConverter() {
+		setBase(10);
+	}
 
-    public void setBase(int base) {
-        this.base = base;
-    }
+	public IntegerNumberConverter(int base) {
+		this();
 
-    @Override
-    public Object convert(Class type, Object value) {
-        String numberText = ((String) value).trim();
+		setBase(base);
+	}
 
-        if (numberText.length() == 0) {
-            return null;
-        }
-        
-        try {
-            return Integer.parseInt(numberText.trim(), getBase());
-        } catch (NumberFormatException e) {
-            throw new ConversionException("renderers.converter.integer", e, true, value);
-        }
-    }
-    
+	public int getBase() {
+		return this.base;
+	}
+
+	public void setBase(int base) {
+		this.base = base;
+	}
+
+	@Override
+	public Object convert(Class type, Object value) {
+		String numberText = ((String) value).trim();
+
+		if (numberText.length() == 0) {
+			return null;
+		}
+
+		try {
+			return Integer.parseInt(numberText.trim(), getBase());
+		} catch (NumberFormatException e) {
+			throw new ConversionException("renderers.converter.integer", e, true, value);
+		}
+	}
+
 }
