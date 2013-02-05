@@ -18,54 +18,54 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
  */
 public class ColorInputRenderer extends StringInputRenderer {
 
-	private static final String BASE_PATH = "/javaScript/picker";
+    private static final String BASE_PATH = "/javaScript/picker";
 
-	@Override
-	protected HtmlComponent createTextField(Object object, Class type) {
-		HtmlContainer fieldComponent = (HtmlContainer) super.createTextField(object, type);
+    @Override
+    protected HtmlComponent createTextField(Object object, Class type) {
+        HtmlContainer fieldComponent = (HtmlContainer) super.createTextField(object, type);
 
-		HtmlTextInput input = (HtmlTextInput) fieldComponent.getChildren().get(0);
-		input.setId(getContext().getMetaObject().getKey().toString());
+        HtmlTextInput input = (HtmlTextInput) fieldComponent.getChildren().get(0);
+        input.setId(getContext().getMetaObject().getKey().toString());
 
-		HtmlLink link = new HtmlLink();
-		link.setModuleRelative(false);
-		link.setUrl(BASE_PATH + "/img/");
+        HtmlLink link = new HtmlLink();
+        link.setModuleRelative(false);
+        link.setUrl(BASE_PATH + "/img/");
 
-		HtmlScript script = new HtmlScript();
-		script.setContentType("text/javascript");
-		script.setScript(String.format("new Control.ColorPicker('%s', { IMAGE_BASE : '%s' });", input.getId(),
-				link.calculateUrl()));
+        HtmlScript script = new HtmlScript();
+        script.setContentType("text/javascript");
+        script.setScript(String.format("new Control.ColorPicker('%s', { IMAGE_BASE : '%s' });", input.getId(),
+                link.calculateUrl()));
 
-		HtmlContainer container = new HtmlInlineContainer();
+        HtmlContainer container = new HtmlInlineContainer();
 
-		container.addChild(input);
-		container.addChild(new HtmlText(getFormatLabel()));
-		container.addChild(script);
+        container.addChild(input);
+        container.addChild(new HtmlText(getFormatLabel()));
+        container.addChild(script);
 
-		return container;
-	}
+        return container;
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		return new ColorPickerLayout();
-	}
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        return new ColorPickerLayout();
+    }
 
-	class ColorPickerLayout extends TextFieldLayout {
+    class ColorPickerLayout extends TextFieldLayout {
 
-		@Override
-		protected void setContextSlot(HtmlComponent component, MetaSlotKey slotKey) {
-			HtmlContainer container = (HtmlContainer) component;
+        @Override
+        protected void setContextSlot(HtmlComponent component, MetaSlotKey slotKey) {
+            HtmlContainer container = (HtmlContainer) component;
 
-			super.setContextSlot(container.getChildren().get(0), slotKey);
-		}
+            super.setContextSlot(container.getChildren().get(0), slotKey);
+        }
 
-		@Override
-		public void applyStyle(HtmlComponent component) {
-			HtmlContainer container = (HtmlContainer) component;
+        @Override
+        public void applyStyle(HtmlComponent component) {
+            HtmlContainer container = (HtmlContainer) component;
 
-			super.applyStyle(container.getChildren().get(0));
-		}
+            super.applyStyle(container.getChildren().get(0));
+        }
 
-	}
+    }
 
 }

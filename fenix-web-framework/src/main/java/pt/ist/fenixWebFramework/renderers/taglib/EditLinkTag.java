@@ -9,86 +9,86 @@ import pt.ist.fenixWebFramework._development.LogLevel;
 
 public class EditLinkTag extends TagSupport {
 
-	private static final Logger logger = Logger.getLogger(EditLinkTag.class);
+    private static final Logger logger = Logger.getLogger(EditLinkTag.class);
 
-	private String name;
+    private String name;
 
-	private String path;
+    private String path;
 
-	private String module;
+    private String module;
 
-	private String redirect;
+    private String redirect;
 
-	public EditLinkTag() {
-		super();
-	}
+    public EditLinkTag() {
+        super();
+    }
 
-	@Override
-	public void release() {
-		super.release();
+    @Override
+    public void release() {
+        super.release();
 
-		this.name = null;
-		this.path = null;
-		this.module = null;
-		this.redirect = null;
-	}
+        this.name = null;
+        this.path = null;
+        this.module = null;
+        this.redirect = null;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getModule() {
-		return module;
-	}
+    public String getModule() {
+        return module;
+    }
 
-	public void setModule(String module) {
-		this.module = module;
-	}
+    public void setModule(String module) {
+        this.module = module;
+    }
 
-	public String getPath() {
-		return path;
-	}
+    public String getPath() {
+        return path;
+    }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-	public String getRedirect() {
-		return redirect;
-	}
+    public String getRedirect() {
+        return redirect;
+    }
 
-	public void setRedirect(String redirect) {
-		this.redirect = redirect;
-	}
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
+    }
 
-	@Override
-	public int doStartTag() throws JspException {
-		BaseRenderObjectTag tag = (BaseRenderObjectTag) findAncestorWithClass(this, BaseRenderObjectTag.class);
+    @Override
+    public int doStartTag() throws JspException {
+        BaseRenderObjectTag tag = (BaseRenderObjectTag) findAncestorWithClass(this, BaseRenderObjectTag.class);
 
-		if (tag == null) {
-			if (LogLevel.WARN) {
-				logger.warn("destination " + getName() + " specified but no parent tag supports destinations");
-			}
-		} else {
-			setDestination(tag, getPath(), getModule(), redirectToBoolean(getRedirect()));
-		}
+        if (tag == null) {
+            if (LogLevel.WARN) {
+                logger.warn("destination " + getName() + " specified but no parent tag supports destinations");
+            }
+        } else {
+            setDestination(tag, getPath(), getModule(), redirectToBoolean(getRedirect()));
+        }
 
-		return SKIP_BODY;
-	}
+        return SKIP_BODY;
+    }
 
-	protected void setDestination(BaseRenderObjectTag tag, String path, String module, boolean redirect) {
-		tag.addDestination(name, path, module, redirect);
-	}
+    protected void setDestination(BaseRenderObjectTag tag, String path, String module, boolean redirect) {
+        tag.addDestination(name, path, module, redirect);
+    }
 
-	protected boolean redirectToBoolean(String redirect) {
-		if (redirect != null && (redirect.equalsIgnoreCase("true") || redirect.equalsIgnoreCase("yes"))) {
-			return true;
-		}
+    protected boolean redirectToBoolean(String redirect) {
+        if (redirect != null && (redirect.equalsIgnoreCase("true") || redirect.equalsIgnoreCase("yes"))) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

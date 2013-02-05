@@ -44,85 +44,85 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  */
 public class RenderersRequestProcessor extends TilesRequestProcessor {
 
-	@Override
-	public void init(final ActionServlet servlet, final ModuleConfig moduleConfig) throws ServletException {
-		RenderersRequestProcessorImpl.implementationClass = RenderersRequestProcessor.class;
-		super.init(servlet, moduleConfig);
-	}
+    @Override
+    public void init(final ActionServlet servlet, final ModuleConfig moduleConfig) throws ServletException {
+        RenderersRequestProcessorImpl.implementationClass = RenderersRequestProcessor.class;
+        super.init(servlet, moduleConfig);
+    }
 
-	@Override
-	public void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		RenderersRequestProcessorImpl.currentRequest.set(request);
-		RenderersRequestProcessorImpl.currentContext.set(getServletContext());
+    @Override
+    public void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        RenderersRequestProcessorImpl.currentRequest.set(request);
+        RenderersRequestProcessorImpl.currentContext.set(getServletContext());
 
-		try {
-			super.process(request, response);
-		} finally {
-			RenderersRequestProcessorImpl.currentRequest.set(null);
-			RenderersRequestProcessorImpl.currentContext.set(null);
-			RenderersRequestProcessorImpl.fileItems.set(null);
-		}
-	}
+        try {
+            super.process(request, response);
+        } finally {
+            RenderersRequestProcessorImpl.currentRequest.set(null);
+            RenderersRequestProcessorImpl.currentContext.set(null);
+            RenderersRequestProcessorImpl.fileItems.set(null);
+        }
+    }
 
-	@Override
-	protected Action processActionCreate(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping)
-			throws IOException {
-		Action action = super.processActionCreate(request, response, mapping);
+    @Override
+    protected Action processActionCreate(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping)
+            throws IOException {
+        Action action = super.processActionCreate(request, response, mapping);
 
-		if (action == null) {
-			return new VoidAction();
-		}
+        if (action == null) {
+            return new VoidAction();
+        }
 
-		return action;
-	}
+        return action;
+    }
 
-	@Override
-	protected ActionForward processActionPerform(HttpServletRequest request, HttpServletResponse response, Action action,
-			ActionForm form, ActionMapping mapping) throws IOException, ServletException {
-		RenderersRequestProcessorImpl.currentRequest.set(RenderersRequestProcessorImpl.parseMultipartRequest(request, form));
-		HttpServletRequest initialRequest = RenderersRequestProcessorImpl.currentRequest.get();
+    @Override
+    protected ActionForward processActionPerform(HttpServletRequest request, HttpServletResponse response, Action action,
+            ActionForm form, ActionMapping mapping) throws IOException, ServletException {
+        RenderersRequestProcessorImpl.currentRequest.set(RenderersRequestProcessorImpl.parseMultipartRequest(request, form));
+        HttpServletRequest initialRequest = RenderersRequestProcessorImpl.currentRequest.get();
 
-		if (RenderersRequestProcessorImpl.hasViewState(initialRequest)) {
-			try {
-				RenderersRequestProcessorImpl.setViewStateProcessed(request);
+        if (RenderersRequestProcessorImpl.hasViewState(initialRequest)) {
+            try {
+                RenderersRequestProcessorImpl.setViewStateProcessed(request);
 
-				ActionForward forward = ComponentLifeCycle.execute(initialRequest);
-				if (forward != null) {
-					return forward;
-				}
+                ActionForward forward = ComponentLifeCycle.execute(initialRequest);
+                if (forward != null) {
+                    return forward;
+                }
 
-				return super.processActionPerform(request, response, action, form, mapping);
-			} catch (Exception e) {
-				if (LogLevel.WARN) {
-					System.out.println(SimpleDateFormat.getInstance().format(new Date()));
-				}
-				e.printStackTrace();
+                return super.processActionPerform(request, response, action, form, mapping);
+            } catch (Exception e) {
+                if (LogLevel.WARN) {
+                    System.out.println(SimpleDateFormat.getInstance().format(new Date()));
+                }
+                e.printStackTrace();
 
-				if (action instanceof ExceptionHandler) {
-					ExceptionHandler handler = (ExceptionHandler) action;
+                if (action instanceof ExceptionHandler) {
+                    ExceptionHandler handler = (ExceptionHandler) action;
 
-					ActionForward input = null;
+                    ActionForward input = null;
 
-					IViewState viewState = RenderUtils.getViewState();
-					if (viewState != null) {
-						ViewDestination destination = viewState.getInputDestination();
-						input = destination.getActionForward();
-					}
+                    IViewState viewState = RenderUtils.getViewState();
+                    if (viewState != null) {
+                        ViewDestination destination = viewState.getInputDestination();
+                        input = destination.getActionForward();
+                    }
 
-					ActionForward forward = handler.processException(request, mapping, input, e);
-					if (forward != null) {
-						return forward;
-					} else {
-						return processException(request, response, e, form, mapping);
-					}
-				} else {
-					return processException(request, response, e, form, mapping);
-				}
-			}
-		} else {
-			return super.processActionPerform(request, response, action, form, mapping);
-		}
+                    ActionForward forward = handler.processException(request, mapping, input, e);
+                    if (forward != null) {
+                        return forward;
+                    } else {
+                        return processException(request, response, e, form, mapping);
+                    }
+                } else {
+                    return processException(request, response, e, form, mapping);
+                }
+            }
+        } else {
+            return super.processActionPerform(request, response, action, form, mapping);
+        }
 
-	}
+    }
 
 }

@@ -25,60 +25,60 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  */
 public class BooleanMenuInputRenderer extends InputRenderer {
 
-	private String nullOptionKey;
-	private String bundle;
+    private String nullOptionKey;
+    private String bundle;
 
-	public String getNullOptionKey() {
-		return nullOptionKey;
-	}
+    public String getNullOptionKey() {
+        return nullOptionKey;
+    }
 
-	public void setNullOptionKey(String nullOptionKey) {
-		this.nullOptionKey = nullOptionKey;
-	}
+    public void setNullOptionKey(String nullOptionKey) {
+        this.nullOptionKey = nullOptionKey;
+    }
 
-	public String getBundle() {
-		return bundle;
-	}
+    public String getBundle() {
+        return bundle;
+    }
 
-	public void setBundle(String bundle) {
-		this.bundle = bundle;
-	}
+    public void setBundle(String bundle) {
+        this.bundle = bundle;
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		return new Layout() {
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        return new Layout() {
 
-			@Override
-			public HtmlComponent createComponent(Object object, Class type) {
-				HtmlMenu menu = new HtmlMenu();
+            @Override
+            public HtmlComponent createComponent(Object object, Class type) {
+                HtmlMenu menu = new HtmlMenu();
 
-				if (getNullOptionKey() != null) {
-					String defaultOptionTitle = RenderUtils.getResourceString(getBundle(), getNullOptionKey());
-					menu.createDefaultOption(defaultOptionTitle).setSelected(object == null);
-					menu.setConverter(new Converter() {
-						@Override
-						public Object convert(Class type, Object value) {
-							return StringUtils.isEmpty((String) value) ? null : Boolean.valueOf((String) value);
-						}
-					});
-				}
+                if (getNullOptionKey() != null) {
+                    String defaultOptionTitle = RenderUtils.getResourceString(getBundle(), getNullOptionKey());
+                    menu.createDefaultOption(defaultOptionTitle).setSelected(object == null);
+                    menu.setConverter(new Converter() {
+                        @Override
+                        public Object convert(Class type, Object value) {
+                            return StringUtils.isEmpty((String) value) ? null : Boolean.valueOf((String) value);
+                        }
+                    });
+                }
 
-				HtmlMenuOption trueOption = menu.createOption(RenderUtils.getResourceString("TRUE"));
-				HtmlMenuOption falseOption = menu.createOption(RenderUtils.getResourceString("FALSE"));
+                HtmlMenuOption trueOption = menu.createOption(RenderUtils.getResourceString("TRUE"));
+                HtmlMenuOption falseOption = menu.createOption(RenderUtils.getResourceString("FALSE"));
 
-				trueOption.setValue("true");
-				falseOption.setValue("false");
+                trueOption.setValue("true");
+                falseOption.setValue("false");
 
-				if (object != null) {
-					(((Boolean) object) ? trueOption : falseOption).setSelected(true);
-				}
+                if (object != null) {
+                    (((Boolean) object) ? trueOption : falseOption).setSelected(true);
+                }
 
-				menu.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
+                menu.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 
-				return menu;
-			}
+                return menu;
+            }
 
-		};
-	}
+        };
+    }
 
 }

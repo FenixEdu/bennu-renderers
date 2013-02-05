@@ -16,51 +16,51 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  */
 public class EnumRenderer extends OutputRenderer {
 
-	private String bundle;
-	private boolean allowHTML = false;
-	private String nullLabel;
+    private String bundle;
+    private boolean allowHTML = false;
+    private String nullLabel;
 
-	public String getNullLabel() {
-		return nullLabel;
-	}
+    public String getNullLabel() {
+        return nullLabel;
+    }
 
-	public void setNullLabel(String nullLabel) {
-		this.nullLabel = nullLabel;
-	}
+    public void setNullLabel(String nullLabel) {
+        this.nullLabel = nullLabel;
+    }
 
-	public boolean getAllowHTML() {
-		return allowHTML;
-	}
+    public boolean getAllowHTML() {
+        return allowHTML;
+    }
 
-	public void setAllowHTML(boolean allowHTML) {
-		this.allowHTML = allowHTML;
-	}
+    public void setAllowHTML(boolean allowHTML) {
+        this.allowHTML = allowHTML;
+    }
 
-	public String getBundle() {
-		return bundle;
-	}
+    public String getBundle() {
+        return bundle;
+    }
 
-	public void setBundle(String bundle) {
-		this.bundle = bundle;
-	}
+    public void setBundle(String bundle) {
+        this.bundle = bundle;
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		return new Layout() {
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        return new Layout() {
 
-			@Override
-			public HtmlComponent createComponent(Object object, Class type) {
-				Enum enumerate = (Enum) object;
+            @Override
+            public HtmlComponent createComponent(Object object, Class type) {
+                Enum enumerate = (Enum) object;
 
-				if (enumerate == null) {
-					return new HtmlText(getNullLabel());
-				}
+                if (enumerate == null) {
+                    return new HtmlText(getNullLabel());
+                }
 
-				String description = RenderUtils.getEnumString(enumerate, getBundle());
+                String description = RenderUtils.getEnumString(enumerate, getBundle());
 
-				return new HtmlText(description, !getAllowHTML());
-			}
+                return new HtmlText(description, !getAllowHTML());
+            }
 
-		};
-	}
+        };
+    }
 }

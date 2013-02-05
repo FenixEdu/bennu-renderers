@@ -10,51 +10,51 @@ import pt.ist.fenixWebFramework.renderers.exceptions.NoRendererException;
 
 public class RendererRegistry {
 
-	private ClassHierarchyTable<Map<String, RendererDescription>> renderersTable;
+    private ClassHierarchyTable<Map<String, RendererDescription>> renderersTable;
 
-	public RendererRegistry() {
-		super();
+    public RendererRegistry() {
+        super();
 
-		this.renderersTable = new ClassHierarchyTable<Map<String, RendererDescription>>();
-	}
+        this.renderersTable = new ClassHierarchyTable<Map<String, RendererDescription>>();
+    }
 
-	public void registerRenderer(Class type, String layout, Class renderer, Properties defaultProperties) {
-		Map<String, RendererDescription> layoutsTable = this.renderersTable.getUnspecific(type);
+    public void registerRenderer(Class type, String layout, Class renderer, Properties defaultProperties) {
+        Map<String, RendererDescription> layoutsTable = this.renderersTable.getUnspecific(type);
 
-		if (layoutsTable == null) {
-			this.renderersTable.put(type, new HashMap<String, RendererDescription>());
-			layoutsTable = this.renderersTable.getUnspecific(type);
-		}
+        if (layoutsTable == null) {
+            this.renderersTable.put(type, new HashMap<String, RendererDescription>());
+            layoutsTable = this.renderersTable.getUnspecific(type);
+        }
 
-		layoutsTable.put(layout, new RendererDescription(renderer, defaultProperties));
-	}
+        layoutsTable.put(layout, new RendererDescription(renderer, defaultProperties));
+    }
 
-	public RendererDescription getRenderDescription(Class objectType, final String layout) {
-		Map<String, RendererDescription> layoutsTable = renderersTable.get(objectType, new Predicate() {
+    public RendererDescription getRenderDescription(Class objectType, final String layout) {
+        Map<String, RendererDescription> layoutsTable = renderersTable.get(objectType, new Predicate() {
 
-			@Override
-			public boolean evaluate(Object table) {
-				Map layoutsTable = (Map) table;
+            @Override
+            public boolean evaluate(Object table) {
+                Map layoutsTable = (Map) table;
 
-				return layoutsTable.get(layout) != null;
-			}
+                return layoutsTable.get(layout) != null;
+            }
 
-		});
+        });
 
-		if (layoutsTable == null) {
-			throw new NoRendererException(objectType, layout);
-		}
+        if (layoutsTable == null) {
+            throw new NoRendererException(objectType, layout);
+        }
 
-		return layoutsTable.get(layout);
-	}
+        return layoutsTable.get(layout);
+    }
 
-	public RendererDescription getExactRenderDescription(Class objectType, String layout) {
-		Map<String, RendererDescription> layoutsTable = renderersTable.getUnspecific(objectType);
+    public RendererDescription getExactRenderDescription(Class objectType, String layout) {
+        Map<String, RendererDescription> layoutsTable = renderersTable.getUnspecific(objectType);
 
-		if (layoutsTable == null) {
-			throw new NoRendererException(objectType, layout);
-		}
+        if (layoutsTable == null) {
+            throw new NoRendererException(objectType, layout);
+        }
 
-		return layoutsTable.get(layout);
-	}
+        return layoutsTable.get(layout);
+    }
 }

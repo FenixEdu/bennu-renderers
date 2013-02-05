@@ -4,48 +4,48 @@ import org.apache.commons.lang.StringUtils;
 
 public class DateValidator extends HtmlValidator {
 
-	private String dateFormat;
+    private String dateFormat;
 
-	/**
-	 * Required constructor.
-	 */
-	public DateValidator() {
-		super();
-		setDateFormat("dd/MM/yyyy");
-		setKey(true);
-	}
+    /**
+     * Required constructor.
+     */
+    public DateValidator() {
+        super();
+        setDateFormat("dd/MM/yyyy");
+        setKey(true);
+    }
 
-	public DateValidator(HtmlChainValidator htmlChainValidator) {
-		this(htmlChainValidator, "dd/MM/yyyy");
-	}
+    public DateValidator(HtmlChainValidator htmlChainValidator) {
+        this(htmlChainValidator, "dd/MM/yyyy");
+    }
 
-	public DateValidator(HtmlChainValidator htmlChainValidator, String dateFormat) {
-		super(htmlChainValidator);
+    public DateValidator(HtmlChainValidator htmlChainValidator, String dateFormat) {
+        super(htmlChainValidator);
 
-		setDateFormat(dateFormat);
-		setKey(true);
+        setDateFormat(dateFormat);
+        setKey(true);
 
-	}
+    }
 
-	public String getDateFormat() {
-		return this.dateFormat;
-	}
+    public String getDateFormat() {
+        return this.dateFormat;
+    }
 
-	public void setDateFormat(String dateFormat) {
-		this.dateFormat = dateFormat;
-	}
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
 
-	@Override
-	public void performValidation() {
+    @Override
+    public void performValidation() {
 
-		String text = getComponent().getValue();
+        String text = getComponent().getValue();
 
-		if (!StringUtils.isEmpty(text)) {
-			setValid(org.apache.commons.validator.DateValidator.getInstance().isValid(text, getDateFormat(), true));
-		}
+        if (!StringUtils.isEmpty(text)) {
+            setValid(org.apache.commons.validator.DateValidator.getInstance().isValid(text, getDateFormat(), true));
+        }
 
-		if (!isValid()) {
-			setMessage("renderers.validator.date");
-		}
-	}
+        if (!isValid()) {
+            setMessage("renderers.validator.date");
+        }
+    }
 }

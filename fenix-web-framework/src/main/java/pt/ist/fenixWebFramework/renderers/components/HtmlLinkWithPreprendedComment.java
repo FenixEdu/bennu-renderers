@@ -6,28 +6,28 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlLinkWithPreprendedComment extends HtmlLink {
 
-	private String preprendedComment;
+    private String preprendedComment;
 
-	public HtmlLinkWithPreprendedComment(String preprendedComment) {
-		super();
-		setPreprendedComment(preprendedComment);
-		setIndented(false);
-	}
+    public HtmlLinkWithPreprendedComment(String preprendedComment) {
+        super();
+        setPreprendedComment(preprendedComment);
+        setIndented(false);
+    }
 
-	@Override
-	public HtmlTag getOwnTag(PageContext context) {
-		HtmlTag ownTag = super.getOwnTag(context);
-		if (getPreprendedComment() != null) {
-			ownTag.setPreprendedComment(getPreprendedComment());
-		}
-		return ownTag;
-	}
+    @Override
+    public HtmlTag getOwnTag(PageContext context) {
+        HtmlTag ownTag = super.getOwnTag(context);
+        if (getPreprendedComment() != null) {
+            ownTag.setPreprendedComment(getPreprendedComment());
+        }
+        return ownTag;
+    }
 
-	public String getPreprendedComment() {
-		return preprendedComment;
-	}
+    public String getPreprendedComment() {
+        return preprendedComment;
+    }
 
-	public void setPreprendedComment(String preprendedComment) {
-		this.preprendedComment = preprendedComment;
-	}
+    public void setPreprendedComment(String preprendedComment) {
+        this.preprendedComment = preprendedComment;
+    }
 }

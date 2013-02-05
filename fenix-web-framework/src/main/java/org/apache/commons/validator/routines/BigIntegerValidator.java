@@ -66,141 +66,141 @@ import java.util.Locale;
  */
 public class BigIntegerValidator extends AbstractNumberValidator {
 
-	private static final BigIntegerValidator VALIDATOR = new BigIntegerValidator();
+    private static final BigIntegerValidator VALIDATOR = new BigIntegerValidator();
 
-	/**
-	 * Return a singleton instance of this validator.
-	 * 
-	 * @return A singleton instance of the BigIntegerValidator.
-	 */
-	public static BigIntegerValidator getInstance() {
-		return VALIDATOR;
-	}
+    /**
+     * Return a singleton instance of this validator.
+     * 
+     * @return A singleton instance of the BigIntegerValidator.
+     */
+    public static BigIntegerValidator getInstance() {
+        return VALIDATOR;
+    }
 
-	/**
-	 * Construct a <i>strict</i> instance.
-	 */
-	public BigIntegerValidator() {
-		this(true, STANDARD_FORMAT);
-	}
+    /**
+     * Construct a <i>strict</i> instance.
+     */
+    public BigIntegerValidator() {
+        this(true, STANDARD_FORMAT);
+    }
 
-	/**
-	 * <p>
-	 * Construct an instance with the specified strict setting and format type.
-	 * </p>
-	 * 
-	 * <p>
-	 * The <code>formatType</code> specified what type of <code>NumberFormat</code> is created - valid types are:
-	 * </p>
-	 * <ul>
-	 * <li>AbstractNumberValidator.STANDARD_FORMAT -to create <i>standard</i> number formats (the default).</li>
-	 * <li>AbstractNumberValidator.CURRENCY_FORMAT -to create <i>currency</i> number formats.</li>
-	 * <li>AbstractNumberValidator.PERCENT_FORMAT -to create <i>percent</i> number formats (the default).</li>
-	 * </ul>
-	 * 
-	 * @param strict <code>true</code> if strict <code>Format</code> parsing should be used.
-	 * @param formatType The <code>NumberFormat</code> type to
-	 *            create for validation, default is STANDARD_FORMAT.
-	 */
-	public BigIntegerValidator(boolean strict, int formatType) {
-		super(strict, formatType, false);
-	}
+    /**
+     * <p>
+     * Construct an instance with the specified strict setting and format type.
+     * </p>
+     * 
+     * <p>
+     * The <code>formatType</code> specified what type of <code>NumberFormat</code> is created - valid types are:
+     * </p>
+     * <ul>
+     * <li>AbstractNumberValidator.STANDARD_FORMAT -to create <i>standard</i> number formats (the default).</li>
+     * <li>AbstractNumberValidator.CURRENCY_FORMAT -to create <i>currency</i> number formats.</li>
+     * <li>AbstractNumberValidator.PERCENT_FORMAT -to create <i>percent</i> number formats (the default).</li>
+     * </ul>
+     * 
+     * @param strict <code>true</code> if strict <code>Format</code> parsing should be used.
+     * @param formatType The <code>NumberFormat</code> type to
+     *            create for validation, default is STANDARD_FORMAT.
+     */
+    public BigIntegerValidator(boolean strict, int formatType) {
+        super(strict, formatType, false);
+    }
 
-	/**
-	 * <p>
-	 * Validate/convert a <code>BigInteger</code> using the default <code>Locale</code>.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @return The parsed <code>BigInteger</code> if valid or <code>null</code> if invalid.
-	 */
-	public BigInteger validate(String value) {
-		return (BigInteger) parse(value, (String) null, (Locale) null);
-	}
+    /**
+     * <p>
+     * Validate/convert a <code>BigInteger</code> using the default <code>Locale</code>.
+     * 
+     * @param value The value validation is being performed on.
+     * @return The parsed <code>BigInteger</code> if valid or <code>null</code> if invalid.
+     */
+    public BigInteger validate(String value) {
+        return (BigInteger) parse(value, (String) null, (Locale) null);
+    }
 
-	/**
-	 * <p>
-	 * Validate/convert a <code>BigInteger</code> using the specified <i>pattern</i>.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @param pattern The pattern used to validate the value against.
-	 * @return The parsed <code>BigInteger</code> if valid or <code>null</code> if invalid.
-	 */
-	public BigInteger validate(String value, String pattern) {
-		return (BigInteger) parse(value, pattern, (Locale) null);
-	}
+    /**
+     * <p>
+     * Validate/convert a <code>BigInteger</code> using the specified <i>pattern</i>.
+     * 
+     * @param value The value validation is being performed on.
+     * @param pattern The pattern used to validate the value against.
+     * @return The parsed <code>BigInteger</code> if valid or <code>null</code> if invalid.
+     */
+    public BigInteger validate(String value, String pattern) {
+        return (BigInteger) parse(value, pattern, (Locale) null);
+    }
 
-	/**
-	 * <p>
-	 * Validate/convert a <code>BigInteger</code> using the specified <code>Locale</code>.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @param locale The locale to use for the number format, system default if null.
-	 * @return The parsed <code>BigInteger</code> if valid or <code>null</code> if invalid.
-	 */
-	public BigInteger validate(String value, Locale locale) {
-		return (BigInteger) parse(value, (String) null, locale);
-	}
+    /**
+     * <p>
+     * Validate/convert a <code>BigInteger</code> using the specified <code>Locale</code>.
+     * 
+     * @param value The value validation is being performed on.
+     * @param locale The locale to use for the number format, system default if null.
+     * @return The parsed <code>BigInteger</code> if valid or <code>null</code> if invalid.
+     */
+    public BigInteger validate(String value, Locale locale) {
+        return (BigInteger) parse(value, (String) null, locale);
+    }
 
-	/**
-	 * <p>
-	 * Validate/convert a <code>BigInteger</code> using the specified pattern and/ or <code>Locale</code>.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @param pattern The pattern used to validate the value against, or the
-	 *            default for the <code>Locale</code> if <code>null</code>.
-	 * @param locale The locale to use for the date format, system default if null.
-	 * @return The parsed <code>BigInteger</code> if valid or <code>null</code> if invalid.
-	 */
-	public BigInteger validate(String value, String pattern, Locale locale) {
-		return (BigInteger) parse(value, pattern, locale);
-	}
+    /**
+     * <p>
+     * Validate/convert a <code>BigInteger</code> using the specified pattern and/ or <code>Locale</code>.
+     * 
+     * @param value The value validation is being performed on.
+     * @param pattern The pattern used to validate the value against, or the
+     *            default for the <code>Locale</code> if <code>null</code>.
+     * @param locale The locale to use for the date format, system default if null.
+     * @return The parsed <code>BigInteger</code> if valid or <code>null</code> if invalid.
+     */
+    public BigInteger validate(String value, String pattern, Locale locale) {
+        return (BigInteger) parse(value, pattern, locale);
+    }
 
-	/**
-	 * Check if the value is within a specified range.
-	 * 
-	 * @param value The <code>Number</code> value to check.
-	 * @param min The minimum value of the range.
-	 * @param max The maximum value of the range.
-	 * @return <code>true</code> if the value is within the
-	 *         specified range.
-	 */
-	public boolean isInRange(BigInteger value, long min, long max) {
-		return (value.longValue() >= min && value.longValue() <= max);
-	}
+    /**
+     * Check if the value is within a specified range.
+     * 
+     * @param value The <code>Number</code> value to check.
+     * @param min The minimum value of the range.
+     * @param max The maximum value of the range.
+     * @return <code>true</code> if the value is within the
+     *         specified range.
+     */
+    public boolean isInRange(BigInteger value, long min, long max) {
+        return (value.longValue() >= min && value.longValue() <= max);
+    }
 
-	/**
-	 * Check if the value is greater than or equal to a minimum.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @param min The minimum value.
-	 * @return <code>true</code> if the value is greater than
-	 *         or equal to the minimum.
-	 */
-	public boolean minValue(BigInteger value, long min) {
-		return (value.longValue() >= min);
-	}
+    /**
+     * Check if the value is greater than or equal to a minimum.
+     * 
+     * @param value The value validation is being performed on.
+     * @param min The minimum value.
+     * @return <code>true</code> if the value is greater than
+     *         or equal to the minimum.
+     */
+    public boolean minValue(BigInteger value, long min) {
+        return (value.longValue() >= min);
+    }
 
-	/**
-	 * Check if the value is less than or equal to a maximum.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @param max The maximum value.
-	 * @return <code>true</code> if the value is less than
-	 *         or equal to the maximum.
-	 */
-	public boolean maxValue(BigInteger value, long max) {
-		return (value.longValue() <= max);
-	}
+    /**
+     * Check if the value is less than or equal to a maximum.
+     * 
+     * @param value The value validation is being performed on.
+     * @param max The maximum value.
+     * @return <code>true</code> if the value is less than
+     *         or equal to the maximum.
+     */
+    public boolean maxValue(BigInteger value, long max) {
+        return (value.longValue() <= max);
+    }
 
-	/**
-	 * Convert the parsed value to a <code>BigInteger</code>.
-	 * 
-	 * @param value The parsed <code>Number</code> object created.
-	 * @param formatter The Format used to parse the value with.
-	 * @return The parsed <code>Number</code> converted to a <code>BigInteger</code>.
-	 */
-	@Override
-	protected Object processParsedValue(Object value, Format formatter) {
-		return BigInteger.valueOf(((Number) value).longValue());
-	}
+    /**
+     * Convert the parsed value to a <code>BigInteger</code>.
+     * 
+     * @param value The parsed <code>Number</code> object created.
+     * @param formatter The Format used to parse the value with.
+     * @return The parsed <code>Number</code> converted to a <code>BigInteger</code>.
+     */
+    @Override
+    protected Object processParsedValue(Object value, Format formatter) {
+        return BigInteger.valueOf(((Number) value).longValue());
+    }
 }

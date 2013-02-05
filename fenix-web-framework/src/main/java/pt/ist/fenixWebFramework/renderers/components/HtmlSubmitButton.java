@@ -2,13 +2,13 @@ package pt.ist.fenixWebFramework.renderers.components;
 
 public class HtmlSubmitButton extends HtmlInputButton {
 
-	public HtmlSubmitButton() {
-		super("submit");
-	}
+    public HtmlSubmitButton() {
+        super("submit");
+    }
 
-	public HtmlSubmitButton(String text) {
-		this();
+    public HtmlSubmitButton(String text) {
+        this();
 
-		setText(text);
-	}
+        setText(text);
+    }
 }

@@ -13,37 +13,37 @@ import org.apache.commons.fileupload.FileItem;
  */
 public class CommonsFile implements UploadedFile {
 
-	private FileItem commonsFile;
+    private FileItem commonsFile;
 
-	public CommonsFile(FileItem commonsFile) {
-		super();
+    public CommonsFile(FileItem commonsFile) {
+        super();
 
-		this.commonsFile = commonsFile;
-	}
+        this.commonsFile = commonsFile;
+    }
 
-	@Override
-	public String getName() {
-		return this.commonsFile.getName();
-	}
+    @Override
+    public String getName() {
+        return this.commonsFile.getName();
+    }
 
-	@Override
-	public String getContentType() {
-		return this.commonsFile.getContentType();
-	}
+    @Override
+    public String getContentType() {
+        return this.commonsFile.getContentType();
+    }
 
-	@Override
-	public long getSize() {
-		return this.commonsFile.getSize();
-	}
+    @Override
+    public long getSize() {
+        return this.commonsFile.getSize();
+    }
 
-	@Override
-	public InputStream getInputStream() throws IOException {
-		return this.commonsFile.getInputStream();
-	}
+    @Override
+    public InputStream getInputStream() throws IOException {
+        return this.commonsFile.getInputStream();
+    }
 
-	@Override
-	public byte[] getFileData() throws FileNotFoundException, IOException {
-		return commonsFile.get();
-	}
+    @Override
+    public byte[] getFileData() throws FileNotFoundException, IOException {
+        return commonsFile.get();
+    }
 
 }

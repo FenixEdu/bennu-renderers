@@ -11,72 +11,72 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 
 public class EnumInputRendererWithPostBack extends EnumInputRenderer {
 
-	private final String HIDDEN_NAME = "postback";
+    private final String HIDDEN_NAME = "postback";
 
-	private String destination;
+    private String destination;
 
-	public String getDestination() {
-		return destination;
-	}
+    public String getDestination() {
+        return destination;
+    }
 
-	/**
-	 * Allows to choose the postback destination. If this property is not
-	 * specified the default "postback" destination is used.
-	 * 
-	 * @property
-	 */
-	public void setDestination(String destination) {
-		this.destination = destination;
-	}
+    /**
+     * Allows to choose the postback destination. If this property is not
+     * specified the default "postback" destination is used.
+     * 
+     * @property
+     */
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
 
-	@Override
-	public HtmlComponent render(Object object, Class type) {
-		HtmlInlineContainer container = new HtmlInlineContainer();
+    @Override
+    public HtmlComponent render(Object object, Class type) {
+        HtmlInlineContainer container = new HtmlInlineContainer();
 
-		String prefix =
-				HtmlComponent.getValidIdOrName(((MetaSlot) getInputContext().getMetaObject()).getKey().toString()
-						.replaceAll("\\.", "_").replaceAll("\\:", "_"));
+        String prefix =
+                HtmlComponent.getValidIdOrName(((MetaSlot) getInputContext().getMetaObject()).getKey().toString()
+                        .replaceAll("\\.", "_").replaceAll("\\:", "_"));
 
-		HtmlHiddenField hidden = new HtmlHiddenField(prefix + HIDDEN_NAME, "");
+        HtmlHiddenField hidden = new HtmlHiddenField(prefix + HIDDEN_NAME, "");
 
-		HtmlMenu menu = (HtmlMenu) super.render(object, type);
-		menu.setOnChange("this.form." + prefix + HIDDEN_NAME + ".value='true';this.form.submit();");
-		menu.setController(new PostBackController(hidden, getDestination()));
+        HtmlMenu menu = (HtmlMenu) super.render(object, type);
+        menu.setOnChange("this.form." + prefix + HIDDEN_NAME + ".value='true';this.form.submit();");
+        menu.setController(new PostBackController(hidden, getDestination()));
 
-		container.addChild(hidden);
-		container.addChild(menu);
+        container.addChild(hidden);
+        container.addChild(menu);
 
-		return container;
-	}
+        return container;
+    }
 
-	private static class PostBackController extends HtmlController {
+    private static class PostBackController extends HtmlController {
 
-		private final HtmlHiddenField hidden;
+        private final HtmlHiddenField hidden;
 
-		private final String destination;
+        private final String destination;
 
-		public PostBackController(HtmlHiddenField hidden, String destination) {
-			this.hidden = hidden;
-			this.destination = destination;
-		}
+        public PostBackController(HtmlHiddenField hidden, String destination) {
+            this.hidden = hidden;
+            this.destination = destination;
+        }
 
-		@Override
-		public void execute(IViewState viewState) {
-			if (hidden.getValue() != null && hidden.getValue().equalsIgnoreCase("true")) {
-				String destinationName = this.destination == null ? "postback" : this.destination;
-				ViewDestination destination = viewState.getDestination(destinationName);
+        @Override
+        public void execute(IViewState viewState) {
+            if (hidden.getValue() != null && hidden.getValue().equalsIgnoreCase("true")) {
+                String destinationName = this.destination == null ? "postback" : this.destination;
+                ViewDestination destination = viewState.getDestination(destinationName);
 
-				if (destination != null) {
-					viewState.setCurrentDestination(destination);
-				} else {
-					viewState.setCurrentDestination("postBack");
-				}
+                if (destination != null) {
+                    viewState.setCurrentDestination(destination);
+                } else {
+                    viewState.setCurrentDestination("postBack");
+                }
 
-				hidden.setValue("false");
-				viewState.setSkipValidation(true);
-			}
+                hidden.setValue("false");
+                viewState.setSkipValidation(true);
+            }
 
-		}
+        }
 
-	}
+    }
 }

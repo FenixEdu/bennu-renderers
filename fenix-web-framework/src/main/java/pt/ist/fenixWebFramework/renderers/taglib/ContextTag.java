@@ -15,57 +15,57 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 
 public class ContextTag extends TagSupport {
 
-	private List<IViewState> viewStates;
-	private MetaObject metaObject;
+    private List<IViewState> viewStates;
+    private MetaObject metaObject;
 
-	public ContextTag() {
-		super();
+    public ContextTag() {
+        super();
 
-		this.viewStates = new ArrayList<IViewState>();
-	}
+        this.viewStates = new ArrayList<IViewState>();
+    }
 
-	@Override
-	public void release() {
-		super.release();
+    @Override
+    public void release() {
+        super.release();
 
-		this.viewStates = new ArrayList<IViewState>();
-		this.metaObject = null;
-	}
+        this.viewStates = new ArrayList<IViewState>();
+        this.metaObject = null;
+    }
 
-	@Override
-	public int doStartTag() throws JspException {
-		return EVAL_BODY_INCLUDE;
-	}
+    @Override
+    public int doStartTag() throws JspException {
+        return EVAL_BODY_INCLUDE;
+    }
 
-	@Override
-	public int doEndTag() throws JspException {
-		try {
-			if (!this.viewStates.isEmpty()) {
-				HtmlHiddenField hidden = new HtmlHiddenField(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME, encodeViewStates());
+    @Override
+    public int doEndTag() throws JspException {
+        try {
+            if (!this.viewStates.isEmpty()) {
+                HtmlHiddenField hidden = new HtmlHiddenField(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME, encodeViewStates());
 
-				hidden.draw(this.pageContext);
-			}
-		} catch (IOException e) {
-			throw new JspException(e);
-		}
+                hidden.draw(this.pageContext);
+            }
+        } catch (IOException e) {
+            throw new JspException(e);
+        }
 
-		release();
-		return EVAL_PAGE;
-	}
+        release();
+        return EVAL_PAGE;
+    }
 
-	private String encodeViewStates() throws IOException {
-		return ViewState.encodeListToBase64(this.viewStates);
-	}
+    private String encodeViewStates() throws IOException {
+        return ViewState.encodeListToBase64(this.viewStates);
+    }
 
-	public void addViewState(IViewState viewState) {
-		this.viewStates.add(viewState);
-	}
+    public void addViewState(IViewState viewState) {
+        this.viewStates.add(viewState);
+    }
 
-	public void setMetaObject(MetaObject metaObject) {
-		this.metaObject = metaObject;
-	}
+    public void setMetaObject(MetaObject metaObject) {
+        this.metaObject = metaObject;
+    }
 
-	public MetaObject getMetaObject() {
-		return this.metaObject;
-	}
+    public MetaObject getMetaObject() {
+        return this.metaObject;
+    }
 }

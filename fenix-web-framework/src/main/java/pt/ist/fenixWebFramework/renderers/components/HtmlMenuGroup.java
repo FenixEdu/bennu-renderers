@@ -9,59 +9,59 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlMenuGroup extends HtmlMenuEntry {
 
-	private List<HtmlMenuOption> options;
+    private List<HtmlMenuOption> options;
 
-	public HtmlMenuGroup(String label) {
-		super(label, false);
+    public HtmlMenuGroup(String label) {
+        super(label, false);
 
-		this.options = new ArrayList<HtmlMenuOption>();
-	}
+        this.options = new ArrayList<HtmlMenuOption>();
+    }
 
-	public HtmlMenuOption createOption() {
-		HtmlMenuOption option = new HtmlMenuOption();
+    public HtmlMenuOption createOption() {
+        HtmlMenuOption option = new HtmlMenuOption();
 
-		this.options.add(option);
+        this.options.add(option);
 
-		return option;
-	}
+        return option;
+    }
 
-	@Override
-	public HtmlTag getOwnTag(PageContext context) {
-		HtmlTag tag = super.getOwnTag(context);
+    @Override
+    public HtmlTag getOwnTag(PageContext context) {
+        HtmlTag tag = super.getOwnTag(context);
 
-		tag.setName("optgroup");
+        tag.setName("optgroup");
 
-		for (HtmlMenuOption option : this.options) {
-			tag.addChild(option.getOwnTag(context));
-		}
+        for (HtmlMenuOption option : this.options) {
+            tag.addChild(option.getOwnTag(context));
+        }
 
-		return tag;
-	}
+        return tag;
+    }
 
-	@Override
-	public List<HtmlComponent> getChildren() {
-		List<HtmlComponent> children = super.getChildren();
+    @Override
+    public List<HtmlComponent> getChildren() {
+        List<HtmlComponent> children = super.getChildren();
 
-		children.addAll(this.options);
+        children.addAll(this.options);
 
-		return children;
-	}
+        return children;
+    }
 
-	@Override
-	public void setSelected(String value) {
-		for (HtmlMenuOption option : this.options) {
-			option.setSelected(value);
-		}
-	}
+    @Override
+    public void setSelected(String value) {
+        for (HtmlMenuOption option : this.options) {
+            option.setSelected(value);
+        }
+    }
 
-	@Override
-	public boolean isSelected() {
-		for (HtmlMenuOption option : this.options) {
-			if (option.isSelected()) {
-				return true;
-			}
-		}
+    @Override
+    public boolean isSelected() {
+        for (HtmlMenuOption option : this.options) {
+            if (option.isSelected()) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

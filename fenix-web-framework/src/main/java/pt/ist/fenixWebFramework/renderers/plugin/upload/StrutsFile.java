@@ -16,37 +16,37 @@ import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
  */
 public class StrutsFile implements UploadedFile {
 
-	private FormFile strutsFile;
+    private FormFile strutsFile;
 
-	public StrutsFile(FormFile strutsFile) {
-		super();
+    public StrutsFile(FormFile strutsFile) {
+        super();
 
-		this.strutsFile = strutsFile;
-	}
+        this.strutsFile = strutsFile;
+    }
 
-	@Override
-	public String getName() {
-		return this.strutsFile.getFileName();
-	}
+    @Override
+    public String getName() {
+        return this.strutsFile.getFileName();
+    }
 
-	@Override
-	public String getContentType() {
-		return this.strutsFile.getContentType();
-	}
+    @Override
+    public String getContentType() {
+        return this.strutsFile.getContentType();
+    }
 
-	@Override
-	public long getSize() {
-		return this.strutsFile.getFileSize();
-	}
+    @Override
+    public long getSize() {
+        return this.strutsFile.getFileSize();
+    }
 
-	@Override
-	public InputStream getInputStream() throws IOException {
-		return this.strutsFile.getInputStream();
-	}
+    @Override
+    public InputStream getInputStream() throws IOException {
+        return this.strutsFile.getInputStream();
+    }
 
-	@Override
-	public byte[] getFileData() throws FileNotFoundException, IOException {
-		return strutsFile.getFileData();
-	}
+    @Override
+    public byte[] getFileData() throws FileNotFoundException, IOException {
+        return strutsFile.getFileData();
+    }
 
 }

@@ -15,26 +15,26 @@ import pt.ist.fenixWebFramework.renderers.converters.IntegerNumberConverter;
  */
 public class IntegerInputRenderer extends NumberInputRenderer {
 
-	private int base = 10;
+    private int base = 10;
 
-	/**
-	 * The base in which the number should be interpreted. For instance,
-	 * if <tt>base</tt> is 16 then an input like <tt>CAFE</tt> will be
-	 * interpreted as 51966.
-	 * 
-	 * @property
-	 */
-	public void setBase(int base) {
-		this.base = base;
-	}
+    /**
+     * The base in which the number should be interpreted. For instance,
+     * if <tt>base</tt> is 16 then an input like <tt>CAFE</tt> will be
+     * interpreted as 51966.
+     * 
+     * @property
+     */
+    public void setBase(int base) {
+        this.base = base;
+    }
 
-	public int getBase() {
-		return this.base;
-	}
+    public int getBase() {
+        return this.base;
+    }
 
-	@Override
-	protected Converter getConverter() {
-		return new IntegerNumberConverter(getBase());
-	}
+    @Override
+    protected Converter getConverter() {
+        return new IntegerNumberConverter(getBase());
+    }
 
 }

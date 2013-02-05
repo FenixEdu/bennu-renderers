@@ -11,34 +11,34 @@ import pt.ist.fenixWebFramework.renderers.components.converters.ConversionExcept
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
 public class DateConverter extends Converter {
-	public static final String DEFAULT_FORMAT = "dd/MM/yyyy";
+    public static final String DEFAULT_FORMAT = "dd/MM/yyyy";
 
-	private DateFormat format;
+    private DateFormat format;
 
-	public DateConverter() {
-		this.format = new SimpleDateFormat(DEFAULT_FORMAT);
-	}
+    public DateConverter() {
+        this.format = new SimpleDateFormat(DEFAULT_FORMAT);
+    }
 
-	public DateConverter(DateFormat format) {
-		this.format = format;
-	}
+    public DateConverter(DateFormat format) {
+        this.format = format;
+    }
 
-	@Override
-	public Object convert(Class type, Object value) {
-		if (value == null) {
-			return null;
-		}
+    @Override
+    public Object convert(Class type, Object value) {
+        if (value == null) {
+            return null;
+        }
 
-		String text = ((String) value).trim();
+        String text = ((String) value).trim();
 
-		if (text.length() == 0) {
-			return null;
-		}
+        if (text.length() == 0) {
+            return null;
+        }
 
-		try {
-			return format.parse(text);
-		} catch (ParseException e) {
-			throw new ConversionException("renderers.converter.date", e, true, value);
-		}
-	}
+        try {
+            return format.parse(text);
+        } catch (ParseException e) {
+            throw new ConversionException("renderers.converter.date", e, true, value);
+        }
+    }
 }

@@ -16,18 +16,18 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
  */
 public class DateTimeAsDateRenderer extends DateRenderer {
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		Date date = object == null ? null : ((DateTime) object).toDate();
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        Date date = object == null ? null : ((DateTime) object).toDate();
 
-		return super.getLayout(date, Date.class);
-	}
+        return super.getLayout(date, Date.class);
+    }
 
-	@Override
-	protected HtmlComponent renderComponent(Layout layout, Object object, Class type) {
-		Date date = object == null ? null : ((DateTime) object).toDate();
+    @Override
+    protected HtmlComponent renderComponent(Layout layout, Object object, Class type) {
+        Date date = object == null ? null : ((DateTime) object).toDate();
 
-		return super.renderComponent(layout, date, Date.class);
-	}
+        return super.renderComponent(layout, date, Date.class);
+    }
 
 }

@@ -15,157 +15,157 @@ import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 
 public abstract class HtmlFormComponent extends HtmlComponent implements Convertible, Controllable, SlotChanger, Validatable {
 
-	public static int COMPONENT_NUMBER = 0;
+    public static int COMPONENT_NUMBER = 0;
 
-	private String name;
+    private String name;
 
-	private Converter converter;
+    private Converter converter;
 
-	private HtmlController controller;
+    private HtmlController controller;
 
-	private MetaSlotKey slotKey;
+    private MetaSlotKey slotKey;
 
-	private boolean disabled;
+    private boolean disabled;
 
-	private HtmlChainValidator chainValidator;
+    private HtmlChainValidator chainValidator;
 
-	public HtmlFormComponent() {
-		super();
+    public HtmlFormComponent() {
+        super();
 
-		this.name = getNewName();
-		this.disabled = false;
-	}
+        this.name = getNewName();
+        this.disabled = false;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * Sets the name of this form component. If the name does not obey the rules
-	 * for component names then it may be transformed to become conformat. Thus {@link #getName()} may return a value that is not
-	 * equal to the name given
-	 * in this method.
-	 * 
-	 * @param name
-	 *            the desired name
-	 */
-	public void setName(String name) {
-		this.name = getValidIdOrName(name);
-	}
+    /**
+     * Sets the name of this form component. If the name does not obey the rules
+     * for component names then it may be transformed to become conformat. Thus {@link #getName()} may return a value that is not
+     * equal to the name given
+     * in this method.
+     * 
+     * @param name
+     *            the desired name
+     */
+    public void setName(String name) {
+        this.name = getValidIdOrName(name);
+    }
 
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
 
-	public boolean isDisabled() {
-		return this.disabled;
-	}
+    public boolean isDisabled() {
+        return this.disabled;
+    }
 
-	@Override
-	public boolean hasConverter() {
-		return this.converter != null;
-	}
+    @Override
+    public boolean hasConverter() {
+        return this.converter != null;
+    }
 
-	@Override
-	public Converter getConverter() {
-		return converter;
-	}
+    @Override
+    public Converter getConverter() {
+        return converter;
+    }
 
-	public void setConverter(Converter converter) {
-		this.converter = converter;
-	}
+    public void setConverter(Converter converter) {
+        this.converter = converter;
+    }
 
-	public Object getConvertedValue() {
-		return null;
-	}
+    public Object getConvertedValue() {
+        return null;
+    }
 
-	@Override
-	public Object getConvertedValue(MetaSlot slot) {
-		return null;
-	}
+    @Override
+    public Object getConvertedValue(MetaSlot slot) {
+        return null;
+    }
 
-	@Override
-	public HtmlChainValidator getChainValidator() {
-		return this.chainValidator;
-	}
+    @Override
+    public HtmlChainValidator getChainValidator() {
+        return this.chainValidator;
+    }
 
-	@Override
-	public void setChainValidator(HtmlChainValidator validator) {
-		if (getChainValidator() != null) {
-			getChainValidator().addValidator(validator);
-		} else {
-			this.chainValidator = validator;
-		}
+    @Override
+    public void setChainValidator(HtmlChainValidator validator) {
+        if (getChainValidator() != null) {
+            getChainValidator().addValidator(validator);
+        } else {
+            this.chainValidator = validator;
+        }
 
-	}
+    }
 
-	@Override
-	public void addValidator(HtmlValidator htmlValidator) {
-		if (this.chainValidator == null) {
-			this.chainValidator = new HtmlChainValidator(this);
-		}
-		this.chainValidator.addValidator(htmlValidator);
-	}
+    @Override
+    public void addValidator(HtmlValidator htmlValidator) {
+        if (this.chainValidator == null) {
+            this.chainValidator = new HtmlChainValidator(this);
+        }
+        this.chainValidator.addValidator(htmlValidator);
+    }
 
-	@Override
-	public boolean hasController() {
-		return controller != null;
-	}
+    @Override
+    public boolean hasController() {
+        return controller != null;
+    }
 
-	@Override
-	public HtmlController getController() {
-		return controller;
-	}
+    @Override
+    public HtmlController getController() {
+        return controller;
+    }
 
-	@Override
-	public void setController(HtmlController controller) {
-		this.controller = controller;
-		this.controller.setControlledComponent(this);
-	}
+    @Override
+    public void setController(HtmlController controller) {
+        this.controller = controller;
+        this.controller.setControlledComponent(this);
+    }
 
-	@Override
-	public MetaSlotKey getTargetSlot() {
-		return this.slotKey;
-	}
+    @Override
+    public MetaSlotKey getTargetSlot() {
+        return this.slotKey;
+    }
 
-	@Override
-	public boolean hasTargetSlot() {
-		return this.slotKey != null;
-	}
+    @Override
+    public boolean hasTargetSlot() {
+        return this.slotKey != null;
+    }
 
-	@Override
-	public void setTargetSlot(MetaSlotKey key) {
-		setName(key != null ? key.toString() : null);
-		this.slotKey = key;
-	}
+    @Override
+    public void setTargetSlot(MetaSlotKey key) {
+        setName(key != null ? key.toString() : null);
+        this.slotKey = key;
+    }
 
-	public void bind(MetaSlot slot) {
-		if (slot != null) {
-			setTargetSlot(slot.getKey());
-		}
-	}
+    public void bind(MetaSlot slot) {
+        if (slot != null) {
+            setTargetSlot(slot.getKey());
+        }
+    }
 
-	public void bind(MetaObject object, String slotName) {
-		bind(object.getSlot(slotName));
-	}
+    public void bind(MetaObject object, String slotName) {
+        bind(object.getSlot(slotName));
+    }
 
-	public static String getNewName() {
-		int number;
+    public static String getNewName() {
+        int number;
 
-		synchronized (HtmlFormComponent.class) {
-			number = HtmlFormComponent.COMPONENT_NUMBER++;
-		}
+        synchronized (HtmlFormComponent.class) {
+            number = HtmlFormComponent.COMPONENT_NUMBER++;
+        }
 
-		String name = Integer.toHexString(number);
-		return "C" + name.toUpperCase();
-	}
+        String name = Integer.toHexString(number);
+        return "C" + name.toUpperCase();
+    }
 
-	@Override
-	public HtmlTag getOwnTag(PageContext context) {
-		HtmlTag tag = super.getOwnTag(context);
+    @Override
+    public HtmlTag getOwnTag(PageContext context) {
+        HtmlTag tag = super.getOwnTag(context);
 
-		tag.setAttribute("name", getName());
+        tag.setAttribute("name", getName());
 
-		return tag;
-	}
+        return tag;
+    }
 }

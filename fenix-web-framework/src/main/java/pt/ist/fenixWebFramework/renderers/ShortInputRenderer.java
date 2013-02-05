@@ -14,41 +14,41 @@ import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
  * @author cfgi
  */
 public class ShortInputRenderer extends IntegerInputRenderer {
-	@Override
-	protected Converter getConverter() {
-		return new ShortNumberConverter(getBase());
-	}
+    @Override
+    protected Converter getConverter() {
+        return new ShortNumberConverter(getBase());
+    }
 
-	private class ShortNumberConverter extends Converter {
+    private class ShortNumberConverter extends Converter {
 
-		private int base;
+        private int base;
 
-		public ShortNumberConverter(int base) {
-			this.base = base;
-		}
+        public ShortNumberConverter(int base) {
+            this.base = base;
+        }
 
-		public int getBase() {
-			return this.base;
-		}
+        public int getBase() {
+            return this.base;
+        }
 
-		public void setBase(int base) {
-			this.base = base;
-		}
+        public void setBase(int base) {
+            this.base = base;
+        }
 
-		@Override
-		public Object convert(Class type, Object value) {
-			String numberText = ((String) value).trim();
+        @Override
+        public Object convert(Class type, Object value) {
+            String numberText = ((String) value).trim();
 
-			if (numberText.length() == 0) {
-				return null;
-			}
+            if (numberText.length() == 0) {
+                return null;
+            }
 
-			try {
-				return Short.parseShort(numberText.trim(), getBase());
-			} catch (NumberFormatException e) {
-				throw new ConversionException("renderers.converter.short", e, true, value);
-			}
-		}
+            try {
+                return Short.parseShort(numberText.trim(), getBase());
+            } catch (NumberFormatException e) {
+                throw new ConversionException("renderers.converter.short", e, true, value);
+            }
+        }
 
-	}
+    }
 }

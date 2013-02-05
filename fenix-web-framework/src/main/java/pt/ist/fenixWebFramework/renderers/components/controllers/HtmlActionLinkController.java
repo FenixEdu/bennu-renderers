@@ -5,20 +5,20 @@ import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 
 public abstract class HtmlActionLinkController extends HtmlController {
 
-	@Override
-	public void execute(IViewState viewState) {
-		HtmlActionLink link = (HtmlActionLink) getControlledComponent();
+    @Override
+    public void execute(IViewState viewState) {
+        HtmlActionLink link = (HtmlActionLink) getControlledComponent();
 
-		if (link.isActivated()) {
-			viewState.setSkipUpdate(isToSkipUpdate());
+        if (link.isActivated()) {
+            viewState.setSkipUpdate(isToSkipUpdate());
 
-			linkPressed(viewState, link);
-		}
-	}
+            linkPressed(viewState, link);
+        }
+    }
 
-	protected boolean isToSkipUpdate() {
-		return true;
-	}
+    protected boolean isToSkipUpdate() {
+        return true;
+    }
 
-	public abstract void linkPressed(IViewState viewState, HtmlActionLink link);
+    public abstract void linkPressed(IViewState viewState, HtmlActionLink link);
 }

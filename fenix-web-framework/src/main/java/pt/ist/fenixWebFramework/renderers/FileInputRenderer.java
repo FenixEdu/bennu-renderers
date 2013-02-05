@@ -32,188 +32,188 @@ import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
  */
 public class FileInputRenderer extends InputRenderer {
 
-	private String size;
-	private String fileNameSlot;
-	private String fileSizeSlot;
-	private String fileContentTypeSlot;
-	private String onChangeEvent;
+    private String size;
+    private String fileNameSlot;
+    private String fileSizeSlot;
+    private String fileContentTypeSlot;
+    private String onChangeEvent;
 
-	public String getSize() {
-		return this.size;
-	}
+    public String getSize() {
+        return this.size;
+    }
 
-	/**
-	 * Selects the size of the file input field.
-	 * 
-	 * @property
-	 */
-	public void setSize(String size) {
-		this.size = size;
-	}
+    /**
+     * Selects the size of the file input field.
+     * 
+     * @property
+     */
+    public void setSize(String size) {
+        this.size = size;
+    }
 
-	public String getFileContentTypeSlot() {
-		return this.fileContentTypeSlot;
-	}
+    public String getFileContentTypeSlot() {
+        return this.fileContentTypeSlot;
+    }
 
-	/**
-	 * When this property is specified the renderer will set the given slot with
-	 * the content type of the file. The slot must have the string type.
-	 * 
-	 * @property
-	 */
-	public void setFileContentTypeSlot(String fileContentTypeSlot) {
-		this.fileContentTypeSlot = fileContentTypeSlot;
-	}
+    /**
+     * When this property is specified the renderer will set the given slot with
+     * the content type of the file. The slot must have the string type.
+     * 
+     * @property
+     */
+    public void setFileContentTypeSlot(String fileContentTypeSlot) {
+        this.fileContentTypeSlot = fileContentTypeSlot;
+    }
 
-	public String getFileNameSlot() {
-		return this.fileNameSlot;
-	}
+    public String getFileNameSlot() {
+        return this.fileNameSlot;
+    }
 
-	/**
-	 * When this property is specified the renderer will set the given slot with
-	 * the name of the file as given by the user. The slot must have the string
-	 * type.
-	 * 
-	 * @property
-	 */
-	public void setFileNameSlot(String fileNameSlot) {
-		this.fileNameSlot = fileNameSlot;
-	}
+    /**
+     * When this property is specified the renderer will set the given slot with
+     * the name of the file as given by the user. The slot must have the string
+     * type.
+     * 
+     * @property
+     */
+    public void setFileNameSlot(String fileNameSlot) {
+        this.fileNameSlot = fileNameSlot;
+    }
 
-	public String getFileSizeSlot() {
-		return this.fileSizeSlot;
-	}
+    public String getFileSizeSlot() {
+        return this.fileSizeSlot;
+    }
 
-	/**
-	 * When this property is specified the renderer will set the given slot with
-	 * the size of the file in bytes. The slot must be have the <code>long</code> type.
-	 * 
-	 * @property
-	 */
-	public void setFileSizeSlot(String fileSizeSlot) {
-		this.fileSizeSlot = fileSizeSlot;
-	}
+    /**
+     * When this property is specified the renderer will set the given slot with
+     * the size of the file in bytes. The slot must be have the <code>long</code> type.
+     * 
+     * @property
+     */
+    public void setFileSizeSlot(String fileSizeSlot) {
+        this.fileSizeSlot = fileSizeSlot;
+    }
 
-	public String getOnChangeEvent() {
-		return this.onChangeEvent;
-	}
+    public String getOnChangeEvent() {
+        return this.onChangeEvent;
+    }
 
-	/**
-	 * JavaScript statement to call when <b>Change</b> event is triggered.
-	 * This can be used, for example, to model a behavior such like having
-	 * this <code><b>input</b></code> element only allowing the submit <code><b>button</b></code> to be enabled when a valid input
-	 * is selected.
-	 * 
-	 * @property
-	 */
-	public void setOnChangeEvent(String onChangeEvent) {
-		this.onChangeEvent = onChangeEvent;
-	}
+    /**
+     * JavaScript statement to call when <b>Change</b> event is triggered.
+     * This can be used, for example, to model a behavior such like having
+     * this <code><b>input</b></code> element only allowing the submit <code><b>button</b></code> to be enabled when a valid input
+     * is selected.
+     * 
+     * @property
+     */
+    public void setOnChangeEvent(String onChangeEvent) {
+        this.onChangeEvent = onChangeEvent;
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		return new Layout() {
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        return new Layout() {
 
-			@Override
-			public HtmlComponent createComponent(Object object, Class type) {
-				getInputContext().getForm().setEncoding(HtmlForm.FORM_DATA);
+            @Override
+            public HtmlComponent createComponent(Object object, Class type) {
+                getInputContext().getForm().setEncoding(HtmlForm.FORM_DATA);
 
-				HtmlInputFile file = new HtmlInputFile();
-				file.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
+                HtmlInputFile file = new HtmlInputFile();
+                file.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 
-				file.setController(new UpdateFilePropertiesController(((MetaSlot) getInputContext().getMetaObject())
-						.getMetaObject(), getFileNameSlot(), getFileSizeSlot(), getFileContentTypeSlot()));
-				file.setConverter(new FileConverter(file));
-				if (getOnChangeEvent() != null) {
-					file.setAttribute("onchange", getOnChangeEvent());
-				}
-				return file;
-			}
+                file.setController(new UpdateFilePropertiesController(((MetaSlot) getInputContext().getMetaObject())
+                        .getMetaObject(), getFileNameSlot(), getFileSizeSlot(), getFileContentTypeSlot()));
+                file.setConverter(new FileConverter(file));
+                if (getOnChangeEvent() != null) {
+                    file.setAttribute("onchange", getOnChangeEvent());
+                }
+                return file;
+            }
 
-			@Override
-			public void applyStyle(HtmlComponent component) {
-				super.applyStyle(component);
+            @Override
+            public void applyStyle(HtmlComponent component) {
+                super.applyStyle(component);
 
-				((HtmlInputFile) component).setSize(getSize());
-			}
+                ((HtmlInputFile) component).setSize(getSize());
+            }
 
-		};
-	}
+        };
+    }
 
-	private static class UpdateFilePropertiesController extends HtmlController {
+    private static class UpdateFilePropertiesController extends HtmlController {
 
-		private MetaObject object;
-		private String fileNameSlot;
-		private String fileSizeSlot;
-		private String fileContentTypeSlot;
+        private MetaObject object;
+        private String fileNameSlot;
+        private String fileSizeSlot;
+        private String fileContentTypeSlot;
 
-		public UpdateFilePropertiesController(MetaObject object, String fileNameSlot, String fileSizeSlot,
-				String fileContentTypeSlot) {
-			this.object = object;
-			this.fileNameSlot = fileNameSlot;
-			this.fileSizeSlot = fileSizeSlot;
-			this.fileContentTypeSlot = fileContentTypeSlot;
-		}
+        public UpdateFilePropertiesController(MetaObject object, String fileNameSlot, String fileSizeSlot,
+                String fileContentTypeSlot) {
+            this.object = object;
+            this.fileNameSlot = fileNameSlot;
+            this.fileSizeSlot = fileSizeSlot;
+            this.fileContentTypeSlot = fileContentTypeSlot;
+        }
 
-		@Override
-		public void execute(IViewState viewState) {
-			HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getControlledComponent();
-			String name = component.getName();
+        @Override
+        public void execute(IViewState viewState) {
+            HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getControlledComponent();
+            String name = component.getName();
 
-			UploadedFile file = RenderersRequestProcessorImpl.getUploadedFile(name);
-			if (file != null) { // if has file
-				Object object = this.object.getObject();
+            UploadedFile file = RenderersRequestProcessorImpl.getUploadedFile(name);
+            if (file != null) { // if has file
+                Object object = this.object.getObject();
 
-				try {
-					String currentEncoding = RenderersRequestProcessorImpl.getCurrentEncoding();
-					setPropertyIgnoringErrors(object, this.fileNameSlot, currentEncoding != null ? new String(file.getName()
-							.getBytes(), currentEncoding) : new String(file.getName().getBytes()));
-				} catch (UnsupportedEncodingException e) {
-					// best effort name setting
-					setPropertyIgnoringErrors(object, this.fileNameSlot, file.getName());
-					e.printStackTrace();
-				}
-				setPropertyIgnoringErrors(object, this.fileSizeSlot, file.getSize());
-				setPropertyIgnoringErrors(object, this.fileContentTypeSlot, file.getContentType());
-			}
-		}
+                try {
+                    String currentEncoding = RenderersRequestProcessorImpl.getCurrentEncoding();
+                    setPropertyIgnoringErrors(object, this.fileNameSlot, currentEncoding != null ? new String(file.getName()
+                            .getBytes(), currentEncoding) : new String(file.getName().getBytes()));
+                } catch (UnsupportedEncodingException e) {
+                    // best effort name setting
+                    setPropertyIgnoringErrors(object, this.fileNameSlot, file.getName());
+                    e.printStackTrace();
+                }
+                setPropertyIgnoringErrors(object, this.fileSizeSlot, file.getSize());
+                setPropertyIgnoringErrors(object, this.fileContentTypeSlot, file.getContentType());
+            }
+        }
 
-		private void setPropertyIgnoringErrors(Object object, String property, Object value) {
-			if (property == null) {
-				return;
-			}
+        private void setPropertyIgnoringErrors(Object object, String property, Object value) {
+            if (property == null) {
+                return;
+            }
 
-			try {
-				PropertyUtils.setProperty(object, property, value);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+            try {
+                PropertyUtils.setProperty(object, property, value);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	private static class FileConverter extends Converter {
+    private static class FileConverter extends Converter {
 
-		private HtmlInputFile component;
+        private HtmlInputFile component;
 
-		public FileConverter(HtmlInputFile file) {
-			this.component = file;
-		}
+        public FileConverter(HtmlInputFile file) {
+            this.component = file;
+        }
 
-		@Override
-		public Object convert(Class type, Object value) {
-			String name = this.component.getName();
-			UploadedFile file = RenderersRequestProcessorImpl.getUploadedFile(name);
+        @Override
+        public Object convert(Class type, Object value) {
+            String name = this.component.getName();
+            UploadedFile file = RenderersRequestProcessorImpl.getUploadedFile(name);
 
-			if (file == null) {
-				return null;
-			} else {
-				try {
-					return file.getInputStream();
-				} catch (IOException e) {
-					throw new ConversionException("renderers.converter.file.obtain", e, true, (Object[]) null);
-				}
-			}
-		}
+            if (file == null) {
+                return null;
+            } else {
+                try {
+                    return file.getInputStream();
+                } catch (IOException e) {
+                    throw new ConversionException("renderers.converter.file.obtain", e, true, (Object[]) null);
+                }
+            }
+        }
 
-	}
+    }
 }

@@ -16,33 +16,33 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
  */
 public class TemplateRenderer extends OutputRenderer {
 
-	private String template;
+    private String template;
 
-	public String getTemplate() {
-		return template;
-	}
+    public String getTemplate() {
+        return template;
+    }
 
-	/**
-	 * The location of the template page that ill be used to present the
-	 * value. This location if relative to the application context but must
-	 * begin with a /.
-	 * 
-	 * @property
-	 */
-	public void setTemplate(String template) {
-		this.template = template;
-	}
+    /**
+     * The location of the template page that ill be used to present the
+     * value. This location if relative to the application context but must
+     * begin with a /.
+     * 
+     * @property
+     */
+    public void setTemplate(String template) {
+        this.template = template;
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		return new Layout() {
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        return new Layout() {
 
-			@Override
-			public HtmlComponent createComponent(Object object, Class type) {
-				return new HtmlTemplate(getTemplate(), getContext().getMetaObject());
-			}
+            @Override
+            public HtmlComponent createComponent(Object object, Class type) {
+                return new HtmlTemplate(getTemplate(), getContext().getMetaObject());
+            }
 
-		};
-	}
+        };
+    }
 
 }

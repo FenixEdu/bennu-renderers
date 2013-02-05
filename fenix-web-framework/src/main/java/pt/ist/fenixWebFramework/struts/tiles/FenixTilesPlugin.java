@@ -16,12 +16,12 @@ import org.apache.struts.tiles.TilesPlugin;
  */
 public class FenixTilesPlugin extends TilesPlugin {
 
-	@Override
-	protected DefinitionsFactoryConfig readFactoryConfig(ActionServlet servlet, ModuleConfig config) throws ServletException {
-		final DefinitionsFactoryConfig factoryConfig = super.readFactoryConfig(servlet, config);
-		factoryConfig.setAttribute("defaultTileDefinition",
-				this.currentPlugInConfigObject.getProperties().get("defaultTileDefinition"));
-		return factoryConfig;
-	}
+    @Override
+    protected DefinitionsFactoryConfig readFactoryConfig(ActionServlet servlet, ModuleConfig config) throws ServletException {
+        final DefinitionsFactoryConfig factoryConfig = super.readFactoryConfig(servlet, config);
+        factoryConfig.setAttribute("defaultTileDefinition",
+                this.currentPlugInConfigObject.getProperties().get("defaultTileDefinition"));
+        return factoryConfig;
+    }
 
 }

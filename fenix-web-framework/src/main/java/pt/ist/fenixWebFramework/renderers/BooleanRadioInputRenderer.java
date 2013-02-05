@@ -33,225 +33,225 @@ import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
  */
 public class BooleanRadioInputRenderer extends InputRenderer {
 
-	/**
-	 * this field is a format {@link FormatRenderer} that must evaluate to true
-	 * of false, if true the slot will be rendered read-only, if false it won't
-	 * 
-	 * @author joantune - João Antunes
-	 */
-	private String readOnlyIf;
-	private String readOnlyIfNot;
+    /**
+     * this field is a format {@link FormatRenderer} that must evaluate to true
+     * of false, if true the slot will be rendered read-only, if false it won't
+     * 
+     * @author joantune - João Antunes
+     */
+    private String readOnlyIf;
+    private String readOnlyIfNot;
 
-	private String trueLabel;
-	private String falseLabel;
-	private String bundle;
+    private String trueLabel;
+    private String falseLabel;
+    private String bundle;
 
-	private String eachClasses;
+    private String eachClasses;
 
-	private String eachStyle;
+    private String eachStyle;
 
-	public BooleanRadioInputRenderer() {
-		super();
+    public BooleanRadioInputRenderer() {
+        super();
 
-		setStyle("white-space: nowrap;");
-	}
+        setStyle("white-space: nowrap;");
+    }
 
-	public String getReadOnlyIf() {
-		return readOnlyIf;
-	}
+    public String getReadOnlyIf() {
+        return readOnlyIf;
+    }
 
-	/**
-	 * This property is a formatted property (like {@link ConditionalFormatRenderer}) that is evaluated. If it is true, the
-	 * slot will be considered read only, if false it won't
-	 * 
-	 * @author joantune - João Antunes
-	 * @property
-	 */
-	public void setReadOnlyIf(String readOnlyIf) {
-		this.readOnlyIf = readOnlyIf;
-	}
+    /**
+     * This property is a formatted property (like {@link ConditionalFormatRenderer}) that is evaluated. If it is true, the
+     * slot will be considered read only, if false it won't
+     * 
+     * @author joantune - João Antunes
+     * @property
+     */
+    public void setReadOnlyIf(String readOnlyIf) {
+        this.readOnlyIf = readOnlyIf;
+    }
 
-	public String getEachClasses() {
-		return eachClasses;
-	}
+    public String getEachClasses() {
+        return eachClasses;
+    }
 
-	public String getReadOnlyIfNot() {
-		return readOnlyIfNot;
-	}
+    public String getReadOnlyIfNot() {
+        return readOnlyIfNot;
+    }
 
-	/**
-	 * This property is a formatted property (like {@link ConditionalFormatRenderer}) that is evaluated. If it is false, the
-	 * slot will be considered read only, if true it won't
-	 * 
-	 * @author joantune - João Antunes
-	 * @property
-	 */
-	public void setReadOnlyIfNot(String readOnlyIfNot) {
-		this.readOnlyIfNot = readOnlyIfNot;
-	}
+    /**
+     * This property is a formatted property (like {@link ConditionalFormatRenderer}) that is evaluated. If it is false, the
+     * slot will be considered read only, if true it won't
+     * 
+     * @author joantune - João Antunes
+     * @property
+     */
+    public void setReadOnlyIfNot(String readOnlyIfNot) {
+        this.readOnlyIfNot = readOnlyIfNot;
+    }
 
-	/**
-	 * This property will set the class for each list item
-	 * 
-	 * @property
-	 */
-	public void setEachClasses(String eachClasses) {
-		this.eachClasses = eachClasses;
-	}
+    /**
+     * This property will set the class for each list item
+     * 
+     * @property
+     */
+    public void setEachClasses(String eachClasses) {
+        this.eachClasses = eachClasses;
+    }
 
-	public String getEachStyle() {
-		return eachStyle;
-	}
+    public String getEachStyle() {
+        return eachStyle;
+    }
 
-	/**
-	 * This property will set the style for each list item
-	 * 
-	 * @property
-	 */
-	public void setEachStyle(String eachStyle) {
-		this.eachStyle = eachStyle;
-	}
+    /**
+     * This property will set the style for each list item
+     * 
+     * @property
+     */
+    public void setEachStyle(String eachStyle) {
+        this.eachStyle = eachStyle;
+    }
 
-	public String getBundle() {
-		return this.bundle;
-	}
+    public String getBundle() {
+        return this.bundle;
+    }
 
-	/**
-	 * Sets the bundle to be used when overring the boolean value presentation
-	 * with labels.
-	 * 
-	 * @property
-	 */
-	public void setBundle(String bundle) {
-		this.bundle = bundle;
-	}
+    /**
+     * Sets the bundle to be used when overring the boolean value presentation
+     * with labels.
+     * 
+     * @property
+     */
+    public void setBundle(String bundle) {
+        this.bundle = bundle;
+    }
 
-	public String getFalseLabel() {
-		return this.falseLabel;
-	}
+    public String getFalseLabel() {
+        return this.falseLabel;
+    }
 
-	/**
-	 * Sets the key to use when presenting the <code>false</code> value.
-	 * 
-	 * @property
-	 */
-	public void setFalseLabel(String falseLabel) {
-		this.falseLabel = falseLabel;
-	}
+    /**
+     * Sets the key to use when presenting the <code>false</code> value.
+     * 
+     * @property
+     */
+    public void setFalseLabel(String falseLabel) {
+        this.falseLabel = falseLabel;
+    }
 
-	public String getTrueLabel() {
-		return this.trueLabel;
-	}
+    public String getTrueLabel() {
+        return this.trueLabel;
+    }
 
-	/**
-	 * Sets the key to use when presenting the <code>true</code> value.
-	 * 
-	 * @property
-	 */
-	public void setTrueLabel(String trueLabel) {
-		this.trueLabel = trueLabel;
-	}
+    /**
+     * Sets the key to use when presenting the <code>true</code> value.
+     * 
+     * @property
+     */
+    public void setTrueLabel(String trueLabel) {
+        this.trueLabel = trueLabel;
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		return new Layout() {
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        return new Layout() {
 
-			@Override
-			public HtmlComponent createComponent(Object object, Class type) {
+            @Override
+            public HtmlComponent createComponent(Object object, Class type) {
 
-				Boolean booleanObject = (Boolean) object;
+                Boolean booleanObject = (Boolean) object;
 
-				if (getReadOnlyIf() != null || getReadOnlyIfNot() != null) {
-					//let's get its parent to assert what to do regarding the read only
-					Object parentObject = null;
-					if (getContext().getParentContext() != null) {
-						parentObject = getContext().getParentContext().getMetaObject().getObject();
-					}
+                if (getReadOnlyIf() != null || getReadOnlyIfNot() != null) {
+                    //let's get its parent to assert what to do regarding the read only
+                    Object parentObject = null;
+                    if (getContext().getParentContext() != null) {
+                        parentObject = getContext().getParentContext().getMetaObject().getObject();
+                    }
 
-					Boolean useReadOnlyIfResult = null;
-					Boolean useReadOnlyIfNotResult = null;
-					try {
-						if (getReadOnlyIf() != null) {
-							useReadOnlyIfResult =
-									(Boolean) RendererPropertyUtils.getProperty(parentObject, getReadOnlyIf(), false);
-						}
-						if (getReadOnlyIfNot() != null) {
-							useReadOnlyIfNotResult =
-									(Boolean) RendererPropertyUtils.getProperty(parentObject, getReadOnlyIfNot(), false);
-						}
-					} catch (ClassCastException e) {
-						e.printStackTrace();
-					}
+                    Boolean useReadOnlyIfResult = null;
+                    Boolean useReadOnlyIfNotResult = null;
+                    try {
+                        if (getReadOnlyIf() != null) {
+                            useReadOnlyIfResult =
+                                    (Boolean) RendererPropertyUtils.getProperty(parentObject, getReadOnlyIf(), false);
+                        }
+                        if (getReadOnlyIfNot() != null) {
+                            useReadOnlyIfNotResult =
+                                    (Boolean) RendererPropertyUtils.getProperty(parentObject, getReadOnlyIfNot(), false);
+                        }
+                    } catch (ClassCastException e) {
+                        e.printStackTrace();
+                    }
 
-					if ((useReadOnlyIfNotResult != null || useReadOnlyIfResult != null)) {
-						if ((useReadOnlyIfNotResult != null && !useReadOnlyIfNotResult)
-								|| (useReadOnlyIfResult != null && useReadOnlyIfResult)) {
-							if (booleanObject == null) {
-								return new HtmlText("");
-							}
-							return new HtmlText(String.valueOf(booleanObject));
-						}
-					}
+                    if ((useReadOnlyIfNotResult != null || useReadOnlyIfResult != null)) {
+                        if ((useReadOnlyIfNotResult != null && !useReadOnlyIfNotResult)
+                                || (useReadOnlyIfResult != null && useReadOnlyIfResult)) {
+                            if (booleanObject == null) {
+                                return new HtmlText("");
+                            }
+                            return new HtmlText(String.valueOf(booleanObject));
+                        }
+                    }
 
-				}
+                }
 
-				HtmlRadioButtonList radioList = new HtmlRadioButtonList();
+                HtmlRadioButtonList radioList = new HtmlRadioButtonList();
 
-				Boolean booleanTrue = Boolean.TRUE;
-				MetaObject booleanMetaObject = MetaObjectFactory.createObject(booleanTrue, null);
-				PresentationContext newContext = getContext().createSubContext(booleanMetaObject);
-				newContext.setRenderMode(RenderMode.getMode("output"));
-				HtmlComponent component = getBooleanComponent(booleanTrue, newContext);
+                Boolean booleanTrue = Boolean.TRUE;
+                MetaObject booleanMetaObject = MetaObjectFactory.createObject(booleanTrue, null);
+                PresentationContext newContext = getContext().createSubContext(booleanMetaObject);
+                newContext.setRenderMode(RenderMode.getMode("output"));
+                HtmlComponent component = getBooleanComponent(booleanTrue, newContext);
 
-				HtmlLabel trueLabel = new HtmlLabel();
-				trueLabel.setBody(component);
-				HtmlRadioButton buttonTrue = radioList.addOption(trueLabel, booleanTrue.toString());
-				trueLabel.setFor(buttonTrue);
+                HtmlLabel trueLabel = new HtmlLabel();
+                trueLabel.setBody(component);
+                HtmlRadioButton buttonTrue = radioList.addOption(trueLabel, booleanTrue.toString());
+                trueLabel.setFor(buttonTrue);
 
-				Boolean booleanFalse = Boolean.FALSE;
-				booleanMetaObject = MetaObjectFactory.createObject(booleanFalse, null);
-				newContext = getContext().createSubContext(booleanMetaObject);
-				newContext.setRenderMode(RenderMode.getMode("output"));
-				component = getBooleanComponent(booleanFalse, newContext);
+                Boolean booleanFalse = Boolean.FALSE;
+                booleanMetaObject = MetaObjectFactory.createObject(booleanFalse, null);
+                newContext = getContext().createSubContext(booleanMetaObject);
+                newContext.setRenderMode(RenderMode.getMode("output"));
+                component = getBooleanComponent(booleanFalse, newContext);
 
-				HtmlLabel falseLabel = new HtmlLabel();
-				falseLabel.setBody(component);
-				HtmlRadioButton buttonFalse = radioList.addOption(falseLabel, booleanFalse.toString());
-				falseLabel.setFor(buttonFalse);
+                HtmlLabel falseLabel = new HtmlLabel();
+                falseLabel.setBody(component);
+                HtmlRadioButton buttonFalse = radioList.addOption(falseLabel, booleanFalse.toString());
+                falseLabel.setFor(buttonFalse);
 
-				buttonTrue.setChecked(booleanObject == null ? false : booleanObject);
-				buttonFalse.setChecked(booleanObject == null ? false : !booleanObject);
+                buttonTrue.setChecked(booleanObject == null ? false : booleanObject);
+                buttonFalse.setChecked(booleanObject == null ? false : !booleanObject);
 
-				radioList.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
+                radioList.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 
-				for (HtmlListItem item : radioList.getList().getItems()) {
-					item.setClasses(getEachClasses());
-					item.setStyle(getEachStyle());
-				}
+                for (HtmlListItem item : radioList.getList().getItems()) {
+                    item.setClasses(getEachClasses());
+                    item.setStyle(getEachStyle());
+                }
 
-				return radioList;
-			}
+                return radioList;
+            }
 
-			private HtmlComponent getBooleanComponent(Boolean value, PresentationContext newContext) {
-				if (value == null) {
-					return RenderKit.getInstance().render(newContext, value);
-				} else {
-					if (value) {
-						if (getTrueLabel() == null) {
-							return RenderKit.getInstance().render(newContext, value);
-						} else {
-							return new HtmlText(RenderUtils.getResourceString(getBundle(), getTrueLabel()));
-						}
-					} else {
-						if (getFalseLabel() == null) {
-							return RenderKit.getInstance().render(newContext, value);
-						} else {
-							return new HtmlText(RenderUtils.getResourceString(getBundle(), getFalseLabel()));
-						}
-					}
-				}
-			}
+            private HtmlComponent getBooleanComponent(Boolean value, PresentationContext newContext) {
+                if (value == null) {
+                    return RenderKit.getInstance().render(newContext, value);
+                } else {
+                    if (value) {
+                        if (getTrueLabel() == null) {
+                            return RenderKit.getInstance().render(newContext, value);
+                        } else {
+                            return new HtmlText(RenderUtils.getResourceString(getBundle(), getTrueLabel()));
+                        }
+                    } else {
+                        if (getFalseLabel() == null) {
+                            return RenderKit.getInstance().render(newContext, value);
+                        } else {
+                            return new HtmlText(RenderUtils.getResourceString(getBundle(), getFalseLabel()));
+                        }
+                    }
+                }
+            }
 
-		};
-	}
+        };
+    }
 }

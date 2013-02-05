@@ -9,86 +9,86 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlSelectList extends HtmlMultipleValueComponent {
 
-	private Integer size;
-	private Integer tabIndex;
+    private Integer size;
+    private Integer tabIndex;
 
-	private List<HtmlMenuOption> options;
+    private List<HtmlMenuOption> options;
 
-	public HtmlSelectList() {
-		super();
+    public HtmlSelectList() {
+        super();
 
-		this.options = new ArrayList<HtmlMenuOption>();
-	}
+        this.options = new ArrayList<HtmlMenuOption>();
+    }
 
-	public Integer getSize() {
-		return size;
-	}
+    public Integer getSize() {
+        return size;
+    }
 
-	public void setSize(Integer size) {
-		this.size = size;
-	}
+    public void setSize(Integer size) {
+        this.size = size;
+    }
 
-	public Integer getTabIndex() {
-		return tabIndex;
-	}
+    public Integer getTabIndex() {
+        return tabIndex;
+    }
 
-	public void setTabIndex(Integer tabIndex) {
-		this.tabIndex = tabIndex;
-	}
+    public void setTabIndex(Integer tabIndex) {
+        this.tabIndex = tabIndex;
+    }
 
-	public HtmlMenuOption createOption(String text) {
-		HtmlMenuOption option = new HtmlMenuOption(text);
+    public HtmlMenuOption createOption(String text) {
+        HtmlMenuOption option = new HtmlMenuOption(text);
 
-		this.options.add(option);
+        this.options.add(option);
 
-		return option;
-	}
+        return option;
+    }
 
-	@Override
-	public void setValues(String... values) {
-		super.setValues(values);
+    @Override
+    public void setValues(String... values) {
+        super.setValues(values);
 
-		for (String value : values) {
-			for (HtmlMenuOption option : getOptions()) {
-				if (option.getValue().equals(value)) {
-					option.setSelected(true);
-				}
-			}
-		}
-	}
+        for (String value : values) {
+            for (HtmlMenuOption option : getOptions()) {
+                if (option.getValue().equals(value)) {
+                    option.setSelected(true);
+                }
+            }
+        }
+    }
 
-	public List<HtmlMenuOption> getOptions() {
-		return this.options;
-	}
+    public List<HtmlMenuOption> getOptions() {
+        return this.options;
+    }
 
-	@Override
-	public HtmlTag getOwnTag(PageContext context) {
-		HtmlTag tag = super.getOwnTag(context);
+    @Override
+    public HtmlTag getOwnTag(PageContext context) {
+        HtmlTag tag = super.getOwnTag(context);
 
-		tag.setName("select");
+        tag.setName("select");
 
-		tag.setAttribute("size", getSize());
-		tag.setAttribute("multiple", true);
-		tag.setAttribute("tabindex", getTabIndex());
+        tag.setAttribute("size", getSize());
+        tag.setAttribute("multiple", true);
+        tag.setAttribute("tabindex", getTabIndex());
 
-		if (isDisabled()) {
-			tag.setAttribute("disabled", true);
-		}
+        if (isDisabled()) {
+            tag.setAttribute("disabled", true);
+        }
 
-		for (HtmlMenuEntry entry : getOptions()) {
-			tag.addChild(entry.getOwnTag(context));
-		}
+        for (HtmlMenuEntry entry : getOptions()) {
+            tag.addChild(entry.getOwnTag(context));
+        }
 
-		return tag;
-	}
+        return tag;
+    }
 
-	@Override
-	public List<HtmlComponent> getChildren() {
-		List<HtmlComponent> children = super.getChildren();
+    @Override
+    public List<HtmlComponent> getChildren() {
+        List<HtmlComponent> children = super.getChildren();
 
-		children.addAll(getOptions());
+        children.addAll(getOptions());
 
-		return children;
-	}
+        return children;
+    }
 
 }

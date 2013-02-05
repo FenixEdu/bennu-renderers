@@ -18,32 +18,32 @@ import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
  * @author cfgi
  */
 public abstract class NumberInputRenderer extends StringInputRenderer {
-	@Override
-	public HtmlComponent render(Object targetObject, Class type) {
-		Number number = (Number) targetObject;
+    @Override
+    public HtmlComponent render(Object targetObject, Class type) {
+        Number number = (Number) targetObject;
 
-		String text;
-		if (number == null) {
-			text = "";
-		} else {
-			text = number.toString();
-		}
+        String text;
+        if (number == null) {
+            text = "";
+        } else {
+            text = number.toString();
+        }
 
-		return super.render(text, type);
-	}
+        return super.render(text, type);
+    }
 
-	@Override
-	protected HtmlComponent createTextField(Object object, Class type) {
-		HtmlContainer fieldComponent = (HtmlContainer) super.createTextField(object, type);
+    @Override
+    protected HtmlComponent createTextField(Object object, Class type) {
+        HtmlContainer fieldComponent = (HtmlContainer) super.createTextField(object, type);
 
-		HtmlFormComponent formComponent = (HtmlFormComponent) fieldComponent.getChildren().get(0);
-		formComponent.setConverter(getConverter());
+        HtmlFormComponent formComponent = (HtmlFormComponent) fieldComponent.getChildren().get(0);
+        formComponent.setConverter(getConverter());
 
-		HtmlContainer container = new HtmlInlineContainer();
-		container.addChild(formComponent);
-		container.addChild(new HtmlText(getFormatLabel()));
-		return container;
-	}
+        HtmlContainer container = new HtmlInlineContainer();
+        container.addChild(formComponent);
+        container.addChild(new HtmlText(getFormatLabel()));
+        return container;
+    }
 
-	protected abstract Converter getConverter();
+    protected abstract Converter getConverter();
 }

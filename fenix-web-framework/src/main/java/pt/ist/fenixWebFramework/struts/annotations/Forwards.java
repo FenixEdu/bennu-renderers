@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Forwards {
 
-	Forward[] value();
+    Forward[] value();
 
-	Tile tileProperties() default @Tile();
+    Tile tileProperties() default @Tile();
 }

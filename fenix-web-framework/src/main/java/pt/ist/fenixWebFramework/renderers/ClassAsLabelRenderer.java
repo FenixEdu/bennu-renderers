@@ -22,82 +22,82 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  */
 public class ClassAsLabelRenderer extends OutputRenderer {
 
-	private String bundle;
-	private String labelFormat;
-	private boolean escape = true;
+    private String bundle;
+    private String labelFormat;
+    private boolean escape = true;
 
-	public String getBundle() {
-		return this.bundle;
-	}
+    public String getBundle() {
+        return this.bundle;
+    }
 
-	/**
-	 * The bundle were to look for the label.
-	 * 
-	 * @property
-	 */
-	public void setBundle(String bundle) {
-		this.bundle = bundle;
-	}
+    /**
+     * The bundle were to look for the label.
+     * 
+     * @property
+     */
+    public void setBundle(String bundle) {
+        this.bundle = bundle;
+    }
 
-	public String getLabelFormat() {
-		return this.labelFormat;
-	}
+    public String getLabelFormat() {
+        return this.labelFormat;
+    }
 
-	/**
-	 * The format of the label. This property allows you to alter the default
-	 * format of the label. You can use a format like the one supported by
-	 * {@link pt.ist.fenixWebFramework.renderers.FormatRenderer} and it will be
-	 * applied to the class object.
-	 * <p>
-	 * For example a format of <code>"label.${superclass.simpleName}.${simpleName}"</code> would produce the label
-	 * <code>"label.Rectangle.Square"</code> when applied to the class of a <code>Square</code> object.
-	 * 
-	 * @property
-	 */
-	public void setLabelFormat(String labelFormat) {
-		this.labelFormat = labelFormat;
-	}
+    /**
+     * The format of the label. This property allows you to alter the default
+     * format of the label. You can use a format like the one supported by
+     * {@link pt.ist.fenixWebFramework.renderers.FormatRenderer} and it will be
+     * applied to the class object.
+     * <p>
+     * For example a format of <code>"label.${superclass.simpleName}.${simpleName}"</code> would produce the label
+     * <code>"label.Rectangle.Square"</code> when applied to the class of a <code>Square</code> object.
+     * 
+     * @property
+     */
+    public void setLabelFormat(String labelFormat) {
+        this.labelFormat = labelFormat;
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		return new Layout() {
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        return new Layout() {
 
-			@Override
-			public HtmlComponent createComponent(Object object, Class type) {
-				if (type == null) {
-					return new HtmlText();
-				}
+            @Override
+            public HtmlComponent createComponent(Object object, Class type) {
+                if (type == null) {
+                    return new HtmlText();
+                }
 
-				String labelName = getLabelName((Class<?>) object);
-				final String label = RenderUtils.getResourceString(getBundle(), labelName);
-				return new HtmlText(label, isEscape());
-			}
+                String labelName = getLabelName((Class<?>) object);
+                final String label = RenderUtils.getResourceString(getBundle(), labelName);
+                return new HtmlText(label, isEscape());
+            }
 
-			protected String getLabelName(Class targetClass) {
-				if (getLabelFormat() == null) {
-					return "label." + targetClass.getName();
-				} else {
-					return RenderUtils.getFormattedProperties(getLabelFormat(), targetClass);
-				}
-			}
+            protected String getLabelName(Class targetClass) {
+                if (getLabelFormat() == null) {
+                    return "label." + targetClass.getName();
+                } else {
+                    return RenderUtils.getFormattedProperties(getLabelFormat(), targetClass);
+                }
+            }
 
-			protected String getLabelName(final String className) {
-				return getLabelFormat() == null ? "label." + className : getFormattedProperties(className);
-			}
+            protected String getLabelName(final String className) {
+                return getLabelFormat() == null ? "label." + className : getFormattedProperties(className);
+            }
 
-			protected String getFormattedProperties(final Object object) {
-				return RenderUtils.getFormattedProperties(getLabelFormat(), object);
-			}
+            protected String getFormattedProperties(final Object object) {
+                return RenderUtils.getFormattedProperties(getLabelFormat(), object);
+            }
 
-		};
-	}
+        };
+    }
 
-	public boolean isEscape() {
-		return escape;
-	}
+    public boolean isEscape() {
+        return escape;
+    }
 
-	public void setEscape(boolean escape) {
-		this.escape = escape;
-	}
+    public void setEscape(boolean escape) {
+        this.escape = escape;
+    }
 
 }

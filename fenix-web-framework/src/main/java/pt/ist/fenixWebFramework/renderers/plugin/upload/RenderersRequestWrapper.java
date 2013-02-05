@@ -18,61 +18,61 @@ import javax.servlet.http.HttpServletRequestWrapper;
  */
 public class RenderersRequestWrapper extends HttpServletRequestWrapper {
 
-	private Hashtable<String, List<String>> parameters;
+    private Hashtable<String, List<String>> parameters;
 
-	public RenderersRequestWrapper(HttpServletRequest request) {
-		super(request);
+    public RenderersRequestWrapper(HttpServletRequest request) {
+        super(request);
 
-		this.parameters = new Hashtable<String, List<String>>();
-	}
+        this.parameters = new Hashtable<String, List<String>>();
+    }
 
-	public void addParameter(String name, String value) {
-		ensureParameterPresent(name);
-		addParameterValue(name, value);
-	}
+    public void addParameter(String name, String value) {
+        ensureParameterPresent(name);
+        addParameterValue(name, value);
+    }
 
-	private void ensureParameterPresent(String name) {
-		if (!parameterExists(name)) {
-			this.parameters.put(name, new ArrayList<String>());
-		}
-	}
+    private void ensureParameterPresent(String name) {
+        if (!parameterExists(name)) {
+            this.parameters.put(name, new ArrayList<String>());
+        }
+    }
 
-	private boolean parameterExists(String name) {
-		return this.parameters.containsKey(name);
-	}
+    private boolean parameterExists(String name) {
+        return this.parameters.containsKey(name);
+    }
 
-	private void addParameterValue(String name, String value) {
-		this.parameters.get(name).add(value);
-	}
+    private void addParameterValue(String name, String value) {
+        this.parameters.get(name).add(value);
+    }
 
-	@Override
-	public String getParameter(String name) {
-		if (!parameterExists(name)) {
-			return null;
-		}
+    @Override
+    public String getParameter(String name) {
+        if (!parameterExists(name)) {
+            return null;
+        }
 
-		return this.parameters.get(name).get(0);
-	}
+        return this.parameters.get(name).get(0);
+    }
 
-	@Override
-	public Map<String, String[]> getParameterMap() {
-		Map<String, String[]> resultMap = new Hashtable<String, String[]>();
+    @Override
+    public Map<String, String[]> getParameterMap() {
+        Map<String, String[]> resultMap = new Hashtable<String, String[]>();
 
-		for (String parameter : this.parameters.keySet()) {
-			resultMap.put(parameter, parameters.get(parameter).toArray(new String[0]));
-		}
+        for (String parameter : this.parameters.keySet()) {
+            resultMap.put(parameter, parameters.get(parameter).toArray(new String[0]));
+        }
 
-		return resultMap;
-	}
+        return resultMap;
+    }
 
-	@Override
-	public Enumeration getParameterNames() {
-		return this.parameters.keys();
-	}
+    @Override
+    public Enumeration getParameterNames() {
+        return this.parameters.keys();
+    }
 
-	@Override
-	public String[] getParameterValues(String name) {
-		return getParameterMap().get(name);
-	}
+    @Override
+    public String[] getParameterValues(String name) {
+        return getParameterMap().get(name);
+    }
 
 }

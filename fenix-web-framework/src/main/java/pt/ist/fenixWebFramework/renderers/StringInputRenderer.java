@@ -21,52 +21,52 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
  */
 public class StringInputRenderer extends TextFieldRenderer {
 
-	@Override
-	protected HtmlComponent createTextField(Object object, Class type) {
-		String string = (String) object;
+    @Override
+    protected HtmlComponent createTextField(Object object, Class type) {
+        String string = (String) object;
 
-		HtmlTextInput input = new HtmlTextInput();
-		input.setValue(string);
+        HtmlTextInput input = new HtmlTextInput();
+        input.setValue(string);
 
-		HtmlContainer container = new HtmlInlineContainer();
-		container.addChild(input);
-		container.addChild(new HtmlText(getFormatLabel()));
+        HtmlContainer container = new HtmlInlineContainer();
+        container.addChild(input);
+        container.addChild(new HtmlText(getFormatLabel()));
 
-		return container;
-	}
+        return container;
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		return new StringInputFieldLayout();
-	}
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        return new StringInputFieldLayout();
+    }
 
-	class StringInputFieldLayout extends TextFieldLayout {
+    class StringInputFieldLayout extends TextFieldLayout {
 
-		@Override
-		protected void setContextSlot(HtmlComponent component, MetaSlotKey slotKey) {
-			HtmlComponent actualComponent = component instanceof HtmlTextInput ? component : component.getChild(new Predicate() {
+        @Override
+        protected void setContextSlot(HtmlComponent component, MetaSlotKey slotKey) {
+            HtmlComponent actualComponent = component instanceof HtmlTextInput ? component : component.getChild(new Predicate() {
 
-				@Override
-				public boolean evaluate(Object arg0) {
-					return arg0 instanceof HtmlTextInput;
-				}
+                @Override
+                public boolean evaluate(Object arg0) {
+                    return arg0 instanceof HtmlTextInput;
+                }
 
-			});
-			super.setContextSlot(actualComponent, slotKey);
-		}
+            });
+            super.setContextSlot(actualComponent, slotKey);
+        }
 
-		@Override
-		public void applyStyle(HtmlComponent component) {
-			HtmlComponent actualComponent = component instanceof HtmlTextInput ? component : component.getChild(new Predicate() {
+        @Override
+        public void applyStyle(HtmlComponent component) {
+            HtmlComponent actualComponent = component instanceof HtmlTextInput ? component : component.getChild(new Predicate() {
 
-				@Override
-				public boolean evaluate(Object arg0) {
-					return arg0 instanceof HtmlTextInput;
-				}
+                @Override
+                public boolean evaluate(Object arg0) {
+                    return arg0 instanceof HtmlTextInput;
+                }
 
-			});
-			super.applyStyle(actualComponent);
-		}
+            });
+            super.applyStyle(actualComponent);
+        }
 
-	}
+    }
 }

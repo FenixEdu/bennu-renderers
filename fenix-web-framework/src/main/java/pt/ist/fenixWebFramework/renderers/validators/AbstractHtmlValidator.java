@@ -8,40 +8,40 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public abstract class AbstractHtmlValidator extends HtmlComponent {
 
-	private boolean valid;
+    private boolean valid;
 
-	protected AbstractHtmlValidator() {
-		setValid(true);
-	}
+    protected AbstractHtmlValidator() {
+        setValid(true);
+    }
 
-	public boolean isValid() {
-		return this.valid;
-	}
+    public boolean isValid() {
+        return this.valid;
+    }
 
-	public void setValid(boolean valid) {
-		this.valid = valid;
-	}
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
 
-	public abstract void performValidation();
+    public abstract void performValidation();
 
-	public abstract String getErrorMessage();
+    public abstract String getErrorMessage();
 
-	public abstract String getMessage();
+    public abstract String getMessage();
 
-	public abstract boolean isKey();
+    public abstract boolean isKey();
 
-	public abstract Validatable getComponent();
+    public abstract Validatable getComponent();
 
-	@Override
-	public HtmlTag getOwnTag(PageContext context) {
-		HtmlTag tag = super.getOwnTag(context);
+    @Override
+    public HtmlTag getOwnTag(PageContext context) {
+        HtmlTag tag = super.getOwnTag(context);
 
-		tag.setName("span");
-		if (!isValid()) {
-			tag.setText(getErrorMessage());
-		}
+        tag.setName("span");
+        if (!isValid()) {
+            tag.setText(getErrorMessage());
+        }
 
-		return tag;
-	}
+        return tag;
+    }
 
 }

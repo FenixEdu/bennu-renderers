@@ -40,21 +40,21 @@ package org.apache.commons.validator.routines.checkdigit;
  */
 public interface CheckDigit {
 
-	/**
-	 * Calculate the <i>Check Digit</i> for a code.
-	 * 
-	 * @param code The code to calculate the Check Digit for.
-	 * @return The calculated Check Digit
-	 * @throws CheckDigitException if an error occurs.
-	 */
-	public String calculate(String code) throws CheckDigitException;
+    /**
+     * Calculate the <i>Check Digit</i> for a code.
+     * 
+     * @param code The code to calculate the Check Digit for.
+     * @return The calculated Check Digit
+     * @throws CheckDigitException if an error occurs.
+     */
+    public String calculate(String code) throws CheckDigitException;
 
-	/**
-	 * Validate the check digit for the code.
-	 * 
-	 * @param code The code to validate.
-	 * @return <code>true</code> if the check digit is valid, otherwise <code>false</code>.
-	 */
-	public boolean isValid(String code);
+    /**
+     * Validate the check digit for the code.
+     * 
+     * @param code The code to validate.
+     * @return <code>true</code> if the check digit is valid, otherwise <code>false</code>.
+     */
+    public boolean isValid(String code);
 
 }

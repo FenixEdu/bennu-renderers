@@ -9,10 +9,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface CreateNodeAction {
 
-	String bundle();
+    String bundle();
 
-	String key();
+    String key();
 
-	String groupKey();
+    String groupKey();
 
 }

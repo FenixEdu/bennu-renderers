@@ -15,41 +15,41 @@ import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
  */
 public class LongInputRenderer extends IntegerInputRenderer {
 
-	@Override
-	protected Converter getConverter() {
-		return new LongNumberConverter(getBase());
-	}
+    @Override
+    protected Converter getConverter() {
+        return new LongNumberConverter(getBase());
+    }
 
-	private class LongNumberConverter extends Converter {
+    private class LongNumberConverter extends Converter {
 
-		private int base;
+        private int base;
 
-		public LongNumberConverter(int base) {
-			this.base = base;
-		}
+        public LongNumberConverter(int base) {
+            this.base = base;
+        }
 
-		public int getBase() {
-			return this.base;
-		}
+        public int getBase() {
+            return this.base;
+        }
 
-		public void setBase(int base) {
-			this.base = base;
-		}
+        public void setBase(int base) {
+            this.base = base;
+        }
 
-		@Override
-		public Object convert(Class type, Object value) {
-			String numberText = ((String) value).trim();
+        @Override
+        public Object convert(Class type, Object value) {
+            String numberText = ((String) value).trim();
 
-			if (numberText.length() == 0) {
-				return null;
-			}
+            if (numberText.length() == 0) {
+                return null;
+            }
 
-			try {
-				return Long.parseLong(numberText.trim(), getBase());
-			} catch (NumberFormatException e) {
-				throw new ConversionException("renderers.converter.long", e, true, value);
-			}
-		}
+            try {
+                return Long.parseLong(numberText.trim(), getBase());
+            } catch (NumberFormatException e) {
+                throw new ConversionException("renderers.converter.long", e, true, value);
+            }
+        }
 
-	}
+    }
 }

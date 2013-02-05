@@ -6,43 +6,43 @@ import pt.ist.fenixWebFramework.renderers.taglib.ViewObjectTag;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public class FenixViewObjectTag extends ViewObjectTag {
-	private String oid;
+    private String oid;
 
-	public String getOid() {
-		return oid;
-	}
+    public String getOid() {
+        return oid;
+    }
 
-	public void setOid(String oid) {
-		this.oid = oid;
-	}
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
 
-	@Override
-	protected Object getTargetObject() throws JspException {
-		Object object = super.getTargetObject();
+    @Override
+    protected Object getTargetObject() throws JspException {
+        Object object = super.getTargetObject();
 
-		if (object == null) {
-			object = getPersistentObject();
+        if (object == null) {
+            object = getPersistentObject();
 
-			if (object != null) {
-				return super.getTargetObjectByProperty(object);
-			}
-		}
+            if (object != null) {
+                return super.getTargetObjectByProperty(object);
+            }
+        }
 
-		return object;
-	}
+        return object;
+    }
 
-	protected Object getPersistentObject() throws JspException {
-		if (getOid() != null) {
-			final long oid = Long.parseLong(getOid());
-			return Transaction.getObjectForOID(oid);
-		}
-		return null;
-	}
+    protected Object getPersistentObject() throws JspException {
+        if (getOid() != null) {
+            final long oid = Long.parseLong(getOid());
+            return Transaction.getObjectForOID(oid);
+        }
+        return null;
+    }
 
-	@Override
-	public void release() {
-		super.release();
+    @Override
+    public void release() {
+        super.release();
 
-		this.oid = null;
-	}
+        this.oid = null;
+    }
 }

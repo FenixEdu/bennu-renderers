@@ -23,25 +23,25 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlText;
  */
 public class EnumRadioInputRenderer extends EnumInputRenderer {
 
-	@Override
-	protected void addEnumElement(Enum enumerate, HtmlSimpleValueComponent holder, Enum oneEnum, String description) {
-		HtmlRadioButtonList radioList = (HtmlRadioButtonList) holder;
+    @Override
+    protected void addEnumElement(Enum enumerate, HtmlSimpleValueComponent holder, Enum oneEnum, String description) {
+        HtmlRadioButtonList radioList = (HtmlRadioButtonList) holder;
 
-		HtmlText descriptionComponent = new HtmlText(description);
-		HtmlLabel label = new HtmlLabel();
-		label.setBody(descriptionComponent);
+        HtmlText descriptionComponent = new HtmlText(description);
+        HtmlLabel label = new HtmlLabel();
+        label.setBody(descriptionComponent);
 
-		HtmlRadioButton radioButton = radioList.addOption(label, oneEnum.toString());
-		label.setFor(radioButton);
+        HtmlRadioButton radioButton = radioList.addOption(label, oneEnum.toString());
+        label.setFor(radioButton);
 
-		if (oneEnum.equals(enumerate)) {
-			radioButton.setChecked(true);
-		}
-	}
+        if (oneEnum.equals(enumerate)) {
+            radioButton.setChecked(true);
+        }
+    }
 
-	@Override
-	protected HtmlSimpleValueComponent createInputContainerComponent(Enum enumerate) {
-		return new HtmlRadioButtonList();
-	}
+    @Override
+    protected HtmlSimpleValueComponent createInputContainerComponent(Enum enumerate) {
+        return new HtmlRadioButtonList();
+    }
 
 }

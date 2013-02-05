@@ -18,41 +18,41 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  */
 public class EnumSetRenderer extends OutputRenderer {
 
-	// NOTE: duplicate code with EnumInputRenderer
-	protected String getEnumSetDescription(EnumSet enumset) {
+    // NOTE: duplicate code with EnumInputRenderer
+    protected String getEnumSetDescription(EnumSet enumset) {
 
-		Object[] enumSetArray = enumset.toArray();
-		StringBuilder description = new StringBuilder();
+        Object[] enumSetArray = enumset.toArray();
+        StringBuilder description = new StringBuilder();
 
-		for (Object enumSetObject : enumSetArray) {
+        for (Object enumSetObject : enumSetArray) {
 
-			String thisDescription = RenderUtils.getEnumString((Enum) enumSetObject);
+            String thisDescription = RenderUtils.getEnumString((Enum) enumSetObject);
 
-			if (description.length() != 0) {
-				description.append(", ");
-			}
-			description.append(thisDescription);
-		}
-		return description.toString();
-	}
+            if (description.length() != 0) {
+                description.append(", ");
+            }
+            description.append(thisDescription);
+        }
+        return description.toString();
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		return new Layout() {
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        return new Layout() {
 
-			@Override
-			public HtmlComponent createComponent(Object object, Class type) {
-				EnumSet enumSet = (EnumSet) object;
+            @Override
+            public HtmlComponent createComponent(Object object, Class type) {
+                EnumSet enumSet = (EnumSet) object;
 
-				if (enumSet == null) {
-					return new HtmlText();
-				}
+                if (enumSet == null) {
+                    return new HtmlText();
+                }
 
-				String description = getEnumSetDescription(enumSet);
+                String description = getEnumSetDescription(enumSet);
 
-				return new HtmlText(description);
-			}
+                return new HtmlText(description);
+            }
 
-		};
-	}
+        };
+    }
 }

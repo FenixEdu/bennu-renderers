@@ -52,75 +52,75 @@ import java.text.Format;
  */
 public class CurrencyValidator extends BigDecimalValidator {
 
-	private static final CurrencyValidator VALIDATOR = new CurrencyValidator();
+    private static final CurrencyValidator VALIDATOR = new CurrencyValidator();
 
-	/** DecimalFormat's currency symbol */
-	private static final char CURRENCY_SYMBOL = '\u00A4';
+    /** DecimalFormat's currency symbol */
+    private static final char CURRENCY_SYMBOL = '\u00A4';
 
-	/**
-	 * Return a singleton instance of this validator.
-	 * 
-	 * @return A singleton instance of the CurrencyValidator.
-	 */
-	public static BigDecimalValidator getInstance() {
-		return VALIDATOR;
-	}
+    /**
+     * Return a singleton instance of this validator.
+     * 
+     * @return A singleton instance of the CurrencyValidator.
+     */
+    public static BigDecimalValidator getInstance() {
+        return VALIDATOR;
+    }
 
-	/**
-	 * Construct a <i>strict</i> instance.
-	 */
-	public CurrencyValidator() {
-		this(true, true);
-	}
+    /**
+     * Construct a <i>strict</i> instance.
+     */
+    public CurrencyValidator() {
+        this(true, true);
+    }
 
-	/**
-	 * Construct an instance with the specified strict setting.
-	 * 
-	 * @param strict <code>true</code> if strict <code>Format</code> parsing should be used.
-	 * @param allowFractions <code>true</code> if fractions are
-	 *            allowed or <code>false</code> if integers only.
-	 */
-	public CurrencyValidator(boolean strict, boolean allowFractions) {
-		super(strict, CURRENCY_FORMAT, allowFractions);
-	}
+    /**
+     * Construct an instance with the specified strict setting.
+     * 
+     * @param strict <code>true</code> if strict <code>Format</code> parsing should be used.
+     * @param allowFractions <code>true</code> if fractions are
+     *            allowed or <code>false</code> if integers only.
+     */
+    public CurrencyValidator(boolean strict, boolean allowFractions) {
+        super(strict, CURRENCY_FORMAT, allowFractions);
+    }
 
-	/**
-	 * <p>
-	 * Parse the value with the specified <code>Format</code>.
-	 * </p>
-	 * 
-	 * <p>
-	 * This implementation is lenient whether the currency symbol is present or not. The default <code>NumberFormat</code>
-	 * behaviour is for the parsing to "fail" if the currency symbol is missing. This method re-parses with a format without the
-	 * currency symbol if it fails initially.
-	 * </p>
-	 * 
-	 * @param value The value to be parsed.
-	 * @param formatter The Format to parse the value with.
-	 * @return The parsed value if valid or <code>null</code> if invalid.
-	 */
-	@Override
-	protected Object parse(String value, Format formatter) {
+    /**
+     * <p>
+     * Parse the value with the specified <code>Format</code>.
+     * </p>
+     * 
+     * <p>
+     * This implementation is lenient whether the currency symbol is present or not. The default <code>NumberFormat</code>
+     * behaviour is for the parsing to "fail" if the currency symbol is missing. This method re-parses with a format without the
+     * currency symbol if it fails initially.
+     * </p>
+     * 
+     * @param value The value to be parsed.
+     * @param formatter The Format to parse the value with.
+     * @return The parsed value if valid or <code>null</code> if invalid.
+     */
+    @Override
+    protected Object parse(String value, Format formatter) {
 
-		// Initial parse of the value
-		Object parsedValue = super.parse(value, formatter);
-		if (parsedValue != null || !(formatter instanceof DecimalFormat)) {
-			return parsedValue;
-		}
+        // Initial parse of the value
+        Object parsedValue = super.parse(value, formatter);
+        if (parsedValue != null || !(formatter instanceof DecimalFormat)) {
+            return parsedValue;
+        }
 
-		// Re-parse using a pattern without the currency symbol
-		DecimalFormat decimalFormat = (DecimalFormat) formatter;
-		String pattern = decimalFormat.toPattern();
-		if (pattern.indexOf(CURRENCY_SYMBOL) >= 0) {
-			StringBuffer buffer = new StringBuffer(pattern.length());
-			for (int i = 0; i < pattern.length(); i++) {
-				if (pattern.charAt(i) != CURRENCY_SYMBOL) {
-					buffer.append(pattern.charAt(i));
-				}
-			}
-			decimalFormat.applyPattern(buffer.toString());
-			parsedValue = super.parse(value, decimalFormat);
-		}
-		return parsedValue;
-	}
+        // Re-parse using a pattern without the currency symbol
+        DecimalFormat decimalFormat = (DecimalFormat) formatter;
+        String pattern = decimalFormat.toPattern();
+        if (pattern.indexOf(CURRENCY_SYMBOL) >= 0) {
+            StringBuffer buffer = new StringBuffer(pattern.length());
+            for (int i = 0; i < pattern.length(); i++) {
+                if (pattern.charAt(i) != CURRENCY_SYMBOL) {
+                    buffer.append(pattern.charAt(i));
+                }
+            }
+            decimalFormat.applyPattern(buffer.toString());
+            parsedValue = super.parse(value, decimalFormat);
+        }
+        return parsedValue;
+    }
 }

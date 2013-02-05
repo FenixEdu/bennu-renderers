@@ -16,15 +16,15 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Forward {
 
-	String name();
+    String name();
 
-	String path();
+    String path();
 
-	boolean redirect() default false;
+    boolean redirect() default false;
 
-	boolean contextRelative() default false;
+    boolean contextRelative() default false;
 
-	boolean useTile() default true;
+    boolean useTile() default true;
 
-	Tile tileProperties() default @Tile();
+    Tile tileProperties() default @Tile();
 }

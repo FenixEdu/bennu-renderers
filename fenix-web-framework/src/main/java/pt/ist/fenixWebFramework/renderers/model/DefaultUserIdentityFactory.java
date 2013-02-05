@@ -5,11 +5,11 @@ import javax.servlet.http.HttpSession;
 
 public class DefaultUserIdentityFactory extends UserIdentityFactory {
 
-	@Override
-	public UserIdentity createUserIdentity(final HttpServletRequest request) {
-		final HttpSession httpSession = request.getSession(false);
-		final String sessionId = httpSession == null ? null : httpSession.getId();
-		return new SimpleUserIdentity(sessionId);
-	}
+    @Override
+    public UserIdentity createUserIdentity(final HttpServletRequest request) {
+        final HttpSession httpSession = request.getSession(false);
+        final String sessionId = httpSession == null ? null : httpSession.getId();
+        return new SimpleUserIdentity(sessionId);
+    }
 
 }

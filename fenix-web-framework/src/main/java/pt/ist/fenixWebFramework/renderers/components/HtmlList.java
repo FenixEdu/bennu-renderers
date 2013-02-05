@@ -9,63 +9,63 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlList extends HtmlComponent {
 
-	private List<HtmlListItem> items;
-	private boolean ordered;
+    private List<HtmlListItem> items;
+    private boolean ordered;
 
-	public HtmlList() {
-		super();
+    public HtmlList() {
+        super();
 
-		this.items = new ArrayList<HtmlListItem>();
-		this.ordered = false;
-	}
+        this.items = new ArrayList<HtmlListItem>();
+        this.ordered = false;
+    }
 
-	public void setOrdered(boolean ordered) {
-		this.ordered = ordered;
-	}
+    public void setOrdered(boolean ordered) {
+        this.ordered = ordered;
+    }
 
-	public boolean isOrdered() {
-		return this.ordered;
-	}
+    public boolean isOrdered() {
+        return this.ordered;
+    }
 
-	public HtmlListItem createItem() {
-		HtmlListItem newItem = new HtmlListItem();
+    public HtmlListItem createItem() {
+        HtmlListItem newItem = new HtmlListItem();
 
-		this.items.add(newItem);
+        this.items.add(newItem);
 
-		return newItem;
-	}
+        return newItem;
+    }
 
-	public HtmlListItem createItem(int index) {
-		HtmlListItem newItem = new HtmlListItem();
+    public HtmlListItem createItem(int index) {
+        HtmlListItem newItem = new HtmlListItem();
 
-		this.items.add(index, newItem);
+        this.items.add(index, newItem);
 
-		return newItem;
-	}
+        return newItem;
+    }
 
-	@Override
-	public List<HtmlComponent> getChildren() {
-		List<HtmlComponent> children = new ArrayList<HtmlComponent>(super.getChildren());
+    @Override
+    public List<HtmlComponent> getChildren() {
+        List<HtmlComponent> children = new ArrayList<HtmlComponent>(super.getChildren());
 
-		children.addAll(this.items);
+        children.addAll(this.items);
 
-		return children;
-	}
+        return children;
+    }
 
-	public List<HtmlListItem> getItems() {
-		return this.items;
-	}
+    public List<HtmlListItem> getItems() {
+        return this.items;
+    }
 
-	@Override
-	public HtmlTag getOwnTag(PageContext context) {
-		HtmlTag tag = super.getOwnTag(context);
+    @Override
+    public HtmlTag getOwnTag(PageContext context) {
+        HtmlTag tag = super.getOwnTag(context);
 
-		tag.setName(isOrdered() ? "ol" : "ul");
+        tag.setName(isOrdered() ? "ol" : "ul");
 
-		for (HtmlListItem item : this.items) {
-			tag.addChild(item.getOwnTag(context));
-		}
+        for (HtmlListItem item : this.items) {
+            tag.addChild(item.getOwnTag(context));
+        }
 
-		return tag;
-	}
+        return tag;
+    }
 }

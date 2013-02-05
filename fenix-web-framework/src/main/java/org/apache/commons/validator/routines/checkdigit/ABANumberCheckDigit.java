@@ -39,41 +39,41 @@ package org.apache.commons.validator.routines.checkdigit;
  */
 public final class ABANumberCheckDigit extends ModulusCheckDigit {
 
-	/** Singleton Routing Transit Number Check Digit instance */
-	public static final CheckDigit ABAN_CHECK_DIGIT = new ABANumberCheckDigit();
+    /** Singleton Routing Transit Number Check Digit instance */
+    public static final CheckDigit ABAN_CHECK_DIGIT = new ABANumberCheckDigit();
 
-	/** weighting given to digits depending on their right position */
-	private static final int[] POSITION_WEIGHT = new int[] { 3, 1, 7 };
+    /** weighting given to digits depending on their right position */
+    private static final int[] POSITION_WEIGHT = new int[] { 3, 1, 7 };
 
-	/**
-	 * Construct a modulus 10 Check Digit routine for ABA Numbers.
-	 */
-	public ABANumberCheckDigit() {
-		super(10);
-	}
+    /**
+     * Construct a modulus 10 Check Digit routine for ABA Numbers.
+     */
+    public ABANumberCheckDigit() {
+        super(10);
+    }
 
-	/**
-	 * Calculates the <i>weighted</i> value of a character in the
-	 * code at a specified position.
-	 * <p>
-	 * ABA Routing numbers are weighted in the following manner:
-	 * 
-	 * <pre>
-	 * <code>
-	 *     left position: 1  2  3  4  5  6  7  8  9
-	 *            weight: 3  7  1  3  7  1  3  7  1
-	 * </code>
-	 * </pre>
-	 * 
-	 * @param charValue The numeric value of the character.
-	 * @param leftPos The position of the character in the code, counting from left to right
-	 * @param rightPos The positionof the character in the code, counting from right to left
-	 * @return The weighted value of the character.
-	 */
-	@Override
-	protected int weightedValue(int charValue, int leftPos, int rightPos) {
-		int weight = POSITION_WEIGHT[rightPos % 3];
-		return (charValue * weight);
-	}
+    /**
+     * Calculates the <i>weighted</i> value of a character in the
+     * code at a specified position.
+     * <p>
+     * ABA Routing numbers are weighted in the following manner:
+     * 
+     * <pre>
+     * <code>
+     *     left position: 1  2  3  4  5  6  7  8  9
+     *            weight: 3  7  1  3  7  1  3  7  1
+     * </code>
+     * </pre>
+     * 
+     * @param charValue The numeric value of the character.
+     * @param leftPos The position of the character in the code, counting from left to right
+     * @param rightPos The positionof the character in the code, counting from right to left
+     * @return The weighted value of the character.
+     */
+    @Override
+    protected int weightedValue(int charValue, int leftPos, int rightPos) {
+        int weight = POSITION_WEIGHT[rightPos % 3];
+        return (charValue * weight);
+    }
 
 }

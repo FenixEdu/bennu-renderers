@@ -14,14 +14,14 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlPasswordInput;
  */
 public class PasswordInputRenderer extends TextFieldRenderer {
 
-	@Override
-	protected HtmlComponent createTextField(Object object, Class type) {
-		String string = (String) object;
+    @Override
+    protected HtmlComponent createTextField(Object object, Class type) {
+        String string = (String) object;
 
-		HtmlPasswordInput inputPassword = new HtmlPasswordInput();
-		inputPassword.setValue(string);
+        HtmlPasswordInput inputPassword = new HtmlPasswordInput();
+        inputPassword.setValue(string);
 
-		return inputPassword;
-	}
+        return inputPassword;
+    }
 
 }

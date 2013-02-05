@@ -12,114 +12,114 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 public class BooleanLinkChangerRenderer extends BooleanRenderer {
 
-	private String trueDestination;
+    private String trueDestination;
 
-	private String falseDestination;
+    private String falseDestination;
 
-	private String trueMessageKey;
+    private String trueMessageKey;
 
-	private String falseMessageKey;
+    private String falseMessageKey;
 
-	private String messageBundle;
+    private String messageBundle;
 
-	public String getFalseDestination() {
-		return falseDestination;
-	}
+    public String getFalseDestination() {
+        return falseDestination;
+    }
 
-	public void setFalseDestination(String falseDestination) {
-		this.falseDestination = falseDestination;
-	}
+    public void setFalseDestination(String falseDestination) {
+        this.falseDestination = falseDestination;
+    }
 
-	public String getFalseMessageKey() {
-		return falseMessageKey;
-	}
+    public String getFalseMessageKey() {
+        return falseMessageKey;
+    }
 
-	public void setFalseMessageKey(String falseMessageKey) {
-		this.falseMessageKey = falseMessageKey;
-	}
+    public void setFalseMessageKey(String falseMessageKey) {
+        this.falseMessageKey = falseMessageKey;
+    }
 
-	public String getMessageBundle() {
-		return messageBundle;
-	}
+    public String getMessageBundle() {
+        return messageBundle;
+    }
 
-	public void setMessageBundle(String messageBundle) {
-		this.messageBundle = messageBundle;
-	}
+    public void setMessageBundle(String messageBundle) {
+        this.messageBundle = messageBundle;
+    }
 
-	public String getTrueDestination() {
-		return trueDestination;
-	}
+    public String getTrueDestination() {
+        return trueDestination;
+    }
 
-	public void setTrueDestination(String trueDestination) {
-		this.trueDestination = trueDestination;
-	}
+    public void setTrueDestination(String trueDestination) {
+        this.trueDestination = trueDestination;
+    }
 
-	public String getTrueMessageKey() {
-		return trueMessageKey;
-	}
+    public String getTrueMessageKey() {
+        return trueMessageKey;
+    }
 
-	public void setTrueMessageKey(String trueMessageKey) {
-		this.trueMessageKey = trueMessageKey;
-	}
+    public void setTrueMessageKey(String trueMessageKey) {
+        this.trueMessageKey = trueMessageKey;
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		final Layout layout = super.getLayout(object, type);
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        final Layout layout = super.getLayout(object, type);
 
-		return new Layout() {
+        return new Layout() {
 
-			@Override
-			public HtmlComponent createComponent(Object object, Class type) {
-				HtmlComponent component = layout.createComponent(object, type);
+            @Override
+            public HtmlComponent createComponent(Object object, Class type) {
+                HtmlComponent component = layout.createComponent(object, type);
 
-				if (object == null) {
-					return component;
-				}
+                if (object == null) {
+                    return component;
+                }
 
-				HtmlInlineContainer container = new HtmlInlineContainer();
+                HtmlInlineContainer container = new HtmlInlineContainer();
 
-				HtmlLink link = createLink((Boolean) object);
+                HtmlLink link = createLink((Boolean) object);
 
-				container.addChild(component);
-				container.addChild(new HtmlText("("));
-				container.addChild(link);
-				container.addChild(new HtmlText(")"));
+                container.addChild(component);
+                container.addChild(new HtmlText("("));
+                container.addChild(link);
+                container.addChild(new HtmlText(")"));
 
-				return container;
-			}
+                return container;
+            }
 
-			private HtmlLink createLink(Boolean value) {
-				Object holder = getContext().getParentContext().getMetaObject().getObject();
+            private HtmlLink createLink(Boolean value) {
+                Object holder = getContext().getParentContext().getMetaObject().getObject();
 
-				HtmlLink link = new HtmlLink();
+                HtmlLink link = new HtmlLink();
 
-				link.setModuleRelative(true);
-				link.setUrl(RenderUtils.getFormattedProperties(getUrlPath(value), holder));
+                link.setModuleRelative(true);
+                link.setUrl(RenderUtils.getFormattedProperties(getUrlPath(value), holder));
 
-				link.setText(getLinkText(value));
+                link.setText(getLinkText(value));
 
-				return link;
-			}
+                return link;
+            }
 
-			private String getLinkText(Boolean value) {
-				String key = value ? getTrueMessageKey() : getFalseMessageKey();
-				return RenderUtils.getResourceString(getMessageBundle(), key);
-			}
+            private String getLinkText(Boolean value) {
+                String key = value ? getTrueMessageKey() : getFalseMessageKey();
+                return RenderUtils.getResourceString(getMessageBundle(), key);
+            }
 
-			private String getUrlPath(Boolean value) {
-				IViewState viewState = getContext().getViewState();
+            private String getUrlPath(Boolean value) {
+                IViewState viewState = getContext().getViewState();
 
-				String destinationName = value ? getTrueDestination() : getFalseDestination();
-				ViewDestination destination = viewState.getDestination(destinationName);
+                String destinationName = value ? getTrueDestination() : getFalseDestination();
+                ViewDestination destination = viewState.getDestination(destinationName);
 
-				if (destination == null) {
-					return "";
-				} else {
-					return destination.getPath();
-				}
-			}
+                if (destination == null) {
+                    return "";
+                } else {
+                    return destination.getPath();
+                }
+            }
 
-		};
-	}
+        };
+    }
 
 }

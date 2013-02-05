@@ -6,12 +6,12 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlBlockContainer extends HtmlContainer {
 
-	@Override
-	public HtmlTag getOwnTag(PageContext context) {
-		HtmlTag tag = super.getOwnTag(context);
+    @Override
+    public HtmlTag getOwnTag(PageContext context) {
+        HtmlTag tag = super.getOwnTag(context);
 
-		tag.setName("div");
+        tag.setName("div");
 
-		return tag;
-	}
+        return tag;
+    }
 }

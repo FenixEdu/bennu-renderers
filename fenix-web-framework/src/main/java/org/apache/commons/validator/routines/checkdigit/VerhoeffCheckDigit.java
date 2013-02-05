@@ -31,79 +31,79 @@ import java.io.Serializable;
  */
 public final class VerhoeffCheckDigit implements CheckDigit, Serializable {
 
-	/** Singleton Verhoeff Check Digit instance */
-	public static final CheckDigit VERHOEFF_CHECK_DIGIT = new VerhoeffCheckDigit();
+    /** Singleton Verhoeff Check Digit instance */
+    public static final CheckDigit VERHOEFF_CHECK_DIGIT = new VerhoeffCheckDigit();
 
-	/** D - multiplication table */
-	private static final int[][] D_TABLE = new int[][] { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 1, 2, 3, 4, 0, 6, 7, 8, 9, 5 },
-			{ 2, 3, 4, 0, 1, 7, 8, 9, 5, 6 }, { 3, 4, 0, 1, 2, 8, 9, 5, 6, 7 }, { 4, 0, 1, 2, 3, 9, 5, 6, 7, 8 },
-			{ 5, 9, 8, 7, 6, 0, 4, 3, 2, 1 }, { 6, 5, 9, 8, 7, 1, 0, 4, 3, 2 }, { 7, 6, 5, 9, 8, 2, 1, 0, 4, 3 },
-			{ 8, 7, 6, 5, 9, 3, 2, 1, 0, 4 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 } };
+    /** D - multiplication table */
+    private static final int[][] D_TABLE = new int[][] { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 1, 2, 3, 4, 0, 6, 7, 8, 9, 5 },
+            { 2, 3, 4, 0, 1, 7, 8, 9, 5, 6 }, { 3, 4, 0, 1, 2, 8, 9, 5, 6, 7 }, { 4, 0, 1, 2, 3, 9, 5, 6, 7, 8 },
+            { 5, 9, 8, 7, 6, 0, 4, 3, 2, 1 }, { 6, 5, 9, 8, 7, 1, 0, 4, 3, 2 }, { 7, 6, 5, 9, 8, 2, 1, 0, 4, 3 },
+            { 8, 7, 6, 5, 9, 3, 2, 1, 0, 4 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 } };
 
-	/** P - permutation table */
-	private static final int[][] P_TABLE = new int[][] { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 },
-			{ 5, 8, 0, 3, 7, 9, 6, 1, 4, 2 }, { 8, 9, 1, 6, 0, 4, 3, 5, 2, 7 }, { 9, 4, 5, 3, 1, 2, 6, 8, 7, 0 },
-			{ 4, 2, 8, 6, 5, 7, 3, 9, 0, 1 }, { 2, 7, 9, 3, 8, 0, 6, 4, 1, 5 }, { 7, 0, 4, 6, 9, 1, 3, 2, 5, 8 } };
+    /** P - permutation table */
+    private static final int[][] P_TABLE = new int[][] { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 },
+            { 5, 8, 0, 3, 7, 9, 6, 1, 4, 2 }, { 8, 9, 1, 6, 0, 4, 3, 5, 2, 7 }, { 9, 4, 5, 3, 1, 2, 6, 8, 7, 0 },
+            { 4, 2, 8, 6, 5, 7, 3, 9, 0, 1 }, { 2, 7, 9, 3, 8, 0, 6, 4, 1, 5 }, { 7, 0, 4, 6, 9, 1, 3, 2, 5, 8 } };
 
-	/** inv: inverse table */
-	private static final int[] INV_TABLE = new int[] { 0, 4, 3, 2, 1, 5, 6, 7, 8, 9 };
+    /** inv: inverse table */
+    private static final int[] INV_TABLE = new int[] { 0, 4, 3, 2, 1, 5, 6, 7, 8, 9 };
 
-	/**
-	 * Validate the Verhoeff <i>Check Digit</i> for a code.
-	 * 
-	 * @param code The code to validate
-	 * @return <code>true</code> if the check digit is valid,
-	 *         otherwise <code>false</code>
-	 */
-	@Override
-	public boolean isValid(String code) {
-		if (code == null || code.length() == 0) {
-			return false;
-		}
-		try {
-			return (calculateChecksum(code, true) == 0);
-		} catch (CheckDigitException e) {
-			return false;
-		}
-	}
+    /**
+     * Validate the Verhoeff <i>Check Digit</i> for a code.
+     * 
+     * @param code The code to validate
+     * @return <code>true</code> if the check digit is valid,
+     *         otherwise <code>false</code>
+     */
+    @Override
+    public boolean isValid(String code) {
+        if (code == null || code.length() == 0) {
+            return false;
+        }
+        try {
+            return (calculateChecksum(code, true) == 0);
+        } catch (CheckDigitException e) {
+            return false;
+        }
+    }
 
-	/**
-	 * Calculate a Verhoeff <i>Check Digit</i> for a code.
-	 * 
-	 * @param code The code to calculate the Check Digit for
-	 * @return The calculated Check Digit
-	 * @throws CheckDigitException if an error occurs calculating
-	 *             the check digit for the specified code
-	 */
-	@Override
-	public String calculate(String code) throws CheckDigitException {
-		if (code == null || code.length() == 0) {
-			throw new CheckDigitException("Code is missing");
-		}
-		int checksum = calculateChecksum(code, false);
-		return Integer.toString(INV_TABLE[checksum]);
-	}
+    /**
+     * Calculate a Verhoeff <i>Check Digit</i> for a code.
+     * 
+     * @param code The code to calculate the Check Digit for
+     * @return The calculated Check Digit
+     * @throws CheckDigitException if an error occurs calculating
+     *             the check digit for the specified code
+     */
+    @Override
+    public String calculate(String code) throws CheckDigitException {
+        if (code == null || code.length() == 0) {
+            throw new CheckDigitException("Code is missing");
+        }
+        int checksum = calculateChecksum(code, false);
+        return Integer.toString(INV_TABLE[checksum]);
+    }
 
-	/**
-	 * Calculate the checksum.
-	 * 
-	 * @param code The code to calculate the checksum for.
-	 * @param includesCheckDigit Whether the code includes the Check Digit or not.
-	 * @return The checksum value
-	 * @throws CheckDigitException if the code contains an invalid character (i.e. not numeric)
-	 */
-	private int calculateChecksum(String code, boolean includesCheckDigit) throws CheckDigitException {
-		int checksum = 0;
-		for (int i = 0; i < code.length(); i++) {
-			int idx = code.length() - (i + 1);
-			int num = Character.getNumericValue(code.charAt(idx));
-			if (num < 0 || num > 9) {
-				throw new CheckDigitException("Invalid Character[" + i + "] = '" + ((int) code.charAt(idx)) + "'");
-			}
-			int pos = includesCheckDigit ? i : i + 1;
-			checksum = D_TABLE[checksum][P_TABLE[pos % 8][num]];
-		}
-		return checksum;
-	}
+    /**
+     * Calculate the checksum.
+     * 
+     * @param code The code to calculate the checksum for.
+     * @param includesCheckDigit Whether the code includes the Check Digit or not.
+     * @return The checksum value
+     * @throws CheckDigitException if the code contains an invalid character (i.e. not numeric)
+     */
+    private int calculateChecksum(String code, boolean includesCheckDigit) throws CheckDigitException {
+        int checksum = 0;
+        for (int i = 0; i < code.length(); i++) {
+            int idx = code.length() - (i + 1);
+            int num = Character.getNumericValue(code.charAt(idx));
+            if (num < 0 || num > 9) {
+                throw new CheckDigitException("Invalid Character[" + i + "] = '" + ((int) code.charAt(idx)) + "'");
+            }
+            int pos = includesCheckDigit ? i : i + 1;
+            checksum = D_TABLE[checksum][P_TABLE[pos % 8][num]];
+        }
+        return checksum;
+    }
 
 }

@@ -8,17 +8,17 @@ import pt.ist.fenixframework.DomainObject;
 
 public class DomainObjectKeyArrayConverter extends Converter {
 
-	@Override
-	public Object convert(Class type, Object value) {
-		DomainObjectKeyConverter converter = new DomainObjectKeyConverter();
-		List<DomainObject> result = new ArrayList<DomainObject>();
+    @Override
+    public Object convert(Class type, Object value) {
+        DomainObjectKeyConverter converter = new DomainObjectKeyConverter();
+        List<DomainObject> result = new ArrayList<DomainObject>();
 
-		String[] values = (String[]) value;
-		for (String key : values) {
-			result.add((DomainObject) converter.convert(type, key));
-		}
+        String[] values = (String[]) value;
+        for (String key : values) {
+            result.add((DomainObject) converter.convert(type, key));
+        }
 
-		return result;
-	}
+        return result;
+    }
 
 }

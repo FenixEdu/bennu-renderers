@@ -19,26 +19,26 @@ import org.apache.struts.action.ActionMapping;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Mapping {
 
-	String path();
+    String path();
 
-	String formBean() default "";
+    String formBean() default "";
 
-	String attribute() default "";
+    String attribute() default "";
 
-	Class<? extends ActionForm> formBeanClass() default ActionForm.class;
+    Class<? extends ActionForm> formBeanClass() default ActionForm.class;
 
-	String input() default "";
+    String input() default "";
 
-	String module() default "";
+    String module() default "";
 
-	String scope() default "request";
+    String scope() default "request";
 
-	boolean validate() default true;
+    boolean validate() default true;
 
-	String parameter() default "method";
+    String parameter() default "method";
 
-	Class<? extends ActionMapping> customMappingClass() default ActionMapping.class;
+    Class<? extends ActionMapping> customMappingClass() default ActionMapping.class;
 
-	String[] customMappingProperties() default {};
+    String[] customMappingProperties() default {};
 
 }

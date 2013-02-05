@@ -53,64 +53,64 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
  */
 public class TabularOptionInputRendererWithPostBack extends TabularOptionInputRenderer {
 
-	private String destination;
+    private String destination;
 
-	public String getDestination() {
-		return destination;
-	}
+    public String getDestination() {
+        return destination;
+    }
 
-	public void setDestination(String destination) {
-		this.destination = destination;
-	}
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
 
-	@Override
-	protected HtmlComponent renderComponent(Layout layout, Object object, Class type) {
-		HtmlComponent component = super.renderComponent(layout, object, type);
+    @Override
+    protected HtmlComponent renderComponent(Layout layout, Object object, Class type) {
+        HtmlComponent component = super.renderComponent(layout, object, type);
 
-		CheckableTabularLayout checkableLayout = (CheckableTabularLayout) layout;
-		List<HtmlCheckBox> checkboxes = checkableLayout.getCheckBoxes();
+        CheckableTabularLayout checkableLayout = (CheckableTabularLayout) layout;
+        List<HtmlCheckBox> checkboxes = checkableLayout.getCheckBoxes();
 
-		for (HtmlCheckBox checkbox : checkboxes) {
-			checkbox.setOnClick("this.form.postback.value=1; this.form.submit();");
-		}
+        for (HtmlCheckBox checkbox : checkboxes) {
+            checkbox.setOnClick("this.form.postback.value=1; this.form.submit();");
+        }
 
-		HtmlInlineContainer htmlInlineContainer = new HtmlInlineContainer();
-		HtmlHiddenField hiddenField = new HtmlHiddenField();
-		hiddenField.setName("postback");
-		htmlInlineContainer.addChild(hiddenField);
-		htmlInlineContainer.addChild(component);
-		hiddenField.setController(new PostBackController(getDestination()));
-		return htmlInlineContainer;
-	}
+        HtmlInlineContainer htmlInlineContainer = new HtmlInlineContainer();
+        HtmlHiddenField hiddenField = new HtmlHiddenField();
+        hiddenField.setName("postback");
+        htmlInlineContainer.addChild(hiddenField);
+        htmlInlineContainer.addChild(component);
+        hiddenField.setController(new PostBackController(getDestination()));
+        return htmlInlineContainer;
+    }
 
-	private static class PostBackController extends HtmlController {
+    private static class PostBackController extends HtmlController {
 
-		private final String destination;
+        private final String destination;
 
-		public PostBackController(String destination) {
-			this.destination = destination;
-		}
+        public PostBackController(String destination) {
+            this.destination = destination;
+        }
 
-		@Override
-		public void execute(IViewState viewState) {
-			HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getControlledComponent();
+        @Override
+        public void execute(IViewState viewState) {
+            HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getControlledComponent();
 
-			if (component.getValue() != null && component.getValue().length() > 0) {
-				String destinationName = this.destination == null ? "postback" : this.destination;
-				ViewDestination destination = viewState.getDestination(destinationName);
+            if (component.getValue() != null && component.getValue().length() > 0) {
+                String destinationName = this.destination == null ? "postback" : this.destination;
+                ViewDestination destination = viewState.getDestination(destinationName);
 
-				if (destination != null) {
-					viewState.setCurrentDestination(destination);
-				} else {
-					viewState.setCurrentDestination("postBack");
-				}
+                if (destination != null) {
+                    viewState.setCurrentDestination(destination);
+                } else {
+                    viewState.setCurrentDestination("postBack");
+                }
 
-				viewState.setSkipValidation(true);
-			}
+                viewState.setSkipValidation(true);
+            }
 
-			component.setValue(null);
-		}
+            component.setValue(null);
+        }
 
-	}
+    }
 
 }

@@ -11,17 +11,17 @@ import org.apache.struts.action.ActionMapping;
  * @author cfgi
  */
 public interface ExceptionHandler {
-	/**
-	 * This method wil lbe called by the {@link RenderersRequestProcessor} when an exception occurs
-	 * during the processing of a viewstate. Those exceptions normally represent problems when converting
-	 * values or when updating certain object in the application's domain.
-	 * 
-	 * @param request the current request
-	 * @param mapping
-	 * @param input an action forward that maps to the place were the viewstate was created
-	 * @param e the exception that occured
-	 * 
-	 * @return an action forward representing were to go next or <code>null</code> to let struts decide
-	 */
-	public ActionForward processException(HttpServletRequest request, ActionMapping mapping, ActionForward input, Exception e);
+    /**
+     * This method wil lbe called by the {@link RenderersRequestProcessor} when an exception occurs
+     * during the processing of a viewstate. Those exceptions normally represent problems when converting
+     * values or when updating certain object in the application's domain.
+     * 
+     * @param request the current request
+     * @param mapping
+     * @param input an action forward that maps to the place were the viewstate was created
+     * @param e the exception that occured
+     * 
+     * @return an action forward representing were to go next or <code>null</code> to let struts decide
+     */
+    public ActionForward processException(HttpServletRequest request, ActionMapping mapping, ActionForward input, Exception e);
 }

@@ -10,11 +10,11 @@ import org.apache.struts.action.ActionMapping;
 
 class VoidAction extends Action {
 
-	@Override
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return null;
+    @Override
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        return null;
 
-	}
+    }
 
 }

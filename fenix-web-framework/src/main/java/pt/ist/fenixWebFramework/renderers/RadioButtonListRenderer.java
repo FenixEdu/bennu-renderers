@@ -34,231 +34,231 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  * <input type="radio" name="option"/><em>&lt;object C presentation&gt;</em> </form>
  */
 public class RadioButtonListRenderer extends SelectionRenderer {
-	private String format;
+    private String format;
 
-	private String eachClasses;
+    private String eachClasses;
 
-	private String eachStyle;
+    private String eachStyle;
 
-	private String eachSchema;
+    private String eachSchema;
 
-	private String eachLayout;
+    private String eachLayout;
 
-	private boolean saveOptions;
+    private boolean saveOptions;
 
-	private String nullOptionKey;
+    private String nullOptionKey;
 
-	private String nullOptionBundle;
+    private String nullOptionBundle;
 
-	public String getFormat() {
-		return this.format;
-	}
+    public String getFormat() {
+        return this.format;
+    }
 
-	/**
-	 * This allows to specify a presentation format for each object. For more
-	 * details about the format syntaxt check the {@see FormatRenderer}.
-	 * 
-	 * @property
-	 */
-	public void setFormat(String format) {
-		this.format = format;
-	}
+    /**
+     * This allows to specify a presentation format for each object. For more
+     * details about the format syntaxt check the {@see FormatRenderer}.
+     * 
+     * @property
+     */
+    public void setFormat(String format) {
+        this.format = format;
+    }
 
-	/**
-	 * This property allows you to configure the class attribute for each
-	 * object's presentation.
-	 * 
-	 * @property
-	 */
-	public void setEachClasses(String classes) {
-		this.eachClasses = classes;
-	}
+    /**
+     * This property allows you to configure the class attribute for each
+     * object's presentation.
+     * 
+     * @property
+     */
+    public void setEachClasses(String classes) {
+        this.eachClasses = classes;
+    }
 
-	public String getEachClasses() {
-		return this.eachClasses;
-	}
+    public String getEachClasses() {
+        return this.eachClasses;
+    }
 
-	/**
-	 * Allows yout to configure the style attribute for each object's
-	 * presentation.
-	 * 
-	 * @property
-	 */
-	public void setEachStyle(String style) {
-		this.eachStyle = style;
-	}
+    /**
+     * Allows yout to configure the style attribute for each object's
+     * presentation.
+     * 
+     * @property
+     */
+    public void setEachStyle(String style) {
+        this.eachStyle = style;
+    }
 
-	public String getEachStyle() {
-		return this.eachStyle;
-	}
+    public String getEachStyle() {
+        return this.eachStyle;
+    }
 
-	public String getEachLayout() {
-		return eachLayout;
-	}
+    public String getEachLayout() {
+        return eachLayout;
+    }
 
-	/**
-	 * Allows you to choose the layout in wich each object is to be presented.
-	 * 
-	 * @property
-	 */
-	public void setEachLayout(String eachLayout) {
-		this.eachLayout = eachLayout;
-	}
+    /**
+     * Allows you to choose the layout in wich each object is to be presented.
+     * 
+     * @property
+     */
+    public void setEachLayout(String eachLayout) {
+        this.eachLayout = eachLayout;
+    }
 
-	public String getEachSchema() {
-		return eachSchema;
-	}
+    public String getEachSchema() {
+        return eachSchema;
+    }
 
-	/**
-	 * Allows you to specify the schema that should be used when presenting each
-	 * individual object.
-	 * 
-	 * @property
-	 */
-	public void setEachSchema(String eachSchema) {
-		this.eachSchema = eachSchema;
-	}
+    /**
+     * Allows you to specify the schema that should be used when presenting each
+     * individual object.
+     * 
+     * @property
+     */
+    public void setEachSchema(String eachSchema) {
+        this.eachSchema = eachSchema;
+    }
 
-	public boolean isSaveOptions() {
-		return saveOptions;
-	}
+    public boolean isSaveOptions() {
+        return saveOptions;
+    }
 
-	/**
-	 * Allows the possible object list to be persisted between requests, meaning
-	 * that the provider is invoked only once.
-	 * 
-	 * @property
-	 */
-	public void setSaveOptions(boolean saveOptions) {
-		this.saveOptions = saveOptions;
-	}
+    /**
+     * Allows the possible object list to be persisted between requests, meaning
+     * that the provider is invoked only once.
+     * 
+     * @property
+     */
+    public void setSaveOptions(boolean saveOptions) {
+        this.saveOptions = saveOptions;
+    }
 
-	/**
-	 * Allow to add option null. Need to set the property setNullOptionBundle
-	 * 
-	 * @property
-	 */
+    /**
+     * Allow to add option null. Need to set the property setNullOptionBundle
+     * 
+     * @property
+     */
 
-	public void setNullOptionKey(String nullOptionKey) {
-		this.nullOptionKey = nullOptionKey;
-	}
+    public void setNullOptionKey(String nullOptionKey) {
+        this.nullOptionKey = nullOptionKey;
+    }
 
-	public String getNullOptionKey() {
-		return nullOptionKey;
-	}
+    public String getNullOptionKey() {
+        return nullOptionKey;
+    }
 
-	public void setNullOptionBundle(String nullOptionLabel) {
-		this.nullOptionBundle = nullOptionLabel;
-	}
+    public void setNullOptionBundle(String nullOptionLabel) {
+        this.nullOptionBundle = nullOptionLabel;
+    }
 
-	public String getNullOptionBundle() {
-		return nullOptionBundle;
-	}
+    public String getNullOptionBundle() {
+        return nullOptionBundle;
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		return new RadioButtonListLayout();
-	}
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        return new RadioButtonListLayout();
+    }
 
-	class RadioButtonListLayout extends Layout {
+    class RadioButtonListLayout extends Layout {
 
-		@Override
-		public HtmlComponent createComponent(Object object, Class type) {
-			HtmlRadioButtonList listComponent = new HtmlRadioButtonList();
+        @Override
+        public HtmlComponent createComponent(Object object, Class type) {
+            HtmlRadioButtonList listComponent = new HtmlRadioButtonList();
 
-			Schema schema = RenderKit.getInstance().findSchema(getEachSchema());
+            Schema schema = RenderKit.getInstance().findSchema(getEachSchema());
 
-			List<MetaObject> possibleMetaObjects;
+            List<MetaObject> possibleMetaObjects;
 
-			if (hasSavedPossibleMetaObjects()) {
-				possibleMetaObjects = getPossibleMetaObjects();
-			} else {
-				possibleMetaObjects = new ArrayList<MetaObject>();
+            if (hasSavedPossibleMetaObjects()) {
+                possibleMetaObjects = getPossibleMetaObjects();
+            } else {
+                possibleMetaObjects = new ArrayList<MetaObject>();
 
-				for (Object possibility : getPossibleObjects()) {
-					possibleMetaObjects.add(MetaObjectFactory.createObject(possibility, schema));
-				}
-			}
+                for (Object possibility : getPossibleObjects()) {
+                    possibleMetaObjects.add(MetaObjectFactory.createObject(possibility, schema));
+                }
+            }
 
-			for (MetaObject metaObject : possibleMetaObjects) {
-				Object obj = metaObject.getObject();
-				MetaObjectKey key = metaObject.getKey();
+            for (MetaObject metaObject : possibleMetaObjects) {
+                Object obj = metaObject.getObject();
+                MetaObjectKey key = metaObject.getKey();
 
-				String layout = getEachLayout();
+                String layout = getEachLayout();
 
-				HtmlLabel label = new HtmlLabel();
+                HtmlLabel label = new HtmlLabel();
 
-				if (StringUtils.isEmpty(layout)) {
-					if (Enum.class.isAssignableFrom(obj.getClass()) && StringUtils.isEmpty(getFormat())) {
-						fillBodyForRadioLabel(metaObject, obj, layout, label);
-					} else {
-						label.setText(getObjectLabel(obj));
-					}
-				} else {
-					fillBodyForRadioLabel(metaObject, obj, layout, label);
-				}
+                if (StringUtils.isEmpty(layout)) {
+                    if (Enum.class.isAssignableFrom(obj.getClass()) && StringUtils.isEmpty(getFormat())) {
+                        fillBodyForRadioLabel(metaObject, obj, layout, label);
+                    } else {
+                        label.setText(getObjectLabel(obj));
+                    }
+                } else {
+                    fillBodyForRadioLabel(metaObject, obj, layout, label);
+                }
 
-				label.setStyle(eachStyle);
-				label.setClasses(eachClasses);
+                label.setStyle(eachStyle);
+                label.setClasses(eachClasses);
 
-				String optionValue =
-						getConverter() instanceof BiDirectionalConverter ? ((BiDirectionalConverter) getConverter())
-								.deserialize(obj) : key.toString();
+                String optionValue =
+                        getConverter() instanceof BiDirectionalConverter ? ((BiDirectionalConverter) getConverter())
+                                .deserialize(obj) : key.toString();
 
-				HtmlRadioButton radioButton = listComponent.addOption(label, optionValue);
-				label.setFor(radioButton);
+                HtmlRadioButton radioButton = listComponent.addOption(label, optionValue);
+                label.setFor(radioButton);
 
-				if (object != null && object.equals(obj)) {
-					radioButton.setChecked(true);
-				}
-			}
+                if (object != null && object.equals(obj)) {
+                    radioButton.setChecked(true);
+                }
+            }
 
-			if (!StringUtils.isEmpty(getNullOptionKey())) {
-				HtmlLabel label = new HtmlLabel();
-				label.setText(RenderUtils.getResourceString(getNullOptionBundle(), getNullOptionKey()));
-				HtmlRadioButton addOption = listComponent.addOption(label, null);
-				if (object == null) {
-					addOption.setChecked(true);
-				}
-			}
+            if (!StringUtils.isEmpty(getNullOptionKey())) {
+                HtmlLabel label = new HtmlLabel();
+                label.setText(RenderUtils.getResourceString(getNullOptionBundle(), getNullOptionKey()));
+                HtmlRadioButton addOption = listComponent.addOption(label, null);
+                if (object == null) {
+                    addOption.setChecked(true);
+                }
+            }
 
-			if (isSaveOptions()) {
-				savePossibleMetaObjects(possibleMetaObjects);
-			}
+            if (isSaveOptions()) {
+                savePossibleMetaObjects(possibleMetaObjects);
+            }
 
-			listComponent.setConverter(new SingleSelectOptionConverter(possibleMetaObjects, getConverter()));
-			listComponent.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
+            listComponent.setConverter(new SingleSelectOptionConverter(possibleMetaObjects, getConverter()));
+            listComponent.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 
-			return listComponent;
-		}
+            return listComponent;
+        }
 
-		private void fillBodyForRadioLabel(MetaObject metaObject, Object obj, String layout, HtmlLabel label) {
-			PresentationContext newContext = getContext().createSubContext(metaObject);
-			newContext.setLayout(layout);
-			newContext.setRenderMode(RenderMode.getMode("output"));
+        private void fillBodyForRadioLabel(MetaObject metaObject, Object obj, String layout, HtmlLabel label) {
+            PresentationContext newContext = getContext().createSubContext(metaObject);
+            newContext.setLayout(layout);
+            newContext.setRenderMode(RenderMode.getMode("output"));
 
-			RenderKit kit = RenderKit.getInstance();
-			HtmlComponent component = kit.render(newContext, obj);
-			label.setBody(component);
-		}
+            RenderKit kit = RenderKit.getInstance();
+            HtmlComponent component = kit.render(newContext, obj);
+            label.setBody(component);
+        }
 
-		private boolean hasSavedPossibleMetaObjects() {
-			return getInputContext().getViewState().getLocalAttribute("options") != null;
-		}
+        private boolean hasSavedPossibleMetaObjects() {
+            return getInputContext().getViewState().getLocalAttribute("options") != null;
+        }
 
-		private List<MetaObject> getPossibleMetaObjects() {
-			return (List<MetaObject>) getInputContext().getViewState().getLocalAttribute("options");
-		}
+        private List<MetaObject> getPossibleMetaObjects() {
+            return (List<MetaObject>) getInputContext().getViewState().getLocalAttribute("options");
+        }
 
-		private void savePossibleMetaObjects(List<MetaObject> possibleMetaObjects) {
-			getInputContext().getViewState().setLocalAttribute("options", possibleMetaObjects);
-		}
+        private void savePossibleMetaObjects(List<MetaObject> possibleMetaObjects) {
+            getInputContext().getViewState().setLocalAttribute("options", possibleMetaObjects);
+        }
 
-		protected String getObjectLabel(Object object) {
-			if (getFormat() != null) {
-				return RenderUtils.getFormattedProperties(getFormat(), object);
-			}
-			return String.valueOf(object);
-		}
-	}
+        protected String getObjectLabel(Object object) {
+            if (getFormat() != null) {
+                return RenderUtils.getFormattedProperties(getFormat(), object);
+            }
+            return String.valueOf(object);
+        }
+    }
 }

@@ -64,184 +64,184 @@ import java.util.Locale;
  */
 public class LongValidator extends AbstractNumberValidator {
 
-	private static final LongValidator VALIDATOR = new LongValidator();
+    private static final LongValidator VALIDATOR = new LongValidator();
 
-	/**
-	 * Return a singleton instance of this validator.
-	 * 
-	 * @return A singleton instance of the LongValidator.
-	 */
-	public static LongValidator getInstance() {
-		return VALIDATOR;
-	}
+    /**
+     * Return a singleton instance of this validator.
+     * 
+     * @return A singleton instance of the LongValidator.
+     */
+    public static LongValidator getInstance() {
+        return VALIDATOR;
+    }
 
-	/**
-	 * Construct a <i>strict</i> instance.
-	 */
-	public LongValidator() {
-		this(true, STANDARD_FORMAT);
-	}
+    /**
+     * Construct a <i>strict</i> instance.
+     */
+    public LongValidator() {
+        this(true, STANDARD_FORMAT);
+    }
 
-	/**
-	 * <p>
-	 * Construct an instance with the specified strict setting and format type.
-	 * </p>
-	 * 
-	 * <p>
-	 * The <code>formatType</code> specified what type of <code>NumberFormat</code> is created - valid types are:
-	 * </p>
-	 * <ul>
-	 * <li>AbstractNumberValidator.STANDARD_FORMAT -to create <i>standard</i> number formats (the default).</li>
-	 * <li>AbstractNumberValidator.CURRENCY_FORMAT -to create <i>currency</i> number formats.</li>
-	 * <li>AbstractNumberValidator.PERCENT_FORMAT -to create <i>percent</i> number formats (the default).</li>
-	 * </ul>
-	 * 
-	 * @param strict <code>true</code> if strict <code>Format</code> parsing should be used.
-	 * @param formatType The <code>NumberFormat</code> type to
-	 *            create for validation, default is STANDARD_FORMAT.
-	 */
-	public LongValidator(boolean strict, int formatType) {
-		super(strict, formatType, false);
-	}
+    /**
+     * <p>
+     * Construct an instance with the specified strict setting and format type.
+     * </p>
+     * 
+     * <p>
+     * The <code>formatType</code> specified what type of <code>NumberFormat</code> is created - valid types are:
+     * </p>
+     * <ul>
+     * <li>AbstractNumberValidator.STANDARD_FORMAT -to create <i>standard</i> number formats (the default).</li>
+     * <li>AbstractNumberValidator.CURRENCY_FORMAT -to create <i>currency</i> number formats.</li>
+     * <li>AbstractNumberValidator.PERCENT_FORMAT -to create <i>percent</i> number formats (the default).</li>
+     * </ul>
+     * 
+     * @param strict <code>true</code> if strict <code>Format</code> parsing should be used.
+     * @param formatType The <code>NumberFormat</code> type to
+     *            create for validation, default is STANDARD_FORMAT.
+     */
+    public LongValidator(boolean strict, int formatType) {
+        super(strict, formatType, false);
+    }
 
-	/**
-	 * <p>
-	 * Validate/convert a <code>Long</code> using the default <code>Locale</code>.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @return The parsed <code>Long</code> if valid or <code>null</code> if invalid.
-	 */
-	public Long validate(String value) {
-		return (Long) parse(value, (String) null, (Locale) null);
-	}
+    /**
+     * <p>
+     * Validate/convert a <code>Long</code> using the default <code>Locale</code>.
+     * 
+     * @param value The value validation is being performed on.
+     * @return The parsed <code>Long</code> if valid or <code>null</code> if invalid.
+     */
+    public Long validate(String value) {
+        return (Long) parse(value, (String) null, (Locale) null);
+    }
 
-	/**
-	 * <p>
-	 * Validate/convert a <code>Long</code> using the specified <i>pattern</i>.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @param pattern The pattern used to validate the value against.
-	 * @return The parsed <code>Long</code> if valid or <code>null</code> if invalid.
-	 */
-	public Long validate(String value, String pattern) {
-		return (Long) parse(value, pattern, (Locale) null);
-	}
+    /**
+     * <p>
+     * Validate/convert a <code>Long</code> using the specified <i>pattern</i>.
+     * 
+     * @param value The value validation is being performed on.
+     * @param pattern The pattern used to validate the value against.
+     * @return The parsed <code>Long</code> if valid or <code>null</code> if invalid.
+     */
+    public Long validate(String value, String pattern) {
+        return (Long) parse(value, pattern, (Locale) null);
+    }
 
-	/**
-	 * <p>
-	 * Validate/convert a <code>Long</code> using the specified <code>Locale</code>.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @param locale The locale to use for the number format, system default if null.
-	 * @return The parsed <code>Long</code> if valid or <code>null</code> if invalid.
-	 */
-	public Long validate(String value, Locale locale) {
-		return (Long) parse(value, (String) null, locale);
-	}
+    /**
+     * <p>
+     * Validate/convert a <code>Long</code> using the specified <code>Locale</code>.
+     * 
+     * @param value The value validation is being performed on.
+     * @param locale The locale to use for the number format, system default if null.
+     * @return The parsed <code>Long</code> if valid or <code>null</code> if invalid.
+     */
+    public Long validate(String value, Locale locale) {
+        return (Long) parse(value, (String) null, locale);
+    }
 
-	/**
-	 * <p>
-	 * Validate/convert a <code>Long</code> using the specified pattern and/ or <code>Locale</code>.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @param pattern The pattern used to validate the value against, or the
-	 *            default for the <code>Locale</code> if <code>null</code>.
-	 * @param locale The locale to use for the date format, system default if null.
-	 * @return The parsed <code>Long</code> if valid or <code>null</code> if invalid.
-	 */
-	public Long validate(String value, String pattern, Locale locale) {
-		return (Long) parse(value, pattern, locale);
-	}
+    /**
+     * <p>
+     * Validate/convert a <code>Long</code> using the specified pattern and/ or <code>Locale</code>.
+     * 
+     * @param value The value validation is being performed on.
+     * @param pattern The pattern used to validate the value against, or the
+     *            default for the <code>Locale</code> if <code>null</code>.
+     * @param locale The locale to use for the date format, system default if null.
+     * @return The parsed <code>Long</code> if valid or <code>null</code> if invalid.
+     */
+    public Long validate(String value, String pattern, Locale locale) {
+        return (Long) parse(value, pattern, locale);
+    }
 
-	/**
-	 * Check if the value is within a specified range.
-	 * 
-	 * @param value The <code>Number</code> value to check.
-	 * @param min The minimum value of the range.
-	 * @param max The maximum value of the range.
-	 * @return <code>true</code> if the value is within the
-	 *         specified range.
-	 */
-	public boolean isInRange(long value, long min, long max) {
-		return (value >= min && value <= max);
-	}
+    /**
+     * Check if the value is within a specified range.
+     * 
+     * @param value The <code>Number</code> value to check.
+     * @param min The minimum value of the range.
+     * @param max The maximum value of the range.
+     * @return <code>true</code> if the value is within the
+     *         specified range.
+     */
+    public boolean isInRange(long value, long min, long max) {
+        return (value >= min && value <= max);
+    }
 
-	/**
-	 * Check if the value is within a specified range.
-	 * 
-	 * @param value The <code>Number</code> value to check.
-	 * @param min The minimum value of the range.
-	 * @param max The maximum value of the range.
-	 * @return <code>true</code> if the value is within the
-	 *         specified range.
-	 */
-	public boolean isInRange(Long value, long min, long max) {
-		return isInRange(value.longValue(), min, max);
-	}
+    /**
+     * Check if the value is within a specified range.
+     * 
+     * @param value The <code>Number</code> value to check.
+     * @param min The minimum value of the range.
+     * @param max The maximum value of the range.
+     * @return <code>true</code> if the value is within the
+     *         specified range.
+     */
+    public boolean isInRange(Long value, long min, long max) {
+        return isInRange(value.longValue(), min, max);
+    }
 
-	/**
-	 * Check if the value is greater than or equal to a minimum.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @param min The minimum value.
-	 * @return <code>true</code> if the value is greater than
-	 *         or equal to the minimum.
-	 */
-	public boolean minValue(long value, long min) {
-		return (value >= min);
-	}
+    /**
+     * Check if the value is greater than or equal to a minimum.
+     * 
+     * @param value The value validation is being performed on.
+     * @param min The minimum value.
+     * @return <code>true</code> if the value is greater than
+     *         or equal to the minimum.
+     */
+    public boolean minValue(long value, long min) {
+        return (value >= min);
+    }
 
-	/**
-	 * Check if the value is greater than or equal to a minimum.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @param min The minimum value.
-	 * @return <code>true</code> if the value is greater than
-	 *         or equal to the minimum.
-	 */
-	public boolean minValue(Long value, long min) {
-		return minValue(value.longValue(), min);
-	}
+    /**
+     * Check if the value is greater than or equal to a minimum.
+     * 
+     * @param value The value validation is being performed on.
+     * @param min The minimum value.
+     * @return <code>true</code> if the value is greater than
+     *         or equal to the minimum.
+     */
+    public boolean minValue(Long value, long min) {
+        return minValue(value.longValue(), min);
+    }
 
-	/**
-	 * Check if the value is less than or equal to a maximum.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @param max The maximum value.
-	 * @return <code>true</code> if the value is less than
-	 *         or equal to the maximum.
-	 */
-	public boolean maxValue(long value, long max) {
-		return (value <= max);
-	}
+    /**
+     * Check if the value is less than or equal to a maximum.
+     * 
+     * @param value The value validation is being performed on.
+     * @param max The maximum value.
+     * @return <code>true</code> if the value is less than
+     *         or equal to the maximum.
+     */
+    public boolean maxValue(long value, long max) {
+        return (value <= max);
+    }
 
-	/**
-	 * Check if the value is less than or equal to a maximum.
-	 * 
-	 * @param value The value validation is being performed on.
-	 * @param max The maximum value.
-	 * @return <code>true</code> if the value is less than
-	 *         or equal to the maximum.
-	 */
-	public boolean maxValue(Long value, long max) {
-		return maxValue(value.longValue(), max);
-	}
+    /**
+     * Check if the value is less than or equal to a maximum.
+     * 
+     * @param value The value validation is being performed on.
+     * @param max The maximum value.
+     * @return <code>true</code> if the value is less than
+     *         or equal to the maximum.
+     */
+    public boolean maxValue(Long value, long max) {
+        return maxValue(value.longValue(), max);
+    }
 
-	/**
-	 * Convert the parsed value to a <code>Long</code>.
-	 * 
-	 * @param value The parsed <code>Number</code> object created.
-	 * @param formatter The Format used to parse the value with.
-	 * @return The parsed <code>Number</code> converted to a <code>Long</code>.
-	 */
-	@Override
-	protected Object processParsedValue(Object value, Format formatter) {
+    /**
+     * Convert the parsed value to a <code>Long</code>.
+     * 
+     * @param value The parsed <code>Number</code> object created.
+     * @param formatter The Format used to parse the value with.
+     * @return The parsed <code>Number</code> converted to a <code>Long</code>.
+     */
+    @Override
+    protected Object processParsedValue(Object value, Format formatter) {
 
-		if (value instanceof Long) {
-			return value;
-		} else {
-			return new Long(((Number) value).longValue());
-		}
+        if (value instanceof Long) {
+            return value;
+        } else {
+            return new Long(((Number) value).longValue());
+        }
 
-	}
+    }
 }

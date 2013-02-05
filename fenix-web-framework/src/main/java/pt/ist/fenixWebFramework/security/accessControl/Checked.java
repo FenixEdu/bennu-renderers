@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Target({ METHOD, CONSTRUCTOR })
 public @interface Checked {
-	String value();
+    String value();
 }

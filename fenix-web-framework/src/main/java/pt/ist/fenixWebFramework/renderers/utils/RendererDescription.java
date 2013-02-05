@@ -11,38 +11,38 @@ import pt.ist.fenixWebFramework.renderers.Renderer;
  * @author cfgi
  */
 public class RendererDescription {
-	private Class<? extends Renderer> renderer;
+    private Class<? extends Renderer> renderer;
 
-	private Properties properties;
+    private Properties properties;
 
-	public RendererDescription(Class<Renderer> renderer, Properties defaultProperties) {
-		this.renderer = renderer;
-		this.properties = defaultProperties;
-	}
+    public RendererDescription(Class<Renderer> renderer, Properties defaultProperties) {
+        this.renderer = renderer;
+        this.properties = defaultProperties;
+    }
 
-	public Properties getProperties() {
-		return properties;
-	}
+    public Properties getProperties() {
+        return properties;
+    }
 
-	public Class<? extends Renderer> getRenderer() {
-		return renderer;
-	}
+    public Class<? extends Renderer> getRenderer() {
+        return renderer;
+    }
 
-	public Renderer createRenderer() {
-		Renderer renderer = null;
+    public Renderer createRenderer() {
+        Renderer renderer = null;
 
-		try {
-			renderer = getRenderer().newInstance();
+        try {
+            renderer = getRenderer().newInstance();
 
-			if (properties != null) {
-				RenderUtils.setProperties(renderer, properties);
-			}
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+            if (properties != null) {
+                RenderUtils.setProperties(renderer, properties);
+            }
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
-		return renderer;
-	}
+        return renderer;
+    }
 }

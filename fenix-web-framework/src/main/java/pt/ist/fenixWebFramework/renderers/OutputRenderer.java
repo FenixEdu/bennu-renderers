@@ -9,7 +9,7 @@ import pt.ist.fenixWebFramework.renderers.contexts.OutputContext;
  */
 public abstract class OutputRenderer extends Renderer {
 
-	public OutputContext getOutputContext() {
-		return (OutputContext) getContext();
-	}
+    public OutputContext getOutputContext() {
+        return (OutputContext) getContext();
+    }
 }

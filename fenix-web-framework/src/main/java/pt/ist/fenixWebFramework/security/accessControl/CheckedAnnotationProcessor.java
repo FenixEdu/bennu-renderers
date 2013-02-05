@@ -23,62 +23,62 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 @SupportedAnnotationTypes({ "pt.ist.fenixWebFramework.security.accessControl.Checked" })
 public class CheckedAnnotationProcessor extends AbstractProcessor {
 
-	static final String LOG_FILENAME = ".checkedAnnotationLog";
-	static final String FIELD_SEPERATOR = "\t";
-	static final String ENTRY_SEPERATOR = "\n";
+    static final String LOG_FILENAME = ".checkedAnnotationLog";
+    static final String FIELD_SEPERATOR = "\t";
+    static final String ENTRY_SEPERATOR = "\n";
 
-	@Override
-	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    @Override
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-		FileWriter fileWriter = null;
-		try {
-			fileWriter = new FileWriter(LOG_FILENAME, true);
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(LOG_FILENAME, true);
 
-			final Set<Element> annotatedElements = (Set<Element>) roundEnv.getElementsAnnotatedWith(Checked.class);
+            final Set<Element> annotatedElements = (Set<Element>) roundEnv.getElementsAnnotatedWith(Checked.class);
 
-			for (final Element element : annotatedElements) {
-				if (element instanceof MethodSymbol) {
-					final MethodSymbol methodSymbol = (MethodSymbol) element;
-					final ClassSymbol classSymbol = (ClassSymbol) methodSymbol.getEnclosingElement();
-					final String className = classSymbol.getQualifiedName().toString();
-					final String annotationConstantValue = getAnnotationConstantValue(element);
+            for (final Element element : annotatedElements) {
+                if (element instanceof MethodSymbol) {
+                    final MethodSymbol methodSymbol = (MethodSymbol) element;
+                    final ClassSymbol classSymbol = (ClassSymbol) methodSymbol.getEnclosingElement();
+                    final String className = classSymbol.getQualifiedName().toString();
+                    final String annotationConstantValue = getAnnotationConstantValue(element);
 
-					fileWriter.write(className);
-					fileWriter.write(FIELD_SEPERATOR);
-					fileWriter.write(methodSymbol.getSimpleName().toString());
-					fileWriter.write(FIELD_SEPERATOR);
-					fileWriter.write(annotationConstantValue);
-					fileWriter.write(ENTRY_SEPERATOR);
-				} else {
-					System.out.println("Element: " + element);
-				}
-			}
-		} catch (IOException e) {
-			throw new Error(e);
-		} finally {
-			if (fileWriter != null) {
-				try {
-					fileWriter.close();
-				} catch (IOException e) {
-					throw new Error(e);
-				}
-			}
-		}
+                    fileWriter.write(className);
+                    fileWriter.write(FIELD_SEPERATOR);
+                    fileWriter.write(methodSymbol.getSimpleName().toString());
+                    fileWriter.write(FIELD_SEPERATOR);
+                    fileWriter.write(annotationConstantValue);
+                    fileWriter.write(ENTRY_SEPERATOR);
+                } else {
+                    System.out.println("Element: " + element);
+                }
+            }
+        } catch (IOException e) {
+            throw new Error(e);
+        } finally {
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException e) {
+                    throw new Error(e);
+                }
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	private String getAnnotationConstantValue(final Element element) {
-		for (final AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
-			if (annotationMirror.getAnnotationType().asElement().toString().equals(Checked.class.getName())) {
-				for (final Entry entry : annotationMirror.getElementValues().entrySet()) {
-					//final MethodSymbol = entry.getKey();
-					final Constant constant = (Constant) entry.getValue();
-					return (String) constant.getValue();
-				}
-			}
-		}
-		return null;
-	}
+    private String getAnnotationConstantValue(final Element element) {
+        for (final AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
+            if (annotationMirror.getAnnotationType().asElement().toString().equals(Checked.class.getName())) {
+                for (final Entry entry : annotationMirror.getElementValues().entrySet()) {
+                    //final MethodSymbol = entry.getKey();
+                    final Constant constant = (Constant) entry.getValue();
+                    return (String) constant.getValue();
+                }
+            }
+        }
+        return null;
+    }
 
 }

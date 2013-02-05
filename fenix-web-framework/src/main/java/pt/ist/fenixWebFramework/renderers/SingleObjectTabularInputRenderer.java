@@ -19,20 +19,20 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
  */
 public class SingleObjectTabularInputRenderer extends TabularInputRenderer {
 
-	@Override
-	public HtmlComponent render(Object object, Class type) {
-		if (object instanceof Collection) {
-			return super.render(object, type);
-		} else {
-			List list = new ArrayList();
-			list.add(object);
+    @Override
+    public HtmlComponent render(Object object, Class type) {
+        if (object instanceof Collection) {
+            return super.render(object, type);
+        } else {
+            List list = new ArrayList();
+            list.add(object);
 
-			MetaObjectCollection multipleMetaObject = MetaObjectFactory.createObjectCollection();
-			multipleMetaObject.add(getInputContext().getMetaObject());
+            MetaObjectCollection multipleMetaObject = MetaObjectFactory.createObjectCollection();
+            multipleMetaObject.add(getInputContext().getMetaObject());
 
-			getInputContext().setMetaObject(multipleMetaObject);
+            getInputContext().setMetaObject(multipleMetaObject);
 
-			return super.render(list, list.getClass());
-		}
-	}
+            return super.render(list, list.getClass());
+        }
+    }
 }

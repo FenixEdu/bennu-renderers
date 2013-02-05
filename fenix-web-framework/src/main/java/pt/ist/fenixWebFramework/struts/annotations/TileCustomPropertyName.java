@@ -9,10 +9,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TileCustomPropertyName {
 
-	/**
-	 * Allows specifying that a Tile parameter name does not match correctly the
-	 * property that it is mapped to.
-	 */
-	String value();
+    /**
+     * Allows specifying that a Tile parameter name does not match correctly the
+     * property that it is mapped to.
+     */
+    String value();
 
 }

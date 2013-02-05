@@ -6,107 +6,107 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlLabel extends HtmlComponent {
 
-	private String text;
-	private HtmlComponent body;
+    private String text;
+    private HtmlComponent body;
 
-	private String forName;
-	private String onBlur;
-	private String onFocus;
-	private HtmlFormComponent forComponent;
+    private String forName;
+    private String onBlur;
+    private String onFocus;
+    private HtmlFormComponent forComponent;
 
-	public HtmlLabel() {
-		super();
-	}
+    public HtmlLabel() {
+        super();
+    }
 
-	public HtmlLabel(String text) {
-		super();
+    public HtmlLabel(String text) {
+        super();
 
-		setText(text);
-	}
+        setText(text);
+    }
 
-	public String getText() {
-		return this.text;
-	}
+    public String getText() {
+        return this.text;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	public HtmlComponent getBody() {
-		return this.body;
-	}
+    public HtmlComponent getBody() {
+        return this.body;
+    }
 
-	public void setBody(HtmlComponent body) {
-		this.body = body;
-	}
+    public void setBody(HtmlComponent body) {
+        this.body = body;
+    }
 
-	public String getFor() {
-		return this.forName;
-	}
+    public String getFor() {
+        return this.forName;
+    }
 
-	public void setFor(String forName) {
-		this.forName = forName;
-	}
+    public void setFor(String forName) {
+        this.forName = forName;
+    }
 
-	public void setFor(HtmlFormComponent component) {
-		this.forComponent = component;
-	}
+    public void setFor(HtmlFormComponent component) {
+        this.forComponent = component;
+    }
 
-	protected HtmlFormComponent getForComponent() {
-		return forComponent;
-	}
+    protected HtmlFormComponent getForComponent() {
+        return forComponent;
+    }
 
-	protected void setForComponent(HtmlFormComponent forComponent) {
-		this.forComponent = forComponent;
-	}
+    protected void setForComponent(HtmlFormComponent forComponent) {
+        this.forComponent = forComponent;
+    }
 
-	public String getOnBlur() {
-		return this.onBlur;
-	}
+    public String getOnBlur() {
+        return this.onBlur;
+    }
 
-	public void setOnBlur(String onBlur) {
-		this.onBlur = onBlur;
-	}
+    public void setOnBlur(String onBlur) {
+        this.onBlur = onBlur;
+    }
 
-	public String getOnFocus() {
-		return this.onFocus;
-	}
+    public String getOnFocus() {
+        return this.onFocus;
+    }
 
-	public void setOnFocus(String onFocus) {
-		this.onFocus = onFocus;
-	}
+    public void setOnFocus(String onFocus) {
+        this.onFocus = onFocus;
+    }
 
-	@Override
-	public HtmlTag getOwnTag(PageContext context) {
-		HtmlTag tag = super.getOwnTag(context);
+    @Override
+    public HtmlTag getOwnTag(PageContext context) {
+        HtmlTag tag = super.getOwnTag(context);
 
-		tag.setName("label");
+        tag.setName("label");
 
-		tag.setAttribute("for", calculateFor());
-		tag.setAttribute("onblur", getOnBlur());
-		tag.setAttribute("onfocus", getOnFocus());
+        tag.setAttribute("for", calculateFor());
+        tag.setAttribute("onblur", getOnBlur());
+        tag.setAttribute("onfocus", getOnFocus());
 
-		if (getText() != null) {
-			tag.setText(getText());
-		}
+        if (getText() != null) {
+            tag.setText(getText());
+        }
 
-		if (getBody() != null) {
-			tag.addChild(getBody().getOwnTag(context));
-		}
+        if (getBody() != null) {
+            tag.addChild(getBody().getOwnTag(context));
+        }
 
-		return tag;
-	}
+        return tag;
+    }
 
-	private String calculateFor() {
-		if (getFor() != null) {
-			return getFor();
-		} else {
-			if (getForComponent() != null) {
-				return getForComponent().getId();
-			}
-		}
+    private String calculateFor() {
+        if (getFor() != null) {
+            return getFor();
+        } else {
+            if (getForComponent() != null) {
+                return getForComponent().getId();
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 }

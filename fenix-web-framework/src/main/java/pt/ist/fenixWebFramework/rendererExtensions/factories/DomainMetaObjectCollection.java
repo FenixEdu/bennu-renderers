@@ -9,18 +9,18 @@ import pt.ist.fenixWebFramework.services.ServicePredicate;
 
 public class DomainMetaObjectCollection extends MetaObjectCollection {
 
-	@Override
-	public void commit() {
-		final List<MetaObject> metaObjects = getAllMetaObjects();
-		final ServicePredicate servicePredicate = new ServicePredicate() {
-			@Override
-			public void execute() {
-				for (MetaObject object : metaObjects) {
-					object.commit();
-				}
-			}
-		};
-		ServiceManager.execute(servicePredicate);
-	}
+    @Override
+    public void commit() {
+        final List<MetaObject> metaObjects = getAllMetaObjects();
+        final ServicePredicate servicePredicate = new ServicePredicate() {
+            @Override
+            public void execute() {
+                for (MetaObject object : metaObjects) {
+                    object.commit();
+                }
+            }
+        };
+        ServiceManager.execute(servicePredicate);
+    }
 
 }

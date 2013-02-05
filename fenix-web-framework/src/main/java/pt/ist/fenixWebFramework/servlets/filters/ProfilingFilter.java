@@ -14,40 +14,40 @@ import org.apache.log4j.Logger;
 
 public class ProfilingFilter implements Filter {
 
-	private final Logger logger = Logger.getLogger("pt.ist.fenixWebFramework.servlets.filters.ProfilingFilter");
+    private final Logger logger = Logger.getLogger("pt.ist.fenixWebFramework.servlets.filters.ProfilingFilter");
 
-	@Override
-	public void init(final FilterConfig arg0) throws ServletException {
-	}
+    @Override
+    public void init(final FilterConfig arg0) throws ServletException {
+    }
 
-	@Override
-	public void destroy() {
-	}
+    @Override
+    public void destroy() {
+    }
 
-	@Override
-	public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
-			throws IOException, ServletException {
-		final HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-		final String uri = httpServletRequest.getRequestURI();
+    @Override
+    public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
+            throws IOException, ServletException {
+        final HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        final String uri = httpServletRequest.getRequestURI();
 
-		final long start = System.currentTimeMillis();
-		try {
-			filterChain.doFilter(servletRequest, servletResponse);
-		} finally {
-			final long end = System.currentTimeMillis();
-			log(uri, start, end);
-		}
-	}
+        final long start = System.currentTimeMillis();
+        try {
+            filterChain.doFilter(servletRequest, servletResponse);
+        } finally {
+            final long end = System.currentTimeMillis();
+            log(uri, start, end);
+        }
+    }
 
-	protected void log(final String uri, final long start, final long end) {
-		final long time = end - start;
+    protected void log(final String uri, final long start, final long end) {
+        final long time = end - start;
 
-		final StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("[");
-		stringBuilder.append(time);
-		stringBuilder.append("ms] - ");
-		stringBuilder.append(uri);
-		logger.info(stringBuilder.toString());
-	}
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[");
+        stringBuilder.append(time);
+        stringBuilder.append("ms] - ");
+        stringBuilder.append(uri);
+        logger.info(stringBuilder.toString());
+    }
 
 }

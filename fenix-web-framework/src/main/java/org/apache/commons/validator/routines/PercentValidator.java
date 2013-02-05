@@ -54,81 +54,81 @@ import java.text.Format;
  */
 public class PercentValidator extends BigDecimalValidator {
 
-	private static final PercentValidator VALIDATOR = new PercentValidator();
+    private static final PercentValidator VALIDATOR = new PercentValidator();
 
-	/** DecimalFormat's percent (thousand multiplier) symbol */
-	private static final char PERCENT_SYMBOL = '%';
+    /** DecimalFormat's percent (thousand multiplier) symbol */
+    private static final char PERCENT_SYMBOL = '%';
 
-	private static final BigDecimal POINT_ZERO_ONE = new BigDecimal("0.01");
+    private static final BigDecimal POINT_ZERO_ONE = new BigDecimal("0.01");
 
-	/**
-	 * Return a singleton instance of this validator.
-	 * 
-	 * @return A singleton instance of the PercentValidator.
-	 */
-	public static BigDecimalValidator getInstance() {
-		return VALIDATOR;
-	}
+    /**
+     * Return a singleton instance of this validator.
+     * 
+     * @return A singleton instance of the PercentValidator.
+     */
+    public static BigDecimalValidator getInstance() {
+        return VALIDATOR;
+    }
 
-	/**
-	 * Construct a <i>strict</i> instance.
-	 */
-	public PercentValidator() {
-		this(true);
-	}
+    /**
+     * Construct a <i>strict</i> instance.
+     */
+    public PercentValidator() {
+        this(true);
+    }
 
-	/**
-	 * Construct an instance with the specified strict setting.
-	 * 
-	 * @param strict <code>true</code> if strict <code>Format</code> parsing should be used.
-	 */
-	public PercentValidator(boolean strict) {
-		super(strict, PERCENT_FORMAT, true);
-	}
+    /**
+     * Construct an instance with the specified strict setting.
+     * 
+     * @param strict <code>true</code> if strict <code>Format</code> parsing should be used.
+     */
+    public PercentValidator(boolean strict) {
+        super(strict, PERCENT_FORMAT, true);
+    }
 
-	/**
-	 * <p>
-	 * Parse the value with the specified <code>Format</code>.
-	 * </p>
-	 * 
-	 * <p>
-	 * This implementation is lenient whether the currency symbol is present or not. The default <code>NumberFormat</code>
-	 * behaviour is for the parsing to "fail" if the currency symbol is missing. This method re-parses with a format without the
-	 * currency symbol if it fails initially.
-	 * </p>
-	 * 
-	 * @param value The value to be parsed.
-	 * @param formatter The Format to parse the value with.
-	 * @return The parsed value if valid or <code>null</code> if invalid.
-	 */
-	@Override
-	protected Object parse(String value, Format formatter) {
+    /**
+     * <p>
+     * Parse the value with the specified <code>Format</code>.
+     * </p>
+     * 
+     * <p>
+     * This implementation is lenient whether the currency symbol is present or not. The default <code>NumberFormat</code>
+     * behaviour is for the parsing to "fail" if the currency symbol is missing. This method re-parses with a format without the
+     * currency symbol if it fails initially.
+     * </p>
+     * 
+     * @param value The value to be parsed.
+     * @param formatter The Format to parse the value with.
+     * @return The parsed value if valid or <code>null</code> if invalid.
+     */
+    @Override
+    protected Object parse(String value, Format formatter) {
 
-		// Initial parse of the value
-		BigDecimal parsedValue = (BigDecimal) super.parse(value, formatter);
-		if (parsedValue != null || !(formatter instanceof DecimalFormat)) {
-			return parsedValue;
-		}
+        // Initial parse of the value
+        BigDecimal parsedValue = (BigDecimal) super.parse(value, formatter);
+        if (parsedValue != null || !(formatter instanceof DecimalFormat)) {
+            return parsedValue;
+        }
 
-		// Re-parse using a pattern without the percent symbol
-		DecimalFormat decimalFormat = (DecimalFormat) formatter;
-		String pattern = decimalFormat.toPattern();
-		if (pattern.indexOf(PERCENT_SYMBOL) >= 0) {
-			StringBuffer buffer = new StringBuffer(pattern.length());
-			for (int i = 0; i < pattern.length(); i++) {
-				if (pattern.charAt(i) != PERCENT_SYMBOL) {
-					buffer.append(pattern.charAt(i));
-				}
-			}
-			decimalFormat.applyPattern(buffer.toString());
-			parsedValue = (BigDecimal) super.parse(value, decimalFormat);
+        // Re-parse using a pattern without the percent symbol
+        DecimalFormat decimalFormat = (DecimalFormat) formatter;
+        String pattern = decimalFormat.toPattern();
+        if (pattern.indexOf(PERCENT_SYMBOL) >= 0) {
+            StringBuffer buffer = new StringBuffer(pattern.length());
+            for (int i = 0; i < pattern.length(); i++) {
+                if (pattern.charAt(i) != PERCENT_SYMBOL) {
+                    buffer.append(pattern.charAt(i));
+                }
+            }
+            decimalFormat.applyPattern(buffer.toString());
+            parsedValue = (BigDecimal) super.parse(value, decimalFormat);
 
-			// If parsed OK, divide by 100 to get percent
-			if (parsedValue != null) {
-				parsedValue = parsedValue.multiply(POINT_ZERO_ONE);
-			}
+            // If parsed OK, divide by 100 to get percent
+            if (parsedValue != null) {
+                parsedValue = parsedValue.multiply(POINT_ZERO_ONE);
+            }
 
-		}
-		return parsedValue;
-	}
+        }
+        return parsedValue;
+    }
 }

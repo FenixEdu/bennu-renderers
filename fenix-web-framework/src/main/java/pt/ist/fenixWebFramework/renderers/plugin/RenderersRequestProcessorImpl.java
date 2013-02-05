@@ -40,114 +40,114 @@ import pt.ist.fenixWebFramework.servlets.filters.RequestWrapperFilter.FenixHttpS
  */
 public class RenderersRequestProcessorImpl {
 
-	public static Class implementationClass = RenderersRequestProcessor.class;
+    public static Class implementationClass = RenderersRequestProcessor.class;
 
-	static ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<HttpServletRequest>();
-	static ThreadLocal<ServletContext> currentContext = new ThreadLocal<ServletContext>();
+    static ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<HttpServletRequest>();
+    static ThreadLocal<ServletContext> currentContext = new ThreadLocal<ServletContext>();
 
-	static ThreadLocal<Map<String, UploadedFile>> fileItems = new ThreadLocal<Map<String, UploadedFile>>();
+    static ThreadLocal<Map<String, UploadedFile>> fileItems = new ThreadLocal<Map<String, UploadedFile>>();
 
-	public static HttpServletRequest getCurrentRequest() {
-		return RenderersRequestProcessorImpl.currentRequest.get();
-	}
+    public static HttpServletRequest getCurrentRequest() {
+        return RenderersRequestProcessorImpl.currentRequest.get();
+    }
 
-	public static ServletContext getCurrentContext() {
-		return RenderersRequestProcessorImpl.currentContext.get();
-	}
+    public static ServletContext getCurrentContext() {
+        return RenderersRequestProcessorImpl.currentContext.get();
+    }
 
-	/**
-	 * @return the form file associated with the given field name or <code>null</code> if no file exists
-	 */
-	public static UploadedFile getUploadedFile(String fieldName) {
-		return RenderersRequestProcessorImpl.fileItems.get().get(fieldName);
-	}
+    /**
+     * @return the form file associated with the given field name or <code>null</code> if no file exists
+     */
+    public static UploadedFile getUploadedFile(String fieldName) {
+        return RenderersRequestProcessorImpl.fileItems.get().get(fieldName);
+    }
 
-	public static Collection<UploadedFile> getAllUploadedFiles() {
-		return RenderersRequestProcessorImpl.fileItems.get().values();
-	}
+    public static Collection<UploadedFile> getAllUploadedFiles() {
+        return RenderersRequestProcessorImpl.fileItems.get().values();
+    }
 
-	public static String getCurrentEncoding() {
-		HttpServletRequest currentRequest = getCurrentRequest();
-		return currentRequest != null ? currentRequest.getCharacterEncoding() : null;
-	}
+    public static String getCurrentEncoding() {
+        HttpServletRequest currentRequest = getCurrentRequest();
+        return currentRequest != null ? currentRequest.getCharacterEncoding() : null;
+    }
 
-	protected static HttpServletRequest parseMultipartRequest(HttpServletRequest request, ActionForm form) {
-		Hashtable<String, UploadedFile> itemsMap = getNewFileItemsMap(request);
+    protected static HttpServletRequest parseMultipartRequest(HttpServletRequest request, ActionForm form) {
+        Hashtable<String, UploadedFile> itemsMap = getNewFileItemsMap(request);
 
-		if (form == null) {
-			return request;
-		} else {
-			if (form.getMultipartRequestHandler() != null) {
-				return createWrapperFromActionForm(request, itemsMap, form);
-			} else {
-				return request;
-			}
-		}
-	}
+        if (form == null) {
+            return request;
+        } else {
+            if (form.getMultipartRequestHandler() != null) {
+                return createWrapperFromActionForm(request, itemsMap, form);
+            } else {
+                return request;
+            }
+        }
+    }
 
-	protected static Hashtable<String, UploadedFile> getNewFileItemsMap(final HttpServletRequest request) {
-		Hashtable<String, UploadedFile> itemsMap =
-				(Hashtable<String, UploadedFile>) request.getAttribute(FenixHttpServletRequestWrapper.ITEM_MAP_ATTRIBUTE);
-		if (itemsMap == null) {
-			itemsMap = new Hashtable<String, UploadedFile>();
-		}
-		RenderersRequestProcessorImpl.fileItems.set(itemsMap);
-		return itemsMap;
-	}
+    protected static Hashtable<String, UploadedFile> getNewFileItemsMap(final HttpServletRequest request) {
+        Hashtable<String, UploadedFile> itemsMap =
+                (Hashtable<String, UploadedFile>) request.getAttribute(FenixHttpServletRequestWrapper.ITEM_MAP_ATTRIBUTE);
+        if (itemsMap == null) {
+            itemsMap = new Hashtable<String, UploadedFile>();
+        }
+        RenderersRequestProcessorImpl.fileItems.set(itemsMap);
+        return itemsMap;
+    }
 
-	protected static HttpServletRequest createWrapperFromActionForm(HttpServletRequest request,
-			Hashtable<String, UploadedFile> itemsMap, ActionForm form) {
-		RenderersRequestWrapper wrapper = new RenderersRequestWrapper(request);
+    protected static HttpServletRequest createWrapperFromActionForm(HttpServletRequest request,
+            Hashtable<String, UploadedFile> itemsMap, ActionForm form) {
+        RenderersRequestWrapper wrapper = new RenderersRequestWrapper(request);
 
-		Hashtable<String, String[]> textElements = form.getMultipartRequestHandler().getTextElements();
-		for (String name : textElements.keySet()) {
-			String[] values = textElements.get(name);
+        Hashtable<String, String[]> textElements = form.getMultipartRequestHandler().getTextElements();
+        for (String name : textElements.keySet()) {
+            String[] values = textElements.get(name);
 
-			for (String value : values) {
-				wrapper.addParameter(name, value);
-			}
-		}
+            for (String value : values) {
+                wrapper.addParameter(name, value);
+            }
+        }
 
-		Hashtable<String, FormFile> fileElements = form.getMultipartRequestHandler().getFileElements();
-		for (String name : fileElements.keySet()) {
-			UploadedFile uploadedFile = new StrutsFile(fileElements.get(name));
+        Hashtable<String, FormFile> fileElements = form.getMultipartRequestHandler().getFileElements();
+        for (String name : fileElements.keySet()) {
+            UploadedFile uploadedFile = new StrutsFile(fileElements.get(name));
 
-			if (uploadedFile.getName() != null && uploadedFile.getName().length() > 0) {
-				itemsMap.put(name, uploadedFile);
-			}
+            if (uploadedFile.getName() != null && uploadedFile.getName().length() > 0) {
+                itemsMap.put(name, uploadedFile);
+            }
 
-			wrapper.addParameter(name, uploadedFile.getName());
-		}
+            wrapper.addParameter(name, uploadedFile.getName());
+        }
 
-		Map<String, String[]> existingParameters = request.getParameterMap();
-		for (String name : existingParameters.keySet()) {
-			String[] values = existingParameters.get(name);
-			for (String value : values) {
-				wrapper.addParameter(name, value);
-			}
-		}
+        Map<String, String[]> existingParameters = request.getParameterMap();
+        for (String name : existingParameters.keySet()) {
+            String[] values = existingParameters.get(name);
+            for (String value : values) {
+                wrapper.addParameter(name, value);
+            }
+        }
 
-		Enumeration enumaration = request.getAttributeNames();
-		while (enumaration.hasMoreElements()) {
-			String name = (String) enumaration.nextElement();
-			wrapper.setAttribute(name, request.getAttribute(name));
-		}
-		return wrapper;
-	}
+        Enumeration enumaration = request.getAttributeNames();
+        while (enumaration.hasMoreElements()) {
+            String name = (String) enumaration.nextElement();
+            wrapper.setAttribute(name, request.getAttribute(name));
+        }
+        return wrapper;
+    }
 
-	protected static boolean hasViewState(HttpServletRequest request) {
-		return viewStateNotProcessed(request)
-				&&
+    protected static boolean hasViewState(HttpServletRequest request) {
+        return viewStateNotProcessed(request)
+                &&
 
-				(request.getParameterValues(LifeCycleConstants.VIEWSTATE_PARAM_NAME) != null || request
-						.getParameterValues(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME) != null);
-	}
+                (request.getParameterValues(LifeCycleConstants.VIEWSTATE_PARAM_NAME) != null || request
+                        .getParameterValues(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME) != null);
+    }
 
-	protected static boolean viewStateNotProcessed(HttpServletRequest request) {
-		return request.getAttribute(LifeCycleConstants.PROCESSED_PARAM_NAME) == null;
-	}
+    protected static boolean viewStateNotProcessed(HttpServletRequest request) {
+        return request.getAttribute(LifeCycleConstants.PROCESSED_PARAM_NAME) == null;
+    }
 
-	protected static void setViewStateProcessed(HttpServletRequest request) {
-		request.setAttribute(LifeCycleConstants.PROCESSED_PARAM_NAME, true);
-	}
+    protected static void setViewStateProcessed(HttpServletRequest request) {
+        request.setAttribute(LifeCycleConstants.PROCESSED_PARAM_NAME, true);
+    }
 }

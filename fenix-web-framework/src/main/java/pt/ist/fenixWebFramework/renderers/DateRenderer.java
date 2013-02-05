@@ -20,50 +20,50 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
  */
 public class DateRenderer extends OutputRenderer {
 
-	private static final String DEFAULT_FORMAT = "dd/MM/yyyy";
+    private static final String DEFAULT_FORMAT = "dd/MM/yyyy";
 
-	private String format;
+    private String format;
 
-	/**
-	 * The format in which the date should be displayed. The format can
-	 * have the form accepted by {@link SimpleDateFormat}.
-	 * 
-	 * <p>
-	 * The default format is {@value #DEFAULT_FORMAT}.
-	 * 
-	 * @property
-	 */
-	public void setFormat(String format) {
-		this.format = format;
-	}
+    /**
+     * The format in which the date should be displayed. The format can
+     * have the form accepted by {@link SimpleDateFormat}.
+     * 
+     * <p>
+     * The default format is {@value #DEFAULT_FORMAT}.
+     * 
+     * @property
+     */
+    public void setFormat(String format) {
+        this.format = format;
+    }
 
-	public String getFormat() {
-		return this.format == null ? DEFAULT_FORMAT : format;
-	}
+    public String getFormat() {
+        return this.format == null ? DEFAULT_FORMAT : format;
+    }
 
-	public boolean isFormatSet() {
-		return this.format != null;
-	}
+    public boolean isFormatSet() {
+        return this.format != null;
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		return new Layout() {
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        return new Layout() {
 
-			@Override
-			public HtmlComponent createComponent(Object object, Class type) {
-				Date date = (Date) object;
+            @Override
+            public HtmlComponent createComponent(Object object, Class type) {
+                Date date = (Date) object;
 
-				if (date == null) {
-					return new HtmlText();
-				}
+                if (date == null) {
+                    return new HtmlText();
+                }
 
-				HttpServletRequest request = getContext().getViewState().getRequest();
-				Locale locale = RequestUtils.getUserLocale(request, null);
-				DateFormat dateFormat = new SimpleDateFormat(getFormat(), locale);
+                HttpServletRequest request = getContext().getViewState().getRequest();
+                Locale locale = RequestUtils.getUserLocale(request, null);
+                DateFormat dateFormat = new SimpleDateFormat(getFormat(), locale);
 
-				return new HtmlText(dateFormat.format(date));
-			}
+                return new HtmlText(dateFormat.format(date));
+            }
 
-		};
-	}
+        };
+    }
 }

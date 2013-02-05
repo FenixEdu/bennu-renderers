@@ -10,76 +10,76 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlApplet extends HtmlComponent {
 
-	private final Map<String, String> properties = new HashMap<String, String>();
+    private final Map<String, String> properties = new HashMap<String, String>();
 
-	private String code;
-	private String archive;
-	private int width;
-	private int height;
+    private String code;
+    private String archive;
+    private int width;
+    private int height;
 
-	public HtmlApplet() {
-		super();
-	}
+    public HtmlApplet() {
+        super();
+    }
 
-	@Override
-	public HtmlTag getOwnTag(PageContext context) {
-		HtmlTag tag = super.getOwnTag(context);
+    @Override
+    public HtmlTag getOwnTag(PageContext context) {
+        HtmlTag tag = super.getOwnTag(context);
 
-		tag.setName("applet");
-		tag.setAttribute("code", getCode());
-		tag.setAttribute("archive", getArchive());
-		tag.setAttribute("width", getWidth() + "px");
-		tag.setAttribute("height", getHeight() + "px");
+        tag.setName("applet");
+        tag.setAttribute("code", getCode());
+        tag.setAttribute("archive", getArchive());
+        tag.setAttribute("width", getWidth() + "px");
+        tag.setAttribute("height", getHeight() + "px");
 
-		for (Entry<String, String> entry : properties.entrySet()) {
-			HtmlTag paramTag = new HtmlTag("param");
+        for (Entry<String, String> entry : properties.entrySet()) {
+            HtmlTag paramTag = new HtmlTag("param");
 
-			paramTag.setAttribute("name", entry.getKey());
-			paramTag.setAttribute("value", entry.getValue());
+            paramTag.setAttribute("name", entry.getKey());
+            paramTag.setAttribute("value", entry.getValue());
 
-			tag.addChild(paramTag);
-		}
+            tag.addChild(paramTag);
+        }
 
-		return tag;
-	}
+        return tag;
+    }
 
-	public void setProperty(String key, String value) {
-		properties.put(key, value);
-	}
+    public void setProperty(String key, String value) {
+        properties.put(key, value);
+    }
 
-	public void removeProperty(String key) {
-		properties.remove(key);
-	}
+    public void removeProperty(String key) {
+        properties.remove(key);
+    }
 
-	public String getCode() {
-		return code;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	public String getArchive() {
-		return archive;
-	}
+    public String getArchive() {
+        return archive;
+    }
 
-	public void setArchive(String archive) {
-		this.archive = archive;
-	}
+    public void setArchive(String archive) {
+        this.archive = archive;
+    }
 
-	public int getWidth() {
-		return width;
-	}
+    public int getWidth() {
+        return width;
+    }
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
+    public void setWidth(int width) {
+        this.width = width;
+    }
 
-	public int getHeight() {
-		return height;
-	}
+    public int getHeight() {
+        return height;
+    }
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
+    public void setHeight(int height) {
+        this.height = height;
+    }
 }

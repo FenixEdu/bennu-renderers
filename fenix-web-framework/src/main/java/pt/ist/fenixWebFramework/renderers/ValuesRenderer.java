@@ -25,181 +25,181 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
  */
 public class ValuesRenderer extends OutputRenderer {
 
-	private String eachClasses;
+    private String eachClasses;
 
-	private String eachStyle;
+    private String eachStyle;
 
-	private boolean eachInline = true;
+    private boolean eachInline = true;
 
-	private String eachLayout;
+    private String eachLayout;
 
-	private String eachSchema;
+    private String eachSchema;
 
-	private String htmlSeparator;
+    private String htmlSeparator;
 
-	private boolean indentation;
+    private boolean indentation;
 
-	public ValuesRenderer() {
-		this.indentation = true;
-	}
+    public ValuesRenderer() {
+        this.indentation = true;
+    }
 
-	/**
-	 * Specifies the css classes to be used in the presentation of each value.
-	 * 
-	 * @property
-	 */
-	public void setEachClasses(String classes) {
-		this.eachClasses = classes;
-	}
+    /**
+     * Specifies the css classes to be used in the presentation of each value.
+     * 
+     * @property
+     */
+    public void setEachClasses(String classes) {
+        this.eachClasses = classes;
+    }
 
-	public String getEachClasses() {
-		return this.eachClasses;
-	}
+    public String getEachClasses() {
+        return this.eachClasses;
+    }
 
-	/**
-	 * The style to be used in the presentation of each value.
-	 * 
-	 * @property
-	 */
-	public void setEachStyle(String style) {
-		this.eachStyle = style;
-	}
+    /**
+     * The style to be used in the presentation of each value.
+     * 
+     * @property
+     */
+    public void setEachStyle(String style) {
+        this.eachStyle = style;
+    }
 
-	public String getEachStyle() {
-		return this.eachStyle;
-	}
+    public String getEachStyle() {
+        return this.eachStyle;
+    }
 
-	public boolean isEachInline() {
-		return eachInline;
-	}
+    public boolean isEachInline() {
+        return eachInline;
+    }
 
-	/**
-	 * This property allows you to indicate if each value should be presented
-	 * inside a <code>span</code> or a <code>div</code>, that is, inline or
-	 * as a block. By default the values are presented inline.
-	 * 
-	 * @property
-	 */
-	public void setEachInline(boolean eachInline) {
-		this.eachInline = eachInline;
-	}
+    /**
+     * This property allows you to indicate if each value should be presented
+     * inside a <code>span</code> or a <code>div</code>, that is, inline or
+     * as a block. By default the values are presented inline.
+     * 
+     * @property
+     */
+    public void setEachInline(boolean eachInline) {
+        this.eachInline = eachInline;
+    }
 
-	public String getEachLayout() {
-		return eachLayout;
-	}
+    public String getEachLayout() {
+        return eachLayout;
+    }
 
-	/**
-	 * The layout in which each value will be shown.
-	 * 
-	 * @property
-	 */
-	public void setEachLayout(String eachLayout) {
-		this.eachLayout = eachLayout;
-	}
+    /**
+     * The layout in which each value will be shown.
+     * 
+     * @property
+     */
+    public void setEachLayout(String eachLayout) {
+        this.eachLayout = eachLayout;
+    }
 
-	public String getEachSchema() {
-		return eachSchema;
-	}
+    public String getEachSchema() {
+        return eachSchema;
+    }
 
-	/**
-	 * The schema to use when presenting each value.
-	 * 
-	 * @property
-	 */
-	public void setEachSchema(String eachSchema) {
-		this.eachSchema = eachSchema;
-	}
+    /**
+     * The schema to use when presenting each value.
+     * 
+     * @property
+     */
+    public void setEachSchema(String eachSchema) {
+        this.eachSchema = eachSchema;
+    }
 
-	public String getHtmlSeparator() {
-		return htmlSeparator;
-	}
+    public String getHtmlSeparator() {
+        return htmlSeparator;
+    }
 
-	/**
-	 * The htm separator to be placed between each value. The separator will
-	 * appera between any two elements and never at the beginning or the end.
-	 * 
-	 * @property
-	 */
-	public void setHtmlSeparator(String htmlSeparator) {
-		this.htmlSeparator = htmlSeparator;
-	}
+    /**
+     * The htm separator to be placed between each value. The separator will
+     * appera between any two elements and never at the beginning or the end.
+     * 
+     * @property
+     */
+    public void setHtmlSeparator(String htmlSeparator) {
+        this.htmlSeparator = htmlSeparator;
+    }
 
-	/**
-	 * Chooses if the generated elements should be indented or not. This can be
-	 * usefull when you want to introduce a separator but need to remove extra
-	 * spaces.
-	 * 
-	 * @property
-	 */
-	public void setIndentation(boolean indentation) {
-		this.indentation = indentation;
-	}
+    /**
+     * Chooses if the generated elements should be indented or not. This can be
+     * usefull when you want to introduce a separator but need to remove extra
+     * spaces.
+     * 
+     * @property
+     */
+    public void setIndentation(boolean indentation) {
+        this.indentation = indentation;
+    }
 
-	public boolean isIndentation() {
-		return this.indentation;
-	}
+    public boolean isIndentation() {
+        return this.indentation;
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		return new ValuesLayout(getContext().getMetaObject());
-	}
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        return new ValuesLayout(getContext().getMetaObject());
+    }
 
-	public class ValuesLayout extends FlowLayout {
+    public class ValuesLayout extends FlowLayout {
 
-		protected int index;
-		protected List<MetaSlot> slots;
-		protected boolean insertSeparator;
+        protected int index;
+        protected List<MetaSlot> slots;
+        protected boolean insertSeparator;
 
-		public ValuesLayout(MetaObject object) {
-			super();
+        public ValuesLayout(MetaObject object) {
+            super();
 
-			this.slots = Collections.unmodifiableList(object.getSlots());
-			this.index = 0;
-			this.insertSeparator = false;
-		}
+            this.slots = Collections.unmodifiableList(object.getSlots());
+            this.index = 0;
+            this.insertSeparator = false;
+        }
 
-		@Override
-		protected boolean hasMoreComponents() {
-			return this.index < this.slots.size();
-		}
+        @Override
+        protected boolean hasMoreComponents() {
+            return this.index < this.slots.size();
+        }
 
-		protected MetaSlot getNextSlot() {
-			return this.slots.get(this.index++);
-		}
+        protected MetaSlot getNextSlot() {
+            return this.slots.get(this.index++);
+        }
 
-		@Override
-		protected HtmlComponent getNextComponent() {
-			if (this.insertSeparator) {
-				this.insertSeparator = false;
-				return new HtmlText(getHtmlSeparator(), false);
-			} else {
-				MetaSlot slot = getNextSlot();
+        @Override
+        protected HtmlComponent getNextComponent() {
+            if (this.insertSeparator) {
+                this.insertSeparator = false;
+                return new HtmlText(getHtmlSeparator(), false);
+            } else {
+                MetaSlot slot = getNextSlot();
 
-				if (hasMoreComponents() && getHtmlSeparator() != null) {
-					this.insertSeparator = true;
-				}
+                if (hasMoreComponents() && getHtmlSeparator() != null) {
+                    this.insertSeparator = true;
+                }
 
-				Schema schema = slot.getSchema();
-				String layout = slot.getLayout();
+                Schema schema = slot.getSchema();
+                String layout = slot.getLayout();
 
-				if (schema == null) {
-					schema = RenderKit.getInstance().findSchema(getEachSchema());
-				}
+                if (schema == null) {
+                    schema = RenderKit.getInstance().findSchema(getEachSchema());
+                }
 
-				if (layout == null) {
-					layout = getEachLayout();
-				}
+                if (layout == null) {
+                    layout = getEachLayout();
+                }
 
-				return renderValue(slot.getObject(), slot.getType(), schema, layout, slot.getProperties());
-			}
-		}
+                return renderValue(slot.getObject(), slot.getType(), schema, layout, slot.getProperties());
+            }
+        }
 
-		@Override
-		public HtmlComponent createComponent(Object object, Class type) {
-			HtmlComponent component = super.createComponent(object, type);
-			component.setIndented(isIndentation());
+        @Override
+        public HtmlComponent createComponent(Object object, Class type) {
+            HtmlComponent component = super.createComponent(object, type);
+            component.setIndented(isIndentation());
 
-			return component;
-		}
-	}
+            return component;
+        }
+    }
 }

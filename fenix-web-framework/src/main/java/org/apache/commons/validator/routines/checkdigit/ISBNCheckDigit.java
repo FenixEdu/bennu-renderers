@@ -33,68 +33,68 @@ import java.io.Serializable;
  */
 public final class ISBNCheckDigit implements CheckDigit, Serializable {
 
-	/** Singleton ISBN-10 Check Digit instance */
-	public static final CheckDigit ISBN10_CHECK_DIGIT = ISBN10CheckDigit.ISBN10_CHECK_DIGIT;
+    /** Singleton ISBN-10 Check Digit instance */
+    public static final CheckDigit ISBN10_CHECK_DIGIT = ISBN10CheckDigit.ISBN10_CHECK_DIGIT;
 
-	/** Singleton ISBN-13 Check Digit instance */
-	public static final CheckDigit ISBN13_CHECK_DIGIT = EAN13CheckDigit.EAN13_CHECK_DIGIT;
+    /** Singleton ISBN-13 Check Digit instance */
+    public static final CheckDigit ISBN13_CHECK_DIGIT = EAN13CheckDigit.EAN13_CHECK_DIGIT;
 
-	/** Singleton combined ISBN-10 / ISBN-13 Check Digit instance */
-	public static final CheckDigit ISBN_CHECK_DIGIT = new ISBNCheckDigit();
+    /** Singleton combined ISBN-10 / ISBN-13 Check Digit instance */
+    public static final CheckDigit ISBN_CHECK_DIGIT = new ISBNCheckDigit();
 
-	/**
-	 * Calculate an ISBN-10 or ISBN-13 check digit, depending
-	 * on the length of the code.
-	 * <p>
-	 * If the length of the code is 9, it is treated as an ISBN-10 code or if the length of the code is 12, it is treated as an
-	 * ISBN-13 code.
-	 * 
-	 * @param code The ISBN code to validate (should have a length of
-	 *            9 or 12)
-	 * @return The ISBN-10 check digit if the length is 9 or an ISBN-13
-	 *         check digit if the length is 12.
-	 * @throws CheckDigitException if the code is missing, or an invalid
-	 *             length (i.e. not 9 or 12) or if there is an error calculating the
-	 *             check digit.
-	 */
-	@Override
-	public String calculate(String code) throws CheckDigitException {
-		if (code == null || code.length() == 0) {
-			throw new CheckDigitException("ISBN Code is missing");
-		} else if (code.length() == 9) {
-			return ISBN10_CHECK_DIGIT.calculate(code);
-		} else if (code.length() == 12) {
-			return ISBN13_CHECK_DIGIT.calculate(code);
-		} else {
-			throw new CheckDigitException("Invalid ISBN Length = " + code.length());
-		}
-	}
+    /**
+     * Calculate an ISBN-10 or ISBN-13 check digit, depending
+     * on the length of the code.
+     * <p>
+     * If the length of the code is 9, it is treated as an ISBN-10 code or if the length of the code is 12, it is treated as an
+     * ISBN-13 code.
+     * 
+     * @param code The ISBN code to validate (should have a length of
+     *            9 or 12)
+     * @return The ISBN-10 check digit if the length is 9 or an ISBN-13
+     *         check digit if the length is 12.
+     * @throws CheckDigitException if the code is missing, or an invalid
+     *             length (i.e. not 9 or 12) or if there is an error calculating the
+     *             check digit.
+     */
+    @Override
+    public String calculate(String code) throws CheckDigitException {
+        if (code == null || code.length() == 0) {
+            throw new CheckDigitException("ISBN Code is missing");
+        } else if (code.length() == 9) {
+            return ISBN10_CHECK_DIGIT.calculate(code);
+        } else if (code.length() == 12) {
+            return ISBN13_CHECK_DIGIT.calculate(code);
+        } else {
+            throw new CheckDigitException("Invalid ISBN Length = " + code.length());
+        }
+    }
 
-	/**
-	 * <p>
-	 * Validate an ISBN-10 or ISBN-13 check digit, depending on the length of the code.
-	 * </p>
-	 * <p>
-	 * If the length of the code is 10, it is treated as an ISBN-10 code or ff the length of the code is 13, it is treated as an
-	 * ISBN-13 code.
-	 * 
-	 * @param code The ISBN code to validate (should have a length of
-	 *            10 or 13)
-	 * @return <code>true</code> if the code has a length of 10 and is
-	 *         a valid ISBN-10 check digit or the code has a length of 13 and is
-	 *         a valid ISBN-13 check digit - otherwise <code>false</code>.
-	 */
-	@Override
-	public boolean isValid(String code) {
-		if (code == null) {
-			return false;
-		} else if (code.length() == 10) {
-			return ISBN10_CHECK_DIGIT.isValid(code);
-		} else if (code.length() == 13) {
-			return ISBN13_CHECK_DIGIT.isValid(code);
-		} else {
-			return false;
-		}
-	}
+    /**
+     * <p>
+     * Validate an ISBN-10 or ISBN-13 check digit, depending on the length of the code.
+     * </p>
+     * <p>
+     * If the length of the code is 10, it is treated as an ISBN-10 code or ff the length of the code is 13, it is treated as an
+     * ISBN-13 code.
+     * 
+     * @param code The ISBN code to validate (should have a length of
+     *            10 or 13)
+     * @return <code>true</code> if the code has a length of 10 and is
+     *         a valid ISBN-10 check digit or the code has a length of 13 and is
+     *         a valid ISBN-13 check digit - otherwise <code>false</code>.
+     */
+    @Override
+    public boolean isValid(String code) {
+        if (code == null) {
+            return false;
+        } else if (code.length() == 10) {
+            return ISBN10_CHECK_DIGIT.isValid(code);
+        } else if (code.length() == 13) {
+            return ISBN13_CHECK_DIGIT.isValid(code);
+        } else {
+            return false;
+        }
+    }
 
 }

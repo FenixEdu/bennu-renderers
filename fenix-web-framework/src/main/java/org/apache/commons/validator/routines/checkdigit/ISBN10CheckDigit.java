@@ -38,78 +38,78 @@ package org.apache.commons.validator.routines.checkdigit;
  */
 public final class ISBN10CheckDigit extends ModulusCheckDigit {
 
-	/** Singleton ISBN-10 Check Digit instance */
-	public static final CheckDigit ISBN10_CHECK_DIGIT = new ISBN10CheckDigit();
+    /** Singleton ISBN-10 Check Digit instance */
+    public static final CheckDigit ISBN10_CHECK_DIGIT = new ISBN10CheckDigit();
 
-	/**
-	 * Construct a modulus 11 Check Digit routine for ISBN-10.
-	 */
-	public ISBN10CheckDigit() {
-		super(11);
-	}
+    /**
+     * Construct a modulus 11 Check Digit routine for ISBN-10.
+     */
+    public ISBN10CheckDigit() {
+        super(11);
+    }
 
-	/**
-	 * Calculates the <i>weighted</i> value of a charcter in the
-	 * code at a specified position.
-	 * 
-	 * <p>
-	 * For ISBN-10 (from right to left) digits are weighted by their position.
-	 * </p>
-	 * 
-	 * @param charValue The numeric value of the character.
-	 * @param leftPos The position of the character in the code, counting from left to right
-	 * @param rightPos The positionof the character in the code, counting from right to left
-	 * @return The weighted value of the character.
-	 */
-	@Override
-	protected int weightedValue(int charValue, int leftPos, int rightPos) {
-		return (charValue * rightPos);
-	}
+    /**
+     * Calculates the <i>weighted</i> value of a charcter in the
+     * code at a specified position.
+     * 
+     * <p>
+     * For ISBN-10 (from right to left) digits are weighted by their position.
+     * </p>
+     * 
+     * @param charValue The numeric value of the character.
+     * @param leftPos The position of the character in the code, counting from left to right
+     * @param rightPos The positionof the character in the code, counting from right to left
+     * @return The weighted value of the character.
+     */
+    @Override
+    protected int weightedValue(int charValue, int leftPos, int rightPos) {
+        return (charValue * rightPos);
+    }
 
-	/**
-	 * <p>
-	 * Convert a character at a specified position to an integer value.
-	 * </p>
-	 * 
-	 * <p>
-	 * Character 'X' check digit converted to 10.
-	 * </p>
-	 * 
-	 * @param character The character to convert.
-	 * @param leftPos The position of the character in the code, counting from left to right
-	 * @param rightPos The positionof the character in the code, counting from right to left
-	 * @return The integer value of the character.
-	 * @throws CheckDigitException if an error occurs.
-	 */
-	@Override
-	protected int toInt(char character, int leftPos, int rightPos) throws CheckDigitException {
-		if (rightPos == 1 && character == 'X') {
-			return 10;
-		} else {
-			return super.toInt(character, leftPos, rightPos);
-		}
-	}
+    /**
+     * <p>
+     * Convert a character at a specified position to an integer value.
+     * </p>
+     * 
+     * <p>
+     * Character 'X' check digit converted to 10.
+     * </p>
+     * 
+     * @param character The character to convert.
+     * @param leftPos The position of the character in the code, counting from left to right
+     * @param rightPos The positionof the character in the code, counting from right to left
+     * @return The integer value of the character.
+     * @throws CheckDigitException if an error occurs.
+     */
+    @Override
+    protected int toInt(char character, int leftPos, int rightPos) throws CheckDigitException {
+        if (rightPos == 1 && character == 'X') {
+            return 10;
+        } else {
+            return super.toInt(character, leftPos, rightPos);
+        }
+    }
 
-	/**
-	 * <p>
-	 * Convert an integer value to a character at a specified position.
-	 * </p>
-	 * 
-	 * <p>
-	 * Value '10' for position 1 (check digit) converted to 'X'.
-	 * </p>
-	 * 
-	 * @param charValue The integer value of the character.
-	 * @return The converted character.
-	 * @throws CheckDigitException if an error occurs.
-	 */
-	@Override
-	protected String toCheckDigit(int charValue) throws CheckDigitException {
-		if (charValue == 10) {
-			return "X";
-		} else {
-			return super.toCheckDigit(charValue);
-		}
-	}
+    /**
+     * <p>
+     * Convert an integer value to a character at a specified position.
+     * </p>
+     * 
+     * <p>
+     * Value '10' for position 1 (check digit) converted to 'X'.
+     * </p>
+     * 
+     * @param charValue The integer value of the character.
+     * @return The converted character.
+     * @throws CheckDigitException if an error occurs.
+     */
+    @Override
+    protected String toCheckDigit(int charValue) throws CheckDigitException {
+        if (charValue == 10) {
+            return "X";
+        } else {
+            return super.toCheckDigit(charValue);
+        }
+    }
 
 }

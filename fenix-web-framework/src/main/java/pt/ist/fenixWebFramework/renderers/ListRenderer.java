@@ -32,220 +32,220 @@ import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
  * @author cfgi
  */
 public class ListRenderer extends OutputRenderer {
-	private String eachClasses;
+    private String eachClasses;
 
-	private String eachStyle;
+    private String eachStyle;
 
-	private String eachSchema;
+    private String eachSchema;
 
-	private String eachLayout;
+    private String eachLayout;
 
-	private boolean ordered;
+    private boolean ordered;
 
-	private String sortBy;
+    private String sortBy;
 
-	private String nullLabel;
+    private String nullLabel;
 
-	private final Map<String, CssStyler> css;
+    private final Map<String, CssStyler> css;
 
-	public ListRenderer() {
-		super();
+    public ListRenderer() {
+        super();
 
-		this.ordered = false;
-		this.css = new Hashtable<String, CssStyler>();
+        this.ordered = false;
+        this.css = new Hashtable<String, CssStyler>();
 
-	}
+    }
 
-	/**
-	 * The css classes to apply in each object's presentation.
-	 * 
-	 * @property
-	 */
-	public void setEachClasses(String classes) {
-		this.eachClasses = classes;
-	}
+    /**
+     * The css classes to apply in each object's presentation.
+     * 
+     * @property
+     */
+    public void setEachClasses(String classes) {
+        this.eachClasses = classes;
+    }
 
-	public String getEachClasses() {
-		return this.eachClasses;
-	}
+    public String getEachClasses() {
+        return this.eachClasses;
+    }
 
-	/**
-	 * The style to apply to each object's presentation.
-	 * 
-	 * @property
-	 */
-	public void setEachStyle(String style) {
-		this.eachStyle = style;
-	}
+    /**
+     * The style to apply to each object's presentation.
+     * 
+     * @property
+     */
+    public void setEachStyle(String style) {
+        this.eachStyle = style;
+    }
 
-	public String getEachStyle() {
-		return this.eachStyle;
-	}
+    public String getEachStyle() {
+        return this.eachStyle;
+    }
 
-	public String getEachLayout() {
-		return eachLayout;
-	}
+    public String getEachLayout() {
+        return eachLayout;
+    }
 
-	/**
-	 * The layout to be used when presenting each sub object.
-	 * 
-	 * @property
-	 */
-	public void setEachLayout(String eachLayout) {
-		this.eachLayout = eachLayout;
-	}
+    /**
+     * The layout to be used when presenting each sub object.
+     * 
+     * @property
+     */
+    public void setEachLayout(String eachLayout) {
+        this.eachLayout = eachLayout;
+    }
 
-	public String getEachSchema() {
-		return eachSchema;
-	}
+    public String getEachSchema() {
+        return eachSchema;
+    }
 
-	/**
-	 * The schema to be used in each sub object presentation.
-	 * 
-	 * @property
-	 */
-	public void setEachSchema(String eachSchema) {
-		this.eachSchema = eachSchema;
-	}
+    /**
+     * The schema to be used in each sub object presentation.
+     * 
+     * @property
+     */
+    public void setEachSchema(String eachSchema) {
+        this.eachSchema = eachSchema;
+    }
 
-	public boolean isOrdered() {
-		return this.ordered;
-	}
+    public boolean isOrdered() {
+        return this.ordered;
+    }
 
-	/**
-	 * Selects if the generated list is a ordered list or a simple unordered
-	 * list. By default the list is unordered.
-	 * 
-	 * @property
-	 */
-	public void setOrdered(boolean ordered) {
-		this.ordered = ordered;
-	}
+    /**
+     * Selects if the generated list is a ordered list or a simple unordered
+     * list. By default the list is unordered.
+     * 
+     * @property
+     */
+    public void setOrdered(boolean ordered) {
+        this.ordered = ordered;
+    }
 
-	public String getSortBy() {
-		return this.sortBy;
-	}
+    public String getSortBy() {
+        return this.sortBy;
+    }
 
-	/**
-	 * Allows you to choose the order in wich the elements will be presented.-
-	 * See {@link pt.ist.fenixWebFramework.renderers.utils.RenderUtils#sortCollectionWithCriteria(Collection, String)} for more
-	 * details.
-	 * 
-	 * @property
-	 */
-	public void setSortBy(String sortBy) {
-		this.sortBy = sortBy;
-	}
+    /**
+     * Allows you to choose the order in wich the elements will be presented.-
+     * See {@link pt.ist.fenixWebFramework.renderers.utils.RenderUtils#sortCollectionWithCriteria(Collection, String)} for more
+     * details.
+     * 
+     * @property
+     */
+    public void setSortBy(String sortBy) {
+        this.sortBy = sortBy;
+    }
 
-	public String getNullLabel() {
-		return nullLabel;
-	}
+    public String getNullLabel() {
+        return nullLabel;
+    }
 
-	/**
-	 * String which will be presented when element is null.
-	 * 
-	 * @property
-	 */
-	public void setNullLabel(String nullLabel) {
-		this.nullLabel = nullLabel;
-	}
+    /**
+     * String which will be presented when element is null.
+     * 
+     * @property
+     */
+    public void setNullLabel(String nullLabel) {
+        this.nullLabel = nullLabel;
+    }
 
-	public CssStyler getCssStyler(String name) {
-		CssStyler css = this.css.get(name);
-		if (css == null) {
-			css = new CssStyler();
-			this.css.put(name, css);
-		}
-		return css;
-	}
+    public CssStyler getCssStyler(String name) {
+        CssStyler css = this.css.get(name);
+        if (css == null) {
+            css = new CssStyler();
+            this.css.put(name, css);
+        }
+        return css;
+    }
 
-	public String getUseCssIf(String name) {
-		return getCssStyler(name).getUseIf();
-	}
+    public String getUseCssIf(String name) {
+        return getCssStyler(name).getUseIf();
+    }
 
-	public void setUseCssIf(String name, String property) {
-		getCssStyler(name).setUseIf(property);
-	}
+    public void setUseCssIf(String name, String property) {
+        getCssStyler(name).setUseIf(property);
+    }
 
-	public String getUseCssIfNot(String name) {
-		return getCssStyler(name).getUseIfNot();
-	}
+    public String getUseCssIfNot(String name) {
+        return getCssStyler(name).getUseIfNot();
+    }
 
-	public void setUseCssIfNot(String name, String property) {
-		getCssStyler(name).setUseIfNot(property);
-	}
+    public void setUseCssIfNot(String name, String property) {
+        getCssStyler(name).setUseIfNot(property);
+    }
 
-	public String getConditionalCss(String name) {
-		return getCssStyler(name).getStyleClass();
-	}
+    public String getConditionalCss(String name) {
+        return getCssStyler(name).getStyleClass();
+    }
 
-	public void setConditionalCss(String name, String style) {
-		getCssStyler(name).setStyleClass(style);
-	}
+    public void setConditionalCss(String name, String style) {
+        getCssStyler(name).setStyleClass(style);
+    }
 
-	@Override
-	protected Layout getLayout(Object object, Class type) {
-		Collection sortedCollection = RenderUtils.sortCollectionWithCriteria((Collection) object, getSortBy());
+    @Override
+    protected Layout getLayout(Object object, Class type) {
+        Collection sortedCollection = RenderUtils.sortCollectionWithCriteria((Collection) object, getSortBy());
 
-		return new ListRendererLayout(sortedCollection);
-	}
+        return new ListRendererLayout(sortedCollection);
+    }
 
-	class ListRendererLayout extends ListLayout {
+    class ListRendererLayout extends ListLayout {
 
-		private final Iterator iterator;
+        private final Iterator iterator;
 
-		public ListRendererLayout(Collection collection) {
-			iterator = collection == null ? null : collection.iterator();
-		}
+        public ListRendererLayout(Collection collection) {
+            iterator = collection == null ? null : collection.iterator();
+        }
 
-		@Override
-		protected HtmlComponent getContainer() {
-			HtmlList list = (HtmlList) super.getContainer();
-			list.setOrdered(isOrdered());
+        @Override
+        protected HtmlComponent getContainer() {
+            HtmlList list = (HtmlList) super.getContainer();
+            list.setOrdered(isOrdered());
 
-			return list;
-		}
+            return list;
+        }
 
-		@Override
-		protected boolean hasMoreComponents() {
-			return this.iterator != null && this.iterator.hasNext();
-		}
+        @Override
+        protected boolean hasMoreComponents() {
+            return this.iterator != null && this.iterator.hasNext();
+        }
 
-		@Override
-		protected HtmlComponent getNextComponent() {
-			Object object = this.iterator.next();
+        @Override
+        protected HtmlComponent getNextComponent() {
+            Object object = this.iterator.next();
 
-			if (getNullLabel() != null && object == null) {
-				return new HtmlText(getNullLabel());
-			}
+            if (getNullLabel() != null && object == null) {
+                return new HtmlText(getNullLabel());
+            }
 
-			Schema schema = RenderKit.getInstance().findSchema(getEachSchema());
-			String layout = getEachLayout();
+            Schema schema = RenderKit.getInstance().findSchema(getEachSchema());
+            String layout = getEachLayout();
 
-			HtmlComponent component = renderValue(object, schema, layout);
-			applyStyles(object, component);
-			return component;
-		}
+            HtmlComponent component = renderValue(object, schema, layout);
+            applyStyles(object, component);
+            return component;
+        }
 
-		protected void applyStyles(Object object, HtmlComponent component) {
-			for (String style : css.keySet()) {
-				CssStyler cssStyler = css.get(style);
-				if (cssStyler != null) {
-					applyConditionalClasses(object, component, cssStyler);
-				}
-			}
-		}
+        protected void applyStyles(Object object, HtmlComponent component) {
+            for (String style : css.keySet()) {
+                CssStyler cssStyler = css.get(style);
+                if (cssStyler != null) {
+                    applyConditionalClasses(object, component, cssStyler);
+                }
+            }
+        }
 
-		protected void applyConditionalClasses(Object object, HtmlComponent component, CssStyler cssStyler) {
-			Boolean useIf =
-					((cssStyler.getUseIf() != null) && (Boolean) RendererPropertyUtils.getProperty(object, cssStyler.getUseIf(),
-							false));
-			Boolean useIfNot =
-					((cssStyler.getUseIfNot() != null) && !(Boolean) RendererPropertyUtils.getProperty(object,
-							cssStyler.getUseIfNot(), false));
-			if (useIf || useIfNot) {
-				component.setClasses(cssStyler.getStyleClass());
-			}
-		}
-	}
+        protected void applyConditionalClasses(Object object, HtmlComponent component, CssStyler cssStyler) {
+            Boolean useIf =
+                    ((cssStyler.getUseIf() != null) && (Boolean) RendererPropertyUtils.getProperty(object, cssStyler.getUseIf(),
+                            false));
+            Boolean useIfNot =
+                    ((cssStyler.getUseIfNot() != null) && !(Boolean) RendererPropertyUtils.getProperty(object,
+                            cssStyler.getUseIfNot(), false));
+            if (useIf || useIfNot) {
+                component.setClasses(cssStyler.getStyleClass());
+            }
+        }
+    }
 }

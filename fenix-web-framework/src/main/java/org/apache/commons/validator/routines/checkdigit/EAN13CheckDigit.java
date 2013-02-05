@@ -35,37 +35,37 @@ package org.apache.commons.validator.routines.checkdigit;
  */
 public final class EAN13CheckDigit extends ModulusCheckDigit {
 
-	/** Singleton EAN-13 Check Digit instance */
-	public static final CheckDigit EAN13_CHECK_DIGIT = new EAN13CheckDigit();
+    /** Singleton EAN-13 Check Digit instance */
+    public static final CheckDigit EAN13_CHECK_DIGIT = new EAN13CheckDigit();
 
-	/** weighting given to digits depending on their right position */
-	private static final int[] POSITION_WEIGHT = new int[] { 3, 1 };
+    /** weighting given to digits depending on their right position */
+    private static final int[] POSITION_WEIGHT = new int[] { 3, 1 };
 
-	/**
-	 * Construct a modulus 10 Check Digit routine for EAN/UPC.
-	 */
-	public EAN13CheckDigit() {
-		super(10);
-	}
+    /**
+     * Construct a modulus 10 Check Digit routine for EAN/UPC.
+     */
+    public EAN13CheckDigit() {
+        super(10);
+    }
 
-	/**
-	 * <p>
-	 * Calculates the <i>weighted</i> value of a character in the code at a specified position.
-	 * </p>
-	 * 
-	 * <p>
-	 * For EAN-13 (from right to left) <b>odd</b> digits are weighted with a factor of <b>one</b> and <b>even</b> digits with a
-	 * factor of <b>three</b>.
-	 * </p>
-	 * 
-	 * @param charValue The numeric value of the character.
-	 * @param leftPos The position of the character in the code, counting from left to right
-	 * @param rightPos The positionof the character in the code, counting from right to left
-	 * @return The weighted value of the character.
-	 */
-	@Override
-	protected int weightedValue(int charValue, int leftPos, int rightPos) {
-		int weight = POSITION_WEIGHT[rightPos % 2];
-		return (charValue * weight);
-	}
+    /**
+     * <p>
+     * Calculates the <i>weighted</i> value of a character in the code at a specified position.
+     * </p>
+     * 
+     * <p>
+     * For EAN-13 (from right to left) <b>odd</b> digits are weighted with a factor of <b>one</b> and <b>even</b> digits with a
+     * factor of <b>three</b>.
+     * </p>
+     * 
+     * @param charValue The numeric value of the character.
+     * @param leftPos The position of the character in the code, counting from left to right
+     * @param rightPos The positionof the character in the code, counting from right to left
+     * @return The weighted value of the character.
+     */
+    @Override
+    protected int weightedValue(int charValue, int leftPos, int rightPos) {
+        int weight = POSITION_WEIGHT[rightPos % 2];
+        return (charValue * weight);
+    }
 }

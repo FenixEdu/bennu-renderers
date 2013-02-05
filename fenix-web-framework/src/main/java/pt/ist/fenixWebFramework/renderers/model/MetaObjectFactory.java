@@ -6,59 +6,59 @@ import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
 
 public abstract class MetaObjectFactory {
-	public static MetaObjectFactory DEFAULT_FACTORY = new DefaultMetaObjectFactory();
+    public static MetaObjectFactory DEFAULT_FACTORY = new DefaultMetaObjectFactory();
 
-	private static MetaObjectFactory currentFactory = DEFAULT_FACTORY;
+    private static MetaObjectFactory currentFactory = DEFAULT_FACTORY;
 
-	public static void setCurrentFactory(MetaObjectFactory factory) {
-		currentFactory = factory;
-	}
+    public static void setCurrentFactory(MetaObjectFactory factory) {
+        currentFactory = factory;
+    }
 
-	public static MetaObjectFactory getCurrentFactory() {
-		return currentFactory;
-	}
+    public static MetaObjectFactory getCurrentFactory() {
+        return currentFactory;
+    }
 
-	public static MetaObjectCollection createObjectCollection() {
-		return currentFactory.createMetaObjectCollection();
-	}
+    public static MetaObjectCollection createObjectCollection() {
+        return currentFactory.createMetaObjectCollection();
+    }
 
-	public static MetaObject createObject(Object object, Schema schema) {
-		Schema usedSchema = schema;
+    public static MetaObject createObject(Object object, Schema schema) {
+        Schema usedSchema = schema;
 
-		if (usedSchema == null && !(object instanceof Collection)) {
-			usedSchema = SchemaFactory.create(object);
-		}
+        if (usedSchema == null && !(object instanceof Collection)) {
+            usedSchema = SchemaFactory.create(object);
+        }
 
-		if (usedSchema == null && object instanceof Collection) {
-			Collection collection = (Collection) object;
+        if (usedSchema == null && object instanceof Collection) {
+            Collection collection = (Collection) object;
 
-			if (!collection.isEmpty()) {
-				usedSchema = SchemaFactory.create(collection.iterator().next());
-			}
-		}
+            if (!collection.isEmpty()) {
+                usedSchema = SchemaFactory.create(collection.iterator().next());
+            }
+        }
 
-		return currentFactory.createMetaObject(object, usedSchema);
-	}
+        return currentFactory.createMetaObject(object, usedSchema);
+    }
 
-	public static MetaObject createObject(Class type, Schema schema) {
-		Schema usedSchema = schema;
+    public static MetaObject createObject(Class type, Schema schema) {
+        Schema usedSchema = schema;
 
-		if (usedSchema == null) {
-			usedSchema = SchemaFactory.create(type);
-		}
+        if (usedSchema == null) {
+            usedSchema = SchemaFactory.create(type);
+        }
 
-		return currentFactory.createMetaObject(type, usedSchema);
-	}
+        return currentFactory.createMetaObject(type, usedSchema);
+    }
 
-	public static MetaSlot createSlot(MetaObject metaObject, SchemaSlotDescription slotDescription) {
-		return currentFactory.createMetaSlot(metaObject, slotDescription);
-	}
+    public static MetaSlot createSlot(MetaObject metaObject, SchemaSlotDescription slotDescription) {
+        return currentFactory.createMetaSlot(metaObject, slotDescription);
+    }
 
-	public abstract MetaObjectCollection createMetaObjectCollection();
+    public abstract MetaObjectCollection createMetaObjectCollection();
 
-	public abstract MetaObject createMetaObject(Object object, Schema schema);
+    public abstract MetaObject createMetaObject(Object object, Schema schema);
 
-	public abstract MetaObject createMetaObject(Class type, Schema schema);
+    public abstract MetaObject createMetaObject(Class type, Schema schema);
 
-	public abstract MetaSlot createMetaSlot(MetaObject metaObject, SchemaSlotDescription slotDescription);
+    public abstract MetaSlot createMetaSlot(MetaObject metaObject, SchemaSlotDescription slotDescription);
 }

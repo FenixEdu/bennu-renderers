@@ -13,98 +13,98 @@ import java.util.List;
  */
 public class MetaObjectCollection extends MetaObject {
 
-	private List<MetaObject> metaObjects;
+    private List<MetaObject> metaObjects;
 
-	public MetaObjectCollection() {
-		super();
+    public MetaObjectCollection() {
+        super();
 
-		this.metaObjects = new ArrayList<MetaObject>();
-	}
+        this.metaObjects = new ArrayList<MetaObject>();
+    }
 
-	public List<MetaObject> getAllMetaObjects() {
-		return this.metaObjects;
-	}
+    public List<MetaObject> getAllMetaObjects() {
+        return this.metaObjects;
+    }
 
-	public void add(MetaObject metaObject) {
-		this.metaObjects.add(metaObject);
-	}
+    public void add(MetaObject metaObject) {
+        this.metaObjects.add(metaObject);
+    }
 
-	public boolean remove(MetaObject metaObject) {
-		return this.metaObjects.remove(metaObject);
-	}
+    public boolean remove(MetaObject metaObject) {
+        return this.metaObjects.remove(metaObject);
+    }
 
-	@Override
-	public void setUser(UserIdentity user) {
-		super.setUser(user);
+    @Override
+    public void setUser(UserIdentity user) {
+        super.setUser(user);
 
-		for (MetaObject metaObject : getAllMetaObjects()) {
-			metaObject.setUser(user);
-		}
-	}
+        for (MetaObject metaObject : getAllMetaObjects()) {
+            metaObject.setUser(user);
+        }
+    }
 
-	@Override
-	public Object getObject() {
-		List<Object> objects = new ArrayList<Object>();
+    @Override
+    public Object getObject() {
+        List<Object> objects = new ArrayList<Object>();
 
-		for (MetaObject metaObject : getAllMetaObjects()) {
-			objects.add(metaObject.getObject());
-		}
+        for (MetaObject metaObject : getAllMetaObjects()) {
+            objects.add(metaObject.getObject());
+        }
 
-		return objects;
-	}
+        return objects;
+    }
 
-	/**
-	 * @return <code>ArrayList.class</code>
-	 */
-	@Override
-	public Class getType() {
-		return ArrayList.class;
-	}
+    /**
+     * @return <code>ArrayList.class</code>
+     */
+    @Override
+    public Class getType() {
+        return ArrayList.class;
+    }
 
-	@Override
-	public List<MetaSlot> getSlots() {
-		List<MetaSlot> slots = new ArrayList<MetaSlot>();
+    @Override
+    public List<MetaSlot> getSlots() {
+        List<MetaSlot> slots = new ArrayList<MetaSlot>();
 
-		for (MetaObject metaObject : getAllMetaObjects()) {
-			slots.addAll(metaObject.getSlots());
-		}
+        for (MetaObject metaObject : getAllMetaObjects()) {
+            slots.addAll(metaObject.getSlots());
+        }
 
-		return slots;
-	}
+        return slots;
+    }
 
-	@Override
-	public void addSlot(MetaSlot slot) {
-	}
+    @Override
+    public void addSlot(MetaSlot slot) {
+    }
 
-	@Override
-	public boolean removeSlot(MetaSlot slot) {
-		return false;
-	}
+    @Override
+    public boolean removeSlot(MetaSlot slot) {
+        return false;
+    }
 
-	@Override
-	public MetaObjectKey getKey() {
-		return null;
-	}
+    @Override
+    public MetaObjectKey getKey() {
+        return null;
+    }
 
-	@Override
-	public List<MetaSlot> getHiddenSlots() {
-		List<MetaSlot> slots = new ArrayList<MetaSlot>();
+    @Override
+    public List<MetaSlot> getHiddenSlots() {
+        List<MetaSlot> slots = new ArrayList<MetaSlot>();
 
-		for (MetaObject metaObject : getAllMetaObjects()) {
-			slots.addAll(metaObject.getHiddenSlots());
-		}
+        for (MetaObject metaObject : getAllMetaObjects()) {
+            slots.addAll(metaObject.getHiddenSlots());
+        }
 
-		return slots;
-	}
+        return slots;
+    }
 
-	@Override
-	public void addHiddenSlot(MetaSlot slot) {
-	}
+    @Override
+    public void addHiddenSlot(MetaSlot slot) {
+    }
 
-	@Override
-	public void commit() {
-		for (MetaObject metaObject : getAllMetaObjects()) {
-			metaObject.commit();
-		}
-	}
+    @Override
+    public void commit() {
+        for (MetaObject metaObject : getAllMetaObjects()) {
+            metaObject.commit();
+        }
+    }
 }
