@@ -70,9 +70,13 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 
     @Override
     public void resetBuffer() {
-        super.resetBuffer();
-        bufferedFacadServletOutputStream.resetBuffer();
-        bufferedFacadPrintWriter.resetBuffer();
+        // super.resetBuffer();
+        if (bufferedFacadServletOutputStream != null) {
+            bufferedFacadServletOutputStream.resetBuffer();
+        }
+        if (bufferedFacadPrintWriter != null) {
+            bufferedFacadPrintWriter.resetBuffer();
+        }
     }
 
 }
