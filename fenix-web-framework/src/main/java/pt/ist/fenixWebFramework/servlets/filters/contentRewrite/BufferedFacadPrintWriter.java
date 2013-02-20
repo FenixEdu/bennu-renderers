@@ -60,4 +60,8 @@ public class BufferedFacadPrintWriter extends PrintWriter {
 	return stringBuilder.toString();
     }
 
+    public void resetBuffer() {
+        stringBuilder.setLength(0);
+    }
+
 }
