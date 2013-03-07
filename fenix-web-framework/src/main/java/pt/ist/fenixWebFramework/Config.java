@@ -150,8 +150,8 @@ public class Config extends pt.ist.fenixframework.Config {
     }
 
     @Override
-    public void checkConfig() {
-        super.checkConfig();
+    public void checkIsValid() {
+        super.checkIsValid();
         checkRequired(defaultLanguage, "defaultLanguage");
         checkRequired(defaultLocation, "defaultLocation");
     }
