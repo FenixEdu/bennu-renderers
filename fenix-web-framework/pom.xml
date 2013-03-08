@@ -110,6 +110,12 @@
 			<groupId>struts</groupId>
 			<artifactId>struts</artifactId>
 			<version>1.2.7</version>
+			<exclusions>
+				<exclusion>
+					<groupId>antlr</groupId>
+					<artifactId>antlr</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>pt.ist</groupId>
