@@ -15,11 +15,8 @@ import pt.ist.fenixWebFramework.renderers.model.CompositeSlotSetter;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectKey;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.SimpleMetaObject;
-import pt.ist.fenixWebFramework.services.ServiceManager;
-import pt.ist.fenixWebFramework.services.ServicePredicate;
 import pt.ist.fenixframework.DomainObject;
-import pt.ist.fenixframework.pstm.IllegalWriteException;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.core.WriteOnReadError;
 
 public class DomainMetaObject extends SimpleMetaObject {
 
@@ -125,8 +122,8 @@ public class DomainMetaObject extends SimpleMetaObject {
 
                     processChange(change, object);
                 } catch (InvocationTargetException e) {
-                    if (e.getCause() != null && e.getCause() instanceof IllegalWriteException) {
-                        throw (IllegalWriteException) e.getCause();
+                    if (e.getCause() != null && e.getCause() instanceof WriteOnReadError) {
+                        throw (WriteOnReadError) e.getCause();
                     }
                     if (e.getCause() != null && e.getCause() instanceof RuntimeException) {
                         throw (RuntimeException) e.getCause();
@@ -161,8 +158,8 @@ public class DomainMetaObject extends SimpleMetaObject {
             try {
                 setter.invoke(object, values);
             } catch (InvocationTargetException e) {
-                if (e.getCause() != null && e.getCause() instanceof IllegalWriteException) {
-                    throw (IllegalWriteException) e.getCause();
+                if (e.getCause() != null && e.getCause() instanceof WriteOnReadError) {
+                    throw (WriteOnReadError) e.getCause();
                 }
                 if (e.getCause() != null && e.getCause() instanceof RuntimeException) {
                     throw (RuntimeException) e.getCause();

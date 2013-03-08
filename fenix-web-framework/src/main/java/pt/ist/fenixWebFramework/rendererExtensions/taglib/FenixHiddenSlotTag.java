@@ -13,7 +13,7 @@ import pt.ist.fenixWebFramework.renderers.converters.EnumConverter;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
 import pt.ist.fenixWebFramework.renderers.taglib.HiddenSlotTag;
 import pt.ist.fenixframework.DomainObject;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.FenixFramework;
 
 public class FenixHiddenSlotTag extends HiddenSlotTag {
 
@@ -108,8 +108,7 @@ public class FenixHiddenSlotTag extends HiddenSlotTag {
 
     protected Object getPersistentObject() throws JspException {
         if (getOid() != null) {
-            final long oid = Long.parseLong(getOid());
-            return Transaction.getObjectForOID(oid);
+            return FenixFramework.getDomainObject(getOid());
         }
         return null;
     }

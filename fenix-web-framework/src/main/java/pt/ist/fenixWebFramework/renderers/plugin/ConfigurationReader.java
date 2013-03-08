@@ -29,8 +29,8 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 import pt.ist.fenixWebFramework.renderers.validators.RequiredValidator;
-import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
-import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
+import pt.ist.fenixframework.core.Project;
+import pt.ist.fenixframework.core.exception.ProjectException;
 import pt.utl.ist.fenix.tools.util.Pair;
 
 public class ConfigurationReader {
@@ -505,18 +505,17 @@ public class ConfigurationReader {
                 properties.load(stream);
             }
 
-            for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(properties.getProperty("app.name"))
-                    .getArtifacts()) {
-                URL renderConfig = context.getResource("/WEB-INF/" + artifact.getName() + "/renderers-config.xml");
+            for (Project project : Project.fromName(properties.getProperty("app.name")).getProjects()) {
+                URL renderConfig = context.getResource("/WEB-INF/" + project.getName() + "/renderers-config.xml");
                 if (renderConfig != null) {
                     ConfigurationReader.readRenderers(context, renderConfig);
                 }
-                URL schemaConfig = context.getResource("/WEB-INF/" + artifact.getName() + "/schemas-config.xml");
+                URL schemaConfig = context.getResource("/WEB-INF/" + project.getName() + "/schemas-config.xml");
                 if (schemaConfig != null) {
                     ConfigurationReader.readSchemas(context, schemaConfig);
                 }
             }
-        } catch (IOException | FenixFrameworkProjectException e) {
+        } catch (IOException | ProjectException e) {
             throw new ServletException(e);
         }
 

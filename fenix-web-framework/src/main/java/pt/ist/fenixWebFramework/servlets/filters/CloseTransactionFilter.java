@@ -8,10 +8,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 
-import pt.ist.fenixframework.pstm.RequestInfo;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.Atomic;
 
 public class CloseTransactionFilter implements Filter {
 
@@ -24,21 +22,14 @@ public class CloseTransactionFilter implements Filter {
     }
 
     @Override
+    @Atomic(readOnly = true)
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
-
-        if (request instanceof HttpServletRequest) {
-            RequestInfo.setRequestURI(((HttpServletRequest) request).getRequestURI());
-        }
-
-        try {
-            Transaction.begin(true);
-            Transaction.currentFenixTransaction().setReadOnly();
-            chain.doFilter(request, response);
-        } finally {
-            Transaction.forceFinish();
-            RequestInfo.clear();
-        }
+        /* 
+         * No need to do anything, due to @Atomic, FenixFramework will ensure
+         * this method runs inside a read-only transaction.
+         */
+        chain.doFilter(request, response);
     }
 
 }

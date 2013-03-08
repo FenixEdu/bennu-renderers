@@ -38,8 +38,8 @@ import pt.ist.fenixWebFramework.struts.annotations.Input;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixWebFramework.struts.tiles.FenixDefinitionsFactory;
 import pt.ist.fenixWebFramework.struts.tiles.PartialTileDefinition;
-import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
-import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
+import pt.ist.fenixframework.core.Project;
+import pt.ist.fenixframework.core.exception.ProjectException;
 
 /**
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
@@ -291,9 +291,8 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
                 properties.load(stream);
             }
 
-            for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(properties.getProperty("app.name"))
-                    .getArtifacts()) {
-                try (InputStream stream = loader.getResourceAsStream(artifact.getName() + "/.actionAnnotationLog")) {
+            for (Project project : Project.fromName(properties.getProperty("app.name")).getProjects()) {
+                try (InputStream stream = loader.getResourceAsStream(project.getName() + "/.actionAnnotationLog")) {
                     if (stream != null) {
                         List<String> classnames = IOUtils.readLines(stream);
                         for (String classname : classnames) {
@@ -307,7 +306,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
                     }
                 }
             }
-        } catch (IOException | FenixFrameworkProjectException e) {
+        } catch (IOException | ProjectException e) {
             e.printStackTrace();
         }
     }

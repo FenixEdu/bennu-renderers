@@ -97,7 +97,7 @@ public class RenderersPlugin implements PlugIn {
 
         } catch (ClassNotFoundException ex) {
             if (LogLevel.FATAL) {
-                logger.fatal("Can't set RequestProcessor: bad class name '" + configProcessorClassname + "'.");
+                logger.error("Can't set RequestProcessor: bad class name '" + configProcessorClassname + "'.");
             }
             throw new ServletException(ex);
         }
@@ -113,7 +113,7 @@ public class RenderersPlugin implements PlugIn {
         Class ourProcessorClass = RenderersRequestProcessorImpl.implementationClass;
         if (!ourProcessorClass.isAssignableFrom(configProcessorClass)) {
             if (LogLevel.FATAL) {
-                logger.fatal("Specified processor is incopatible with " + RequestProcessor.class.getName());
+                logger.error("Specified processor is incopatible with " + RequestProcessor.class.getName());
             }
             throw new ServletException("invalid processor was specified");
         }
