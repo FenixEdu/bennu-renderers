@@ -15,12 +15,14 @@ import pt.ist.fenixWebFramework.renderers.model.CompositeSlotSetter;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectKey;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.SimpleMetaObject;
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.WriteOnReadError;
 
 public class DomainMetaObject extends SimpleMetaObject {
 
-    private long oid;
+    private String externalId;
 
     private transient DomainObject object;
 
@@ -45,20 +47,20 @@ public class DomainMetaObject extends SimpleMetaObject {
     protected void setObject(final Object object) {
         this.object = (DomainObject) object;
         if (this.object != null) {
-            this.oid = this.object.getOID();
+            this.externalId = this.object.getExternalId();
         }
     }
 
     protected DomainObject getPersistentObject() {
-        return Transaction.getObjectForOID(oid);
+        return FenixFramework.getDomainObject(externalId);
     }
 
-    public long getOid() {
-        return oid;
+    public String getExternalId() {
+        return externalId;
     }
 
-    protected void setOid(long oid) {
-        this.oid = oid;
+    protected void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     @Override
@@ -68,14 +70,14 @@ public class DomainMetaObject extends SimpleMetaObject {
 
     @Override
     public MetaObjectKey getKey() {
-        return new MetaObjectKey(getType(), getOid());
+        return new MetaObjectKey(getType(), getExternalId());
     }
 
     @Override
     public void commit() {
         List<ObjectChange> changes = new ArrayList<ObjectChange>();
 
-        ObjectKey key = new ObjectKey(getOid(), getType());
+        ObjectKey key = new ObjectKey(getExternalId(), getType());
 
         for (MetaSlot slot : getAllSlots()) {
             if (slot.isSetterIgnored()) {
@@ -100,7 +102,7 @@ public class DomainMetaObject extends SimpleMetaObject {
         callService(changes);
     }
 
-    public static class ServicePredicateWithResult implements ServicePredicate {
+    public static class ServicePredicateWithResult {
 
         final List<ObjectChange> changes;
 
@@ -110,7 +112,6 @@ public class DomainMetaObject extends SimpleMetaObject {
             this.changes = changes;
         }
 
-        @Override
         public void execute() {
             beforeRun(changes);
 
@@ -264,7 +265,7 @@ public class DomainMetaObject extends SimpleMetaObject {
         }
 
         protected DomainObject getNewObject(ObjectChange change) {
-            return Transaction.getObjectForOID(change.key.getOid());
+            return FenixFramework.getDomainObject(change.key.getExternalId());
         }
 
     }
@@ -273,9 +274,10 @@ public class DomainMetaObject extends SimpleMetaObject {
         return new ServicePredicateWithResult(changes);
     }
 
+    @Atomic
     protected Object callService(final List<ObjectChange> changes) {
         final ServicePredicateWithResult servicePredicate = getServiceToCall(changes);
-        ServiceManager.execute(servicePredicate);
+        servicePredicate.execute();
         final Object result = servicePredicate.getResult();
         return result;
     }

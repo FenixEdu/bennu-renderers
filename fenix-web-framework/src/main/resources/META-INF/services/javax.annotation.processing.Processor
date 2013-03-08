@@ -1,4 +1,3 @@
-pt.ist.fenixWebFramework.services.ServiceAnnotationProcessor
 pt.ist.fenixWebFramework.security.accessControl.CheckedAnnotationProcessor
 pt.ist.fenixWebFramework.servlets.functionalities.CreateNodeActionAnnotationProcessor
 pt.ist.fenixWebFramework.servlets.functionalities.FunctionalityAnnotationProcessor
