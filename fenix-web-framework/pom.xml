@@ -71,7 +71,7 @@
 					</archive>
 					<excludes>
 						<exclude>**/*_Base*</exclude>
-						<exclude>**/pt/ist/fenixframework/ValueTypeSerializationGenerator*</exclude>
+						<exclude>**/pt/ist/fenixframework/ValueTypeSerializer*</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
