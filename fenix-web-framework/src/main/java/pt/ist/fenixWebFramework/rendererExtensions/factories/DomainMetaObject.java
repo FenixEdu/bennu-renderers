@@ -201,8 +201,8 @@ public class DomainMetaObject extends SimpleMetaObject {
                 throw new RuntimeException("could not find type of property " + slot + " in object " + object);
             }
 
-            if (type.isAssignableFrom(Collection.class)) {
-                setCollectionProperty(object, slot, (List) value);
+            if (Collection.class.isAssignableFrom(type)) {
+                setCollectionProperty(object, slot, (Collection) value);
             } else {
                 try {
                     setSlotProperty(object, slot, value);
@@ -226,7 +226,7 @@ public class DomainMetaObject extends SimpleMetaObject {
             PropertyUtils.setProperty(object, slot, value);
         }
 
-        protected void setCollectionProperty(Object object, String slot, List list) throws IllegalAccessException,
+        protected void setCollectionProperty(Object object, String slot, Collection list) throws IllegalAccessException,
                 InvocationTargetException, NoSuchMethodException, InstantiationException {
             Collection relation = (Collection) getSlotProperty(object, slot);
 
