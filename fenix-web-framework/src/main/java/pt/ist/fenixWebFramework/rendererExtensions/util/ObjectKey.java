@@ -36,7 +36,7 @@ public class ObjectKey {
             return false;
         }
 
-        return this.externalId == otherKey.externalId;
+        return this.externalId == null ? otherKey.externalId == null : this.externalId.equals(otherKey.externalId);
     }
 
     @Override

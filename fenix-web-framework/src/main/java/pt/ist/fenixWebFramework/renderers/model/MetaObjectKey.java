@@ -44,7 +44,7 @@ public class MetaObjectKey implements Serializable {
         }
 
         MetaObjectKey otherKey = (MetaObjectKey) other;
-        return this.code == otherKey.code && this.type.equals(otherKey.type);
+        return (this.code == null ? otherKey.code == null : this.code.equals(otherKey.code)) && this.type.equals(otherKey.type);
     }
 
     @Override
