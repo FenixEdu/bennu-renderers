@@ -8,14 +8,15 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 
 public class LinkFormatTag extends TagSupport {
 
     static private final long serialVersionUID = 1L;
-    static private final Logger logger = Logger.getLogger(LinkFormatTag.class);
+    static private final Logger logger = LoggerFactory.getLogger(LinkFormatTag.class);
     static private final String ELEMENTS_SEPARATOR = ",";
 
     private String name;

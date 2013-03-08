@@ -9,12 +9,13 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @WebListener
 public class ShutdownContextListener implements ServletContextListener {
 
-    private static final Logger logger = Logger.getLogger(ShutdownContextListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(ShutdownContextListener.class);
 
     private ClassLoader thisClassLoader;
 

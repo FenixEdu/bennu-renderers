@@ -1,6 +1,7 @@
 package pt.ist.fenixWebFramework.rendererExtensions;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework.renderers.StringRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
@@ -25,7 +26,7 @@ import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
  */
 public class MultiLanguageStringRenderer extends StringRenderer {
 
-    private static final Logger logger = Logger.getLogger(MultiLanguageStringRenderer.class);
+    private static final Logger logger = LoggerFactory.getLogger(MultiLanguageStringRenderer.class);
 
     private String language;
     private boolean forceShowLanguage;

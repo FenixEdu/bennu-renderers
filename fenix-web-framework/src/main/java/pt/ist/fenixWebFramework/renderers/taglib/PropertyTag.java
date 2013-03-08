@@ -3,12 +3,13 @@ package pt.ist.fenixWebFramework.renderers.taglib;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 
 public class PropertyTag extends BodyTagSupport {
-    private static final Logger logger = Logger.getLogger(PropertyTag.class);
+    private static final Logger logger = LoggerFactory.getLogger(PropertyTag.class);
 
     private String name = null;
 

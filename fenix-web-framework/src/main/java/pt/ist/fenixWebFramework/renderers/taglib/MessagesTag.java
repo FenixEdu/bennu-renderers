@@ -10,7 +10,8 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
@@ -18,7 +19,7 @@ import pt.ist.fenixWebFramework.renderers.components.state.Message;
 import pt.ist.fenixWebFramework.renderers.components.state.Message.Type;
 
 public class MessagesTag extends BodyTagSupport {
-    private static final Logger logger = Logger.getLogger(MessagesTag.class);
+    private static final Logger logger = LoggerFactory.getLogger(MessagesTag.class);
 
     private Iterator<Message> iterator;
     private Message message;

@@ -6,7 +6,8 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 
 import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
@@ -20,7 +21,7 @@ import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
  */
 public class CreateObjectTag extends EditObjectTag {
 
-    private static final Logger logger = Logger.getLogger(CreateObjectTag.class);
+    private static final Logger logger = LoggerFactory.getLogger(CreateObjectTag.class);
 
     private List<DefaultValue> defaultValues;
 

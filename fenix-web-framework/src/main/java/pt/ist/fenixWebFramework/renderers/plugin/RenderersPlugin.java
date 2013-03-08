@@ -2,13 +2,14 @@ package pt.ist.fenixWebFramework.renderers.plugin;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.action.PlugIn;
 import org.apache.struts.action.RequestProcessor;
 import org.apache.struts.config.ControllerConfig;
 import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.util.RequestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
@@ -17,7 +18,7 @@ import pt.ist.fenixWebFramework.renderers.model.UserIdentityFactory;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 
 public class RenderersPlugin implements PlugIn {
-    private static Logger logger = Logger.getLogger(RenderersPlugin.class);
+    private static Logger logger = LoggerFactory.getLogger(RenderersPlugin.class);
 
     // TODO: allow per module configuration, this includes factories
     private static boolean initialized = false;

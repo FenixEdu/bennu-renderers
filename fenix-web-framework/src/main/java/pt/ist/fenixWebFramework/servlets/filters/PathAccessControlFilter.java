@@ -18,12 +18,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.utl.ist.fenix.tools.util.PropertiesManager;
 
 public class PathAccessControlFilter implements Filter {
-    private static final Logger logger = Logger.getLogger(PathAccessControlFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(PathAccessControlFilter.class);
 
     private static final String ACCESS_CONTROL_PROPERTIES = "/.pathAccessControl.properties";
     private static final String ACCESS_CONTROL_PATH_PREFIX = "host.control.path.";

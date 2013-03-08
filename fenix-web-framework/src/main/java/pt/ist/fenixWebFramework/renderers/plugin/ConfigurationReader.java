@@ -11,10 +11,11 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.exceptions.NoRendererException;
@@ -33,7 +34,7 @@ import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
 import pt.utl.ist.fenix.tools.util.Pair;
 
 public class ConfigurationReader {
-    private static final Logger logger = Logger.getLogger(ConfigurationReader.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConfigurationReader.class);
 
     public static void readSchemas(ServletContext context, URL schemaConfig) throws ServletException {
         Element root = readConfigRootElement(context, schemaConfig);

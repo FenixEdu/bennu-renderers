@@ -6,7 +6,8 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
@@ -15,7 +16,7 @@ import pt.ist.fenixWebFramework.renderers.components.state.Message.Type;
 import pt.ist.fenixWebFramework.renderers.components.state.SlotMessage;
 
 public class MessageTag extends TagSupport {
-    private static final Logger logger = Logger.getLogger(MessageTag.class);
+    private static final Logger logger = LoggerFactory.getLogger(MessageTag.class);
 
     private String forName;
     private String type;

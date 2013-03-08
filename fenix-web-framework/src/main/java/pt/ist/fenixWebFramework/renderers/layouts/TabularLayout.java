@@ -1,6 +1,7 @@
 package pt.ist.fenixWebFramework.renderers.layouts;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
@@ -11,7 +12,7 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlTableRow;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 
 public abstract class TabularLayout extends Layout {
-    protected static Logger logger = Logger.getLogger(TabularLayout.class);
+    protected static Logger logger = LoggerFactory.getLogger(TabularLayout.class);
 
     private String caption;
     private String summary;
