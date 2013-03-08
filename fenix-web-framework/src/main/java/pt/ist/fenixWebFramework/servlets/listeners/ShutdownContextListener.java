@@ -12,6 +12,8 @@ import javax.servlet.annotation.WebListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.fenixframework.FenixFramework;
+
 @WebListener
 public class ShutdownContextListener implements ServletContextListener {
 
@@ -27,6 +29,8 @@ public class ShutdownContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent context) {
+        FenixFramework.shutdown();
+
         this.thisClassLoader = this.getClass().getClassLoader();
         interruptThreads();
         deregisterJDBCDrivers();
@@ -61,7 +65,7 @@ public class ShutdownContextListener implements ServletContextListener {
             }
 
             if (thread.isAlive()) {
-                System.out.println("Killing initiated thread: " + thread + " of class " + thread.getClass());
+                logger.info("Killing initiated thread: " + thread + " of class " + thread.getClass());
                 thread.interrupt();
             }
         }
