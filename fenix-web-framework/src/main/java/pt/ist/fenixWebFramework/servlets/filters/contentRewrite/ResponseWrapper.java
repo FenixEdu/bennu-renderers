@@ -67,4 +67,15 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
         return StringUtils.EMPTY;
     }
 
+    @Override
+    public void resetBuffer() {
+        // super.resetBuffer();
+        if (bufferedFacadServletOutputStream != null) {
+            bufferedFacadServletOutputStream.resetBuffer();
+        }
+        if (bufferedFacadPrintWriter != null) {
+            bufferedFacadPrintWriter.resetBuffer();
+        }
+    }
+
 }

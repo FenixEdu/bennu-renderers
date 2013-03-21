@@ -41,4 +41,8 @@ public class BufferedFacadServletOutputStream extends ServletOutputStream {
         return byteArrayOutputStream.toString();
     }
 
+    public void resetBuffer() {
+        byteArrayOutputStream.reset();
+    }
+
 }

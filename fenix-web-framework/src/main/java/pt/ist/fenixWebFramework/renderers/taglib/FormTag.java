@@ -19,6 +19,7 @@ public class FormTag extends ContextTag {
     private String okKey;
     private String cancelKey;
     private String formId;
+    private String style;
 
     public boolean isConfirmationNeeded() {
         return confirmationNeeded;
@@ -92,6 +93,14 @@ public class FormTag extends ContextTag {
         this.target = target;
     }
 
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
+    }
+
     @Override
     public int doStartTag() throws JspException {
         writeStartForm();
@@ -141,6 +150,10 @@ public class FormTag extends ContextTag {
 
         if (getTarget() != null) {
             formHead.append("target=\"" + getTarget() + "\" ");
+        }
+
+        if (getStyle() != null) {
+            formHead.append("style=\"" + getStyle() + "\" ");
         }
 
         formHead.append("method=\"post\">\n");

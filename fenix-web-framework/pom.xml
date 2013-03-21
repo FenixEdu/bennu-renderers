@@ -8,7 +8,7 @@
 	<name>Fenix Web Framework</name>
 
 	<properties>
-		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<build>
@@ -147,16 +147,16 @@
 			<systemPath>${java.home}/../lib/tools.jar</systemPath>
 		</dependency>
 		<dependency>
-  			<!-- jsoup HTML parser library @ http://jsoup.org/ -->
-  			<groupId>org.jsoup</groupId>
-  			<artifactId>jsoup</artifactId>
-  			<version>1.6.3</version>
+			<!-- jsoup HTML parser library @ http://jsoup.org/ -->
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.6.3</version>
 		</dependency>
 		<dependency>
-				<groupId>jfree</groupId>
-					<artifactId>jfreechart</artifactId>
-						<version>0.9.18</version>
-					</dependency>
+			<groupId>jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>0.9.18</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
