@@ -10,7 +10,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -38,8 +37,8 @@ import pt.ist.fenixWebFramework.struts.annotations.Input;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixWebFramework.struts.tiles.FenixDefinitionsFactory;
 import pt.ist.fenixWebFramework.struts.tiles.PartialTileDefinition;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.Project;
-import pt.ist.fenixframework.core.exception.ProjectException;
 
 /**
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
@@ -283,15 +282,8 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
     private void loadActionsFromFile(final Set<Class<?>> actionClasses) {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            Properties properties = new Properties();
-            try (InputStream stream = loader.getResourceAsStream("/configuration.properties")) {
-                if (stream == null) {
-                    throw new RuntimeException();
-                }
-                properties.load(stream);
-            }
 
-            for (Project project : Project.fromName(properties.getProperty("app.name")).getProjects()) {
+            for (Project project : FenixFramework.getProject().getProjects()) {
                 try (InputStream stream = loader.getResourceAsStream(project.getName() + "/.actionAnnotationLog")) {
                     if (stream != null) {
                         List<String> classnames = IOUtils.readLines(stream);
@@ -306,7 +298,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
                     }
                 }
             }
-        } catch (IOException | ProjectException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

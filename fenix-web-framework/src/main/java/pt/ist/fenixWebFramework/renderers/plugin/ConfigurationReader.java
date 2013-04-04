@@ -1,7 +1,6 @@
 package pt.ist.fenixWebFramework.renderers.plugin;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,8 +28,8 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 import pt.ist.fenixWebFramework.renderers.validators.RequiredValidator;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.Project;
-import pt.ist.fenixframework.core.exception.ProjectException;
 import pt.utl.ist.fenix.tools.util.Pair;
 
 public class ConfigurationReader {
@@ -496,16 +495,7 @@ public class ConfigurationReader {
         RendererPropertyUtils.initCache();
 
         try {
-            Properties properties = new Properties();
-            try (InputStream stream = ConfigurationReader.class.getResourceAsStream("/configuration.properties")) {
-                if (stream == null) {
-                    logger.error("configuration.properties not found found in classpath");
-                    throw new RuntimeException();
-                }
-                properties.load(stream);
-            }
-
-            for (Project project : Project.fromName(properties.getProperty("app.name")).getProjects()) {
+            for (Project project : FenixFramework.getProject().getProjects()) {
                 URL renderConfig = context.getResource("/WEB-INF/" + project.getName() + "/renderers-config.xml");
                 if (renderConfig != null) {
                     ConfigurationReader.readRenderers(context, renderConfig);
@@ -515,7 +505,7 @@ public class ConfigurationReader {
                     ConfigurationReader.readSchemas(context, schemaConfig);
                 }
             }
-        } catch (IOException | ProjectException e) {
+        } catch (IOException e) {
             throw new ServletException(e);
         }
 
