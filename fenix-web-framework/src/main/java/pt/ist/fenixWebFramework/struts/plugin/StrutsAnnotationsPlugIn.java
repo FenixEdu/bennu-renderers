@@ -281,7 +281,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
 	if (inputStream != null) {
 	    try {
 		final String contents = FileUtils.readFile(inputStream);
-		for (final String classname : contents.split(ActionAnnotationProcessor.ENTRY_SEPERATOR)) {
+		for (final String classname : contents.split(ActionAnnotationProcessor.ENTRY_SEPARATOR)) {
 		    try {
 			ClassLoader loader = Thread.currentThread().getContextClassLoader();
 			Class<?> type = loader.loadClass(classname);

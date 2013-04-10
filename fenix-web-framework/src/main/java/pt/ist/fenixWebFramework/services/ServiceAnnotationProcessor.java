@@ -1,60 +1,48 @@
 package pt.ist.fenixWebFramework.services;
 
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.Element;
+
+import pt.ist.fenixWebFramework.annotation.FenixWebFrameworkAbstractProcessor;
 
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-// cannot use ActiveObject.class.getName() the value must be a constant
-// expression BLEAH!
 @SupportedAnnotationTypes({ "pt.ist.fenixWebFramework.services.Service" })
-public class ServiceAnnotationProcessor extends AbstractProcessor {
+public class ServiceAnnotationProcessor extends FenixWebFrameworkAbstractProcessor {
 
-    static final String LOG_FILENAME = ".serviceAnnotationLog";
-    static final String FIELD_SEPERATOR = " ";
-    static final String ENTRY_SEPERATOR = "\n";
+    protected static final String LOG_FILENAME = ".serviceAnnotationLog";
+    protected static final String FIELD_SEPARATOR = " ";
+    protected static final String ENTRY_SEPARATOR = "\n";
+
+    private static final Set<String> ENTRY_SET = new HashSet<String>();
 
     @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-
-	FileWriter fileWriter = null;
-	try {
-	    fileWriter = new FileWriter(LOG_FILENAME, true);
-
-	    final Set<MethodSymbol> annotatedElements = (Set<MethodSymbol>) roundEnv.getElementsAnnotatedWith(Service.class);
-
-	    for (final MethodSymbol methodElement : annotatedElements) {
-		final ClassSymbol classSymbol = (ClassSymbol) methodElement.getEnclosingElement();
-		String className = processClassName(classSymbol);
-		fileWriter.write(className);
-		fileWriter.write(FIELD_SEPERATOR);
-		fileWriter.write(methodElement.getSimpleName().toString());
-		fileWriter.write(ENTRY_SEPERATOR);
-	    }
-	} catch (IOException e) {
-	    throw new Error(e);
-	} finally {
-	    if (fileWriter != null) {
-		try {
-		    fileWriter.close();
-		} catch (IOException e) {
-		    throw new Error(e);
-		}
-	    }
+    public void processElements(Set<? extends Element> elements) {
+	for (final Element element : elements) {
+	    final ClassSymbol classSymbol = (ClassSymbol) element.getEnclosingElement();
+	    String className = processClassName(classSymbol);
+	    String entry = getEntry(className, element.getSimpleName().toString());
+	    ENTRY_SET.add(entry);
 	}
+    }
 
-	return true;
+    private String getEntry(String className, String methodName) {
+	StringBuilder entryBuilder = new StringBuilder();
+	entryBuilder.append(className);
+	entryBuilder.append(FIELD_SEPARATOR);
+	entryBuilder.append(methodName);
+	entryBuilder.append(ENTRY_SEPARATOR);
+	return entryBuilder.toString();
     }
 
     private String processClassName(ClassSymbol classSymbol) {
@@ -63,6 +51,23 @@ public class ServiceAnnotationProcessor extends AbstractProcessor {
 	    return processClassName((ClassSymbol) symbol) + "$" + classSymbol.getSimpleName();
 	}
 	return classSymbol.getQualifiedName().toString();
+    }
+
+    @Override
+    public String getLogFilename() {
+	return LOG_FILENAME;
+    }
+
+    @Override
+    public Class<? extends Annotation> getAnnotationClass() {
+	return Service.class;
+    }
+
+    @Override
+    public void writeLogFile(Writer writer) throws IOException {
+	for (String entry : ENTRY_SET) {
+	    writer.append(entry);
+	}
     }
 
 }

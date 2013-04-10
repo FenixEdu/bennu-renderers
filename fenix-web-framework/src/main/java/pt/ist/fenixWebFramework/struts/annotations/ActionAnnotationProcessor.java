@@ -1,72 +1,52 @@
 package pt.ist.fenixWebFramework.struts.annotations;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.Element;
 
-import pt.utl.ist.fenix.tools.util.FileUtils;
+import pt.ist.fenixWebFramework.annotation.FenixWebFrameworkAbstractProcessor;
 
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedAnnotationTypes( { "pt.ist.fenixWebFramework.struts.annotations.Mapping" })
-public class ActionAnnotationProcessor extends AbstractProcessor {
+@SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SupportedAnnotationTypes({ "pt.ist.fenixWebFramework.struts.annotations.Mapping" })
+public class ActionAnnotationProcessor extends FenixWebFrameworkAbstractProcessor {
 
     static final String LOG_FILENAME = ".actionAnnotationLog";
-    public static final String ENTRY_SEPERATOR = "\n";
+    public static final String ENTRY_SEPARATOR = "\n";
+
+    private final Set<String> actions = new HashSet<String>();
 
     @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    public String getLogFilename() {
+	return LOG_FILENAME;
+    }
 
-	final Set<String> actions = new HashSet<String>();
+    @Override
+    public Class<? extends Annotation> getAnnotationClass() {
+	return Mapping.class;
+    }
 
-	final File file = new File(LOG_FILENAME);
-	if (file.exists()) {
-	    try {
-		final String contents = FileUtils.readFile(LOG_FILENAME);
-		for (final String line : contents.split(ENTRY_SEPERATOR)) {
-		    actions.add(line);
-		}
-	    } catch (final IOException e) {
-		e.printStackTrace();
-	    }
+    @Override
+    public void writeLogFile(Writer writer) throws IOException {
+	for (final String action : actions) {
+	    writer.append(action);
+	    writer.write(ENTRY_SEPARATOR);
 	}
+    }
 
-	final Set<ClassSymbol> elements = (Set<ClassSymbol>) roundEnv.getElementsAnnotatedWith(Mapping.class);
-
-	for (final ClassSymbol classSymbol : elements) {
-	    actions.add(classSymbol.getQualifiedName().toString());
+    @Override
+    public void processElements(Set<? extends Element> elements) {
+	for (Element element : elements) {
+	    actions.add(((ClassSymbol) element).getQualifiedName().toString());
 	}
-
-	FileWriter fileWriter = null;
-	try {
-	    fileWriter = new FileWriter(LOG_FILENAME, true);
-	    for (final String action : actions) {
-		fileWriter.append(action);
-		fileWriter.write(ENTRY_SEPERATOR);
-	    }
-	} catch (final IOException e) {
-	    e.printStackTrace();
-	} finally {
-	    if (fileWriter != null) {
-		try {
-		    fileWriter.close();
-		} catch (final IOException e) {
-		    e.printStackTrace();
-		}
-	    }
-	}
-
-	return true;
     }
 
 }

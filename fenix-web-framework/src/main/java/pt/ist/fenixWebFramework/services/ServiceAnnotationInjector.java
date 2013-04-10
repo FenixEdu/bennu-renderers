@@ -1,20 +1,68 @@
 package pt.ist.fenixWebFramework.services;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
+import javassist.LoaderClassPath;
 import javassist.NotFoundException;
-import pt.utl.ist.fenix.tools.util.FileUtils;
+
+import org.apache.commons.io.FileUtils;
 
 public class ServiceAnnotationInjector {
 
     private static final String SERVICE_MANAGER_PACKAGE = ServiceManager.class.getPackage().getName();
+
+    public static void inject(File outputFolder, ClassLoader loader) {
+	final ClassPool classPool = ClassPool.getDefault();
+	classPool.appendClassPath(new LoaderClassPath(loader));
+
+	classPool.importPackage(SERVICE_MANAGER_PACKAGE);
+	classPool.importPackage("pt.ist.fenixWebFramework.security");
+	classPool.importPackage("pt.ist.fenixframework.pstm");
+	classPool.importPackage("pt.ist.fenixWebFramework._development");
+
+	File file = null;
+	try {
+	    final URL resource = ServiceAnnotationInjector.class.getClassLoader().getResource(
+		    ServiceAnnotationProcessor.LOG_FILENAME);
+	    if (resource == null) {
+		System.out.printf("File not found :%s. Skipping service annotation injection.\n",
+			ServiceAnnotationProcessor.LOG_FILENAME);
+		return;
+	    }
+	    final URI uri = resource.toURI();
+	    file = new File(uri);
+	    if (file.exists()) {
+		final String fileContents = FileUtils.readFileToString(file);
+		final String[] lines = fileContents.split(ServiceAnnotationProcessor.ENTRY_SEPARATOR);
+		for (final String line : lines) {
+		    final String[] strings = line.split(ServiceAnnotationProcessor.FIELD_SEPARATOR);
+		    process(outputFolder.getAbsolutePath(), classPool, strings[0], strings[1]);
+		}
+	    } else {
+		throw new Error("[ServiceAnnotationInjector] : couldn't inject @Service, file not found : "
+			+ ServiceAnnotationProcessor.LOG_FILENAME);
+	    }
+	} catch (FileNotFoundException e) {
+	    throw new Error(e);
+	} catch (IOException e) {
+	    throw new Error(e);
+	} catch (URISyntaxException e) {
+	    throw new Error(e);
+	} finally {
+	    if (file != null && file.exists()) {
+		file.delete();
+	    }
+	}
+    }
 
     public static void main(String[] args) {
 	final ClassPool classPool = ClassPool.getDefault();
@@ -44,31 +92,7 @@ public class ServiceAnnotationInjector {
 	    throw new Error(e);
 	}
 
-	classPool.importPackage(SERVICE_MANAGER_PACKAGE);
-	classPool.importPackage("pt.ist.fenixWebFramework.security");
-	classPool.importPackage("pt.ist.fenixframework.pstm");
-	classPool.importPackage("pt.ist.fenixWebFramework._development");
-
-	File file = null;
-	try {
-	    file = new File(ServiceAnnotationProcessor.LOG_FILENAME);
-	    if (file.exists()) {
-		final String fileContents = FileUtils.readFile(new FileInputStream(file));
-		final String[] lines = fileContents.split(ServiceAnnotationProcessor.ENTRY_SEPERATOR);
-		for (final String line : lines) {
-		    final String[] strings = line.split(ServiceAnnotationProcessor.FIELD_SEPERATOR);
-		    process(args[0], classPool, strings[0], strings[1]);
-		}
-	    }
-	} catch (FileNotFoundException e) {
-	    throw new Error(e);
-	} catch (IOException e) {
-	    throw new Error(e);
-	} finally {
-	    if (file != null && file.exists()) {
-		file.delete();
-	    }
-	}
+	inject(new File(args[0]), classPool.getClassLoader());
     }
 
     private static void process(final String outputFolder, final ClassPool classPool, final String className,
@@ -81,8 +105,8 @@ public class ServiceAnnotationInjector {
 		    if (ctMethod.getName().equals(methodName)) {
 			ctMethod.setName("_" + methodName + "_");
 
-			final CtMethod newCtMethod = new CtMethod(ctMethod.getReturnType(), methodName, ctMethod
-				.getParameterTypes(), ctMethod.getDeclaringClass());
+			final CtMethod newCtMethod = new CtMethod(ctMethod.getReturnType(), methodName,
+				ctMethod.getParameterTypes(), ctMethod.getDeclaringClass());
 			newCtMethod.setModifiers(ctMethod.getModifiers());
 			final String body = getWrapperMethod(ctMethod, className, methodName);
 			newCtMethod.setBody(body);
@@ -166,7 +190,7 @@ public class ServiceAnnotationInjector {
 	stringBuilder.append("          command.execute();");
 	stringBuilder.append("          }");
 	stringBuilder.append("          }");
-	
+
 	stringBuilder.append("	        keepGoing = false;");
 	stringBuilder.append("	    } finally {");
 	stringBuilder.append("          if (keepGoing) {");
