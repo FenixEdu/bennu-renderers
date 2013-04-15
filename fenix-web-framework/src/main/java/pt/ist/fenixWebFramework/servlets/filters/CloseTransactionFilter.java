@@ -10,6 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 public class CloseTransactionFilter implements Filter {
 
@@ -22,7 +23,7 @@ public class CloseTransactionFilter implements Filter {
     }
 
     @Override
-    @Atomic(readOnly = true)
+    @Atomic(mode = TxMode.READ)
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
         /* 
