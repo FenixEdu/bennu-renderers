@@ -4,7 +4,7 @@
 	<groupId>pt.ist</groupId>
 	<artifactId>fenix-web-framework</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<name>Fenix Web Framework</name>
 
 	<properties>
@@ -100,6 +100,11 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.6.3</version>
 		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.6.1</version>
+		</dependency>
 	</dependencies>
 
 
@@ -109,5 +114,13 @@
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-maven-repository</url>
 		</repository>
 	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>fenix-ashes-releases</id>
+			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-releases</url>
+		</repository>
+	</distributionManagement>
+
 
 </project>
