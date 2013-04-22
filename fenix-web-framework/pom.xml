@@ -80,7 +80,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>pt.ist</groupId>
-			<artifactId>fenix-framework-core</artifactId>
+			<artifactId>fenix-framework-core-api</artifactId>
 			<version>${version.fenix.framework}</version>
 		</dependency>
 		<dependency>
