@@ -9,7 +9,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version.fenix.framework>2.1-SNAPSHOT</version.fenix.framework>
+		<version.fenix.framework>2.1.0-rc2</version.fenix.framework>
 		<version.bennu.maven.plugin>1.1-SNAPSHOT</version.bennu.maven.plugin>
 	</properties>
 
