@@ -12,7 +12,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Logger;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -30,6 +29,8 @@ import org.apache.commons.fileupload.DefaultFileItemFactory;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileUploadException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework.security.User;
 import pt.ist.fenixWebFramework.security.UserView;
@@ -93,8 +94,8 @@ public class RequestWrapperFilter implements Filter {
 
     public static class FenixSessionWrapper implements HttpSession {
 
-        public static Logger logger = Logger.getLogger(FenixSessionWrapper.class.getName());
-        private HttpSession session;
+        public static Logger logger = LoggerFactory.getLogger(FenixSessionWrapper.class.getName());
+        private final HttpSession session;
 
         public FenixSessionWrapper(HttpSession session) {
             this.session = session;
@@ -189,7 +190,7 @@ public class RequestWrapperFilter implements Filter {
                     stringBuilder.append(" - arg1: ");
                     stringBuilder.append(arg1);
                     stringBuilder.append("\n");
-                    logger.warning(stringBuilder.toString());
+                    logger.warn(stringBuilder.toString());
                     e.printStackTrace();
                 }
             }

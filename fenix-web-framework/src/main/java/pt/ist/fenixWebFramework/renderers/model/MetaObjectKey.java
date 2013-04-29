@@ -12,10 +12,10 @@ import java.io.Serializable;
  */
 public class MetaObjectKey implements Serializable {
 
-    private Class type;
-    private long code;
+    private final Class type;
+    private final String code;
 
-    public MetaObjectKey(Class type, long code) {
+    public MetaObjectKey(Class type, String code) {
         if (type == null) {
             throw new NullPointerException("type cannot be null");
         }
@@ -33,7 +33,7 @@ public class MetaObjectKey implements Serializable {
         return this.type;
     }
 
-    protected long getCode() {
+    protected String getCode() {
         return this.code;
     }
 
@@ -44,12 +44,12 @@ public class MetaObjectKey implements Serializable {
         }
 
         MetaObjectKey otherKey = (MetaObjectKey) other;
-        return this.code == otherKey.code && this.type.equals(otherKey.type);
+        return (this.code == null ? otherKey.code == null : this.code.equals(otherKey.code)) && this.type.equals(otherKey.type);
     }
 
     @Override
     public int hashCode() {
-        return (int) (this.code + this.type.hashCode());
+        return this.code.hashCode() + this.type.hashCode();
     }
 
     @Override

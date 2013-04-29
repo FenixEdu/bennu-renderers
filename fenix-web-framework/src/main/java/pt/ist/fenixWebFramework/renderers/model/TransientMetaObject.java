@@ -31,7 +31,7 @@ public class TransientMetaObject extends MetaObject {
 
     @Override
     public MetaObjectKey getKey() {
-        return new MetaObjectKey(getType(), this.code);
+        return new MetaObjectKey(getType(), String.valueOf(this.code));
     }
 
     @Override

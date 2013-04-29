@@ -10,11 +10,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProfilingFilter implements Filter {
 
-    private final Logger logger = Logger.getLogger("pt.ist.fenixWebFramework.servlets.filters.ProfilingFilter");
+    private final Logger logger = LoggerFactory.getLogger("pt.ist.fenixWebFramework.servlets.filters.ProfilingFilter");
 
     @Override
     public void init(final FilterConfig arg0) throws ServletException {

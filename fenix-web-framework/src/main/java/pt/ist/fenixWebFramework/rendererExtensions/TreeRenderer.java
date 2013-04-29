@@ -796,7 +796,7 @@ public class TreeRenderer extends OutputRenderer {
                 boolean current = false;
                 if (getCurrent() != null) {
                     DomainObject domainObject = (DomainObject) object;
-                    if (domainObject.getIdInternal().toString().equals(getCurrent())) {
+                    if (domainObject.getExternalId().toString().equals(getCurrent())) {
                         current = true;
 
                         for (HtmlListItem level : itemPath) {

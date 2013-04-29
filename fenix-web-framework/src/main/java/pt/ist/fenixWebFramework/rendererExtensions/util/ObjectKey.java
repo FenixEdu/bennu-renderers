@@ -2,18 +2,18 @@ package pt.ist.fenixWebFramework.rendererExtensions.util;
 
 public class ObjectKey {
 
-    private final long oid;
+    private final String externalId;
     private final Class type;
 
-    public ObjectKey(long oid, Class type) {
+    public ObjectKey(String externalId, Class type) {
         super();
 
-        this.oid = oid;
+        this.externalId = externalId;
         this.type = type;
     }
 
-    public long getOid() {
-        return oid;
+    public String getExternalId() {
+        return externalId;
     }
 
     public Class getType() {
@@ -36,11 +36,11 @@ public class ObjectKey {
             return false;
         }
 
-        return this.oid == otherKey.oid;
+        return this.externalId == null ? otherKey.externalId == null : this.externalId.equals(otherKey.externalId);
     }
 
     @Override
     public int hashCode() {
-        return ((int) this.oid) + (this.type == null ? 0 : this.type.hashCode());
+        return this.externalId.hashCode() + (this.type == null ? 0 : this.type.hashCode());
     }
 }

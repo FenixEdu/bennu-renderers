@@ -6,14 +6,14 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.ist.fenixframework.pstm.IllegalWriteException;
+import pt.ist.fenixframework.core.WriteOnReadError;
 
 public class CompositeSlotSetter implements Serializable {
     private MetaObject metaObject;
 
-    private String setterName;
-    private List<MetaSlot> slots;
-    private List<Class> types;
+    private final String setterName;
+    private final List<MetaSlot> slots;
+    private final List<Class> types;
 
     public CompositeSlotSetter(MetaObject metaObject, String setterName) {
         super();
@@ -54,8 +54,8 @@ public class CompositeSlotSetter implements Serializable {
         } catch (RuntimeException e) {
             throw e;
         } catch (InvocationTargetException e) {
-            if (e.getCause() instanceof IllegalWriteException) {
-                throw (IllegalWriteException) e.getCause();
+            if (e.getCause() instanceof WriteOnReadError) {
+                throw (WriteOnReadError) e.getCause();
             }
             if (e.getCause() instanceof RuntimeException) {
                 throw (RuntimeException) e.getCause();

@@ -9,19 +9,20 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<version.fenix.framework>2.1.0-rc2</version.fenix.framework>
+		<version.bennu.maven.plugin>1.1-SNAPSHOT</version.bennu.maven.plugin>
 	</properties>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>dml</groupId>
-				<artifactId>dml-maven-plugin</artifactId>
-				<version>1.2.1</version>
+				<groupId>pt.ist</groupId>
+				<artifactId>ff-maven-plugin</artifactId>
+				<version>${version.fenix.framework}</version>
 				<executions>
 					<execution>
 						<goals>
-							<goal>generate-domain</goal>
-							<goal>post-compile</goal>
+							<goal>ff-process-atomic-annotations</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -29,7 +30,7 @@
 			<plugin>
 				<groupId>pt.ist</groupId>
 				<artifactId>bennu-maven-plugin</artifactId>
-				<version>1.0.0</version>
+				<version>${version.bennu.maven.plugin}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -69,7 +70,7 @@
 					</archive>
 					<excludes>
 						<exclude>**/*_Base*</exclude>
-						<exclude>**/pt/ist/fenixframework/ValueTypeSerializationGenerator*</exclude>
+						<exclude>**/pt/ist/fenixframework/ValueTypeSerializer*</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -79,8 +80,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>pt.ist</groupId>
-			<artifactId>fenix-framework-core</artifactId>
-			<version>1.2.1</version>
+			<artifactId>fenix-framework-core-api</artifactId>
+			<version>${version.fenix.framework}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
@@ -108,6 +109,12 @@
 			<groupId>struts</groupId>
 			<artifactId>struts</artifactId>
 			<version>1.2.7</version>
+			<exclusions>
+				<exclusion>
+					<groupId>antlr</groupId>
+					<artifactId>antlr</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>pt.ist</groupId>
@@ -156,6 +163,11 @@
 			<groupId>jfree</groupId>
 			<artifactId>jfreechart</artifactId>
 			<version>0.9.18</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
 		</dependency>
 	</dependencies>
 

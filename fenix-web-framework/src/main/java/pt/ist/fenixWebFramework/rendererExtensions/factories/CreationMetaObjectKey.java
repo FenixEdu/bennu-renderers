@@ -4,7 +4,7 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObjectKey;
 
 public class CreationMetaObjectKey extends MetaObjectKey {
     public CreationMetaObjectKey(Class type) {
-        super(type, 0);
+        super(type, null);
     }
 
     @Override

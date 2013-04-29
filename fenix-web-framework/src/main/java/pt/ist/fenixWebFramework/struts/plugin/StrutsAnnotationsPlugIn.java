@@ -10,7 +10,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -38,8 +37,8 @@ import pt.ist.fenixWebFramework.struts.annotations.Input;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixWebFramework.struts.tiles.FenixDefinitionsFactory;
 import pt.ist.fenixWebFramework.struts.tiles.PartialTileDefinition;
-import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
-import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.core.Project;
 
 /**
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
@@ -283,17 +282,9 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
     private void loadActionsFromFile(final Set<Class<?>> actionClasses) {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            Properties properties = new Properties();
-            try (InputStream stream = loader.getResourceAsStream("/configuration.properties")) {
-                if (stream == null) {
-                    throw new RuntimeException();
-                }
-                properties.load(stream);
-            }
 
-            for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(properties.getProperty("app.name"))
-                    .getArtifacts()) {
-                try (InputStream stream = loader.getResourceAsStream(artifact.getName() + "/.actionAnnotationLog")) {
+            for (Project project : FenixFramework.getProject().getProjects()) {
+                try (InputStream stream = loader.getResourceAsStream(project.getName() + "/.actionAnnotationLog")) {
                     if (stream != null) {
                         List<String> classnames = IOUtils.readLines(stream);
                         for (String classname : classnames) {
@@ -307,7 +298,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
                     }
                 }
             }
-        } catch (IOException | FenixFrameworkProjectException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

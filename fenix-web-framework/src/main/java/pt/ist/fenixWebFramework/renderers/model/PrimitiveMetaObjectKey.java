@@ -2,11 +2,11 @@ package pt.ist.fenixWebFramework.renderers.model;
 
 public class PrimitiveMetaObjectKey extends MetaObjectKey {
 
-    private Object object;
-    private Class type;
+    private final Object object;
+    private final Class type;
 
     public PrimitiveMetaObjectKey(Object object, Class type) {
-        super(type, 0);
+        super(type, null);
 
         this.object = object;
         this.type = type;

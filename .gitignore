@@ -6,8 +6,11 @@
 *.ear
 
 .settings/
+.project
+.classpath
 .serviceAnnotationLog
 
 # Maven #
 target/
 bin/
+

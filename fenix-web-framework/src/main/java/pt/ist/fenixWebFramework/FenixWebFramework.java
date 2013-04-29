@@ -1,78 +1,29 @@
 package pt.ist.fenixWebFramework;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Layout;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.Priority;
-import org.apache.log4j.varia.DenyAllFilter;
-import org.apache.log4j.varia.LevelRangeFilter;
-
-import pt.ist.fenixframework.FenixFramework;
 import pt.utl.ist.fenix.tools.file.DSpaceFileManagerFactory;
 import pt.utl.ist.fenix.tools.file.FileManagerFactory;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
-import dml.DomainModel;
 
-public class FenixWebFramework extends FenixFramework {
+public class FenixWebFramework {
 
     private static final Object INIT_LOCK = new Object();
 
-    public static void bootStrap(final Config config) {
-        synchronized (INIT_LOCK) {
-            FenixFramework.bootStrap(config);
-        }
-    }
+    private static Config frameworkConfig;
 
     public static void initialize(final Config config) {
         synchronized (INIT_LOCK) {
-            FenixFramework.initialize();
+
+            frameworkConfig = config;
 
             final Locale locale =
                     new Locale(config.getDefaultLanguage(), config.getDefaultLocation(), config.getDefaultVariant());
+
             Language.setDefaultLocale(locale);
 
-            initializeLoggingSystem(config);
-
             initializeFileManager(config);
-        }
-    }
-
-    private static void initializeLoggingSystem(final Config config) {
-        if (config.logProfileFilename != null) {
-            final Logger logger = Logger.getLogger("pt.ist.fenixWebFramework.servlets.filters.ProfilingFilter");
-            logger.setAdditivity(false);
-            logger.setLevel(Level.DEBUG);
-
-            final Layout layout = new PatternLayout("%d{HH:mm:ss.SSS} %m%n");
-            final String filename =
-                    config.logProfileDir == null ? config.logProfileFilename : config.logProfileDir + File.separatorChar
-                            + config.logProfileFilename;
-            try {
-                final FileAppender fileAppender = new FileAppender(layout, filename, true);
-                fileAppender.setName("pt.ist.fenixWebFramework.servlets.filters");
-                fileAppender.setThreshold(Priority.DEBUG);
-
-                final LevelRangeFilter levelRangeFilter = new LevelRangeFilter();
-                levelRangeFilter.setLevelMin(Level.DEBUG);
-                levelRangeFilter.setLevelMax(Level.WARN);
-                levelRangeFilter.setAcceptOnMatch(true);
-                fileAppender.addFilter(levelRangeFilter);
-                final DenyAllFilter denyAllFilter = new DenyAllFilter();
-                fileAppender.addFilter(denyAllFilter);
-
-                logger.addAppender(fileAppender);
-            } catch (IOException ex) {
-                //throw new Error(ex);
-                final Logger l = Logger.getLogger(FenixWebFramework.class);
-                logger.warn("Profile logger not initialized correctly.");
-            }
         }
     }
 
@@ -103,11 +54,7 @@ public class FenixWebFramework extends FenixFramework {
     }
 
     public static Config getConfig() {
-        return (Config) FenixFramework.getConfig();
-    }
-
-    public static DomainModel getDomainModel() {
-        return FenixFramework.getDomainModel();
+        return frameworkConfig;
     }
 
 }

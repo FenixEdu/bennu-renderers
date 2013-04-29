@@ -3,7 +3,7 @@ package pt.ist.fenixWebFramework;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class Config extends pt.ist.fenixframework.Config {
+public class Config {
 
     public static class CasConfig {
 
@@ -141,17 +141,13 @@ public class Config extends pt.ist.fenixframework.Config {
      */
     protected boolean requiredMarkShown = false;
 
-    // TODO : make method in superclass visible in the hierarchy so we don't
-    // need to replicate the code here.
     private static void checkRequired(Object obj, String fieldName) {
         if (obj == null) {
             throw new Error("The required field '" + fieldName + "' was not specified in the FenixFramework config.");
         }
     }
 
-    @Override
-    public void checkIsValid() {
-        super.checkIsValid();
+    public void checkConfig() {
         checkRequired(defaultLanguage, "defaultLanguage");
         checkRequired(defaultLocation, "defaultLocation");
     }
