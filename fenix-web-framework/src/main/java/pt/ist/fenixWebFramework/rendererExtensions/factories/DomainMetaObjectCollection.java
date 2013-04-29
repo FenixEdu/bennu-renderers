@@ -1,26 +1,19 @@
 package pt.ist.fenixWebFramework.rendererExtensions.factories;
 
-import java.util.List;
-
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectCollection;
-import pt.ist.fenixWebFramework.services.ServiceManager;
-import pt.ist.fenixWebFramework.services.ServicePredicate;
+import pt.ist.fenixframework.Atomic;
 
 public class DomainMetaObjectCollection extends MetaObjectCollection {
 
+    private static final long serialVersionUID = -7897380281635901184L;
+
+    @Atomic
     @Override
     public void commit() {
-        final List<MetaObject> metaObjects = getAllMetaObjects();
-        final ServicePredicate servicePredicate = new ServicePredicate() {
-            @Override
-            public void execute() {
-                for (MetaObject object : metaObjects) {
-                    object.commit();
-                }
-            }
-        };
-        ServiceManager.execute(servicePredicate);
+        for (MetaObject object : getAllMetaObjects()) {
+            object.commit();
+        }
     }
 
 }

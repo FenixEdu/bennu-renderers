@@ -3,7 +3,8 @@ package pt.ist.fenixWebFramework.renderers;
 import java.util.List;
 
 import org.apache.commons.collections.Predicate;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
@@ -22,7 +23,7 @@ import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
  * @author cfgi
  */
 public abstract class InputRenderer extends Renderer {
-    private static final Logger logger = Logger.getLogger(InputRenderer.class);
+    private static final Logger logger = LoggerFactory.getLogger(InputRenderer.class);
 
     public InputContext getInputContext() {
         return (InputContext) getContext();

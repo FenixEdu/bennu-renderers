@@ -9,9 +9,9 @@ import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
-import dml.DomainClass;
-import dml.Role;
-import dml.Slot;
+import pt.ist.fenixframework.dml.DomainClass;
+import pt.ist.fenixframework.dml.Role;
+import pt.ist.fenixframework.dml.Slot;
 
 public class FenixSchemaFactory extends DefaultSchemaFactory {
     @Override
@@ -51,8 +51,8 @@ public class FenixSchemaFactory extends DefaultSchemaFactory {
         String[] slotsToIgnore = new String[] { ".*Key$", "^chave.*", "^idInternal$", "^ackOptLock$" };
 
         while (domainClass != null) {
-            outter: for (Iterator iter = domainClass.getSlots(); iter.hasNext();) {
-                Slot slot = (Slot) iter.next();
+            outter: for (Iterator<Slot> iter = domainClass.getSlots(); iter.hasNext();) {
+                Slot slot = iter.next();
 
                 String slotName = slot.getName();
 
@@ -77,8 +77,8 @@ public class FenixSchemaFactory extends DefaultSchemaFactory {
         List<Role> roles = new ArrayList<Role>();
 
         while (domainClass != null) {
-            for (Iterator iter = domainClass.getRoleSlots(); iter.hasNext();) {
-                Role role = (Role) iter.next();
+            for (Iterator<Role> iter = domainClass.getRoleSlots(); iter.hasNext();) {
+                Role role = iter.next();
 
                 roles.add(role);
             }

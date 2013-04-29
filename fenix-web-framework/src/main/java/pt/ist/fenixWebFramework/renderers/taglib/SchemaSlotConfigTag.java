@@ -10,7 +10,8 @@ import java.util.Properties;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
@@ -19,7 +20,7 @@ import pt.utl.ist.fenix.tools.util.Pair;
 
 public class SchemaSlotConfigTag extends BodyTagSupport implements PropertyContainerTag, ValidatorContainerTag {
 
-    private static final Logger logger = Logger.getLogger(SchemaSlotConfigTag.class);
+    private static final Logger logger = LoggerFactory.getLogger(SchemaSlotConfigTag.class);
 
     private String name;
     private String bundle;

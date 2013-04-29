@@ -22,12 +22,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
 import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.util.MessageResources;
 import org.apache.struts.util.ModuleUtils;
 import org.apache.struts.util.RequestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.rendererExtensions.util.IPresentableEnum;
@@ -38,7 +39,7 @@ import pt.ist.fenixWebFramework.renderers.components.state.LifeCycleConstants;
 import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessorImpl;
 
 public class RenderUtils {
-    private static Logger logger = Logger.getLogger(RenderUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(RenderUtils.class);
 
     public static String RESOURCE_LABEL_PREFIX = "label";
     public static String COMPONENT_REGISTRY_NAME = RenderUtils.class.getName() + "/component/registry";

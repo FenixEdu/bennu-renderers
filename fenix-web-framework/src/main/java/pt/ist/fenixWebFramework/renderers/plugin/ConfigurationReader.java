@@ -1,7 +1,6 @@
 package pt.ist.fenixWebFramework.renderers.plugin;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,10 +10,11 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.exceptions.NoRendererException;
@@ -28,12 +28,12 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 import pt.ist.fenixWebFramework.renderers.validators.RequiredValidator;
-import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
-import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.core.Project;
 import pt.utl.ist.fenix.tools.util.Pair;
 
 public class ConfigurationReader {
-    private static final Logger logger = Logger.getLogger(ConfigurationReader.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConfigurationReader.class);
 
     public static void readSchemas(ServletContext context, URL schemaConfig) throws ServletException {
         Element root = readConfigRootElement(context, schemaConfig);
@@ -495,27 +495,17 @@ public class ConfigurationReader {
         RendererPropertyUtils.initCache();
 
         try {
-            Properties properties = new Properties();
-            try (InputStream stream = ConfigurationReader.class.getResourceAsStream("/configuration.properties")) {
-                if (stream == null) {
-                    logger.error("configuration.properties not found found in classpath");
-                    throw new RuntimeException();
-                }
-                properties.load(stream);
-            }
-
-            for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(properties.getProperty("app.name"))
-                    .getArtifacts()) {
-                URL renderConfig = context.getResource("/WEB-INF/" + artifact.getName() + "/renderers-config.xml");
+            for (Project project : FenixFramework.getProject().getProjects()) {
+                URL renderConfig = context.getResource("/WEB-INF/" + project.getName() + "/renderers-config.xml");
                 if (renderConfig != null) {
                     ConfigurationReader.readRenderers(context, renderConfig);
                 }
-                URL schemaConfig = context.getResource("/WEB-INF/" + artifact.getName() + "/schemas-config.xml");
+                URL schemaConfig = context.getResource("/WEB-INF/" + project.getName() + "/schemas-config.xml");
                 if (schemaConfig != null) {
                     ConfigurationReader.readSchemas(context, schemaConfig);
                 }
             }
-        } catch (IOException | FenixFrameworkProjectException e) {
+        } catch (IOException e) {
             throw new ServletException(e);
         }
 

@@ -5,7 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.utils.ClassHierarchyTable;
@@ -13,7 +14,7 @@ import pt.ist.fenixWebFramework.renderers.utils.ClassHierarchyTable;
 // TODO: This needs revision. It's problably an horrible way of creating default values for types
 public class DefaultValues {
 
-    private static Logger logger = Logger.getLogger(DefaultValues.class);
+    private static Logger logger = LoggerFactory.getLogger(DefaultValues.class);
 
     protected static DefaultValues instance;
 
