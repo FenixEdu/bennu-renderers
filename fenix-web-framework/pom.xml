@@ -24,7 +24,7 @@
 
     <properties>
         <version.fenix.framework>2.1.0-rc2</version.fenix.framework>
-        <version.bennu.maven.plugin>1.1.0-rc1</version.bennu.maven.plugin>
+        <version.bennu.maven.plugin>1.1.0-rc2</version.bennu.maven.plugin>
     </properties>
 
     <build>
