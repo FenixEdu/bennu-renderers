@@ -6,7 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixWebFramework.FenixWebFramework;
+import pt.ist.fenixWebFramework.RenderersConfigurationManager;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
@@ -69,7 +69,7 @@ public class StandardInputRenderer extends InputRenderer {
 
     private boolean displayLabel = Boolean.TRUE;
 
-    private boolean requiredMarkShown = FenixWebFramework.getConfig().getRequiredMarkShown();
+    private boolean requiredMarkShown = RenderersConfigurationManager.getRequiredMarkShown();
 
     private boolean requiredMessageShown = true;
 
@@ -261,7 +261,7 @@ public class StandardInputRenderer extends InputRenderer {
                         if (formComponent.getId() == null) {
                             formComponent.setId(slot.getKey().toString());
                         }
-                        if (FenixWebFramework.getConfig().isJavascriptValidationEnabled() && !isHideValidators()) {
+                        if (RenderersConfigurationManager.isJavascriptValidationEnabled() && !isHideValidators()) {
                             HtmlChainValidator chainValidator = getChainValidator(formComponent, slot);
                             for (HtmlValidator validator : chainValidator.getSupportedJavascriptValidators()) {
                                 HtmlInlineContainer container = new HtmlInlineContainer();

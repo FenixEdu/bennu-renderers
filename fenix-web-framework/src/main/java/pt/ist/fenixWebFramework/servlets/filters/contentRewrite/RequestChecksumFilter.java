@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.CharEncoding;
 
-import pt.ist.fenixWebFramework.FenixWebFramework;
+import pt.ist.fenixWebFramework.RenderersConfigurationManager;
 
 public class RequestChecksumFilter implements Filter {
 
@@ -45,7 +45,7 @@ public class RequestChecksumFilter implements Filter {
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
             throws IOException, ServletException {
-        if (FenixWebFramework.getConfig().getFilterRequestWithDigest()) {
+        if (RenderersConfigurationManager.getFilterRequestWithDigest()) {
             try {
                 applyFilter(servletRequest, servletResponse, filterChain);
             } catch (UrlTamperingException ex) {
@@ -63,7 +63,7 @@ public class RequestChecksumFilter implements Filter {
     }
 
     protected void redirectByTampering(HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        response.sendRedirect(FenixWebFramework.getConfig().getTamperingRedirect());
+        response.sendRedirect(RenderersConfigurationManager.getTamperingRedirect());
     }
 
     private void applyFilter(final ServletRequest servletRequest, final ServletResponse servletResponse,
