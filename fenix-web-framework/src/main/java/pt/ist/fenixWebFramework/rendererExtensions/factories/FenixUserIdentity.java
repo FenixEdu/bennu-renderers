@@ -1,7 +1,9 @@
 package pt.ist.fenixWebFramework.rendererExtensions.factories;
 
+import java.util.Objects;
+
+import pt.ist.bennu.core.domain.User;
 import pt.ist.fenixWebFramework.renderers.model.UserIdentity;
-import pt.ist.fenixWebFramework.security.User;
 
 public class FenixUserIdentity implements UserIdentity {
 
@@ -20,12 +22,10 @@ public class FenixUserIdentity implements UserIdentity {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof FenixUserIdentity)) {
-            return false;
+        if (obj instanceof FenixUserIdentity) {
+            return Objects.equals(user, ((FenixUserIdentity) obj).user);
         }
-
-        final FenixUserIdentity other = (FenixUserIdentity) obj;
-        return user == other.user || (user != null && user.equals(other.user));
+        return false;
     }
 
     @Override

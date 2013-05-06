@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.CharEncoding;
 import org.joda.time.DateTime;
 
-import pt.ist.fenixWebFramework.security.User;
-import pt.ist.fenixWebFramework.security.UserView;
+import pt.ist.bennu.core.security.Authenticate;
+import pt.ist.bennu.core.security.UserSession;
 import pt.ist.fenixWebFramework.servlets.json.JsonObject;
 
 public class JsonServlet extends HttpServlet {
@@ -70,7 +70,7 @@ public class JsonServlet extends HttpServlet {
     }
 
     public static String getTokenFor(JsonObject jsonObject) {
-        User user = UserView.getUser();
+        UserSession user = Authenticate.getUserSession();
         if (user == null) {
             throw new RuntimeException("access.control.error.only.authenticated.users.can.request.tokens");
         }

@@ -32,8 +32,8 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixWebFramework.security.User;
-import pt.ist.fenixWebFramework.security.UserView;
+import pt.ist.bennu.core.domain.User;
+import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.fenixWebFramework.servlets.commons.CommonsFile;
 import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
 
@@ -235,7 +235,7 @@ public class RequestWrapperFilter implements Filter {
 
         @Override
         public String getName() {
-            final User user = UserView.getUser();
+            final User user = Authenticate.getUser();
             return user == null ? null : user.getUsername();
         }
 
@@ -392,13 +392,13 @@ public class RequestWrapperFilter implements Filter {
 
         @Override
         public boolean isUserInRole(String role) {
-            final User user = UserView.getUser();
+            final User user = Authenticate.getUser();
             return user == null ? false : user.hasRole(role);
         }
 
         @Override
         public String getRemoteUser() {
-            final User user = UserView.getUser();
+            final User user = Authenticate.getUser();
             return user == null ? super.getRemoteUser() : user.getUsername();
         }
 
