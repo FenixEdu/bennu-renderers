@@ -2,14 +2,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>pt.ist</groupId>
+
+    <parent>
+        <groupId>pt.ist</groupId>
+        <artifactId>ist-dsi-project</artifactId>
+        <version>1.0.0-rc1</version>
+        <relativePath />
+    </parent>
+
     <artifactId>fenix-web-framework</artifactId>
     <packaging>jar</packaging>
     <version>2.1-SNAPSHOT</version>
     <name>Fenix Web Framework</name>
 
+    <scm>
+        <connection>scm:git:git@github.com:ist-dsi/bennu-renderers.git</connection>
+        <developerConnection>scm:git:git@github.com:ist-dsi/bennu-renderers.git</developerConnection>
+        <url>http://ist-dsi.github.io/bennu-renderers/</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.fenix.framework>2.1.0-rc2</version.fenix.framework>
         <version.bennu.maven.plugin>1.1.0-rc1</version.bennu.maven.plugin>
     </properties>
@@ -44,10 +57,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
                     <proc>none</proc>
                 </configuration>
             </plugin>
@@ -69,10 +79,6 @@
                             <artifactId>${project.artifactId}</artifactId>
                         </manifestEntries>
                     </archive>
-                    <excludes>
-                        <exclude>**/*_Base*</exclude>
-                        <exclude>**/pt/ist/fenixframework/ValueTypeSerializer*</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
         </plugins>
@@ -179,17 +185,4 @@
         </repository>
     </repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>fenix-ashes-maven-repository</id>
-            <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>fenix-ashes-releases</id>
-            <url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-releases</url>
-        </repository>
-    </distributionManagement>
 </project>
