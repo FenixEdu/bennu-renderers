@@ -35,5 +35,6 @@
 
     <modules>
         <module>fenix-web-framework</module>
+        <module>example</module>
     </modules>
 </project>
