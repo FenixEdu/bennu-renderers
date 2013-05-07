@@ -3,6 +3,7 @@ package pt.ist.fenixWebFramework.renderers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -68,7 +69,14 @@ public abstract class SelectionRenderer extends InputRenderer {
         @Override
         public Object provide(Object source, Object currentValue) {
             try {
-                return PropertyUtils.getProperty(source, getFrom());
+
+                if (source != null) {
+                    return PropertyUtils.getProperty(source, getFrom());
+                }
+                Class<?> type = getInputContext().getMetaObject().getType();
+                String getter = getFrom();
+                getter = "get" + getter.substring(0, 1).toUpperCase(Locale.ENGLISH) + getter.substring(1);
+                return type.getMethod(getter).invoke(null);
             } catch (Exception e) {
                 throw new RuntimeException("exception while accessing 'from' collection", e);
             }
