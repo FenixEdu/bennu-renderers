@@ -1,15 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-fragment xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd" version="3.0">
-	<name>fenix-web-framework</name>
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+    version="3.0">
+    <name>fenix-web-framework</name>
 
-	<ordering>
-		<after>
-			<!-- [START OF BENNU GENERATED FRAGMENT] -->
-   <!-- [END OF BENNU GENERATED FRAGMENT] -->
-		</after>
-		<before>
-			<others />
-		</before>
-	</ordering>
+    <ordering>
+        <after>
+            <!-- [START OF BENNU GENERATED FRAGMENT] -->
+            <!-- [END OF BENNU GENERATED FRAGMENT] -->
+        </after>
+        <before>
+            <others />
+        </before>
+    </ordering>
+
+    <locale-encoding-mapping-list>
+        <locale-encoding-mapping>
+            <locale>pt</locale>
+            <encoding>UTF-8</encoding>
+        </locale-encoding-mapping>
+    </locale-encoding-mapping-list>
+    
+    <ordering>
+        <after>
+            <name>bennu-core</name>
+        </after>
+    </ordering>
+
+    <filter>
+        <filter-name>MultipartFilter</filter-name>
+        <filter-class>org.apache.myfaces.component.html.util.MultipartFilter</filter-class>
+        <init-param>
+            <param-name>uploadMaxFileSize</param-name>
+            <param-value>10m</param-value>
+        </init-param>
+        <init-param>
+            <param-name>uploadThresholdSize</param-name>
+            <param-value>1m</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>indexFilter</filter-name>
+        <filter-class>pt.ist.bennu.core.presentationTier.servlets.filters.MyOrgRequestWrapperFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>I18NFilter-renderers</filter-name>
+        <filter-class>pt.ist.fenixWebFramework.servlets.filters.I18NFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>ExceptionHandlerFilter</filter-name>
+        <filter-class>pt.ist.bennu.core.presentationTier.servlets.filters.ExceptionHandlerFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>RequestChecksumFilter</filter-name>
+        <filter-class>pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>RequestRewriteFilter</filter-name>
+        <filter-class>pt.ist.bennu.core.presentationTier.servlets.filters.RequestRewriterFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>ViewStateChangedExceptionCatcher</filter-name>
+        <filter-class>pt.ist.bennu.core.presentationTier.servlets.filters.ViewStateChangedExceptionCatcher</filter-class>
+    </filter>
+
+
+    <!-- Filter Mapping -->
+    <filter-mapping>
+        <filter-name>MultipartFilter</filter-name>
+        <url-pattern>*.faces</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ExceptionHandlerFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ExceptionHandlerFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ViewStateChangedExceptionCatcher</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>I18NFilter-renderers</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>indexFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>RequestChecksumFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>RequestRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>AutoCompleteServlet</servlet-name>
+        <servlet-class>pt.ist.bennu.core.presentationTier.servlets.ajax.MyorgAutoCompleteServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AutoCompleteServlet</servlet-name>
+        <url-pattern>/ajax/AutoCompleteServlet</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>120</session-timeout>
+    </session-config>
+
+    <jsp-config>
+        <jsp-property-group>
+            <description>All JSPs</description>
+            <url-pattern>*.jsp</url-pattern>
+            <el-ignored>true</el-ignored>
+            <page-encoding>UTF-8</page-encoding>
+        </jsp-property-group>
+    </jsp-config>
+
 </web-fragment>

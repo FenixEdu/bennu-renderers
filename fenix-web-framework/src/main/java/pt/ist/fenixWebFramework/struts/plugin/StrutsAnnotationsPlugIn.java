@@ -3,8 +3,6 @@
  */
 package pt.ist.fenixWebFramework.struts.plugin;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -14,7 +12,6 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -36,8 +33,6 @@ import pt.ist.fenixWebFramework.struts.annotations.Input;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixWebFramework.struts.tiles.FenixDefinitionsFactory;
 import pt.ist.fenixWebFramework.struts.tiles.PartialTileDefinition;
-import pt.ist.fenixframework.FenixFramework;
-import pt.ist.fenixframework.core.Project;
 
 /**
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
@@ -69,7 +64,6 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
     public void init(ActionServlet servlet, ModuleConfig config) throws ServletException {
 
         if (!initialized) {
-            loadActionsFromFile(actionClasses);
             PartialTileDefinition.init();
             initialized = true;
         }
@@ -275,27 +269,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
         return mapping.path() + INPUT_DEFAULT_PAGE_AND_METHOD;
     }
 
-    private void loadActionsFromFile(final Set<Class<?>> actionClasses) {
-        try {
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-
-            for (Project project : FenixFramework.getProject().getProjects()) {
-                try (InputStream stream = loader.getResourceAsStream(project.getName() + "/.actionAnnotationLog")) {
-                    if (stream != null) {
-                        List<String> classnames = IOUtils.readLines(stream);
-                        for (String classname : classnames) {
-                            try {
-                                Class<?> type = loader.loadClass(classname);
-                                actionClasses.add(type);
-                            } catch (final ClassNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void registerMapping(Class<?> type) {
+        actionClasses.add(type);
     }
 }
