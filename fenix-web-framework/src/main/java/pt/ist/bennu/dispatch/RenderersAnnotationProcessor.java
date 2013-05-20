@@ -16,7 +16,7 @@ import org.apache.struts.action.ActionForward;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.presentationTier.actions.ContextBaseAction;
 import pt.ist.bennu.core.presentationTier.actions.RenderAction;
 import pt.ist.bennu.core.security.Authenticate;
@@ -37,7 +37,7 @@ public class RenderersAnnotationProcessor implements ServletContainerInitializer
 
         private String redirect;
 
-        private transient BennuGroup group;
+        private transient Group group;
 
         public Forwarder(String path, String redirect, String groupExpression) {
             this.path = path;
@@ -45,9 +45,9 @@ public class RenderersAnnotationProcessor implements ServletContainerInitializer
             this.groupExpression = groupExpression;
         }
 
-        private BennuGroup group() {
+        private Group group() {
             if (group == null) {
-                group = BennuGroup.parse(groupExpression);
+                group = Group.parse(groupExpression);
             }
             return group;
         }
