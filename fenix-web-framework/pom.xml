@@ -6,7 +6,7 @@
     <parent>
         <groupId>pt.ist.bennu</groupId>
         <artifactId>bennu-renderers</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>fenix-web-framework</artifactId>
@@ -14,7 +14,7 @@
     <name>Renderers</name>
 
     <properties>
-        <version.pt.ist.bennu.bennu>2.0-SNAPSHOT</version.pt.ist.bennu.bennu>
+        <version.pt.ist.bennu.bennu>2.0.0-SNAPSHOT</version.pt.ist.bennu.bennu>
     </properties>
 
     <dependencies>
