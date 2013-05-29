@@ -5,7 +5,7 @@
     <parent>
         <groupId>pt.ist</groupId>
         <artifactId>ist-dsi-project</artifactId>
-        <version>1.0.0-rc1</version>
+        <version>1.0.0</version>
         <relativePath />
     </parent>
 
@@ -22,8 +22,8 @@
     </scm>
 
     <properties>
-        <version.fenix.framework>2.1.0-rc2</version.fenix.framework>
-        <version.bennu.maven.plugin>1.1.0-rc2</version.bennu.maven.plugin>
+        <version.fenix.framework>2.1.0</version.fenix.framework>
+        <version.bennu.maven.plugin>1.1.0</version.bennu.maven.plugin>
     </properties>
 
     <build>
