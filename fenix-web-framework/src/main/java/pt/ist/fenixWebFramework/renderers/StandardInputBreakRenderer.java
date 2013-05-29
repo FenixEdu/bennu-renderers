@@ -1,6 +1,7 @@
 package pt.ist.fenixWebFramework.renderers;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
@@ -55,7 +56,7 @@ public class StandardInputBreakRenderer extends StandardInputRenderer {
 
     class ObjectInputTabularBreakLayout extends ObjectInputTabularLayout {
 
-        public Logger logger = Logger.getLogger(ObjectInputTabularLayout.class);
+        public Logger logger = LoggerFactory.getLogger(ObjectInputTabularLayout.class);
 
         public ObjectInputTabularBreakLayout(MetaObject object) {
             super(object);

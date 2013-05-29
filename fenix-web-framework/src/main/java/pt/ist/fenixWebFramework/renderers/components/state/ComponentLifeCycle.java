@@ -8,9 +8,10 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.Predicate;
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.taglib.html.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
@@ -32,7 +33,7 @@ import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 
 public class ComponentLifeCycle {
-    private static final Logger logger = Logger.getLogger(ComponentLifeCycle.class);
+    private static final Logger logger = LoggerFactory.getLogger(ComponentLifeCycle.class);
 
     //
     // Utility classes

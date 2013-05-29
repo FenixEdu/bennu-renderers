@@ -17,7 +17,7 @@ public class CreationDomainMetaObject extends DomainMetaObject {
         super();
 
         setType(type);
-        setOid(0);
+        setExternalId(null);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class CreationDomainMetaObject extends DomainMetaObject {
 
             InstanceCreator instanceCreator = domainMetaObject.getInstanceCreator();
             if (instanceCreator != null) {
-                long oid = domainMetaObject.getOid();
+                String oid = domainMetaObject.getExternalId();
                 ObjectKey key = new ObjectKey(oid, domainMetaObject.getType());
 
                 try {

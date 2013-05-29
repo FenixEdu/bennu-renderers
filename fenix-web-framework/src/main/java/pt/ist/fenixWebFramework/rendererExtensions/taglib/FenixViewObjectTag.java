@@ -3,7 +3,7 @@ package pt.ist.fenixWebFramework.rendererExtensions.taglib;
 import javax.servlet.jsp.JspException;
 
 import pt.ist.fenixWebFramework.renderers.taglib.ViewObjectTag;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.FenixFramework;
 
 public class FenixViewObjectTag extends ViewObjectTag {
     private String oid;
@@ -33,8 +33,7 @@ public class FenixViewObjectTag extends ViewObjectTag {
 
     protected Object getPersistentObject() throws JspException {
         if (getOid() != null) {
-            final long oid = Long.parseLong(getOid());
-            return Transaction.getObjectForOID(oid);
+            return FenixFramework.getDomainObject(getOid());
         }
         return null;
     }
