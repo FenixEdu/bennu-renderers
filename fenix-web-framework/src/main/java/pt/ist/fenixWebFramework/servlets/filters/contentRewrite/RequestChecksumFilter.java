@@ -148,7 +148,7 @@ public class RequestChecksumFilter implements Filter {
         }
     }
 
-    private String decodeURL(final String url, final String encoding) {
+    public static String decodeURL(final String url, final String encoding) {
         if (url == null) {
             return null;
         }
@@ -164,11 +164,11 @@ public class RequestChecksumFilter implements Filter {
 
         return isValidChecksum(uri, decodeURL(httpServletRequest.getQueryString(), ENCODING), checksum) ||
 
-        isValidChecksum(uri, httpServletRequest.getQueryString(), checksum) ||
+                isValidChecksum(uri, httpServletRequest.getQueryString(), checksum) ||
 
-        isValidChecksumIgnoringPath(uri, checksum, decodeURL(httpServletRequest.getQueryString(), ENCODING)) ||
+                isValidChecksumIgnoringPath(uri, checksum, decodeURL(httpServletRequest.getQueryString(), ENCODING)) ||
 
-        isValidChecksumIgnoringPath(uri, checksum, httpServletRequest.getQueryString());
+                isValidChecksumIgnoringPath(uri, checksum, httpServletRequest.getQueryString());
 
     }
 
