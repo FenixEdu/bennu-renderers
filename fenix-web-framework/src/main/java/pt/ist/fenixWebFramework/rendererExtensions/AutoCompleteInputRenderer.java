@@ -22,6 +22,8 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
+import pt.ist.fenixWebFramework.servlets.ajax.AutoCompleteServlet;
+import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 
 /**
  * This renderer allows you to search for a domain object by providing a list of
@@ -375,7 +377,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
                 link.setParameter("maxCount", String.valueOf(getMaxCount()));
             }
 
-            String finalUri = link.calculateUrl();
+            String finalUri = calculateUriWithChecksum(link);
             String escapeId = escapeId(textFieldId);
             String scriptText =
                     "jQuery(\"input#"
@@ -402,6 +404,27 @@ public class AutoCompleteInputRenderer extends InputRenderer {
             script.setScript(scriptText);
 
             container.addChild(script);
+        }
+
+        private String calculateUriWithChecksum(final HtmlLink link) {
+            String calculatedUrl = link.calculateUrl();
+            //let us just get the labelField, format, valueField and styleClass for the checksum
+            //(wich are the ones used on the getResponseHtml and susceptible of
+            //showing more than the intended)
+            String checkSumString = "";
+            checkSumString += link.getParameter(AutoCompleteServlet.MAX_COUNT);
+            checkSumString += link.getParameter(AutoCompleteServlet.LABEL_FIELD);
+            checkSumString += link.getParameter(AutoCompleteServlet.FORMAT);
+            checkSumString += link.getParameter(AutoCompleteServlet.VALUE_FIELD);
+            checkSumString += link.getParameter(AutoCompleteServlet.STYLE_CLASS);
+
+            String urlParametersBoundaryCharacter = "&";
+            if (calculatedUrl.indexOf("?") == -1) {
+                urlParametersBoundaryCharacter = "?";
+            }
+            return calculatedUrl
+                    + String.format(urlParametersBoundaryCharacter + "%s=%s", GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME,
+                            GenericChecksumRewriter.calculateChecksum(checkSumString));
         }
 
         protected String escapeId(String textFieldId) {
