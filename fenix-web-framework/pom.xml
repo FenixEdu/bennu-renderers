@@ -11,14 +11,14 @@
 
     <artifactId>fenix-web-framework</artifactId>
     <packaging>jar</packaging>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
     <name>Fenix Web Framework</name>
 
     <scm>
         <connection>scm:git:git@github.com:ist-dsi/bennu-renderers.git</connection>
         <developerConnection>scm:git:git@github.com:ist-dsi/bennu-renderers.git</developerConnection>
         <url>http://ist-dsi.github.io/bennu-renderers/</url>
-        <tag>v2.1.0</tag>
+        <tag>v2.1.1</tag>
     </scm>
 
     <properties>
