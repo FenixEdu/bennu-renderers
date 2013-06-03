@@ -4,27 +4,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>pt.ist.bennu</groupId>
-        <artifactId>bennu</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
+        <groupId>pt.ist</groupId>
+        <artifactId>bennu-project</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
+    <groupId>pt.ist.bennu</groupId>
     <artifactId>bennu-renderers</artifactId>
     <name>Bennu Renderers Framework</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
-        <version.javax.servlet.javax.servlet.api>3.0.1</version.javax.servlet.javax.servlet.api>
         <version.javax.servlet.jsp.jsp.api>2.2.1-b03</version.javax.servlet.jsp.jsp.api>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${version.javax.servlet.javax.servlet.api}</version>
-        </dependency>
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
@@ -37,4 +32,11 @@
         <module>fenix-web-framework</module>
         <module>example</module>
     </modules>
+
+    <repositories>
+        <repository>
+            <id>fenix-ashes-maven-repository</id>
+            <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+        </repository>
+    </repositories>
 </project>
