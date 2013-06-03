@@ -9,8 +9,8 @@ import org.apache.struts.action.ActionMapping;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.presentationTier.actions.ContextBaseAction;
-import pt.ist.bennu.dispatch.Application;
-import pt.ist.bennu.dispatch.Functionality;
+import pt.ist.bennu.portal.Application;
+import pt.ist.bennu.portal.Functionality;
 import pt.ist.bennu.renderers.example.domain.ShoppingList;
 import pt.ist.bennu.renderers.example.domain.ShoppingListItem;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;

@@ -15,6 +15,7 @@
 
     <properties>
         <version.pt.ist.bennu.bennu>2.0.0-SNAPSHOT</version.pt.ist.bennu.bennu>
+        <version.commons.codec.commons.codec>1.6</version.commons.codec.commons.codec>
     </properties>
 
     <dependencies>
@@ -25,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>pt.ist.bennu</groupId>
-            <artifactId>bennu-dispatch</artifactId>
+            <artifactId>bennu-portal</artifactId>
             <version>${version.pt.ist.bennu.bennu}</version>
         </dependency>
         <dependency>
@@ -72,6 +73,7 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
+            <version>${version.commons.codec.commons.codec}</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>

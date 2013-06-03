@@ -1,4 +1,4 @@
-package pt.ist.bennu.dispatch;
+package pt.ist.bennu.portal;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -20,9 +20,9 @@ import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.presentationTier.actions.ContextBaseAction;
 import pt.ist.bennu.core.presentationTier.actions.RenderAction;
 import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.dispatch.model.ApplicationInfo;
-import pt.ist.bennu.dispatch.model.BundleDetails;
-import pt.ist.bennu.dispatch.model.FunctionalityInfo;
+import pt.ist.bennu.portal.domain.ApplicationInfo;
+import pt.ist.bennu.portal.domain.BundleDetails;
+import pt.ist.bennu.portal.domain.FunctionalityInfo;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter.ChecksumPredicate;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;

@@ -10,7 +10,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import pt.ist.bennu.dispatch.RenderersAnnotationProcessor.Forwarder;
+import pt.ist.bennu.portal.RenderersAnnotationProcessor.Forwarder;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 
 @Mapping(path = "/render")
