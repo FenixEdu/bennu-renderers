@@ -5,13 +5,13 @@
 
     <parent>
         <groupId>pt.ist.bennu</groupId>
-        <artifactId>bennu-renderers</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <artifactId>bennu-renderers-aggregator</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>fenix-web-framework</artifactId>
+    <artifactId>bennu-renderers</artifactId>
     <packaging>jar</packaging>
-    <name>Renderers</name>
+    <name>Bennu Renderers Framework</name>
 
     <properties>
         <version.pt.ist.bennu.bennu>2.0.0-SNAPSHOT</version.pt.ist.bennu.bennu>

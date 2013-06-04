@@ -5,14 +5,14 @@
 
     <parent>
         <groupId>pt.ist</groupId>
-        <artifactId>bennu-project</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <artifactId>fenix-framework-project</artifactId>
+        <version>1.1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>pt.ist.bennu</groupId>
-    <artifactId>bennu-renderers</artifactId>
-    <name>Bennu Renderers Framework</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>bennu-renderers-aggregator</artifactId>
+    <name>Bennu Renderers Framework Aggregator</name>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -29,7 +29,7 @@
     </dependencies>
 
     <modules>
-        <module>fenix-web-framework</module>
+        <module>bennu-renderers</module>
         <module>example</module>
     </modules>
 
