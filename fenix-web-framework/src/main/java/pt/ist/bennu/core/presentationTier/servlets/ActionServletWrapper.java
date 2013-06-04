@@ -26,6 +26,7 @@ package pt.ist.bennu.core.presentationTier.servlets;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -45,6 +46,8 @@ import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessorImpl;
 import pt.ist.fenixWebFramework.renderers.plugin.SimpleRenderersRequestProcessor;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.Project;
+
+import com.google.common.base.Joiner;
 
 /**
  * 
@@ -127,14 +130,18 @@ public class ActionServletWrapper extends ActionServlet {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             for (Project artifact : FenixFramework.getProject().getProjects()) {
-                try (InputStream stream = loader.getResourceAsStream(artifact.getName() + "/.messageResources")) {
+                String resource = capitalizeArtifactId(artifact.getName()) + "Resources";
+                createMessageResourcesConfig(moduleConfig, getMessageResourceBundleKey(resource),
+                        getMessageResourceBundleParameter(resource));
+
+                try (InputStream stream = loader.getResourceAsStream("resources/" + artifact.getName() + "/messages.properties")) {
                     if (stream != null) {
                         List<String> resources = IOUtils.readLines(stream);
-                        for (String resource : resources) {
-                            final String key = getMessageResourceBundleKey(resource);
-                            final String parameter = getMessageResourceBundleParameter(resource);
+                        for (String extra : resources) {
+                            final String key = getMessageResourceBundleKey(extra);
+                            final String parameter = getMessageResourceBundleParameter(extra);
                             createMessageResourcesConfig(moduleConfig, key, parameter);
-                            if (resource.equals("MyorgResources")) {
+                            if (extra.equals("RendererResources")) {
                                 createMessageResourcesConfig(moduleConfig, "org.apache.struts.action.MESSAGE", parameter);
                             }
                         }
@@ -155,6 +162,14 @@ public class ActionServletWrapper extends ActionServlet {
         messageResourcesConfig.setNull(false);
         messageResourcesConfig.setParameter(parameter);
         moduleConfig.addMessageResourcesConfig(messageResourcesConfig);
+    }
+
+    private String capitalizeArtifactId(String name) {
+        List<String> parts = new ArrayList<>();
+        for (String string : name.split("-")) {
+            parts.add(string.substring(0, 1).toUpperCase() + string.substring(1));
+        }
+        return Joiner.on("").join(parts);
     }
 
     private String getMessageResourceBundleKey(final String resource) {
