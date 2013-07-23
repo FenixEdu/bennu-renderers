@@ -1,9 +1,5 @@
 package pt.ist.fenixWebFramework.rendererExtensions;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -26,22 +22,21 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
-import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixWebFramework.servlets.ajax.AutoCompleteServlet;
+import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 
 /**
  * This renderer allows you to search for a domain object by providing a list of
  * possible completions, for the text typed, using a javascript technique.
  * 
  * <p>
- * This renderer can be used to do the input of any domain object because you
- * can configure the concrete service that searches the objects and all objects
- * are referred to by their internal id. It's recommended that a specialized
- * service is created for most cases so that it's as efficient as possible.
+ * This renderer can be used to do the input of any domain object because you can configure the concrete service that searches the
+ * objects and all objects are referred to by their internal id. It's recommended that a specialized service is created for most
+ * cases so that it's as efficient as possible.
  * 
  * <p>
  * Example: <br/>
- * <input type="text" value="po" style="width: 20em;"/> <div
- * style="margin-top: -10px; border: 1px solid #eee; width: 20em;">
+ * <input type="text" value="po" style="width: 20em;"/> <div style="margin-top: -10px; border: 1px solid #eee; width: 20em;">
  * <ul>
  * <li>French Polynesia</li>
  * <li>Poland</li>
@@ -76,13 +71,13 @@ public class AutoCompleteInputRenderer extends InputRenderer {
     private String autoCompleteWidth;
 
     public AutoCompleteInputRenderer() {
-	super();
+        super();
 
-	setMinChars(3);
+        setMinChars(3);
     }
 
     public String getAutoCompleteWidth() {
-	return autoCompleteWidth;
+        return autoCompleteWidth;
     }
 
     /**
@@ -92,27 +87,27 @@ public class AutoCompleteInputRenderer extends InputRenderer {
      * @param autoCompleteWidth
      */
     public void setAutoCompleteWidth(String autoCompleteWidth) {
-	this.autoCompleteWidth = autoCompleteWidth;
+        this.autoCompleteWidth = autoCompleteWidth;
     }
 
     public String getRawSlotName() {
-	return this.rawSlotName;
+        return this.rawSlotName;
     }
 
     public void setValueField(String valueField) {
-	this.valueField = valueField;
+        this.valueField = valueField;
     }
 
     public String getValueField() {
-	return valueField;
+        return valueField;
     }
 
     public void setArgs(String args) {
-	this.args = args;
+        this.args = args;
     }
 
     public String getArgs() {
-	return args;
+        return args;
     }
 
     /**
@@ -120,58 +115,55 @@ public class AutoCompleteInputRenderer extends InputRenderer {
      * was present in the input field when it was submited.
      * 
      * <p>
-     * If the renderer is used to edit the slot <code>slotA</code> of an object
-     * A and this property is set the value <code>slotB</code> then when the
-     * field is submited the renderer will set the value of the text field in
-     * the <code>slotB</code> of the object A.
+     * If the renderer is used to edit the slot <code>slotA</code> of an object A and this property is set the value
+     * <code>slotB</code> then when the field is submited the renderer will set the value of the text field in the
+     * <code>slotB</code> of the object A.
      * 
      * <p>
-     * When you type in the text field an auto completion list is presented.
-     * Nevertheless an object is only selected when the user selects one element
-     * from the sugested completions. This means that if the user does not
-     * select one element after typing some text the value of the slot beeing
-     * edited will be set to <code>null</code>.
+     * When you type in the text field an auto completion list is presented. Nevertheless an object is only selected when the user
+     * selects one element from the sugested completions. This means that if the user does not select one element after typing
+     * some text the value of the slot beeing edited will be set to <code>null</code>.
      * 
      * @property
      */
     public void setRawSlotName(String rawSlotName) {
-	this.rawSlotName = rawSlotName;
+        this.rawSlotName = rawSlotName;
     }
 
     public String getLabelField() {
-	return this.labelField;
+        return this.labelField;
     }
 
     /**
      * This property allows you tho choose the name of the slot that will be
-     * used as the presentation of the object. If this proprty has the value
-     * <code>slotL</code> then the list of suggestions will be a list of values
+     * used as the presentation of the object. If this proprty has the value <code>slotL</code> then the list of suggestions will
+     * be a list of values
      * obtained by invoking <code>getSlotL</code> in each object.
      * 
      * @property
      */
     public void setLabelField(String labelField) {
-	this.labelField = labelField;
+        this.labelField = labelField;
     }
 
     public String getFormat() {
-	return this.format;
+        return this.format;
     }
 
     /**
      * Allows you select the presentation format. If not set the value of the
      * field given by {@link #setLabelField(String) labelField} is used. See
-     * {@link pt.ist.fenixWebFramework.renderers.utils.RenderUtils#getFormattedProperties(String, Object)}
-     * to see the accepted format syntax.
+     * {@link pt.ist.fenixWebFramework.renderers.utils.RenderUtils#getFormattedProperties(String, Object)} to see the accepted
+     * format syntax.
      * 
      * @property
      */
     public void setFormat(String format) {
-	this.format = format;
+        this.format = format;
     }
 
     public Integer getMaxCount() {
-	return this.maxCount;
+        return this.maxCount;
     }
 
     /**
@@ -181,11 +173,11 @@ public class AutoCompleteInputRenderer extends InputRenderer {
      * @property
      */
     public void setMaxCount(Integer maxCount) {
-	this.maxCount = maxCount;
+        this.maxCount = maxCount;
     }
 
     public String getAutoCompleteItemsStyleClass() {
-	return this.autoCompleteItemsStyleClass;
+        return this.autoCompleteItemsStyleClass;
     }
 
     /**
@@ -194,11 +186,11 @@ public class AutoCompleteInputRenderer extends InputRenderer {
      * @property
      */
     public void setAutoCompleteItemsStyleClass(String autoCompleteItemsStyleClass) {
-	this.autoCompleteItemsStyleClass = autoCompleteItemsStyleClass;
+        this.autoCompleteItemsStyleClass = autoCompleteItemsStyleClass;
     }
 
     public String getAutoCompleteStyleClass() {
-	return this.autoCompleteStyleClass;
+        return this.autoCompleteStyleClass;
     }
 
     /**
@@ -207,11 +199,11 @@ public class AutoCompleteInputRenderer extends InputRenderer {
      * @property
      */
     public void setAutoCompleteStyleClass(String autoCompleteStyleClass) {
-	this.autoCompleteStyleClass = autoCompleteStyleClass;
+        this.autoCompleteStyleClass = autoCompleteStyleClass;
     }
 
     public String getTextFieldStyleClass() {
-	return this.textFieldStyleClass;
+        return this.textFieldStyleClass;
     }
 
     /**
@@ -220,11 +212,11 @@ public class AutoCompleteInputRenderer extends InputRenderer {
      * @property
      */
     public void setTextFieldStyleClass(String textFieldStyleClass) {
-	this.textFieldStyleClass = textFieldStyleClass;
+        this.textFieldStyleClass = textFieldStyleClass;
     }
 
     public String getErrorStyleClass() {
-	return this.errorStyleClass;
+        return this.errorStyleClass;
     }
 
     /**
@@ -233,11 +225,11 @@ public class AutoCompleteInputRenderer extends InputRenderer {
      * @property
      */
     public void setErrorStyleClass(String errorStyleClass) {
-	this.errorStyleClass = errorStyleClass;
+        this.errorStyleClass = errorStyleClass;
     }
 
     public String getSize() {
-	return this.size;
+        return this.size;
     }
 
     /**
@@ -246,11 +238,11 @@ public class AutoCompleteInputRenderer extends InputRenderer {
      * @property
      */
     public void setSize(String size) {
-	this.size = size;
+        this.size = size;
     }
 
     public int getMinChars() {
-	return this.minChars;
+        return this.minChars;
     }
 
     /**
@@ -260,221 +252,243 @@ public class AutoCompleteInputRenderer extends InputRenderer {
      * @property
      */
     public void setMinChars(int minChars) {
-	this.minChars = minChars;
+        this.minChars = minChars;
     }
 
     @Override
     protected Layout getLayout(Object object, Class type) {
-	return new AutoCompleteLayout();
+        return new AutoCompleteLayout();
     }
 
     protected Converter createConverter() {
-	return new AutoCompleteConverter();
+        return new AutoCompleteConverter();
     }
 
     protected class AutoCompleteLayout extends Layout {
-	public AutoCompleteLayout() {
-	    
-	}
-	
-	@Override
-	public HtmlComponent createComponent(Object object, Class type) {
+        public AutoCompleteLayout() {
 
-	    HtmlBlockContainer container = new HtmlBlockContainer();
+        }
 
-	    addScripts(container);
+        @Override
+        public HtmlComponent createComponent(Object object, Class type) {
 
-	    MetaSlotKey key = (MetaSlotKey) getContext().getMetaObject().getKey();
+            HtmlBlockContainer container = new HtmlBlockContainer();
 
-	    HtmlHiddenField valueField = new HtmlHiddenField();
+            addScripts(container);
 
-	    valueField.setTargetSlot(key);
-	    valueField.setId(key.toString() + "_AutoComplete");
-	    valueField.setName(valueField.getId());
-	    container.addChild(valueField);
+            MetaSlotKey key = (MetaSlotKey) getContext().getMetaObject().getKey();
 
-	    if (object != null) {
-		Object oid = RendererPropertyUtils.getProperty(object, getValueField(), false);
-		valueField.setValue(oid == null ? null : oid.toString());
-	    }
+            HtmlHiddenField valueField = new HtmlHiddenField();
 
-	    valueField.setConverter(createConverter());
+            valueField.setTargetSlot(key);
+            valueField.setId(key.toString() + "_AutoComplete");
+            valueField.setName(valueField.getId());
+            container.addChild(valueField);
 
-	    HtmlHiddenField oldValueField = new HtmlHiddenField();
-	    oldValueField.setId(key.toString() + "_OldValue");
-	    oldValueField.setName(oldValueField.getId());
-	    container.addChild(oldValueField);
+            if (object != null) {
+                Object oid = RendererPropertyUtils.getProperty(object, getValueField(), false);
+                valueField.setValue(oid == null ? null : oid.toString());
+            }
 
-	    HtmlTextInput textField = new HtmlTextInput();
-	    textField.setId(key.toString());
-	    textField.setName(textField.getId());
-	    textField.setClasses(getTextFieldStyleClass());
-	    textField.setSize(getSize());
-	    textField.setAttribute("autocomplete", "off");
-	    container.addChild(textField);
+            valueField.setConverter(createConverter());
 
-	    if (object != null && getLabelField() != null) {
-		String label = (String) RendererPropertyUtils.getProperty(object, getLabelField(), false);
-		textField.setValue(label);
-	    } else if (getRawSlotName() != null) {
-		Object beanObject = getInputContext().getParentContext().getMetaObject().getObject();
+            HtmlHiddenField oldValueField = new HtmlHiddenField();
+            oldValueField.setId(key.toString() + "_OldValue");
+            oldValueField.setName(oldValueField.getId());
+            container.addChild(oldValueField);
 
-		if (beanObject != null) { // protect from a creation context
-		    String rawText = (String) RendererPropertyUtils.getProperty(beanObject, getRawSlotName(), false);
-		    textField.setValue(rawText);
+            HtmlTextInput textField = new HtmlTextInput();
+            textField.setId(key.toString());
+            textField.setName(textField.getId());
+            textField.setClasses(getTextFieldStyleClass());
+            textField.setSize(getSize());
+            textField.setAttribute("autocomplete", "off");
+            container.addChild(textField);
 
-		    if (rawText != null) {
-			valueField.setValue(TYPING_VALUE);
-		    }
-		}
-	    }
+            if (object != null && getLabelField() != null) {
+                String label = (String) RendererPropertyUtils.getProperty(object, getLabelField(), false);
+                textField.setValue(label);
+            } else if (getRawSlotName() != null) {
+                Object beanObject = getInputContext().getParentContext().getMetaObject().getObject();
 
-	    if (getRawSlotName() != null) {
-		textField.setController(new UpdateRawNameController(getRawSlotName()));
-	    }
+                if (beanObject != null) { // protect from a creation context
+                    String rawText = (String) RendererPropertyUtils.getProperty(beanObject, getRawSlotName(), false);
+                    textField.setValue(rawText);
 
-	    HtmlText errorMessage = new HtmlText(RenderUtils.getResourceString("fenix.renderers.autocomplete.error"));
-	    errorMessage.setId(key.toString() + "_Error");
-	    errorMessage.setClasses(getErrorStyleClass());
-	    errorMessage.setStyle("display: none;");
-	    container.addChild(errorMessage);
+                    if (rawText != null) {
+                        valueField.setValue(TYPING_VALUE);
+                    }
+                }
+            }
 
-	    addFinalScript(container, textField.getId());
+            if (getRawSlotName() != null) {
+                textField.setController(new UpdateRawNameController(getRawSlotName()));
+            }
 
-	    return container;
-	}
+            HtmlText errorMessage = new HtmlText(RenderUtils.getResourceString("fenix.renderers.autocomplete.error"));
+            errorMessage.setId(key.toString() + "_Error");
+            errorMessage.setClasses(getErrorStyleClass());
+            errorMessage.setStyle("display: none;");
+            container.addChild(errorMessage);
 
-	protected void addScripts(HtmlContainer container) {
-	    HtmlLink link = new HtmlLink();
-	    link.setModuleRelative(false);
-	    link.setContextRelative(true);
+            addFinalScript(container, textField.getId());
 
-	    String[] scriptNames = new String[] { "autoComplete.js", "autoCompleteHandlers.js" };
-	    for (String script : scriptNames) {
-		addSingleScript(container, link, script);
-	    }
-	}
+            return container;
+        }
 
-	protected void addSingleScript(HtmlContainer container, HtmlLink link, String scriptName) {
-	    link.setUrl("/javaScript/" + scriptName);
-	    HtmlScript script = new HtmlScript("text/javascript", link.calculateUrl(), true);
-	    container.addChild(script);
-	}
+        protected void addScripts(HtmlContainer container) {
+            HtmlLink link = new HtmlLink();
+            link.setModuleRelative(false);
+            link.setContextRelative(true);
 
-	protected void addFinalScript(HtmlContainer container, String textFieldId) {
+            String[] scriptNames = new String[] { "autoComplete.js", "autoCompleteHandlers.js" };
+            for (String script : scriptNames) {
+                addSingleScript(container, link, script);
+            }
+        }
 
-	    HtmlLink link = new HtmlLink();
-	    link.setModuleRelative(false);
-	    link.setContextRelative(true);
+        protected void addSingleScript(HtmlContainer container, HtmlLink link, String scriptName) {
+            link.setUrl("/javaScript/" + scriptName);
+            HtmlScript script = new HtmlScript("text/javascript", link.calculateUrl(), true);
+            container.addChild(script);
+        }
 
-	    link.setUrl(SERVLET_URI);
-	    link.setParameter("args", getFormatedArgs());
-	    link.setParameter("labelField", getLabelField());
-	    link.setParameter("valueField", getValueField()); // TODO: allow
-	    // configuration,1
-	    // needs also
-	    // converter
-	    link.setParameter("styleClass", getAutoCompleteItemsStyleClass() == null ? "" : getAutoCompleteItemsStyleClass());
-	    link.setEscapeAmpersand(false);
+        protected void addFinalScript(HtmlContainer container, String textFieldId) {
 
-	    if (getFormat() != null) {
-		link.setParameter("format", getFormat());
-	    }
+            HtmlLink link = new HtmlLink();
+            link.setModuleRelative(false);
+            link.setContextRelative(true);
 
-	    if (getMaxCount() != null) {
-		link.setParameter("maxCount", String.valueOf(getMaxCount()));
-	    }
+            link.setUrl(SERVLET_URI);
+            link.setParameter("args", getFormatedArgs());
+            link.setParameter("labelField", getLabelField());
+            link.setParameter("valueField", getValueField()); // TODO: allow
+            // configuration,1
+            // needs also
+            // converter
+            link.setParameter("styleClass", getAutoCompleteItemsStyleClass() == null ? "" : getAutoCompleteItemsStyleClass());
+            link.setEscapeAmpersand(false);
 
-	    String finalUri = link.calculateUrl();
-	    String escapeId = escapeId(textFieldId);
-	    String scriptText = "jQuery(\"input#"
-		    + escapeId
-		    + "\").autocomplete(\""
-		    + finalUri
-		    + "\", { minChars: "
-		    + getMinChars()
-		    + (!StringUtils.isEmpty(getAutoCompleteWidth()) ? ", width: '" + getAutoCompleteWidth() + "'" : "")
-		    + ", validSelection: false"
-		    + ", cleanSelection: clearAutoComplete, select: selectElement, after: updateCustomValue, error:showError}); +\n"
-		    + "jQuery(\"input[name='" + escapeId + "']\").val(jQuery(\"input#" + escapeId + "\").val());";
+            if (getFormat() != null) {
+                link.setParameter("format", getFormat());
+            }
 
-	    //on submit let's call the updateCustomValue to make sure that the rawSlotName is correctly filled;
-	    if (getRawSlotName() != null) {
-		scriptText = scriptText.concat("\njQuery(\"input[name='" + escapeId + "']\").closest('form').submit(function() {\n" +
-		"var inputFieldVal = jQuery(\"input[name='" + escapeId + "_text']\").val()\n" +
- "updateRawSlotNameOnSubmit(jQuery(\"input[name='" + escapeId
-			+ "_text']\"),inputFieldVal);});");
-	    }
+            if (getMaxCount() != null) {
+                link.setParameter("maxCount", String.valueOf(getMaxCount()));
+            }
 
-	    HtmlScript script = new HtmlScript();
-	    script.setContentType("text/javascript");
-	    script.setScript(scriptText);
+            String finalUri = calculateUriWithChecksum(link);
+            String escapeId = escapeId(textFieldId);
+            String scriptText =
+                    "jQuery(\"input#"
+                            + escapeId
+                            + "\").autocomplete(\""
+                            + finalUri
+                            + "\", { minChars: "
+                            + getMinChars()
+                            + (!StringUtils.isEmpty(getAutoCompleteWidth()) ? ", width: '" + getAutoCompleteWidth() + "'" : "")
+                            + ", validSelection: false"
+                            + ", cleanSelection: clearAutoComplete, select: selectElement, after: updateCustomValue, error:showError}); +\n"
+                            + "jQuery(\"input[name='" + escapeId + "']\").val(jQuery(\"input#" + escapeId + "\").val());";
 
-	    container.addChild(script);
-	}
+            //on submit let's call the updateCustomValue to make sure that the rawSlotName is correctly filled;
+            if (getRawSlotName() != null) {
+                scriptText =
+                        scriptText.concat("\njQuery(\"input[name='" + escapeId + "']\").closest('form').submit(function() {\n"
+                                + "var inputFieldVal = jQuery(\"input[name='" + escapeId + "_text']\").val()\n"
+                                + "updateRawSlotNameOnSubmit(jQuery(\"input[name='" + escapeId + "_text']\"),inputFieldVal);});");
+            }
 
-	protected String escapeId(String textFieldId) {
-	    return textFieldId.replace(".", "\\\\.").replaceAll(":", "\\\\\\\\:");
-	}
+            HtmlScript script = new HtmlScript();
+            script.setContentType("text/javascript");
+            script.setScript(scriptText);
 
-	protected String getFormatedArgs() {
-	    Object object = ((MetaSlot) getInputContext().getMetaObject()).getMetaObject().getObject();
-	    return RenderUtils.getFormattedProperties(getArgs(), object);
-	}
+            container.addChild(script);
+        }
+
+        private String calculateUriWithChecksum(final HtmlLink link) {
+            String calculatedUrl = link.calculateUrl();
+            //let us just get the labelField, format, valueField and styleClass for the checksum
+            //(wich are the ones used on the getResponseHtml and susceptible of
+            //showing more than the intended)
+            String checkSumString = "";
+            checkSumString += link.getParameter(AutoCompleteServlet.MAX_COUNT);
+            checkSumString += link.getParameter(AutoCompleteServlet.LABEL_FIELD);
+            checkSumString += link.getParameter(AutoCompleteServlet.FORMAT);
+            checkSumString += link.getParameter(AutoCompleteServlet.VALUE_FIELD);
+            checkSumString += link.getParameter(AutoCompleteServlet.STYLE_CLASS);
+
+            String urlParametersBoundaryCharacter = "&";
+            if (calculatedUrl.indexOf("?") == -1) {
+                urlParametersBoundaryCharacter = "?";
+            }
+            return calculatedUrl
+                    + String.format(urlParametersBoundaryCharacter + "%s=%s", GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME,
+                            GenericChecksumRewriter.calculateChecksum(checkSumString));
+        }
+
+        protected String escapeId(String textFieldId) {
+            return textFieldId.replace(".", "\\\\.").replaceAll(":", "\\\\\\\\:");
+        }
+
+        protected String getFormatedArgs() {
+            Object object = ((MetaSlot) getInputContext().getMetaObject()).getMetaObject().getObject();
+            return RenderUtils.getFormattedProperties(getArgs(), object);
+        }
 
     }
 
     protected static class UpdateRawNameController extends HtmlController {
 
-	private final String rawSlotName;
+        private final String rawSlotName;
 
-	public UpdateRawNameController(String rawSlotName) {
-	    super();
+        public UpdateRawNameController(String rawSlotName) {
+            super();
 
-	    this.rawSlotName = rawSlotName;
-	}
+            this.rawSlotName = rawSlotName;
+        }
 
-	@Override
-	public void execute(IViewState viewState) {
-	    HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getControlledComponent();
+        @Override
+        public void execute(IViewState viewState) {
+            HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getControlledComponent();
 
-	    updatRawSlot(viewState, component.getValue());
-	}
+            updatRawSlot(viewState, component.getValue());
+        }
 
-	private void updatRawSlot(IViewState viewState, String value) {
-	    Object object = viewState.getMetaObject().getObject();
+        private void updatRawSlot(IViewState viewState, String value) {
+            Object object = viewState.getMetaObject().getObject();
 
-	    try {
-		PropertyUtils.setProperty(object, this.rawSlotName, value);
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
-	}
+            try {
+                PropertyUtils.setProperty(object, this.rawSlotName, value);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
     protected static class AutoCompleteConverter extends Converter {
 
-	public AutoCompleteConverter() {
-	    super();
+        public AutoCompleteConverter() {
+            super();
 
-	}
+        }
 
-	@Override
-	public Object convert(Class type, Object value) {
-	    if (value == null || "".equals(value)) {
-		return null;
-	    }
+        @Override
+        public Object convert(Class type, Object value) {
+            if (value == null || "".equals(value)) {
+                return null;
+            }
 
-	    String text = (String) value;
+            String text = (String) value;
 
-	    if (text.equals(TYPING_VALUE)) {
-		return null;
-	    }
+            if (text.equals(TYPING_VALUE)) {
+                return null;
+            }
 
-	    String key = text;
-	    return new DomainObjectKeyConverter().convert(type, key);
-	}
+            String key = text;
+            return new DomainObjectKeyConverter().convert(type, key);
+        }
 
     }
 
