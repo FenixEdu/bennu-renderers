@@ -6,6 +6,7 @@ public class DefaultContext extends Context {
     private String layout = "/renderers/layout.jsp";
 
     private String body;
+    private String head;
 
     public DefaultContext(String path) {
         super(path);
@@ -20,4 +21,13 @@ public class DefaultContext extends Context {
     public String getBody() {
         return body;
     }
+
+    public String getHead() {
+        return head;
+    }
+
+    public void setHead(String head) {
+        this.head = head;
+    }
+
 }

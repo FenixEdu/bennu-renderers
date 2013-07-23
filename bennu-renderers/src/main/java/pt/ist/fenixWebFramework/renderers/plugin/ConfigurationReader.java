@@ -15,6 +15,9 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.exceptions.NoRendererException;
@@ -483,6 +486,16 @@ public class ConfigurationReader {
         try {
             SAXBuilder build = new SAXBuilder();
             build.setExpandEntities(true);
+//            final InputSource EMPTY_SOURCE = new InputSource(new ByteArrayInputStream(new byte[0]));
+            build.setEntityResolver(new EntityResolver() {
+
+                @Override
+                public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+                    final String[] split = systemId.split("!");
+                    final String fileName = split[1];
+                    return new InputSource(getClass().getResourceAsStream(fileName));
+                }
+            });
             return build.build(config).getRootElement();
         } catch (JDOMException | IOException e) {
             throw new ServletException(e);
