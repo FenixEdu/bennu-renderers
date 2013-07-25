@@ -1,9 +1,5 @@
 package pt.ist.fenixWebFramework.rendererExtensions;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -26,7 +22,8 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
-import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixWebFramework.servlets.ajax.AutoCompleteServlet;
+import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 
 /**
  * This renderer allows you to search for a domain object by providing a list of
@@ -145,7 +142,9 @@ public class AutoCompleteInputRenderer extends InputRenderer {
     /**
      * This property allows you tho choose the name of the slot that will be
      * used as the presentation of the object. If this proprty has the value
-     * <code>slotL</code> then the list of suggestions will be a list of values
+     * <code>slotL</code> then the list of
+     * suggestions will
+     * be a list of values
      * obtained by invoking <code>getSlotL</code> in each object.
      * 
      * @property
@@ -162,7 +161,9 @@ public class AutoCompleteInputRenderer extends InputRenderer {
      * Allows you select the presentation format. If not set the value of the
      * field given by {@link #setLabelField(String) labelField} is used. See
      * {@link pt.ist.fenixWebFramework.renderers.utils.RenderUtils#getFormattedProperties(String, Object)}
-     * to see the accepted format syntax.
+     * to see the
+     * accepted
+     * format syntax.
      * 
      * @property
      */
@@ -274,9 +275,9 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 
     protected class AutoCompleteLayout extends Layout {
 	public AutoCompleteLayout() {
-	    
+
 	}
-	
+
 	@Override
 	public HtmlComponent createComponent(Object object, Class type) {
 
@@ -385,25 +386,27 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 		link.setParameter("maxCount", String.valueOf(getMaxCount()));
 	    }
 
-	    String finalUri = link.calculateUrl();
+	    String finalUri = calculateUriWithChecksum(link);
 	    String escapeId = escapeId(textFieldId);
-	    String scriptText = "jQuery(\"input#"
-		    + escapeId
-		    + "\").autocomplete(\""
-		    + finalUri
-		    + "\", { minChars: "
-		    + getMinChars()
-		    + (!StringUtils.isEmpty(getAutoCompleteWidth()) ? ", width: '" + getAutoCompleteWidth() + "'" : "")
-		    + ", validSelection: false"
-		    + ", cleanSelection: clearAutoComplete, select: selectElement, after: updateCustomValue, error:showError}); +\n"
-		    + "jQuery(\"input[name='" + escapeId + "']\").val(jQuery(\"input#" + escapeId + "\").val());";
+	    String scriptText =
+		    "jQuery(\"input#"
+			    + escapeId
+			    + "\").autocomplete(\""
+			    + finalUri
+			    + "\", { minChars: "
+			    + getMinChars()
+			    + (!StringUtils.isEmpty(getAutoCompleteWidth()) ? ", width: '" + getAutoCompleteWidth() + "'" : "")
+			    + ", validSelection: false"
+			    + ", cleanSelection: clearAutoComplete, select: selectElement, after: updateCustomValue, error:showError}); +\n"
+			    + "jQuery(\"input[name='" + escapeId + "']\").val(jQuery(\"input#" + escapeId + "\").val());";
 
-	    //on submit let's call the updateCustomValue to make sure that the rawSlotName is correctly filled;
+	    // on submit let's call the updateCustomValue to make sure that the
+	    // rawSlotName is correctly filled;
 	    if (getRawSlotName() != null) {
-		scriptText = scriptText.concat("\njQuery(\"input[name='" + escapeId + "']\").closest('form').submit(function() {\n" +
-		"var inputFieldVal = jQuery(\"input[name='" + escapeId + "_text']\").val()\n" +
- "updateRawSlotNameOnSubmit(jQuery(\"input[name='" + escapeId
-			+ "_text']\"),inputFieldVal);});");
+		scriptText =
+			scriptText.concat("\njQuery(\"input[name='" + escapeId + "']\").closest('form').submit(function() {\n"
+				+ "var inputFieldVal = jQuery(\"input[name='" + escapeId + "_text']\").val()\n"
+				+ "updateRawSlotNameOnSubmit(jQuery(\"input[name='" + escapeId + "_text']\"),inputFieldVal);});");
 	    }
 
 	    HtmlScript script = new HtmlScript();
@@ -411,6 +414,28 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 	    script.setScript(scriptText);
 
 	    container.addChild(script);
+	}
+
+	private String calculateUriWithChecksum(final HtmlLink link) {
+	    String calculatedUrl = link.calculateUrl();
+	    // let us just get the labelField, format, valueField and styleClass
+	    // for the checksum
+	    // (wich are the ones used on the getResponseHtml and susceptible of
+	    // showing more than the intended)
+	    String checkSumString = "";
+	    checkSumString += link.getParameter(AutoCompleteServlet.MAX_COUNT);
+	    checkSumString += link.getParameter(AutoCompleteServlet.LABEL_FIELD);
+	    checkSumString += link.getParameter(AutoCompleteServlet.FORMAT);
+	    checkSumString += link.getParameter(AutoCompleteServlet.VALUE_FIELD);
+	    checkSumString += link.getParameter(AutoCompleteServlet.STYLE_CLASS);
+
+	    String urlParametersBoundaryCharacter = "&";
+	    if (calculatedUrl.indexOf("?") == -1) {
+		urlParametersBoundaryCharacter = "?";
+	    }
+	    return calculatedUrl
+		    + String.format(urlParametersBoundaryCharacter + "%s=%s", GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME,
+			    GenericChecksumRewriter.calculateChecksum(checkSumString));
 	}
 
 	protected String escapeId(String textFieldId) {
