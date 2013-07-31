@@ -2,12 +2,16 @@ package pt.ist.fenixWebFramework.servlets.filters.contentRewrite;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.commons.lang.StringUtils;
+
+import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriterFilter.RequestRewriterFactory;
 
 public class ResponseWrapper extends HttpServletResponseWrapper {
 
@@ -48,12 +52,13 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
         }
     }
 
-    public void writeRealResponse(final RequestRewriter... requestRewriters) throws IOException {
+    public void writeRealResponse(final HttpServletRequest request, final Collection<RequestRewriterFactory> requestRewriters)
+            throws IOException {
         if (bufferedFacadServletOutputStream != null) {
-            bufferedFacadServletOutputStream.writeRealResponse(requestRewriters);
+            bufferedFacadServletOutputStream.writeRealResponse();
         }
         if (bufferedFacadPrintWriter != null) {
-            bufferedFacadPrintWriter.writeRealResponse(requestRewriters);
+            bufferedFacadPrintWriter.writeRealResponse(request, requestRewriters);
         }
     }
 

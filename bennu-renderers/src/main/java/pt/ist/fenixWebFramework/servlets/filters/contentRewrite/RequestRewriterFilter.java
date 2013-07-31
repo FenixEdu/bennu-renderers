@@ -1,6 +1,7 @@
 package pt.ist.fenixWebFramework.servlets.filters.contentRewrite;
 
 import java.io.IOException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -15,8 +16,24 @@ import pt.ist.fenixWebFramework._development.LogLevel;
 
 public class RequestRewriterFilter implements Filter {
 
+    public static interface RequestRewriterFactory {
+        public RequestRewriter createRequestRewriter(HttpServletRequest request);
+    }
+
+    private static final ConcurrentLinkedQueue<RequestRewriterFactory> rewriters = new ConcurrentLinkedQueue<>();
+
+    public static void registerRequestRewriter(RequestRewriterFactory rewriter) {
+        rewriters.add(rewriter);
+    }
+
     @Override
     public void init(FilterConfig config) {
+        registerRequestRewriter(new RequestRewriterFactory() {
+            @Override
+            public RequestRewriter createRequestRewriter(HttpServletRequest request) {
+                return new GenericChecksumRewriter(request);
+            }
+        });
     }
 
     @Override
@@ -62,9 +79,9 @@ public class RequestRewriterFilter implements Filter {
                 + percent + " %.");
     }
 
-    protected void writeResponse(final FilterChain filterChain, final HttpServletRequest httpServletRequest,
+    protected final void writeResponse(final FilterChain filterChain, final HttpServletRequest httpServletRequest,
             final ResponseWrapper responseWrapper) throws IOException, ServletException {
-        responseWrapper.writeRealResponse(new GenericChecksumRewriter(httpServletRequest));
+        responseWrapper.writeRealResponse(httpServletRequest, rewriters);
     }
 
 }

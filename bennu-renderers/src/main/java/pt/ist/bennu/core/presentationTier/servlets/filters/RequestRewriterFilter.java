@@ -27,14 +27,14 @@ package pt.ist.bennu.core.presentationTier.servlets.filters;
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import pt.ist.bennu.core.presentationTier.servlets.filters.contentRewrite.ContentContextInjectionRewriter;
-import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
-import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.ResponseWrapper;
+import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter;
 
 /**
  * 
@@ -42,6 +42,17 @@ import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.ResponseWrapper;
  * 
  */
 public class RequestRewriterFilter extends pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriterFilter {
+
+    @Override
+    public void init(FilterConfig config) {
+        super.init(config);
+        registerRequestRewriter(new RequestRewriterFactory() {
+            @Override
+            public RequestRewriter createRequestRewriter(HttpServletRequest request) {
+                return new ContentContextInjectionRewriter(request);
+            }
+        });
+    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
@@ -53,13 +64,6 @@ public class RequestRewriterFilter extends pt.ist.fenixWebFramework.servlets.fil
             super.doFilter(servletRequest, servletResponse, filterChain);
         }
 
-    }
-
-    @Override
-    protected void writeResponse(FilterChain filterChain, HttpServletRequest httpServletRequest, ResponseWrapper responseWrapper)
-            throws IOException, ServletException {
-        responseWrapper.writeRealResponse(new ContentContextInjectionRewriter(httpServletRequest), new GenericChecksumRewriter(
-                httpServletRequest));
     }
 
 }

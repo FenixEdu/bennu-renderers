@@ -31,7 +31,7 @@ public class BufferedFacadServletOutputStream extends ServletOutputStream {
         byteArrayOutputStream.write(value, off, len);
     }
 
-    public void writeRealResponse(final RequestRewriter... requestRewriters) throws IOException {
+    public void writeRealResponse() throws IOException {
         realOutputStream.write(byteArrayOutputStream.toByteArray());
         realOutputStream.flush();
         realOutputStream.close();
