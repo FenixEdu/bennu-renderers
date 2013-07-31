@@ -4,14 +4,11 @@ import javax.servlet.ServletException;
 
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.action.PlugIn;
-import org.apache.struts.action.RequestProcessor;
-import org.apache.struts.config.ControllerConfig;
 import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.util.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
 import pt.ist.fenixWebFramework.renderers.model.SchemaFactory;
 import pt.ist.fenixWebFramework.renderers.model.UserIdentityFactory;
@@ -82,41 +79,6 @@ public class RenderersPlugin implements PlugIn {
             initFactories(servlet, config);
         }
 
-        initProcessor(servlet, config);
-    }
-
-    private void initProcessor(ActionServlet servlet, ModuleConfig config) throws ServletException {
-        String ourProcessorClassname = RenderersRequestProcessorImpl.implementationClass.getName();
-        ControllerConfig controllerConfig = config.getControllerConfig();
-        String configProcessorClassname = controllerConfig.getProcessorClass();
-
-        // Check if specified classname exist
-        Class configProcessorClass;
-        try {
-            configProcessorClass = RequestUtils.applicationClass(configProcessorClassname);
-
-        } catch (ClassNotFoundException ex) {
-            if (LogLevel.FATAL) {
-                logger.error("Can't set RequestProcessor: bad class name '" + configProcessorClassname + "'.");
-            }
-            throw new ServletException(ex);
-        }
-
-        if (configProcessorClassname.equals(RequestProcessor.class.getName())
-                || configProcessorClassname.endsWith(ourProcessorClassname)) {
-
-            controllerConfig.setProcessorClass(ourProcessorClassname);
-            return;
-        }
-
-        // Check if specified request processor is compatible with ours.
-        Class ourProcessorClass = RenderersRequestProcessorImpl.implementationClass;
-        if (!ourProcessorClass.isAssignableFrom(configProcessorClass)) {
-            if (LogLevel.FATAL) {
-                logger.error("Specified processor is incopatible with " + RequestProcessor.class.getName());
-            }
-            throw new ServletException("invalid processor was specified");
-        }
     }
 
     private void initFactories(ActionServlet servlet, ModuleConfig config) throws ServletException {

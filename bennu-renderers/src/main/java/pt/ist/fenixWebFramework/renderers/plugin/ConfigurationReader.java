@@ -492,8 +492,12 @@ public class ConfigurationReader {
                 @Override
                 public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
                     final String[] split = systemId.split("!");
-                    final String fileName = split[1];
-                    return new InputSource(getClass().getResourceAsStream(fileName));
+                    if (split.length > 1) {
+                        final String fileName = split[1];
+                        return new InputSource(getClass().getResourceAsStream(fileName));
+                    } else {
+                        return null;
+                    }
                 }
             });
             return build.build(config).getRootElement();

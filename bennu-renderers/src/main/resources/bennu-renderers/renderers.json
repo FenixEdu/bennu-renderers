@@ -1,0 +1,9 @@
+{
+  "resources": {
+    "bundles": [
+      "MyorgResources",
+      "RendererResources"
+    ],
+    "defaultBundle": "RendererResources"
+  }
+}

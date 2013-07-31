@@ -26,7 +26,10 @@ package pt.ist.bennu.core.presentationTier.servlets;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,17 +40,23 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.struts.Globals;
 import org.apache.struts.action.ActionServlet;
+import org.apache.struts.config.ExceptionConfig;
 import org.apache.struts.config.MessageResourcesConfig;
 import org.apache.struts.config.ModuleConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessorImpl;
-import pt.ist.fenixWebFramework.renderers.plugin.SimpleRenderersRequestProcessor;
+import pt.ist.bennu.core.presentationTier.servlets.ActionServletConfiguration.ExceptionHandler;
+import pt.ist.bennu.core.presentationTier.servlets.ActionServletConfiguration.ExceptionHandlerMapping;
+import pt.ist.bennu.core.presentationTier.servlets.ActionServletConfiguration.ModuleConfiguration;
+import pt.ist.bennu.core.presentationTier.servlets.ActionServletConfiguration.ResourceConfig;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.Project;
 
 import com.google.common.base.Joiner;
+import com.google.gson.Gson;
 
 /**
  * 
@@ -56,19 +65,19 @@ import com.google.common.base.Joiner;
  */
 public class ActionServletWrapper extends ActionServlet {
 
-    private static class ServletConfigWrapper implements ServletConfig {
+    private static final long serialVersionUID = -6838259271932491702L;
+
+    private static final Logger logger = LoggerFactory.getLogger(ActionServletWrapper.class);
+
+    private final Map<String, MessageResourcesConfig> resourcesConfigurations = new HashMap<>();
+
+    private final Collection<ExceptionConfig> exceptionConfigs = new ArrayList<>();
+
+    private final Map<String, String> parameterMap = new HashMap<String, String>();
+
+    private class ServletConfigWrapper implements ServletConfig {
 
         private final ServletConfig servletConfig;
-
-        public static final Map<String, String> parameterMap = new HashMap<String, String>();
-        static {
-            parameterMap.put("config", "/WEB-INF/conf/struts-default.xml");
-            parameterMap.put("application", "resources.MyorgResources");
-
-            parameterMap.put("debug", "3");
-            parameterMap.put("detail", "3");
-            parameterMap.put("validating", "true");
-        }
 
         public ServletConfigWrapper(final ServletConfig servletConfig) {
             this.servletConfig = servletConfig;
@@ -113,37 +122,38 @@ public class ActionServletWrapper extends ActionServlet {
 
     }
 
-    public static ServletConfig servletConfig = null;
-
     @Override
     public void init(final ServletConfig config) throws ServletException {
-        servletConfig = config;
-        final ServletConfigWrapper servletConfigWrapper = new ServletConfigWrapper(config);
-        RenderersRequestProcessorImpl.implementationClass = SimpleRenderersRequestProcessor.class;
-        super.init(servletConfigWrapper);
+        initializeParameterMapDefaults();
+        initializeConfigurations();
+        super.init(new ServletConfigWrapper(config));
     }
 
-    @Override
-    protected ModuleConfig initModuleConfig(String prefix, String paths) throws ServletException {
-        final ModuleConfig moduleConfig = super.initModuleConfig(prefix, paths);
+    private void initializeParameterMapDefaults() {
+        parameterMap.put("config", "/WEB-INF/conf/struts-default.xml");
+        //  parameterMap.put("application", "resources.ApplicationResources");
 
+        parameterMap.put("debug", "3");
+        parameterMap.put("detail", "3");
+        parameterMap.put("validating", "true");
+    }
+
+    private void initializeConfigurations() throws ServletException {
+        Gson gson = new Gson();
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             for (Project artifact : FenixFramework.getProject().getProjects()) {
-                String resource = capitalizeArtifactId(artifact.getName()) + "Resources";
-                createMessageResourcesConfig(moduleConfig, getMessageResourceBundleKey(resource),
-                        getMessageResourceBundleParameter(resource));
 
-                try (InputStream stream = loader.getResourceAsStream("resources/" + artifact.getName() + "/messages.properties")) {
+                String resource = capitalizeArtifactId(artifact.getName()) + "Resources";
+                createMessageResourcesConfig(getMessageResourceBundleKey(resource), getMessageResourceBundleParameter(resource));
+
+                try (InputStream stream = loader.getResourceAsStream(artifact.getName() + "/renderers.json")) {
                     if (stream != null) {
-                        List<String> resources = IOUtils.readLines(stream);
-                        for (String extra : resources) {
-                            final String key = getMessageResourceBundleKey(extra);
-                            final String parameter = getMessageResourceBundleParameter(extra);
-                            createMessageResourcesConfig(moduleConfig, key, parameter);
-                            if (extra.equals("RendererResources")) {
-                                createMessageResourcesConfig(moduleConfig, "org.apache.struts.action.MESSAGE", parameter);
-                            }
+                        try (Reader reader = new InputStreamReader(stream)) {
+                            ActionServletConfiguration configuration = gson.fromJson(reader, ActionServletConfiguration.class);
+                            initializeResourceConfigurations(configuration.resources);
+                            initializeModuleConfigurations(configuration.modules);
+                            initializeExceptionHandlerConfigurations(configuration.exceptionHandlers);
                         }
                     }
                 }
@@ -151,17 +161,72 @@ public class ActionServletWrapper extends ActionServlet {
         } catch (IOException e) {
             throw new ServletException(e);
         }
+    }
+
+    private void initializeResourceConfigurations(ResourceConfig resources) {
+        if (resources != null) {
+            for (String resource : resources.bundles) {
+                createMessageResourcesConfig(getMessageResourceBundleKey(resource), getMessageResourceBundleParameter(resource));
+            }
+
+            if (resources.defaultBundle != null) {
+                createMessageResourcesConfig(Globals.MESSAGES_KEY, getMessageResourceBundleParameter(resources.defaultBundle));
+            }
+        }
+    }
+
+    private void initializeModuleConfigurations(Collection<ModuleConfiguration> modules) {
+        if (modules != null) {
+            for (ModuleConfiguration module : modules) {
+                parameterMap.put("config/" + module.name, "/WEB-INF/conf/" + module.configFile);
+            }
+        }
+    }
+
+    private void initializeExceptionHandlerConfigurations(Collection<ExceptionHandler> exceptionHandlers) {
+        if (exceptionHandlers != null) {
+            for (ExceptionHandler handler : exceptionHandlers) {
+                for (ExceptionHandlerMapping mapping : handler.mappings) {
+                    ExceptionConfig config = new ExceptionConfig();
+                    config.setHandler(handler.handler);
+                    config.setKey(mapping.key);
+                    config.setType(mapping.type);
+                    logger.debug("Adding exception config {}", config);
+                    exceptionConfigs.add(config);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected ModuleConfig initModuleConfig(String prefix, String paths) throws ServletException {
+        logger.info("Initializing Struts Module '{}'", prefix);
+        final ModuleConfig moduleConfig = super.initModuleConfig(prefix, paths);
+
+        for (MessageResourcesConfig config : resourcesConfigurations.values()) {
+            // If a ResourceConfig with the key already exists, do nothing, this
+            // means the user configured the resources manually in struts-config.xml
+            if (moduleConfig.findMessageResourcesConfig(config.getKey()) == null) {
+                moduleConfig.addMessageResourcesConfig(config);
+            }
+        }
+
+        for (ExceptionConfig config : exceptionConfigs) {
+            moduleConfig.addExceptionConfig(config);
+        }
 
         return moduleConfig;
     }
 
-    private void createMessageResourcesConfig(final ModuleConfig moduleConfig, final String key, final String parameter) {
+    private void createMessageResourcesConfig(final String key, final String parameter) {
+        logger.debug("Adding Message Resource Config with key: {}, parameter: {}", key, parameter);
         final MessageResourcesConfig messageResourcesConfig = new MessageResourcesConfig();
         messageResourcesConfig.setFactory("org.apache.struts.util.PropertyMessageResourcesFactory");
         messageResourcesConfig.setKey(key);
         messageResourcesConfig.setNull(false);
         messageResourcesConfig.setParameter(parameter);
-        moduleConfig.addMessageResourcesConfig(messageResourcesConfig);
+
+        this.resourcesConfigurations.put(key, messageResourcesConfig);
     }
 
     private String capitalizeArtifactId(String name) {

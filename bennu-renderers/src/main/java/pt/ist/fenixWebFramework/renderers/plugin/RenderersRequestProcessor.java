@@ -12,8 +12,6 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.tiles.TilesRequestProcessor;
 
 import pt.ist.fenixWebFramework._development.LogLevel;
@@ -43,12 +41,6 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  * @author cfgi
  */
 public class RenderersRequestProcessor extends TilesRequestProcessor {
-
-    @Override
-    public void init(final ActionServlet servlet, final ModuleConfig moduleConfig) throws ServletException {
-        RenderersRequestProcessorImpl.implementationClass = RenderersRequestProcessor.class;
-        super.init(servlet, moduleConfig);
-    }
 
     @Override
     public void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

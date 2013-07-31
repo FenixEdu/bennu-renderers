@@ -40,8 +40,6 @@ import pt.ist.fenixWebFramework.servlets.filters.RequestWrapperFilter.FenixHttpS
  */
 public class RenderersRequestProcessorImpl {
 
-    public static Class implementationClass = RenderersRequestProcessor.class;
-
     static ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<HttpServletRequest>();
     static ThreadLocal<ServletContext> currentContext = new ThreadLocal<ServletContext>();
 
