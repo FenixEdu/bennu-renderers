@@ -38,16 +38,18 @@ import pt.ist.fenixWebFramework.servlets.ajax.AutoCompleteServlet;
  */
 public class MyorgAutoCompleteServlet extends AutoCompleteServlet {
 
+    private static final long serialVersionUID = 1132218903850276508L;
+
     @Override
-    protected Collection getSearchResult(Map<String, String> argsMap, String value, int maxCount) {
-        AutoCompleteProvider provider = getProvider(argsMap.get("provider"));
+    protected Collection<?> getSearchResult(Map<String, String> argsMap, String value, int maxCount) {
+        AutoCompleteProvider<?> provider = getProvider(argsMap.get("provider"));
         return provider.getSearchResults(argsMap, value, maxCount);
     }
 
-    private AutoCompleteProvider getProvider(String providerClass) {
+    private AutoCompleteProvider<?> getProvider(String providerClass) {
         try {
-            Class provider = Class.forName(providerClass);
-            return (AutoCompleteProvider) provider.newInstance();
+            Class<?> provider = Class.forName(providerClass);
+            return (AutoCompleteProvider<?>) provider.newInstance();
         } catch (Exception e) {
             throw new RuntimeException("cannot find provider " + providerClass);
         }

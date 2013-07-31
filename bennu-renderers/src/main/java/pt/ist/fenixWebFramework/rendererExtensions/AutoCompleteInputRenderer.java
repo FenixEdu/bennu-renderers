@@ -70,6 +70,8 @@ public class AutoCompleteInputRenderer extends InputRenderer {
     private String errorStyleClass;
     private String autoCompleteWidth;
 
+    private String provider;
+
     public AutoCompleteInputRenderer() {
         super();
 
@@ -255,6 +257,14 @@ public class AutoCompleteInputRenderer extends InputRenderer {
         this.minChars = minChars;
     }
 
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
     @Override
     protected Layout getLayout(Object object, Class type) {
         return new AutoCompleteLayout();
@@ -433,7 +443,11 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 
         protected String getFormatedArgs() {
             Object object = ((MetaSlot) getInputContext().getMetaObject()).getMetaObject().getObject();
-            return RenderUtils.getFormattedProperties(getArgs(), object);
+            if (getProvider() == null) {
+                return RenderUtils.getFormattedProperties(getArgs(), object);
+            } else {
+                return String.format("provider=%s,%s", getProvider(), RenderUtils.getFormattedProperties(getArgs(), object));
+            }
         }
 
     }

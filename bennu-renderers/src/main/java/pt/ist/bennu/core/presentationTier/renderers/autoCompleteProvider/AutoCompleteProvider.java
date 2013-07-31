@@ -32,8 +32,8 @@ import java.util.Map;
  * @author Luis Cruz
  * 
  */
-public interface AutoCompleteProvider {
+public interface AutoCompleteProvider<T> {
 
-    public Collection getSearchResults(Map<String, String> argsMap, String value, int maxCount);
+    public Collection<T> getSearchResults(Map<String, String> argsMap, String value, int maxCount);
 
 }

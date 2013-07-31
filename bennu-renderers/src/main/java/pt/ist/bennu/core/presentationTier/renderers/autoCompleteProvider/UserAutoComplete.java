@@ -39,10 +39,10 @@ import pt.utl.ist.fenix.tools.util.StringNormalizer;
  * @author Luis Cruz
  * 
  */
-public class UserAutoComplete implements AutoCompleteProvider {
+public class UserAutoComplete implements AutoCompleteProvider<User> {
 
     @Override
-    public Collection getSearchResults(Map<String, String> argsMap, String value, int maxCount) {
+    public Collection<User> getSearchResults(Map<String, String> argsMap, String value, int maxCount) {
         Set<User> users = new HashSet<User>();
         String[] values = StringNormalizer.normalize(value).toLowerCase().split(" ");
         for (User user : Bennu.getInstance().getUsersSet()) {
