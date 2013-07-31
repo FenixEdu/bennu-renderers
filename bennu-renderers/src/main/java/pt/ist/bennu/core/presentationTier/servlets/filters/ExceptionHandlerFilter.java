@@ -54,7 +54,7 @@ public class ExceptionHandlerFilter implements Filter {
 
         public abstract boolean isCustomizedFor(final Throwable t);
 
-        public abstract void handle(final HttpServletRequest httpServletRequest, final ServletResponse response)
+        public abstract void handle(final HttpServletRequest httpServletRequest, final ServletResponse response, final Throwable t)
                 throws ServletException, IOException;
 
     }
@@ -86,7 +86,7 @@ public class ExceptionHandlerFilter implements Filter {
         } catch (final Throwable t) {
             for (final CustomeHandler customeHandler : customeHandlers) {
                 if (customeHandler.isCustomizedFor(t)) {
-                    customeHandler.handle(httpServletRequest, response);
+                    customeHandler.handle(httpServletRequest, response, t);
                     return;
                 }
                 printTraceInformation(t);

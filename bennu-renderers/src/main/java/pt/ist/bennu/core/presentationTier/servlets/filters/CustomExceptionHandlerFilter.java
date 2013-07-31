@@ -89,8 +89,8 @@ public class CustomExceptionHandlerFilter extends CustomeHandler implements Filt
     }
 
     @Override
-    public void handle(final HttpServletRequest httpServletRequest, final ServletResponse response) throws ServletException,
-            IOException {
+    public void handle(final HttpServletRequest httpServletRequest, final ServletResponse response, final Throwable t)
+            throws ServletException, IOException {
         httpServletRequest.getRequestDispatcher(forwardPath).forward(httpServletRequest, response);
     }
 
