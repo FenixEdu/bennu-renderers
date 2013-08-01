@@ -91,6 +91,7 @@ public class ExceptionHandlerFilter implements Filter {
                 }
                 printTraceInformation(t);
             }
+            t.printStackTrace();
             request.setAttribute("exceptionInfo",
                     ExceptionInformation.buildUncaughtExceptionInfo((HttpServletRequest) request, t));
             httpServletRequest.getRequestDispatcher(RenderersConfigurationManager.getErrorPage()).forward(request, response);
