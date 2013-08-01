@@ -235,9 +235,6 @@
     <renderer type="java.math.BigDecimal" class="pt.ist.fenixWebFramework.renderers.DecimalRenderer" layout="decimal-format"/>
     <renderer type="java.lang.Double" class="pt.ist.fenixWebFramework.renderers.DecimalRenderer" layout="decimal-format"/>
     
-    <renderer type="pt.ist.bennu.core.domain.util.Money" class="pt.ist.bennu.core.presentationTier.renderers.MoneyRenderer" />
-
-    
     <!--@ The default layout for editing objects.  -->  
     <renderer mode="input" type="java.lang.Object" class="pt.ist.fenixWebFramework.renderers.StandardInputRenderer">
     		<property name="labelTerminator" value=":"/>
@@ -565,8 +562,6 @@
 
 	<renderer type="pt.ist.fenixframework.DomainObject" layout="expandable" class="pt.ist.bennu.core.presentationTier.renderers.AjaxExpandableRenderer"/>
 	
-	<renderer type="java.lang.Class" layout="name-resolver" class="pt.ist.bennu.core.presentationTier.renderers.ClassNameResolverRenderer"/>
-	
 	<renderer mode="input" type="java.lang.String" layout="advanced-password" class="pt.ist.fenixWebFramework.renderers.AdvancedPasswordRenderer"/>
 	
 	<renderer mode="input" type="java.lang.Object" layout="matrix" class="pt.ist.fenixWebFramework.renderers.MatrixRenderer"/>
@@ -576,8 +571,6 @@
 		<property name="falseIconPath" value="/images/cancel.jpg"/>
 		<property name="contextRelative" value="true"/>
 	</renderer>
-	
-	<renderer mode="input" type="pt.ist.bennu.core.domain.util.Money" class="pt.ist.bennu.core.presentationTier.renderers.MoneyInputRenderer" />
 	
     <renderer type="java.util.Collection" layout="ajax-tabular" class="pt.ist.fenixWebFramework.renderers.ajax.AjaxTableRenderer">
         	<property name="groupLinks" value="true"/>

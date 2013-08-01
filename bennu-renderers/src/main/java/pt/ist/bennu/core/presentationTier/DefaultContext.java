@@ -13,10 +13,17 @@ public class DefaultContext extends Context {
     private List<String> head;
     private List<String> scripts;
 
-    public DefaultContext(String path) {
-        super(path);
+    {
         head = new ArrayList<String>();
         scripts = new ArrayList<String>();
+    }
+
+    public DefaultContext() {
+        super();
+    }
+
+    public DefaultContext(String path) {
+        super(path);
     }
 
     @Override

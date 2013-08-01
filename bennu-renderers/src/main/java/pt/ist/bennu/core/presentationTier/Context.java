@@ -36,6 +36,10 @@ public abstract class Context {
 
     private String path;
 
+    public Context() {
+
+    }
+
     public Context(final String path) {
         this.path = path;
     }
