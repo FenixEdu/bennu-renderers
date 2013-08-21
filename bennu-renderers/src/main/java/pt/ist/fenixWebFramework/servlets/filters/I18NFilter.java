@@ -10,16 +10,15 @@ import java.util.Locale;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
 
+import pt.ist.dsi.commons.i18n.I18N;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 /**
@@ -28,69 +27,46 @@ import pt.utl.ist.fenix.tools.util.i18n.Language;
  */
 public class I18NFilter implements Filter {
 
-    public static final String LOCALE_KEY = I18NFilter.class.getName() + "_LOCAL_KEY";
-
-    ServletContext servletContext;
-
-    FilterConfig filterConfig;
-
     @Override
     public void init(FilterConfig filterConfig) {
-        this.filterConfig = filterConfig;
-        this.servletContext = filterConfig.getServletContext();
+
     }
 
     @Override
     public void destroy() {
-        this.servletContext = null;
-        this.filterConfig = null;
+
     }
 
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
             throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
-        final HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        final String localParameter = request.getParameter("locale");
-        final HttpSession httpSession;
-        final Locale locale;
-        if (localParameter != null) {
-            final String[] localTokens = localParameter.split("_");
-            locale = localTokens.length > 1 ? new Locale(localTokens[0], localTokens[1]) : new Locale(localParameter);
-            httpSession = getOrCreateSession(request);
-        } else {
-            httpSession = request.getSession(true);
-            final Locale localeFromSession = (Locale) httpSession.getAttribute(LOCALE_KEY);
-            locale = localeFromSession == null ? Language.getDefaultLocale() : localeFromSession;
+        // Handle Language Change from Renderers context
+        if (request.getParameter("locale") != null) {
+            String[] localeParts = request.getParameter("locale").split("_");
+            Locale locale = localeParts.length == 1 ? new Locale(localeParts[0]) : new Locale(localeParts[0], localeParts[1]);
+            HttpSession session = request.getSession();
+
+            // Tell I18N to use the new locale
+            I18N.setLocale(session, locale);
+
+            // And also inform Struts
+            session.setAttribute(Globals.LOCALE_KEY, locale);
         }
 
-        setRequestReconstructor(request);
-        setLocale(request, httpSession, locale);
-        filterChain.doFilter(request, response);
-    }
+        try {
+            // Fetch Locale from I18N
+            Locale locale = I18N.getLocale();
+            Language.setLocale(locale);
+            request.setAttribute(Globals.LOCALE_KEY, locale);
 
-    private HttpSession getOrCreateSession(final HttpServletRequest request) {
-        final HttpSession httpSession = request.getSession(false);
-        return httpSession == null ? request.getSession(true) : httpSession;
-    }
+            request.setAttribute("requestReconstructor", new RequestReconstructor(request));
 
-    public static void setDefaultLocale(final HttpServletRequest httpServletRequest, final HttpSession httpSession) {
-        setLocale(httpServletRequest, httpSession, Language.getDefaultLocale());
-    }
-
-    public static void setLocale(final HttpServletRequest httpServletRequest, final HttpSession httpSession, final Locale locale) {
-        httpSession.removeAttribute(LOCALE_KEY);
-        httpSession.setAttribute(LOCALE_KEY, locale);
-        httpSession.removeAttribute(Globals.LOCALE_KEY);
-        httpSession.setAttribute(Globals.LOCALE_KEY, locale);
-        httpServletRequest.removeAttribute(Globals.LOCALE_KEY);
-        httpServletRequest.setAttribute(Globals.LOCALE_KEY, locale);
-        Language.setLocale(locale);
-    }
-
-    private void setRequestReconstructor(final HttpServletRequest request) {
-        request.setAttribute("requestReconstructor", new RequestReconstructor(request));
+            filterChain.doFilter(servletRequest, servletResponse);
+        } finally {
+            Language.setLocale(null);
+        }
     }
 
 }
