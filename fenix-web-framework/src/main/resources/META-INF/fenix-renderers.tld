@@ -989,7 +989,17 @@
        Cancel Key Button for confirmation dialog
       </description>
     </attribute>
-    
+
+    <attribute>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+       CSS Style to be applied to the form
+      </description>
+    </attribute>
+
   </tag>
   
   <tag>
