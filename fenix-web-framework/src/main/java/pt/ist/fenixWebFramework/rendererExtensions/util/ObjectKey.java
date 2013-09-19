@@ -1,5 +1,7 @@
 package pt.ist.fenixWebFramework.rendererExtensions.util;
 
+import java.util.Objects;
+
 public class ObjectKey {
 
     private final String externalId;
@@ -41,6 +43,6 @@ public class ObjectKey {
 
     @Override
     public int hashCode() {
-        return this.externalId.hashCode() + (this.type == null ? 0 : this.type.hashCode());
+        return Objects.hashCode(this.externalId) + Objects.hashCode(this.type);
     }
 }
