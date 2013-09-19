@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,8 +14,6 @@ import org.jsoup.safety.Whitelist;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
 public class JsoupSafeHtmlConverter extends Converter {
-
-    private static final Logger LOGGER = Logger.getLogger(JsoupSafeHtmlConverter.class);
 
     private static final String[] MATHJAX_TAGS = { "abs", "and", "annotation", "annotation-xml", "apply", "approx", "arccos",
             "arccosh", "arccot", "arccoth", "arccsc", "arccsch", "arcsec", "arcsech", "arcsin", "arcsinh", "arctan", "arctanh",
