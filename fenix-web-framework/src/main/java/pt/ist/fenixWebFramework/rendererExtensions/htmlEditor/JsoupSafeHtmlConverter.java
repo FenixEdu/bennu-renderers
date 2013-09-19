@@ -1,14 +1,20 @@
 package pt.ist.fenixWebFramework.rendererExtensions.htmlEditor;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
 public class JsoupSafeHtmlConverter extends Converter {
+
     private static final String[] MATHJAX_TAGS = { "abs", "and", "annotation", "annotation-xml", "apply", "approx", "arccos",
             "arccosh", "arccot", "arccoth", "arccsc", "arccsch", "arcsec", "arcsech", "arcsin", "arcsinh", "arctan", "arctanh",
             "arg", "bvar", "card", "cartesianproduct", "ceiling", "ci", "cn", "codomain", "complexes", "compose", "condition",
@@ -27,6 +33,7 @@ public class JsoupSafeHtmlConverter extends Converter {
             "rem", "root", "scalarproduct", "sdev", "sec", "sech", "selector", "semantics", "sep", "set", "setdiff", "sin",
             "sinh", "subset", "sum", "tan", "tanh", "tendsto", "times", "transpose", "true", "union", "uplimit", "variance",
             "vector", "vectorproduct", "xor" };
+
     private static final String[] MATHJAX_ATTRS = { "accent", "accentunder", "actiontype", "align", "alignmentscope", "alt",
             "axis", "background", "background-color", "base", "bevelled", "class", "close", "closure", "color", "columnalign",
             "columnalignment", "columnlines", "columnspacing", "columnspan", "columnwidth", "css-color-name", "css-fontfamily",
@@ -44,14 +51,20 @@ public class JsoupSafeHtmlConverter extends Converter {
     private static final String[] TABLE_ATTRS = { "align", "bgcolor", "border", "cellpadding", "cellspacing", "frame", "rules",
             "summary", "width" };
     private static final String[] TBODY_TR_ATTRS = { "align", "bgcolor", "char", "charoff", "valign" };
+    private static final String[] IFRAME_ATTRS = { "align", "frameborder", "height", "width", "style", "src", "name",
+            "marginheight", "marginwidth" };
     private static final String[] TH_TD_ATTRS = { "abbr", "align", "axis", "bgcolor", "char", "charoff", "colspan", "height",
             "nowrap", "rowspan", "scope", "valign", "width" };
+
+    private static final String[] URL_SCHEMES = new String[] { "http", "https" };
+    private static final String[] URL_VALID_AUTHORITIES_REGEXPS = new String[] { ".*google.com" };
 
     private static Whitelist whitelistSimple = Whitelist.relaxed().addTags("span").addAttributes(":all", "style");
 
     private static Whitelist whiteListMathJax;
 
     static {
+        whitelistSimple = whitelistSimple.addAttributes("iframe", IFRAME_ATTRS).addProtocols("iframe", "src", "http", "https");
         whitelistSimple = whitelistSimple.addAttributes("table", TABLE_ATTRS);
         whitelistSimple = whitelistSimple.addAttributes("tr", TBODY_TR_ATTRS).addAttributes("tbody", TBODY_TR_ATTRS);
         whitelistSimple = whitelistSimple.addAttributes("th", TH_TD_ATTRS).addAttributes("td", TH_TD_ATTRS);
@@ -81,9 +94,44 @@ public class JsoupSafeHtmlConverter extends Converter {
         }
 
         Document dirty = Jsoup.parseBodyFragment(htmlText);
+
         Cleaner cleaner = new Cleaner(whitelist);
         Document clean = cleaner.clean(dirty);
+        cleanInvalidIframes(clean);
         clean.outputSettings().charset("ASCII");
         return clean.body().html();
     }
+
+    private void cleanInvalidIframes(Document clean) {
+        for (Element iframe : clean.getElementsByTag("iframe")) {
+            String src = iframe.attr("src");
+            if (!validUrl(src)) {
+                iframe.remove();
+            }
+        }
+    }
+
+    private boolean validUrl(String src) {
+        if (StringUtils.isBlank(src)) {
+            return false;
+        }
+        try {
+            URL url = new URL(src);
+
+            if (!Arrays.asList(URL_SCHEMES).contains(url.getProtocol())) {
+                return false;
+            }
+
+            for (String authRegexp : URL_VALID_AUTHORITIES_REGEXPS) {
+                if (!url.getAuthority().matches(authRegexp)) {
+                    return false;
+                }
+            }
+
+            return true;
+        } catch (MalformedURLException e) {
+            return false;
+        }
+    }
+
 }
