@@ -3,14 +3,16 @@ package pt.ist.fenixWebFramework.struts.annotations;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import pt.utl.ist.fenix.tools.util.FileUtils;
@@ -27,31 +29,34 @@ public class ActionAnnotationProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-        final Set<String> actions = new HashSet<String>();
+        final SortedSet<String> lines = new TreeSet<String>();
 
         final File file = new File(LOG_FILENAME);
         if (file.exists()) {
             try {
                 final String contents = FileUtils.readFile(LOG_FILENAME);
                 for (final String line : contents.split(ENTRY_SEPERATOR)) {
-                    actions.add(line);
+                    lines.add(line);
                 }
             } catch (final IOException e) {
                 e.printStackTrace();
             }
         }
 
-        final Set<ClassSymbol> elements = (Set<ClassSymbol>) roundEnv.getElementsAnnotatedWith(Mapping.class);
-
-        for (final ClassSymbol classSymbol : elements) {
-            actions.add(classSymbol.getQualifiedName().toString());
+        for (final Element iter : roundEnv.getElementsAnnotatedWith(Mapping.class)) {
+            if (ClassSymbol.class.isAssignableFrom(iter.getClass())) {
+                final ClassSymbol classSymbol = (ClassSymbol) iter;
+                lines.add(classSymbol.getQualifiedName().toString());
+            } else {
+                System.out.println("Ignoring " + iter.getSimpleName());
+            }
         }
 
         FileWriter fileWriter = null;
         try {
-            fileWriter = new FileWriter(LOG_FILENAME, true);
-            for (final String action : actions) {
-                fileWriter.append(action);
+            fileWriter = new FileWriter(LOG_FILENAME);
+            for (final String line : lines) {
+                fileWriter.append(line);
                 fileWriter.write(ENTRY_SEPERATOR);
             }
         } catch (final IOException e) {
