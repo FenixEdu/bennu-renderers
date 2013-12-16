@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>pt.ist.bennu</groupId>
+        <groupId>org.fenixedu</groupId>
         <artifactId>bennu-renderers-aggregator</artifactId>
-        <version>3.0.0-M1</version>
+        <version>3.0.0-M2</version>
     </parent>
 
     <artifactId>bennu-renderers</artifactId>
@@ -14,20 +14,20 @@
     <name>Bennu Renderers Framework</name>
 
     <properties>
-        <version.pt.ist.bennu.bennu>2.0.0-M1</version.pt.ist.bennu.bennu>
+        <version.org.fenixedu.bennu>2.0.0-M4</version.org.fenixedu.bennu>
         <version.commons.codec.commons.codec>1.6</version.commons.codec.commons.codec>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>pt.ist.bennu</groupId>
+            <groupId>org.fenixedu</groupId>
             <artifactId>bennu-core</artifactId>
-            <version>${version.pt.ist.bennu.bennu}</version>
+            <version>${version.org.fenixedu.bennu}</version>
         </dependency>
         <dependency>
-            <groupId>pt.ist.bennu</groupId>
+            <groupId>org.fenixedu</groupId>
             <artifactId>bennu-portal</artifactId>
-            <version>${version.pt.ist.bennu.bennu}</version>
+            <version>${version.org.fenixedu.bennu}</version>
         </dependency>
         <dependency>
             <groupId>javax.mail</groupId>

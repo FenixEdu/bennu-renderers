@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>pt.ist.bennu</groupId>
+        <groupId>org.fenixedu</groupId>
         <artifactId>bennu-renderers-aggregator</artifactId>
-        <version>3.0.0-M1</version>
+        <version>3.0.0-M2</version>
     </parent>
 
     <artifactId>bennu-renderers-example</artifactId>
@@ -15,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>pt.ist.bennu</groupId>
+            <groupId>org.fenixedu</groupId>
             <artifactId>bennu-renderers</artifactId>
             <version>${project.version}</version>
         </dependency>
