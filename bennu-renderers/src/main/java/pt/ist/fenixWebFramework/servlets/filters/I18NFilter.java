@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
+import org.fenixedu.commons.i18n.I18N;
 
-import pt.ist.dsi.commons.i18n.I18N;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 /**
