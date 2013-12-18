@@ -5,10 +5,9 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.struts.action.ExceptionHandler;
+import org.fenixedu.bennu.core.presentationTier.servlets.filters.ExceptionHandlerFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pt.ist.bennu.core.presentationTier.servlets.filters.ExceptionHandlerFilter;
 
 public class RenderersConfigurationManager {
     private static Logger logger = LoggerFactory.getLogger(RenderersConfigurationManager.class);

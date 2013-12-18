@@ -14,7 +14,7 @@
     <name>Bennu Renderers Framework</name>
 
     <properties>
-        <version.org.fenixedu.bennu>2.0.0-M4</version.org.fenixedu.bennu>
+        <version.org.fenixedu.bennu>2.0.0-M5</version.org.fenixedu.bennu>
         <version.commons.codec.commons.codec>1.6</version.commons.codec.commons.codec>
     </properties>
 

@@ -22,8 +22,8 @@
  
 	<tag>
 	   <name>orgChart</name>
-	   <tag-class>pt.ist.bennu.core.presentationTier.tagLib.commons.OrganizationChartTag</tag-class>
-	   <tei-class>pt.ist.bennu.core.presentationTier.tagLib.commons.OrganizationChartTei</tei-class>
+	   <tag-class>org.fenixedu.bennu.core.presentationTier.tagLib.commons.OrganizationChartTag</tag-class>
+	   <tei-class>org.fenixedu.bennu.core.presentationTier.tagLib.commons.OrganizationChartTei</tei-class>
 	   <body-content>JSP</body-content>
 	   <description>
 			Renders the specified organizational chart.

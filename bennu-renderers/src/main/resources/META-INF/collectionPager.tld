@@ -22,7 +22,7 @@
  
 	<tag>
 	   <name>collectionPages</name>
-	   <tag-class>pt.ist.bennu.core.presentationTier.tagLib.commons.CollectionPagerTag</tag-class>
+	   <tag-class>org.fenixedu.bennu.core.presentationTier.tagLib.commons.CollectionPagerTag</tag-class>
 	   <body-content>empty</body-content>
 	   <description>
 	   	 Collection pager renders 

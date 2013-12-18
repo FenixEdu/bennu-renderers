@@ -5,8 +5,7 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.digest.DigestUtils;
-
-import pt.ist.bennu.core.security.Authenticate;
+import org.fenixedu.bennu.core.security.Authenticate;
 
 public class GenericChecksumRewriter extends RequestRewriter {
 

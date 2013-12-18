@@ -560,7 +560,7 @@
 	
 	<renderer type="java.lang.String" layout="slot-as-label" class="pt.ist.fenixWebFramework.renderers.SlotAsLabelRenderer"/>
 
-	<renderer type="pt.ist.fenixframework.DomainObject" layout="expandable" class="pt.ist.bennu.core.presentationTier.renderers.AjaxExpandableRenderer"/>
+	<renderer type="pt.ist.fenixframework.DomainObject" layout="expandable" class="org.fenixedu.bennu.core.presentationTier.renderers.AjaxExpandableRenderer"/>
 	
 	<renderer mode="input" type="java.lang.String" layout="advanced-password" class="pt.ist.fenixWebFramework.renderers.AdvancedPasswordRenderer"/>
 	

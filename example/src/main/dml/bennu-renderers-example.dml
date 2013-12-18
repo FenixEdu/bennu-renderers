@@ -1,4 +1,4 @@
-package pt.ist.bennu.renderers.example.domain;
+package org.fenixedu.bennu.renderers.example.domain;
 
 class ShoppingList {
     String name (REQUIRED);
@@ -14,7 +14,7 @@ class Product {
 }
 
 relation ShoppingLists {
-    .pt.ist.bennu.core.domain.Bennu playsRole bennu {
+    .org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
         multiplicity 1..1;
     }
     ShoppingList playsRole shoppingList {
@@ -32,7 +32,7 @@ relation ShoppingListItems {
 }
 
 relation ShoppingProducts {
-    .pt.ist.bennu.core.domain.Bennu playsRole bennu {
+    .org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
         multiplicity 1..1;
     }
     Product playsRole product {

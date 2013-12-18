@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.CharEncoding;
+import org.fenixedu.bennu.core.security.Authenticate;
+import org.fenixedu.bennu.core.security.UserSession;
 import org.joda.time.DateTime;
 
-import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.core.security.UserSession;
 import pt.ist.fenixWebFramework.servlets.json.JsonObject;
 
 public class JsonServlet extends HttpServlet {

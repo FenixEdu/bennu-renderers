@@ -9,16 +9,16 @@
 </h2>
 
 <fr:view name="list" property="itemSet">
-    <fr:schema bundle="EXAMPLE_RESOURCES" type="pt.ist.bennu.renderers.example.domain.ShoppingListItem">
+    <fr:schema bundle="EXAMPLE_RESOURCES" type="org.fenixedu.bennu.renderers.example.domain.ShoppingListItem">
         <fr:slot name="product.name" key="label.example.shoppinglist.product" />
         <fr:slot name="amount" key="label.example.shoppinglist.amount" />
     </fr:schema>
     <fr:layout name="tabular"></fr:layout>
 </fr:view>
 
-<fr:create id="create" type="pt.ist.bennu.renderers.example.domain.ShoppingListItem"
+<fr:create id="create" type="org.fenixedu.bennu.renderers.example.domain.ShoppingListItem"
     action="shopping.do?method=addItem">
-    <fr:schema bundle="EXAMPLE_RESOURCES" type="pt.ist.bennu.renderers.example.domain.ShoppingListItem">
+    <fr:schema bundle="EXAMPLE_RESOURCES" type="org.fenixedu.bennu.renderers.example.domain.ShoppingListItem">
         <fr:hidden slot="shoppingList" name="list" />
         <fr:slot name="product" layout="menu-select" key="label.example.shoppinglist.product" required="true">
             <fr:property name="from" value="possibleProducts"></fr:property>

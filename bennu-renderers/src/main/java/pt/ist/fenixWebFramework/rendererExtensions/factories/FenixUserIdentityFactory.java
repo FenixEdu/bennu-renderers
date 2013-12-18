@@ -2,7 +2,8 @@ package pt.ist.fenixWebFramework.rendererExtensions.factories;
 
 import javax.servlet.http.HttpServletRequest;
 
-import pt.ist.bennu.core.security.Authenticate;
+import org.fenixedu.bennu.core.security.Authenticate;
+
 import pt.ist.fenixWebFramework.renderers.model.UserIdentity;
 import pt.ist.fenixWebFramework.renderers.model.UserIdentityFactory;
 

@@ -2,7 +2,8 @@ package pt.ist.fenixWebFramework.rendererExtensions.factories;
 
 import java.util.Objects;
 
-import pt.ist.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.User;
+
 import pt.ist.fenixWebFramework.renderers.model.UserIdentity;
 
 public class FenixUserIdentity implements UserIdentity {

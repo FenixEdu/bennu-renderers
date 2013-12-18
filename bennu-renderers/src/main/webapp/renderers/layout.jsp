@@ -1,6 +1,6 @@
 <!Doctype html>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic"%>
-<%@page import="pt.ist.bennu.core.presentationTier.DefaultContext"%>
+<%@page import="org.fenixedu.bennu.core.presentationTier.DefaultContext"%>
 
 <%
 	DefaultContext context = (DefaultContext) request.getAttribute("_CONTEXT_");

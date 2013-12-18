@@ -29,12 +29,12 @@ import org.apache.commons.fileupload.DefaultFileItemFactory;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileUploadException;
+import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.groups.Group;
+import org.fenixedu.bennu.core.security.Authenticate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.domain.groups.Group;
-import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.fenixWebFramework.servlets.commons.CommonsFile;
 import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
 

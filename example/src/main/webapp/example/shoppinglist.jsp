@@ -5,7 +5,7 @@
 <%@ taglib uri="http://fenix-ashes.ist.utl.pt/fenix-renderers" prefix="fr"%>
 
 <fr:view name="list">
-    <fr:schema bundle="EXAMPLE_RESOURCES" type="pt.ist.bennu.renderers.example.domain.ShoppingList">
+    <fr:schema bundle="EXAMPLE_RESOURCES" type="org.fenixedu.bennu.renderers.example.domain.ShoppingList">
         <fr:slot name="name" key="label.example.shoppinglist.name" />
         <fr:slot name="creationDate" key="label.example.shoppinglist.creation" />
     </fr:schema>
