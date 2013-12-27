@@ -1,9 +1,7 @@
 package pt.ist.fenixWebFramework.servlets.filters;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.lang.ref.SoftReference;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -16,14 +14,12 @@ import java.util.Vector;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
 
 import org.apache.commons.fileupload.DefaultFileItemFactory;
 import org.apache.commons.fileupload.FileItem;
@@ -32,8 +28,6 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.Group;
 import org.fenixedu.bennu.core.security.Authenticate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework.servlets.commons.CommonsFile;
 import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
@@ -44,166 +38,6 @@ import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
  * @author jpvl
  */
 public class RequestWrapperFilter implements Filter {
-
-    private static SoftReference<Map<String, Boolean>> sessionLogHashRefs = null;
-
-    private static void logSessionUsage(String arg0, Object arg1) {
-        Map<String, Boolean> sessionLogHashs = sessionLogHashRefs == null ? null : sessionLogHashRefs.get();
-        if (sessionLogHashs == null) {
-            synchronized (RequestWrapperFilter.class) {
-                sessionLogHashs = sessionLogHashRefs == null ? null : sessionLogHashRefs.get();
-                if (sessionLogHashs == null) {
-                    sessionLogHashs = new Hashtable<String, Boolean>();
-                    sessionLogHashRefs = new SoftReference<Map<String, Boolean>>(sessionLogHashs);
-                }
-            }
-        }
-        final String classType = arg1 == null ? null : arg1.getClass().getName();
-        final String hash = calcHash(classType);
-
-        if (!sessionLogHashs.containsKey(hash)) {
-            sessionLogHashs.put(hash, Boolean.TRUE);
-            final StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("Adding object of type: ");
-            stringBuilder.append(classType);
-            stringBuilder.append(" to session as attribute: ");
-            stringBuilder.append(arg0);
-            stringBuilder.append(".\n");
-            for (final StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()) {
-                stringBuilder.append("   ");
-                stringBuilder.append(stackTraceElement.getClassName());
-                stringBuilder.append(".");
-                stringBuilder.append(stackTraceElement.getMethodName());
-                stringBuilder.append(" : ");
-                stringBuilder.append(stackTraceElement.getLineNumber());
-                stringBuilder.append("\n");
-            }
-            System.out.println(stringBuilder.toString());
-        }
-
-    }
-
-    private static String calcHash(final String classType) {
-        long hash = classType.hashCode();
-        for (final StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()) {
-            hash +=
-                    stackTraceElement.getClassName().hashCode() + stackTraceElement.getMethodName().hashCode()
-                            + stackTraceElement.getLineNumber();
-        }
-        return Long.toString(hash);
-    }
-
-    public static class FenixSessionWrapper implements HttpSession {
-
-        public static Logger logger = LoggerFactory.getLogger(FenixSessionWrapper.class.getName());
-        private final HttpSession session;
-
-        public FenixSessionWrapper(HttpSession session) {
-            this.session = session;
-        }
-
-        @Override
-        public Object getAttribute(String arg0) {
-            return session.getAttribute(arg0);
-        }
-
-        @Override
-        public Enumeration getAttributeNames() {
-            return session.getAttributeNames();
-        }
-
-        @Override
-        public long getCreationTime() {
-            return session.getCreationTime();
-        }
-
-        @Override
-        public String getId() {
-            return session.getId();
-        }
-
-        @Override
-        public long getLastAccessedTime() {
-            return session.getLastAccessedTime();
-        }
-
-        @Override
-        public int getMaxInactiveInterval() {
-            return session.getMaxInactiveInterval();
-        }
-
-        @Override
-        public ServletContext getServletContext() {
-            return session.getServletContext();
-        }
-
-        @Override
-        public HttpSessionContext getSessionContext() {
-            return session.getSessionContext();
-        }
-
-        @Override
-        public Object getValue(String arg0) {
-            return session.getValue(arg0);
-        }
-
-        @Override
-        public String[] getValueNames() {
-            return session.getValueNames();
-        }
-
-        @Override
-        public void invalidate() {
-            session.invalidate();
-
-        }
-
-        @Override
-        public boolean isNew() {
-            return session.isNew();
-        }
-
-        @Override
-        public void putValue(String arg0, Object arg1) {
-            session.putValue(arg0, arg1);
-        }
-
-        @Override
-        public void removeAttribute(String arg0) {
-            session.removeAttribute(arg0);
-        }
-
-        @Override
-        public void removeValue(String arg0) {
-            session.removeValue(arg0);
-        }
-
-        @Override
-        public void setAttribute(String arg0, Object arg1) {
-            logSessionUsage(arg0, arg1);
-            if (arg1 != null && !(arg1 instanceof Serializable)) {
-                try {
-                    throw new Error("Trying to find out where's the serialization problem");
-                } catch (Error e) {
-                    final StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append("arg0: ");
-                    stringBuilder.append(arg0);
-                    stringBuilder.append(" - arg1: ");
-                    stringBuilder.append(arg1);
-                    stringBuilder.append("\n");
-                    logger.warn(stringBuilder.toString());
-                    e.printStackTrace();
-                }
-            }
-            session.setAttribute(arg0, arg1);
-        }
-
-        @Override
-        public void setMaxInactiveInterval(int arg0) {
-            session.setMaxInactiveInterval(arg0);
-        }
-
-    }
 
     @Override
     public void init(FilterConfig config) {
@@ -230,37 +64,6 @@ public class RequestWrapperFilter implements Filter {
 
     public FenixHttpServletRequestWrapper getFenixHttpServletRequestWrapper(final HttpServletRequest httpServletRequest) {
         return new FenixHttpServletRequestWrapper(httpServletRequest);
-    }
-
-    public static class FenixPrincipal implements Principal {
-
-        @Override
-        public String getName() {
-            final User user = Authenticate.getUser();
-            return user == null ? null : user.getUsername();
-        }
-
-        @Override
-        public boolean equals(final Object obj) {
-            if (obj instanceof Principal) {
-                final Principal principal = (Principal) obj;
-                final String name = getName();
-                return name != null && name.equals(principal.getName());
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            final String name = getName();
-            return name == null ? 0 : name.hashCode();
-        }
-
-        @Override
-        public String toString() {
-            return getName();
-        }
-
     }
 
     public static class FenixHttpServletRequestWrapper extends HttpServletRequestWrapper {
@@ -387,11 +190,6 @@ public class RequestWrapperFilter implements Filter {
         }
 
         @Override
-        public HttpSession getSession() {
-            return new FenixSessionWrapper(super.getSession());
-        }
-
-        @Override
         public boolean isUserInRole(String role) {
             return Group.parse(role).isMember(Authenticate.getUser());
         }
@@ -404,7 +202,7 @@ public class RequestWrapperFilter implements Filter {
 
         @Override
         public Principal getUserPrincipal() {
-            return new FenixPrincipal();
+            return Authenticate.getUserSession();
         }
 
     }
