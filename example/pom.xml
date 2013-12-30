@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>bennu-renderers-aggregator</artifactId>
-        <version>3.0.0-M2</version>
+        <version>3.0.0-M3</version>
     </parent>
 
     <artifactId>bennu-renderers-example</artifactId>

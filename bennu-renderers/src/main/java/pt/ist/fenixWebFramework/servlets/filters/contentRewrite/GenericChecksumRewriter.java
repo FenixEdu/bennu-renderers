@@ -5,7 +5,6 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.fenixedu.bennu.core.security.Authenticate;
 
 public class GenericChecksumRewriter extends RequestRewriter {
 
@@ -35,7 +34,7 @@ public class GenericChecksumRewriter extends RequestRewriter {
             stringBuilder.append(string);
         }
 
-        final String digest = Authenticate.getPrivateConstantForDigestCalculation();
+        final String digest = RequestChecksumFilter.getDigestSecret();
         if (digest != null) {
             stringBuilder.append(digest);
         }

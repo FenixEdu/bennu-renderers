@@ -202,7 +202,7 @@ public class RequestWrapperFilter implements Filter {
 
         @Override
         public Principal getUserPrincipal() {
-            return Authenticate.getUserSession();
+            return Authenticate.getUser();
         }
 
     }

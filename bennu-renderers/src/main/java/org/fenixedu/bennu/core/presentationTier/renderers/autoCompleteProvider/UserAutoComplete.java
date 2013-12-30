@@ -46,7 +46,7 @@ public class UserAutoComplete implements AutoCompleteProvider<User> {
     public Collection<User> getSearchResults(Map<String, String> argsMap, String value, int maxCount) {
         Set<User> users = new HashSet<User>();
         String[] values = StringNormalizer.normalize(value).toLowerCase().split(" ");
-        for (User user : Bennu.getInstance().getUsersSet()) {
+        for (User user : Bennu.getInstance().getUserSet()) {
             final String normalizedUser = StringNormalizer.normalize(user.getPresentationName()).toLowerCase();
 
             if (hasMatch(values, normalizedUser)) {
