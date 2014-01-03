@@ -31,15 +31,15 @@ import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class MultipartRequestWrapper extends HttpServletRequestWrapper {
-    private static Log log = LogFactory.getLog(MultipartRequestWrapper.class);
+    private static Logger log = LoggerFactory.getLogger(MultipartRequestWrapper.class);
 
     HttpServletRequest request = null;
     HashMap parametersMap = null;
