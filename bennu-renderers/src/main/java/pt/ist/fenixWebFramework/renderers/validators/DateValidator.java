@@ -1,6 +1,6 @@
 package pt.ist.fenixWebFramework.renderers.validators;
 
-import org.apache.commons.lang.StringUtils;
+import com.google.common.base.Strings;
 
 public class DateValidator extends HtmlValidator {
 
@@ -40,7 +40,7 @@ public class DateValidator extends HtmlValidator {
 
         String text = getComponent().getValue();
 
-        if (!StringUtils.isEmpty(text)) {
+        if (!Strings.isNullOrEmpty(text)) {
             setValid(org.apache.commons.validator.DateValidator.getInstance().isValid(text, getDateFormat(), true));
         }
 

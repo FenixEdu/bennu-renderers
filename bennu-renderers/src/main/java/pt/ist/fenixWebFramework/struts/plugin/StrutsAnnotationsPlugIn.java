@@ -12,7 +12,6 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -33,6 +32,9 @@ import pt.ist.fenixWebFramework.struts.annotations.Input;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixWebFramework.struts.tiles.FenixDefinitionsFactory;
 import pt.ist.fenixWebFramework.struts.tiles.PartialTileDefinition;
+
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Strings;
 
 /**
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
@@ -68,7 +70,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
             initialized = true;
         }
 
-        final String modulePrefix = StringUtils.removeStart(config.getPrefix(), "/");
+        final String modulePrefix = CharMatcher.is('/').trimLeadingFrom(config.getPrefix());
 
         for (Class<?> actionClass : actionClasses) {
             Mapping mapping = actionClass.getAnnotation(Mapping.class);
@@ -141,11 +143,11 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
             exceptionConfig.setHandler(exceptionHandler);
             exceptionConfig.setType(exClass.getName());
 
-            if (!StringUtils.isEmpty(exception.path())) {
+            if (!Strings.isNullOrEmpty(exception.path())) {
                 exceptionConfig.setPath(exception.path());
             }
 
-            if (!StringUtils.isEmpty(exception.scope())) {
+            if (!Strings.isNullOrEmpty(exception.scope())) {
                 exceptionConfig.setScope(exception.scope());
             }
 
@@ -241,7 +243,8 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
     }
 
     private static boolean isSimplePageFile(String str) {
-        return (str.endsWith(PAGE_FILE_EXTENSION)) && (StringUtils.countMatches(str, PAGE_FILE_EXTENSION) == 1);
+        return str.endsWith(PAGE_FILE_EXTENSION)
+                && !str.substring(0, str.length() - PAGE_FILE_EXTENSION.length()).contains(PAGE_FILE_EXTENSION);
     }
 
     private void createFormBeanConfigIfNecessary(ModuleConfig config, Mapping mapping, final String formName) {

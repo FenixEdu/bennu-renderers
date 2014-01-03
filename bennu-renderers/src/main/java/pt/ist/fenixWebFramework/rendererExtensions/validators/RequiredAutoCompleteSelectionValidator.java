@@ -1,13 +1,13 @@
 package pt.ist.fenixWebFramework.rendererExtensions.validators;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.fenixWebFramework.rendererExtensions.AutoCompleteInputRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
+
+import com.google.common.base.Strings;
 
 public class RequiredAutoCompleteSelectionValidator extends HtmlValidator {
 
@@ -67,7 +67,7 @@ public class RequiredAutoCompleteSelectionValidator extends HtmlValidator {
 
     @Override
     public String getMessage() {
-        if (StringUtils.isEmpty(super.getMessage())) {
+        if (Strings.isNullOrEmpty(super.getMessage())) {
             setMessage("renderers.validator.autoComplete.required");
         }
         return super.getMessage();

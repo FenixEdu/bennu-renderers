@@ -1,7 +1,5 @@
 package pt.ist.fenixWebFramework.renderers.validators;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.Validatable;
@@ -126,7 +124,7 @@ public abstract class HtmlValidator extends AbstractHtmlValidator {
     }
 
     protected String getSpecificValidatorScript() {
-        return StringUtils.EMPTY;
+        return "";
     }
 
     protected String getJavascriptErrorMessage() {

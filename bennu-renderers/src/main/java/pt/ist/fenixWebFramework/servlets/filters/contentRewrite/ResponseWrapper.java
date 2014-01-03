@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriterFilter.RequestRewriterFactory;
 
 public class ResponseWrapper extends HttpServletResponseWrapper {
@@ -69,7 +67,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
         if (bufferedFacadPrintWriter != null) {
             return bufferedFacadPrintWriter.getContent();
         }
-        return StringUtils.EMPTY;
+        return "";
     }
 
     @Override

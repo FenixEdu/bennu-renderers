@@ -13,14 +13,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.CharEncoding;
-import org.apache.commons.lang.StringUtils;
 
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter.UrlTamperingException;
 import pt.ist.fenixWebFramework.servlets.json.JsonObject;
+
+import com.google.common.base.Charsets;
 
 public abstract class AutoCompleteServlet extends HttpServlet {
 
@@ -34,7 +34,7 @@ public abstract class AutoCompleteServlet extends HttpServlet {
 
     public static final String MAX_COUNT = "maxCount";
 
-    private static final String JAVASCRIPT_LIBRARY_ENCODING = CharEncoding.UTF_8;
+    private static final String JAVASCRIPT_LIBRARY_ENCODING = Charsets.UTF_8.name();
 
     private static final int DEFAULT_MAX_COUNT = 20;
 
@@ -123,11 +123,11 @@ public abstract class AutoCompleteServlet extends HttpServlet {
     protected abstract Collection getSearchResult(Map<String, String> argsMap, String value, int maxCount);
 
     private Map<String, String> getArgsMap(String encodedServiceArgs) {
-        String[] serviceArgsArray = StringUtils.split(encodedServiceArgs, ',');
+        String[] serviceArgsArray = encodedServiceArgs.split(",");
         Map<String, String> serviceArgsMap = new HashMap<String, String>();
 
         for (String serviceArg : serviceArgsArray) {
-            String[] argNameArgValue = StringUtils.split(serviceArg, '=');
+            String[] argNameArgValue = serviceArg.split("=");
             serviceArgsMap.put(argNameArgValue[0], argNameArgValue[1]);
         }
 

@@ -1,8 +1,8 @@
 package pt.ist.fenixWebFramework.renderers.validators;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+
+import com.google.common.base.Strings;
 
 public class NumberValidator extends HtmlValidator {
 
@@ -42,7 +42,7 @@ public class NumberValidator extends HtmlValidator {
 
         String numberText = getComponent().getValue();
 
-        if (!StringUtils.isEmpty(numberText)) {
+        if (!Strings.isNullOrEmpty(numberText)) {
             try {
                 Integer.parseInt(numberText.trim(), getBase());
                 setValid(true);

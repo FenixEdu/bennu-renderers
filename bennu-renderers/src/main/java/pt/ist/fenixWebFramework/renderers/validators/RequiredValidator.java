@@ -1,9 +1,9 @@
 package pt.ist.fenixWebFramework.renderers.validators;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.components.Validatable;
+
+import com.google.common.base.Strings;
 
 public class RequiredValidator extends HtmlValidator {
 
@@ -51,7 +51,7 @@ public class RequiredValidator extends HtmlValidator {
 
     @Override
     public String getMessage() {
-        if (StringUtils.isEmpty(super.getMessage())) {
+        if (Strings.isNullOrEmpty(super.getMessage())) {
             setMessage("renderers.validator.required");
         }
         return super.getMessage();

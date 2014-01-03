@@ -1,7 +1,5 @@
 package pt.ist.fenixWebFramework.renderers;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextInput;
@@ -136,7 +134,7 @@ public abstract class TextFieldRenderer extends InputRenderer {
         } else if (getFormatText() != null) {
             return getFormatText();
         }
-        return StringUtils.EMPTY;
+        return "";
     }
 
     protected abstract HtmlComponent createTextField(Object object, Class type);

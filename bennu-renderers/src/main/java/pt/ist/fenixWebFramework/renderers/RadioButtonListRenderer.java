@@ -3,8 +3,6 @@ package pt.ist.fenixWebFramework.renderers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlRadioButton;
@@ -20,6 +18,8 @@ import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+
+import com.google.common.base.Strings;
 
 /**
  * This renderer can be used as the input for a list of objects. The list of
@@ -188,8 +188,8 @@ public class RadioButtonListRenderer extends SelectionRenderer {
 
                 HtmlLabel label = new HtmlLabel();
 
-                if (StringUtils.isEmpty(layout)) {
-                    if (Enum.class.isAssignableFrom(obj.getClass()) && StringUtils.isEmpty(getFormat())) {
+                if (Strings.isNullOrEmpty(layout)) {
+                    if (Enum.class.isAssignableFrom(obj.getClass()) && Strings.isNullOrEmpty(getFormat())) {
                         fillBodyForRadioLabel(metaObject, obj, layout, label);
                     } else {
                         label.setText(getObjectLabel(obj));
@@ -213,7 +213,7 @@ public class RadioButtonListRenderer extends SelectionRenderer {
                 }
             }
 
-            if (!StringUtils.isEmpty(getNullOptionKey())) {
+            if (!Strings.isNullOrEmpty(getNullOptionKey())) {
                 HtmlLabel label = new HtmlLabel();
                 label.setText(RenderUtils.getResourceString(getNullOptionBundle(), getNullOptionKey()));
                 HtmlRadioButton addOption = listComponent.addOption(label, null);

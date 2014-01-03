@@ -1,10 +1,10 @@
 package pt.ist.fenixWebFramework.rendererExtensions.validators;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
+
+import com.google.common.base.Strings;
 
 public class NumberRangeValidator extends HtmlValidator {
 
@@ -49,7 +49,7 @@ public class NumberRangeValidator extends HtmlValidator {
 
         String numberText = getComponent().getValue();
 
-        if (!StringUtils.isEmpty(numberText)) {
+        if (!Strings.isNullOrEmpty(numberText)) {
             try {
                 int number = Integer.parseInt(numberText.trim());
 

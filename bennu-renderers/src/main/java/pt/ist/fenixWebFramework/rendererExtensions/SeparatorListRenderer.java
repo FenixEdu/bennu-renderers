@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.StringUtils;
 
 import pt.ist.fenixWebFramework.renderers.OutputRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
@@ -14,6 +13,8 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
+
+import com.google.common.base.Strings;
 
 public class SeparatorListRenderer extends OutputRenderer {
 
@@ -58,7 +59,7 @@ public class SeparatorListRenderer extends OutputRenderer {
     }
 
     private boolean hasSeparator() {
-        return !StringUtils.isEmpty(this.separator);
+        return !Strings.isNullOrEmpty(this.separator);
     }
 
     public String getEachSchema() {
@@ -111,8 +112,8 @@ public class SeparatorListRenderer extends OutputRenderer {
                     Schema schema = RenderKit.getInstance().findSchema(getEachSchema());
                     HtmlComponent htmlComponent = renderValue(each, each.getClass(), schema, getEachLayout(), null);
 
-                    if (htmlComponent != null && getLink() != null && !StringUtils.isEmpty(getLink().trim())) {
-                        if (getParam() != null && !StringUtils.isEmpty(getParam().trim())) {
+                    if (htmlComponent != null && getLink() != null && !Strings.isNullOrEmpty(getLink().trim())) {
+                        if (getParam() != null && !Strings.isNullOrEmpty(getParam().trim())) {
                             htmlComponent = getHtmlLink(each, htmlComponent);
                         }
                     }
@@ -121,7 +122,7 @@ public class SeparatorListRenderer extends OutputRenderer {
                     blockContainer.addChild(iterator.hasNext() ? new HtmlText(getSeparator()) : new HtmlText());
                 }
 
-                if (objects.isEmpty() && getEmptyLabel() != null && !StringUtils.isEmpty(getEmptyLabel())) {
+                if (objects.isEmpty() && getEmptyLabel() != null && !Strings.isNullOrEmpty(getEmptyLabel())) {
                     blockContainer.addChild(new HtmlText(getEmptyLabel()));
                 }
 

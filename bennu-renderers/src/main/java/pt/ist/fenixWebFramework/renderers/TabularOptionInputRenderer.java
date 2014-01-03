@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.fenixWebFramework.renderers.components.HtmlCheckBox;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
@@ -22,6 +20,8 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+
+import com.google.common.base.Strings;
 
 /**
  * This renderer allows you choose several object from a list of choices. The
@@ -178,7 +178,7 @@ public class TabularOptionInputRenderer extends SelectionRenderer {
             HtmlComponent component = super.createLayout(object, type);
             container.addChild(hiddenField);
             container.addChild(component);
-            if (metaObjects.isEmpty() && !StringUtils.isEmpty(getEmptyMessageKey())) {
+            if (metaObjects.isEmpty() && !Strings.isNullOrEmpty(getEmptyMessageKey())) {
                 HtmlText emptyMessage =
                         new HtmlText(RenderUtils.getResourceString(getEmptyMessageBundle(), getEmptyMessageKey()), false);
                 container.addChild(emptyMessage);

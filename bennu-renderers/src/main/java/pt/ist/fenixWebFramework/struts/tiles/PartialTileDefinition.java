@@ -13,7 +13,6 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.struts.tiles.ComponentDefinition;
 
 import pt.ist.fenixWebFramework.struts.annotations.Forward;
@@ -23,6 +22,8 @@ import pt.ist.fenixWebFramework.struts.annotations.Tile;
 import pt.ist.fenixWebFramework.struts.annotations.TileCustomPropertyName;
 
 public class PartialTileDefinition {
+    private static final String RESOURCES_PREFIX = "resources.";
+    private static final String RESOURCES_SUFFIX = "Resources";
 
     private static final List<String> MANUALLY_HANDLED_TILE_METHODS = Arrays.asList("extend", "title", "bundle");
 
@@ -38,9 +39,6 @@ public class PartialTileDefinition {
     private final String title;
     private final String customBundleName;
     private final String defaultBundleName;
-
-    private static final String RESOURCES_PREFIX = "resources.";
-    private static final String RESOURCES_SUFFIX = "Resources";
 
     public static void init() {
         for (Method tileMethod : Tile.class.getDeclaredMethods()) {
@@ -173,14 +171,19 @@ public class PartialTileDefinition {
     }
 
     private static ResourceBundle searchBundleByName(String bundleName, Locale locale) {
-        bundleName = StringUtils.removeStartIgnoreCase(bundleName, RESOURCES_PREFIX);
-        bundleName = StringUtils.removeEndIgnoreCase(bundleName, RESOURCES_SUFFIX);
-        bundleName = StringUtils.capitalize(bundleName);
+        bundleName = bundleName.replaceFirst("^" + RESOURCES_PREFIX, "");
+        bundleName = bundleName.replace(RESOURCES_SUFFIX + "$", "");
+        if (bundleName.length() >= 1) {
+            bundleName = Character.toTitleCase(bundleName.charAt(0)) + bundleName.substring(1);
+        }
         try {
             return getBundle(bundleName, locale);
         } catch (MissingResourceException e) {
             try {
-                return getBundle(StringUtils.capitalize(bundleName.toLowerCase()), locale);
+                if (bundleName.length() >= 1) {
+                    bundleName = bundleName.charAt(0) + bundleName.substring(1).toLowerCase();
+                }
+                return getBundle(bundleName, locale);
             } catch (MissingResourceException ex) {
                 return getBundle(bundleName.toUpperCase(), locale);
             }

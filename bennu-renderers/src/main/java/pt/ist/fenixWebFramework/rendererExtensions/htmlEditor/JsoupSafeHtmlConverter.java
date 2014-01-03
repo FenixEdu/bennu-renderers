@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
-import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,6 +11,8 @@ import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
+
+import com.google.common.base.Strings;
 
 public class JsoupSafeHtmlConverter extends Converter {
 
@@ -89,7 +90,7 @@ public class JsoupSafeHtmlConverter extends Converter {
     public Object convert(Class type, Object value) {
         String htmlText = (String) value;
 
-        if (StringUtils.isBlank(htmlText)) {
+        if (Strings.isNullOrEmpty(htmlText)) {
             return null;
         }
 
@@ -112,7 +113,7 @@ public class JsoupSafeHtmlConverter extends Converter {
     }
 
     private boolean validUrl(String src) {
-        if (StringUtils.isBlank(src)) {
+        if (Strings.isNullOrEmpty(src)) {
             return false;
         }
         try {

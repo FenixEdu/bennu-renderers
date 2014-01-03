@@ -1,7 +1,5 @@
 package pt.ist.fenixWebFramework.renderers;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenu;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenuOption;
@@ -9,6 +7,8 @@ import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+
+import com.google.common.base.Strings;
 
 /**
  * This renderer provides an alternative way of doing the input of a boolean
@@ -58,7 +58,7 @@ public class BooleanMenuInputRenderer extends InputRenderer {
                     menu.setConverter(new Converter() {
                         @Override
                         public Object convert(Class type, Object value) {
-                            return StringUtils.isEmpty((String) value) ? null : Boolean.valueOf((String) value);
+                            return Strings.isNullOrEmpty((String) value) ? null : Boolean.valueOf((String) value);
                         }
                     });
                 }

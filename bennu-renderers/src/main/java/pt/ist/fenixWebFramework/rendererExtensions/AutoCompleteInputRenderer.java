@@ -1,7 +1,6 @@
 package pt.ist.fenixWebFramework.rendererExtensions;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.StringUtils;
 
 import pt.ist.fenixWebFramework.rendererExtensions.converters.DomainObjectKeyConverter;
 import pt.ist.fenixWebFramework.renderers.InputRenderer;
@@ -24,6 +23,8 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 import pt.ist.fenixWebFramework.servlets.ajax.AutoCompleteServlet;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
+
+import com.google.common.base.Strings;
 
 /**
  * This renderer allows you to search for a domain object by providing a list of
@@ -396,7 +397,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
                             + finalUri
                             + "\", { minChars: "
                             + getMinChars()
-                            + (!StringUtils.isEmpty(getAutoCompleteWidth()) ? ", width: '" + getAutoCompleteWidth() + "'" : "")
+                            + (!Strings.isNullOrEmpty(getAutoCompleteWidth()) ? ", width: '" + getAutoCompleteWidth() + "'" : "")
                             + ", validSelection: false"
                             + ", cleanSelection: clearAutoComplete, select: selectElement, after: updateCustomValue, error:showError}); +\n"
                             + "jQuery(\"input[name='" + escapeId + "']\").val(jQuery(\"input#" + escapeId + "\").val());";

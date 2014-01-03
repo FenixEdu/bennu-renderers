@@ -1,8 +1,8 @@
 package pt.ist.fenixWebFramework.renderers.validators;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+
+import com.google.common.base.Strings;
 
 public class DoubleValidator extends HtmlValidator {
 
@@ -23,7 +23,7 @@ public class DoubleValidator extends HtmlValidator {
     public void performValidation() {
         String numberText = getComponent().getValue().trim();
 
-        if (!StringUtils.isEmpty(numberText)) {
+        if (!Strings.isNullOrEmpty(numberText)) {
             try {
                 Double.parseDouble(numberText);
                 setValid(true);

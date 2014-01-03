@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.StringUtils;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlCheckBox;
@@ -36,6 +35,7 @@ import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 import pt.utl.ist.fenix.tools.util.CollectionPager;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 
 /**
  * This renderer provides a way of presenting a collection in a table. The table
@@ -1215,7 +1215,7 @@ public class CollectionRenderer extends OutputRenderer {
                 HtmlLabel label = new HtmlLabel();
                 MetaSlot metaSlot = getObject(0).getSlots().get(columnIndex - (isCheckable() ? 1 : 0));
                 label.setFor(metaSlot.getKey().toString());
-                if (StringUtils.isEmpty(getHeaderToolTip(columnIndex))) {
+                if (Strings.isNullOrEmpty(getHeaderToolTip(columnIndex))) {
                     label.setTitle(metaSlot.getTitle());
                 }
                 HtmlText text = new HtmlText();
@@ -1234,13 +1234,12 @@ public class CollectionRenderer extends OutputRenderer {
 
         private String getHeaderToolTip(final int columnIndex) {
             MetaSlot metaSlot = this.metaObjects.get(0).getSlots().get(columnIndex - (isCheckable() ? 1 : 0));
-            String headerToolTip =
-                    metaSlot.getProperties() == null ? StringUtils.EMPTY : metaSlot.getProperties().getProperty("headerToolTip");
-            if (!StringUtils.isEmpty(headerToolTip)) {
+            String headerToolTip = metaSlot.getProperties() == null ? "" : metaSlot.getProperties().getProperty("headerToolTip");
+            if (!Strings.isNullOrEmpty(headerToolTip)) {
                 return " <a href=\"#\" class=\"help\">[?]<span>"
                         + RenderUtils.getResourceString(metaSlot.getBundle(), headerToolTip) + "</span></a>";
             }
-            return StringUtils.EMPTY;
+            return "";
         }
 
         protected String getLabel(int columnIndex) {

@@ -3,8 +3,6 @@ package pt.ist.fenixWebFramework.renderers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenu;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenuOption;
@@ -18,6 +16,8 @@ import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+
+import com.google.common.base.Strings;
 
 /**
  * This renderer as a purpose similar to {@link pt.ist.fenixWebFramework.renderers.CheckBoxOptionListRenderer} but is
@@ -196,8 +196,8 @@ public class MenuOptionListRenderer extends SelectionRenderer {
                     option.setValue(metaObject.getKey().toString());
                 }
 
-                if (StringUtils.isEmpty(getEachLayout())) {
-                    if (Enum.class.isAssignableFrom(obj.getClass()) && StringUtils.isEmpty(getFormat())) {
+                if (Strings.isNullOrEmpty(getEachLayout())) {
+                    if (Enum.class.isAssignableFrom(obj.getClass()) && Strings.isNullOrEmpty(getFormat())) {
                         fillBodyWithRenderKit(kit, metaObject, obj, option);
                     } else {
                         option.setText(getObjectLabel(obj));

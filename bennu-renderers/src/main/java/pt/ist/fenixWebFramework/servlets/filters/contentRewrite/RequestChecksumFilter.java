@@ -17,15 +17,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang.CharEncoding;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.security.Authenticate;
 
 import pt.ist.fenixWebFramework.RenderersConfigurationManager;
 
+import com.google.common.base.Charsets;
+
 public class RequestChecksumFilter implements Filter {
 
-    private static final String ENCODING = CharEncoding.UTF_8;
+    private static final String ENCODING = Charsets.UTF_8.name();
     private static final String DIGEST_SECRET_ATTRIBUTE = "DIGEST_SECRET_ATTRIBUTE";
 
     private static final InheritableThreadLocal<String> digestSecret = new InheritableThreadLocal<>();
