@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 
 import javax.servlet.jsp.PageContext;
 
-import org.apache.commons.collections.Predicate;
-
 import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+
+import com.google.common.base.Predicate;
 
 public abstract class HtmlComponent implements Serializable {
 
@@ -279,9 +279,9 @@ public abstract class HtmlComponent implements Serializable {
         return tag;
     }
 
-    public HtmlComponent getChild(Predicate predicate) {
+    public HtmlComponent getChild(Predicate<HtmlComponent> predicate) {
         for (HtmlComponent child : getChildren()) {
-            if (predicate.evaluate(child)) {
+            if (predicate.apply(child)) {
                 return child;
             } else {
                 HtmlComponent foundComponent = child.getChild(predicate);
@@ -294,11 +294,11 @@ public abstract class HtmlComponent implements Serializable {
         return null;
     }
 
-    public List<HtmlComponent> getChildren(Predicate predicate) {
+    public List<HtmlComponent> getChildren(Predicate<HtmlComponent> predicate) {
         List<HtmlComponent> results = new ArrayList<HtmlComponent>();
 
         for (HtmlComponent child : getChildren()) {
-            if (predicate.evaluate(child)) {
+            if (predicate.apply(child)) {
                 results.add(child);
             }
 
@@ -309,34 +309,32 @@ public abstract class HtmlComponent implements Serializable {
     }
 
     public HtmlComponent getChildWithId(final String id) {
-        return getChild(new Predicate() {
-
+        return getChild(new Predicate<HtmlComponent>() {
             @Override
-            public boolean evaluate(Object component) {
-                return ((HtmlComponent) component).getId().equals(id);
+            public boolean apply(HtmlComponent component) {
+                return component.getId().equals(id);
             }
-
         });
     }
 
-    public static HtmlComponent getComponent(HtmlComponent component, Predicate predicate) {
+    public static HtmlComponent getComponent(HtmlComponent component, Predicate<HtmlComponent> predicate) {
         if (component == null) {
             return null;
         }
 
-        if (predicate.evaluate(component)) {
+        if (predicate.apply(component)) {
             return component;
         }
 
         return component.getChild(predicate);
     }
 
-    public static List<HtmlComponent> getComponents(HtmlComponent component, Predicate predicate) {
+    public static List<HtmlComponent> getComponents(HtmlComponent component, Predicate<HtmlComponent> predicate) {
         if (component == null) {
             return new ArrayList<HtmlComponent>();
         }
 
-        if (predicate.evaluate(component)) {
+        if (predicate.apply(component)) {
             List<HtmlComponent> results = new ArrayList<HtmlComponent>();
             results.add(component);
 

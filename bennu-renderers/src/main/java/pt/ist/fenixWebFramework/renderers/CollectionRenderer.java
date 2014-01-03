@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
@@ -35,6 +34,8 @@ import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 import pt.utl.ist.fenix.tools.util.CollectionPager;
+
+import com.google.common.base.Predicate;
 
 /**
  * This renderer provides a way of presenting a collection in a table. The table
@@ -1043,12 +1044,11 @@ public class CollectionRenderer extends OutputRenderer {
         @Override
         public void applyStyle(HtmlComponent component) {
             if (pagedLayout) {
-                component.getChild(new Predicate() {
+                component.getChild(new Predicate<HtmlComponent>() {
                     @Override
-                    public boolean evaluate(Object arg0) {
-                        return arg0 instanceof HtmlTable;
+                    public boolean apply(HtmlComponent component) {
+                        return component instanceof HtmlTable;
                     }
-
                 }).setClasses(getClasses());
             } else {
                 component.setClasses(getClasses());

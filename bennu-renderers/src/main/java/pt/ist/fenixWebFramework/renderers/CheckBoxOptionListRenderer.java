@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.collections.Predicate;
-
 import pt.ist.fenixWebFramework.renderers.components.HtmlCheckBox;
 import pt.ist.fenixWebFramework.renderers.components.HtmlCheckBoxList;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
@@ -20,6 +18,8 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
+
+import com.google.common.base.Predicate;
 
 /**
  * This renderer can be used as the input for a list of objects. The list of
@@ -271,10 +271,10 @@ public class CheckBoxOptionListRenderer extends SelectionRenderer {
                 savePossibleMetaObjects(possibleMetaObjects);
             }
 
-            List<HtmlComponent> components = listComponent.getChildren(new Predicate() {
+            List<HtmlComponent> components = listComponent.getChildren(new Predicate<HtmlComponent>() {
                 @Override
-                public boolean evaluate(Object arg0) {
-                    return arg0 instanceof HtmlListItem;
+                public boolean apply(HtmlComponent component) {
+                    return component instanceof HtmlListItem;
                 }
             });
 

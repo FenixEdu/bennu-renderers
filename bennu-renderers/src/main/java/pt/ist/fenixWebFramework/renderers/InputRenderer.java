@@ -2,7 +2,6 @@ package pt.ist.fenixWebFramework.renderers;
 
 import java.util.List;
 
-import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +15,8 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
+
+import com.google.common.base.Predicate;
 
 /**
  * The base renderer for every input renderer.
@@ -37,10 +38,10 @@ public abstract class InputRenderer extends Renderer {
         if (component instanceof Validatable) {
             return (Validatable) component;
         } else {
-            List<HtmlComponent> children = component.getChildren(new Predicate() {
+            List<HtmlComponent> children = component.getChildren(new Predicate<HtmlComponent>() {
 
                 @Override
-                public boolean evaluate(Object component) {
+                public boolean apply(HtmlComponent component) {
                     if (!(component instanceof HtmlFormComponent)) {
                         return false;
                     }
@@ -48,7 +49,6 @@ public abstract class InputRenderer extends Renderer {
                     HtmlFormComponent formComponent = (HtmlFormComponent) component;
                     return formComponent.hasTargetSlot();
                 }
-
             });
 
             if (children.size() > 0) {

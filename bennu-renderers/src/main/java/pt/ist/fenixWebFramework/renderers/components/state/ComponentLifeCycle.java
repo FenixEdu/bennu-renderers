@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.collections.Predicate;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.taglib.html.Constants;
 import org.slf4j.Logger;
@@ -31,6 +30,8 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
+
+import com.google.common.base.Predicate;
 
 public class ComponentLifeCycle {
     private static final Logger logger = LoggerFactory.getLogger(ComponentLifeCycle.class);
@@ -87,9 +88,9 @@ public class ComponentLifeCycle {
         }
 
         private void collect(HtmlComponent component) {
-            Predicate isFormComponent = new Predicate() {
+            Predicate<HtmlComponent> isFormComponent = new Predicate<HtmlComponent>() {
                 @Override
-                public boolean evaluate(Object component) {
+                public boolean apply(HtmlComponent component) {
                     if (component instanceof HtmlFormComponent) {
                         HtmlFormComponent formComponent = (HtmlFormComponent) component;
 
@@ -107,9 +108,9 @@ public class ComponentLifeCycle {
                 this.formComponents.add((HtmlFormComponent) comp);
             }
 
-            Predicate hasController = new Predicate() {
+            Predicate<HtmlComponent> hasController = new Predicate<HtmlComponent>() {
                 @Override
-                public boolean evaluate(Object component) {
+                public boolean apply(HtmlComponent component) {
                     if (component instanceof Controllable) {
                         Controllable controllabelComponent = (Controllable) component;
 
@@ -292,27 +293,23 @@ public class ComponentLifeCycle {
     private boolean validateComponent(IViewState viewState, HtmlComponent component, MetaObject metaObject) {
         boolean valid = true;
 
-        List<HtmlComponent> validators = component.getChildren(new Predicate() {
-
+        List<HtmlComponent> validators = component.getChildren(new Predicate<HtmlComponent>() {
             @Override
-            public boolean evaluate(Object component) {
+            public boolean apply(HtmlComponent component) {
                 return component instanceof HtmlChainValidator;
             }
-
         });
 
-        List<HtmlComponent> formComponents = HtmlComponent.getComponents(component, new Predicate() {
-
+        List<HtmlComponent> formComponents = HtmlComponent.getComponents(component, new Predicate<HtmlComponent>() {
             @Override
-            public boolean evaluate(Object object) {
-                if (!(object instanceof HtmlFormComponent)) {
+            public boolean apply(HtmlComponent component) {
+                if (!(component instanceof HtmlFormComponent)) {
                     return false;
                 }
 
-                HtmlFormComponent formComponent = (HtmlFormComponent) object;
+                HtmlFormComponent formComponent = (HtmlFormComponent) component;
                 return formComponent.getTargetSlot() != null;
             }
-
         });
 
         if (!formComponents.isEmpty()) {

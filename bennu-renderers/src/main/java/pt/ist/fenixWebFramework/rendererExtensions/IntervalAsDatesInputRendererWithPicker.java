@@ -9,8 +9,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.collections.Predicate;
-
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
@@ -18,6 +16,8 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextInput;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+
+import com.google.common.base.Predicate;
 
 /**
  * @author Joao Carvalho (joao.pedro.carvalho@ist.utl.pt)
@@ -58,14 +58,12 @@ public class IntervalAsDatesInputRendererWithPicker extends IntervalAsDatesInput
             for (HtmlComponent component : components) {
                 if (component instanceof HtmlContainer) {
 
-                    HtmlTextInput field = (HtmlTextInput) component.getChild(new Predicate() {
-
+                    HtmlTextInput field = (HtmlTextInput) component.getChild(new Predicate<HtmlComponent>() {
                         @Override
-                        public boolean evaluate(Object field) {
-                            return (field instanceof HtmlTextInput);
+                        public boolean apply(HtmlComponent component) {
+                            return component instanceof HtmlTextInput;
                         }
                     });
-
                     ((HtmlContainer) component).addChild(getCalendarScript(field.getName()));
 
                 }

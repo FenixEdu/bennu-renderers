@@ -4,9 +4,9 @@ import java.util.List;
 
 import javax.servlet.jsp.PageContext;
 
-import org.apache.commons.collections.Predicate;
-
 import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
+
+import com.google.common.base.Predicate;
 
 public class HtmlRadioButtonList extends HtmlRadioButtonGroup {
 
@@ -28,7 +28,7 @@ public class HtmlRadioButtonList extends HtmlRadioButtonGroup {
     }
 
     @Override
-    public HtmlComponent getChild(Predicate predicate) {
+    public HtmlComponent getChild(Predicate<HtmlComponent> predicate) {
         return this.list.getChild(predicate);
     }
 
@@ -38,7 +38,7 @@ public class HtmlRadioButtonList extends HtmlRadioButtonGroup {
     }
 
     @Override
-    public List<HtmlComponent> getChildren(Predicate predicate) {
+    public List<HtmlComponent> getChildren(Predicate<HtmlComponent> predicate) {
         return this.list.getChildren(predicate);
     }
 

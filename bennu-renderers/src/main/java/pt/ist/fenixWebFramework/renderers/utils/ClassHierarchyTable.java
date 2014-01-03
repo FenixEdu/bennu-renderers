@@ -5,8 +5,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.functors.TruePredicate;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
 public class ClassHierarchyTable<T> extends Hashtable<Class, T> {
 
@@ -20,14 +20,14 @@ public class ClassHierarchyTable<T> extends Hashtable<Class, T> {
 
     @Override
     public synchronized T get(Object key) {
-        return get(key, TruePredicate.INSTANCE);
+        return get(key, Predicates.<T> alwaysTrue());
     }
 
-    public synchronized T get(Object key, Predicate predicate) {
+    public synchronized T get(Object key, Predicate<T> predicate) {
         Class objectType = (Class) key;
 
         for (Class<? extends Object> type : this.classSort) {
-            if (type.isAssignableFrom(objectType) && predicate.evaluate(super.get(type))) {
+            if (type.isAssignableFrom(objectType) && predicate.apply(super.get(type))) {
                 return super.get(type);
             }
         }

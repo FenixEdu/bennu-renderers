@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.collections.Predicate;
-
 import pt.ist.fenixWebFramework.rendererExtensions.converters.DomainObjectKeyArrayConverter;
 import pt.ist.fenixWebFramework.renderers.InputRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlActionLink;
@@ -28,6 +26,8 @@ import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+
+import com.google.common.base.Predicate;
 
 /**
  * This renderer allows you get a list as input but delegates part of the
@@ -259,13 +259,12 @@ public class ManageableListRenderer extends InputRenderer {
         }
 
         private void renameLinks() {
-            List<HtmlComponent> links = this.table.getChildren(new Predicate() {
+            List<HtmlComponent> links = this.table.getChildren(new Predicate<HtmlComponent>() {
 
                 @Override
-                public boolean evaluate(Object object) {
-                    return object instanceof HtmlActionLink;
+                public boolean apply(HtmlComponent component) {
+                    return component instanceof HtmlActionLink;
                 }
-
             });
 
             int pos = 0;

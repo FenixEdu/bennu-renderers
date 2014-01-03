@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.collections.Predicate;
-
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlHiddenField;
@@ -25,6 +23,8 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.utl.ist.fenix.tools.util.Pair;
+
+import com.google.common.base.Predicate;
 
 /**
  * This renderer presents an html menu with one option for each possible enum
@@ -179,9 +179,9 @@ public class EnumInputRenderer extends InputRenderer {
                 @Override
                 public void applyStyle(HtmlComponent component) {
                     HtmlInlineContainer block = (HtmlInlineContainer) component;
-                    HtmlTextInput textInput = (HtmlTextInput) block.getChild(new Predicate() {
+                    HtmlTextInput textInput = (HtmlTextInput) block.getChild(new Predicate<HtmlComponent>() {
                         @Override
-                        public boolean evaluate(Object elem) {
+                        public boolean apply(HtmlComponent elem) {
                             return !(elem instanceof HtmlHiddenField);
                         }
                     });

@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.servlet.jsp.PageContext;
 
-import org.apache.commons.collections.Predicate;
-
 import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+
+import com.google.common.base.Predicate;
 
 public class HtmlCheckBoxList extends HtmlMultipleValueComponent {
 
@@ -38,7 +38,7 @@ public class HtmlCheckBoxList extends HtmlMultipleValueComponent {
     }
 
     @Override
-    public HtmlComponent getChild(Predicate predicate) {
+    public HtmlComponent getChild(Predicate<HtmlComponent> predicate) {
         return this.list.getChild(predicate);
     }
 
@@ -48,7 +48,7 @@ public class HtmlCheckBoxList extends HtmlMultipleValueComponent {
     }
 
     @Override
-    public List<HtmlComponent> getChildren(Predicate predicate) {
+    public List<HtmlComponent> getChildren(Predicate<HtmlComponent> predicate) {
         return this.list.getChildren(predicate);
     }
 

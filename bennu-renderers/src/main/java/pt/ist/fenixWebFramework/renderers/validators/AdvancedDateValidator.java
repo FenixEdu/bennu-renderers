@@ -5,11 +5,12 @@ package pt.ist.fenixWebFramework.renderers.validators;
 
 import java.text.ParseException;
 
-import org.apache.commons.collections.Predicate;
 import org.joda.time.DateTime;
-import org.joda.time.YearMonthDay;
+import org.joda.time.LocalDate;
 
 import pt.utl.ist.fenix.tools.util.DateFormatUtil;
+
+import com.google.common.base.Predicate;
 
 /**
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
@@ -63,25 +64,24 @@ public class AdvancedDateValidator extends DateValidator {
         return null;
     }
 
-    private static Predicate pastPredicate = new Predicate() {
+    private static Predicate<DateTime> pastPredicate = new Predicate<DateTime>() {
         @Override
-        public boolean evaluate(Object arg0) {
-            return ((DateTime) arg0).isBeforeNow();
+        public boolean apply(DateTime dateTime) {
+            return dateTime.isBeforeNow();
         }
     };
 
-    private static Predicate pastOrTodayPredicate = new Predicate() {
+    private static Predicate<DateTime> pastOrTodayPredicate = new Predicate<DateTime>() {
         @Override
-        public boolean evaluate(Object arg0) {
-            final DateTime dateTime = (DateTime) arg0;
-            return dateTime.isBeforeNow() || dateTime.toYearMonthDay().isEqual(new YearMonthDay());
+        public boolean apply(DateTime dateTime) {
+            return dateTime.isBeforeNow() || dateTime.toLocalDate().isEqual(new LocalDate());
         }
     };
 
-    private static Predicate futurePredicate = new Predicate() {
+    private static Predicate<DateTime> futurePredicate = new Predicate<DateTime>() {
         @Override
-        public boolean evaluate(Object arg0) {
-            return ((DateTime) arg0).isAfterNow();
+        public boolean apply(DateTime dateTime) {
+            return dateTime.isAfterNow();
         }
     };
 
@@ -89,14 +89,14 @@ public class AdvancedDateValidator extends DateValidator {
 
         PAST(pastPredicate), PASTORTODAY(pastOrTodayPredicate), FUTURE(futurePredicate);
 
-        private Predicate predicate;
+        private Predicate<DateTime> predicate;
 
-        private ValidationPeriodType(Predicate predicate) {
+        private ValidationPeriodType(Predicate<DateTime> predicate) {
             this.predicate = predicate;
         }
 
         protected boolean evaluateDate(DateTime dateTime) {
-            return this.predicate.evaluate(dateTime);
+            return this.predicate.apply(dateTime);
         }
 
     }

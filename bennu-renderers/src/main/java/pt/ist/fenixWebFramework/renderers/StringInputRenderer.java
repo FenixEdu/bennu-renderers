@@ -1,7 +1,5 @@
 package pt.ist.fenixWebFramework.renderers;
 
-import org.apache.commons.collections.Predicate;
-
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
@@ -9,6 +7,8 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextInput;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
+
+import com.google.common.base.Predicate;
 
 /**
  * This renderer provides a standard way of doing the input of a string. The
@@ -44,27 +44,25 @@ public class StringInputRenderer extends TextFieldRenderer {
 
         @Override
         protected void setContextSlot(HtmlComponent component, MetaSlotKey slotKey) {
-            HtmlComponent actualComponent = component instanceof HtmlTextInput ? component : component.getChild(new Predicate() {
-
-                @Override
-                public boolean evaluate(Object arg0) {
-                    return arg0 instanceof HtmlTextInput;
-                }
-
-            });
+            HtmlComponent actualComponent =
+                    component instanceof HtmlTextInput ? component : component.getChild(new Predicate<HtmlComponent>() {
+                        @Override
+                        public boolean apply(HtmlComponent component) {
+                            return component instanceof HtmlTextInput;
+                        }
+                    });
             super.setContextSlot(actualComponent, slotKey);
         }
 
         @Override
         public void applyStyle(HtmlComponent component) {
-            HtmlComponent actualComponent = component instanceof HtmlTextInput ? component : component.getChild(new Predicate() {
-
-                @Override
-                public boolean evaluate(Object arg0) {
-                    return arg0 instanceof HtmlTextInput;
-                }
-
-            });
+            HtmlComponent actualComponent =
+                    component instanceof HtmlTextInput ? component : component.getChild(new Predicate<HtmlComponent>() {
+                        @Override
+                        public boolean apply(HtmlComponent component) {
+                            return component instanceof HtmlTextInput;
+                        }
+                    });
             super.applyStyle(actualComponent);
         }
 

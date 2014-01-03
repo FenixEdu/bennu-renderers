@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import org.apache.commons.collections.Predicate;
-
 import pt.ist.fenixWebFramework.renderers.DateInputRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
@@ -15,6 +13,8 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextInput;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+
+import com.google.common.base.Predicate;
 
 /**
  * This renderer provides a more fashionable way of doing the input of a date
@@ -38,15 +38,12 @@ public class DateInputRendererWithPicker extends DateInputRenderer {
     protected HtmlComponent createTextField(Object object, Class type) {
         HtmlContainer container = (HtmlContainer) super.createTextField(object, type);
 
-        HtmlTextInput input = (HtmlTextInput) container.getChild(new Predicate() {
-
+        HtmlTextInput input = (HtmlTextInput) container.getChild(new Predicate<HtmlComponent>() {
             @Override
-            public boolean evaluate(Object arg0) {
-                return arg0 instanceof HtmlTextInput;
+            public boolean apply(HtmlComponent component) {
+                return component instanceof HtmlTextInput;
             }
-
         });
-
         MetaSlotKey key = (MetaSlotKey) getContext().getMetaObject().getKey();
         input.setId(key.toString());
         container.addChild(getCalendarScript(input.getId()));

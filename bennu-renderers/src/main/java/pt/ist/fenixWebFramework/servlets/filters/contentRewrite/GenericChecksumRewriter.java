@@ -4,7 +4,7 @@ import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import com.google.common.hash.Hashing;
 
 public class GenericChecksumRewriter extends RequestRewriter {
 
@@ -38,7 +38,7 @@ public class GenericChecksumRewriter extends RequestRewriter {
         if (digest != null) {
             stringBuilder.append(digest);
         }
-        final String checksum = new String(DigestUtils.shaHex(stringBuilder.toString()));
+        final String checksum = new String(Hashing.sha1().hashBytes(stringBuilder.toString().getBytes()).toString());
         // System.out.println("Generating checksum for: " +
         // stringBuilder.toString() + " --> " + checksum);
         return checksum;

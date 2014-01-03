@@ -1,7 +1,5 @@
 package pt.ist.fenixWebFramework.renderers;
 
-import org.apache.commons.collections.Predicate;
-
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlHiddenField;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
@@ -12,6 +10,8 @@ import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.components.state.ViewDestination;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
+
+import com.google.common.base.Predicate;
 
 /**
  * This renderer can be used as the input for a list of objects. The list of
@@ -71,13 +71,11 @@ public class RadioButtonListRendererWithPostback extends RadioButtonListRenderer
         @Override
         public void applyStyle(HtmlComponent component) {
             HtmlInlineContainer container = (HtmlInlineContainer) component;
-            HtmlComponent list = container.getChild(new Predicate() {
-
+            HtmlComponent list = container.getChild(new Predicate<HtmlComponent>() {
                 @Override
-                public boolean evaluate(Object arg0) {
-                    return arg0 instanceof HtmlRadioButtonList;
+                public boolean apply(HtmlComponent component) {
+                    return component instanceof HtmlRadioButtonList;
                 }
-
             });
             super.applyStyle(list);
         }

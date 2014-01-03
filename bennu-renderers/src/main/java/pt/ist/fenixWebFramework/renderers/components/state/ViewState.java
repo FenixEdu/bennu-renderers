@@ -15,12 +15,12 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.codec.binary.Base64;
-
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.UserIdentity;
+
+import com.google.common.io.BaseEncoding;
 
 public class ViewState implements IViewState {
 
@@ -343,7 +343,7 @@ public class ViewState implements IViewState {
         stream.writeObject(object);
         stream.close();
 
-        return new String(Base64.encodeBase64(byteOutputStream.toByteArray()));
+        return new String(BaseEncoding.base64().encode(byteOutputStream.toByteArray()));
     }
 
     public static String encodeListToBase64(List<IViewState> viewStates) throws IOException {
@@ -355,7 +355,7 @@ public class ViewState implements IViewState {
     }
 
     private static Object decodeObjectFromBase64(String encodedState) throws IOException, ClassNotFoundException {
-        byte[] decodedForm = Base64.decodeBase64(encodedState.getBytes());
+        byte[] decodedForm = BaseEncoding.base64().decode(encodedState);
 
         ByteArrayInputStream byteInputStream = new ByteArrayInputStream(decodedForm);
         GZIPInputStream zipStream = new GZIPInputStream(byteInputStream);

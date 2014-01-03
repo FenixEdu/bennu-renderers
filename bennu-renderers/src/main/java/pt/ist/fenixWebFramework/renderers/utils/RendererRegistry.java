@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.collections.Predicate;
-
 import pt.ist.fenixWebFramework.renderers.exceptions.NoRendererException;
+
+import com.google.common.base.Predicate;
 
 public class RendererRegistry {
 
@@ -30,16 +30,13 @@ public class RendererRegistry {
     }
 
     public RendererDescription getRenderDescription(Class objectType, final String layout) {
-        Map<String, RendererDescription> layoutsTable = renderersTable.get(objectType, new Predicate() {
-
-            @Override
-            public boolean evaluate(Object table) {
-                Map layoutsTable = (Map) table;
-
-                return layoutsTable.get(layout) != null;
-            }
-
-        });
+        Map<String, RendererDescription> layoutsTable =
+                renderersTable.get(objectType, new Predicate<Map<String, RendererDescription>>() {
+                    @Override
+                    public boolean apply(Map<String, RendererDescription> table) {
+                        return table.get(layout) != null;
+                    }
+                });
 
         if (layoutsTable == null) {
             throw new NoRendererException(objectType, layout);
