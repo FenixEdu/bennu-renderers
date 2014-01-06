@@ -46,7 +46,7 @@
         <dependency>
             <groupId>struts</groupId>
             <artifactId>struts</artifactId>
-            <version>1.2.9</version>
+            <version>1.2.7</version>
             <exclusions>
                 <exclusion>
                     <groupId>antlr</groupId>
