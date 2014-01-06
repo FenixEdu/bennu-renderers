@@ -45,7 +45,7 @@ public class RequestChecksumFilter implements Filter {
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
             throws IOException, ServletException {
-        if (RenderersConfigurationManager.getFilterRequestWithDigest()) {
+        if (RenderersConfigurationManager.getConfiguration().filterRequestWithDigest()) {
             try {
                 applyFilter(servletRequest, servletResponse, filterChain);
             } catch (UrlTamperingException ex) {
@@ -63,7 +63,7 @@ public class RequestChecksumFilter implements Filter {
     }
 
     protected void redirectByTampering(HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        response.sendRedirect(RenderersConfigurationManager.getTamperingRedirect());
+        response.sendRedirect(RenderersConfigurationManager.getConfiguration().tamperingRedirect());
     }
 
     private void applyFilter(final ServletRequest servletRequest, final ServletResponse servletResponse,

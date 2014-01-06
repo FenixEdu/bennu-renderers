@@ -69,7 +69,7 @@ public class StandardInputRenderer extends InputRenderer {
 
     private boolean displayLabel = Boolean.TRUE;
 
-    private boolean requiredMarkShown = RenderersConfigurationManager.getRequiredMarkShown();
+    private boolean requiredMarkShown = RenderersConfigurationManager.getConfiguration().requiredMarkShown();
 
     private boolean requiredMessageShown = true;
 
@@ -261,7 +261,7 @@ public class StandardInputRenderer extends InputRenderer {
                         if (formComponent.getId() == null) {
                             formComponent.setId(slot.getKey().toString());
                         }
-                        if (RenderersConfigurationManager.isJavascriptValidationEnabled() && !isHideValidators()) {
+                        if (RenderersConfigurationManager.getConfiguration().javascriptValidationEnabled() && !isHideValidators()) {
                             HtmlChainValidator chainValidator = getChainValidator(formComponent, slot);
                             for (HtmlValidator validator : chainValidator.getSupportedJavascriptValidators()) {
                                 HtmlInlineContainer container = new HtmlInlineContainer();

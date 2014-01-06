@@ -59,7 +59,7 @@ public class ViewStateChangedExceptionCatcher implements Filter {
         try {
             filterChain.doFilter(request, response);
         } catch (ViewStateUserChangedException exception) {
-            ((HttpServletResponse) response).sendRedirect(RenderersConfigurationManager.getTamperingRedirect());
+            ((HttpServletResponse) response).sendRedirect(RenderersConfigurationManager.getConfiguration().tamperingRedirect());
         }
     }
 }

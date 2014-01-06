@@ -67,7 +67,7 @@ public class RequestRewriterFilter implements Filter {
     }
 
     private void setSessionKey(HttpServletRequest request) {
-        if (RenderersConfigurationManager.getFilterRequestWithDigest()) {
+        if (RenderersConfigurationManager.getConfiguration().filterRequestWithDigest()) {
             HttpSession session = request.getSession(false);
             if (session != null) {
                 String secret = (String) session.getAttribute(RENDERERS_SESSION_SECRET);

@@ -9,7 +9,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionMapping;
 
 /**
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
@@ -36,9 +35,4 @@ public @interface Mapping {
     boolean validate() default true;
 
     String parameter() default "method";
-
-    Class<? extends ActionMapping> customMappingClass() default ActionMapping.class;
-
-    String[] customMappingProperties() default {};
-
 }

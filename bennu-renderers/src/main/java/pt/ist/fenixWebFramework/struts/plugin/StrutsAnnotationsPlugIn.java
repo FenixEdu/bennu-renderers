@@ -3,7 +3,6 @@
  */
 package pt.ist.fenixWebFramework.struts.plugin;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,7 +22,6 @@ import org.apache.struts.config.FormBeanConfig;
 import org.apache.struts.config.MessageResourcesConfig;
 import org.apache.struts.config.ModuleConfig;
 
-import pt.ist.fenixWebFramework.RenderersConfigurationManager;
 import pt.ist.fenixWebFramework.struts.annotations.ExceptionHandling;
 import pt.ist.fenixWebFramework.struts.annotations.Exceptions;
 import pt.ist.fenixWebFramework.struts.annotations.Forward;
@@ -49,8 +47,6 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
     private static final String INPUT_PAGE_AND_METHOD = ".do?page=0&method=";
 
     private static final String INPUT_DEFAULT_PAGE_AND_METHOD = ".do?page=0&method=prepare";
-
-    private static final String EXCEPTION_KEY_DEFAULT_PREFIX = "resources.Action.exceptions.";
 
     private static final List<String> UPPER_BOUND_SUPERCLASSES = Arrays.asList("DispatchAction", "Action", "Object");
 
@@ -78,10 +74,7 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
                 continue;
             }
 
-            final ActionMapping actionMapping = createCustomActionMapping(mapping);
-            if (actionMapping == null) {
-                continue;
-            }
+            final ActionMapping actionMapping = new ActionMapping();
 
             actionMapping.setPath(mapping.path());
             actionMapping.setType(actionClass.getName());
@@ -117,12 +110,8 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
                 registerExceptionHandling(actionMapping, exceptions);
             }
 
-            initializeActionMappingProperties(actionMapping, mapping.customMappingProperties());
-
             config.addActionConfig(actionMapping);
-
         }
-
     }
 
     private static void registerExceptionHandling(final ActionMapping actionMapping, Exceptions exceptions) {
@@ -132,15 +121,8 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
             Class<? extends Exception> exClass = exception.type();
             Class<? extends ExceptionHandler> handlerClass = exception.handler();
 
-            String exceptionHandler = (handlerClass == null ? null : handlerClass.getName());
-            if (exceptionHandler == null) {
-                exceptionHandler = RenderersConfigurationManager.getExceptionHandlerClassname();
-            }
-
-            String key = (exception.key() == null ? EXCEPTION_KEY_DEFAULT_PREFIX + exClass.getSimpleName() : exception.key());
-
-            exceptionConfig.setKey(key);
-            exceptionConfig.setHandler(exceptionHandler);
+            exceptionConfig.setKey(Strings.emptyToNull(exception.key()));
+            exceptionConfig.setHandler(handlerClass.getName());
             exceptionConfig.setType(exClass.getName());
 
             if (!Strings.isNullOrEmpty(exception.path())) {
@@ -152,48 +134,6 @@ public class StrutsAnnotationsPlugIn implements PlugIn {
             }
 
             actionMapping.addExceptionConfig(exceptionConfig);
-        }
-    }
-
-    private static ActionMapping createCustomActionMapping(Mapping mapping) {
-        try {
-            return mapping.customMappingClass().newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private static void initializeActionMappingProperties(ActionMapping actionMapping, String[] properties) {
-        Method[] mappingMethods = actionMapping.getClass().getMethods();
-        for (int i = 0; i < properties.length; i += 2) {
-            String property = properties[i];
-            String value = properties[i + 1];
-
-            String setterName = "set" + property.substring(0, 1).toUpperCase() + property.substring(1);
-            Method setterMethod = null;
-            for (Method mappingMethod : mappingMethods) {
-                if (mappingMethod.getName().equals(setterName) && mappingMethod.getParameterTypes().length == 1) {
-                    setterMethod = mappingMethod;
-                    break;
-                }
-            }
-
-            if (setterMethod == null) {
-                continue;
-            }
-
-            try {
-                setterMethod.invoke(actionMapping, value);
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
         }
     }
 

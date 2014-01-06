@@ -7,6 +7,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.fenixWebFramework.RenderersConfigurationManager;
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
@@ -22,7 +23,7 @@ public abstract class Layout {
 
     private String title;
 
-    private boolean requiredMarkShown;
+    private boolean requiredMarkShown = RenderersConfigurationManager.getConfiguration().requiredMarkShown();
 
     private boolean requiredMessageShown;
 

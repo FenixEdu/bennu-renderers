@@ -36,10 +36,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.fenixedu.bennu.core.presentationTier.util.ExceptionInformation;
-
-import pt.ist.fenixWebFramework.RenderersConfigurationManager;
-
 /**
  * 
  * @author Artur Ventura
@@ -51,23 +47,23 @@ import pt.ist.fenixWebFramework.RenderersConfigurationManager;
  */
 public class ExceptionHandlerFilter implements Filter {
 
-    public static abstract class CustomeHandler {
+    public static interface CustomHandler {
 
-        public abstract boolean isCustomizedFor(final Throwable t);
+        public boolean isCustomizedFor(final Throwable t);
 
-        public abstract void handle(final HttpServletRequest httpServletRequest, final ServletResponse response, final Throwable t)
+        public void handle(final HttpServletRequest httpServletRequest, final ServletResponse response, final Throwable t)
                 throws ServletException, IOException;
 
     }
 
-    private static final List<CustomeHandler> customeHandlers = new ArrayList<CustomeHandler>();
+    private static final List<CustomHandler> customHandlers = new ArrayList<CustomHandler>();
 
-    public static void register(final CustomeHandler customeHandler) {
-        customeHandlers.add(customeHandler);
+    public static void register(final CustomHandler customHandler) {
+        customHandlers.add(customHandler);
     }
 
-    public static void unregister(final CustomeHandler customeHandler) {
-        customeHandlers.remove(customeHandler);
+    public static void unregister(final CustomHandler customHandler) {
+        customHandlers.remove(customHandler);
     }
 
     @Override
@@ -85,29 +81,13 @@ public class ExceptionHandlerFilter implements Filter {
         try {
             filterChain.doFilter(request, response);
         } catch (final Throwable t) {
-            for (final CustomeHandler customeHandler : customeHandlers) {
-                if (customeHandler.isCustomizedFor(t)) {
-                    customeHandler.handle(httpServletRequest, response, t);
+            for (final CustomHandler customHandler : customHandlers) {
+                if (customHandler.isCustomizedFor(t)) {
+                    customHandler.handle(httpServletRequest, response, t);
                     return;
                 }
-                printTraceInformation(t);
             }
-            t.printStackTrace();
-            request.setAttribute("exceptionInfo",
-                    ExceptionInformation.buildUncaughtExceptionInfo((HttpServletRequest) request, t));
-            httpServletRequest.getRequestDispatcher(RenderersConfigurationManager.getErrorPage()).forward(request, response);
+            throw t;
         }
     }
-
-    private void printTraceInformation(final Throwable t) {
-        if (t instanceof ServletException) {
-            final ServletException servletException = (ServletException) t;
-            if (servletException.getRootCause() != null) {
-                servletException.getRootCause().printStackTrace();
-                return;
-            }
-        }
-        t.printStackTrace();
-    }
-
 }
