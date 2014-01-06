@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -17,9 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.security.Authenticate;
-
 import pt.ist.fenixWebFramework.RenderersConfigurationManager;
 
 import com.google.common.base.Charsets;
@@ -27,9 +23,6 @@ import com.google.common.base.Charsets;
 public class RequestChecksumFilter implements Filter {
 
     private static final String ENCODING = Charsets.UTF_8.name();
-    private static final String DIGEST_SECRET_ATTRIBUTE = "DIGEST_SECRET_ATTRIBUTE";
-
-    private static final InheritableThreadLocal<String> digestSecret = new InheritableThreadLocal<>();
 
     public static interface ChecksumPredicate {
         public boolean shouldFilter(HttpServletRequest request);
@@ -39,10 +32,6 @@ public class RequestChecksumFilter implements Filter {
 
     public static void registerFilterRule(ChecksumPredicate predicate) {
         predicates.add(predicate);
-    }
-
-    public static String getDigestSecret() {
-        return digestSecret.get();
     }
 
     @Override
@@ -58,20 +47,6 @@ public class RequestChecksumFilter implements Filter {
             throws IOException, ServletException {
         if (RenderersConfigurationManager.getFilterRequestWithDigest()) {
             try {
-                HttpSession session = ((HttpServletRequest) servletRequest).getSession(false);
-                if (session != null) {
-                    String secret = (String) session.getAttribute(DIGEST_SECRET_ATTRIBUTE);
-                    if (secret == null) {
-                        User user = Authenticate.getUser();
-                        if (user != null) {
-                            secret = user.getUsername() + UUID.randomUUID().toString();
-                            session.setAttribute(DIGEST_SECRET_ATTRIBUTE, secret);
-                        }
-                    }
-                    digestSecret.set(secret);
-                } else {
-                    digestSecret.set(null);
-                }
                 applyFilter(servletRequest, servletResponse, filterChain);
             } catch (UrlTamperingException ex) {
                 final HttpServletRequest request = (HttpServletRequest) servletRequest;

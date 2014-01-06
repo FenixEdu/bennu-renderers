@@ -1,6 +1,7 @@
 package pt.ist.fenixWebFramework.servlets.filters.contentRewrite;
 
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.servlet.Filter;
@@ -11,10 +12,16 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import pt.ist.fenixWebFramework._development.LogLevel;
+import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.security.Authenticate;
+
+import pt.ist.fenixWebFramework.RenderersConfigurationManager;
 
 public class RequestRewriterFilter implements Filter {
+
+    private static final String RENDERERS_SESSION_SECRET = "DIGEST_SECRET_ATTRIBUTE";
 
     public static interface RequestRewriterFactory {
         public RequestRewriter createRequestRewriter(HttpServletRequest request);
@@ -25,6 +32,8 @@ public class RequestRewriterFilter implements Filter {
     public static void registerRequestRewriter(RequestRewriterFactory rewriter) {
         rewriters.add(rewriter);
     }
+
+    private static final ThreadLocal<String> currentSecret = new InheritableThreadLocal<>();
 
     @Override
     public void init(FilterConfig config) {
@@ -48,40 +57,41 @@ public class RequestRewriterFilter implements Filter {
 
         final ResponseWrapper responseWrapper = new ResponseWrapper(httpServletResponse);
 
-        if (LogLevel.DEBUG) {
-            continueChainAndWriteResponseWithTimeLog(filterChain, httpServletRequest, responseWrapper);
-        } else {
-            continueChainAndWriteResponse(filterChain, httpServletRequest, responseWrapper);
+        try {
+            setSessionKey(httpServletRequest);
+            filterChain.doFilter(httpServletRequest, responseWrapper);
+            responseWrapper.writeRealResponse(httpServletRequest, rewriters);
+        } finally {
+            currentSecret.remove();
         }
     }
 
-    private void continueChainAndWriteResponse(final FilterChain filterChain, final HttpServletRequest httpServletRequest,
-            final ResponseWrapper responseWrapper) throws IOException, ServletException {
-        filterChain.doFilter(httpServletRequest, responseWrapper);
-        writeResponse(filterChain, httpServletRequest, responseWrapper);
+    private void setSessionKey(HttpServletRequest request) {
+        if (RenderersConfigurationManager.getFilterRequestWithDigest()) {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                String secret = (String) session.getAttribute(RENDERERS_SESSION_SECRET);
+                if (secret == null) {
+                    secret = computeSecret(session);
+
+                }
+                currentSecret.set(secret);
+            }
+        }
     }
 
-    private void continueChainAndWriteResponseWithTimeLog(final FilterChain filterChain,
-            final HttpServletRequest httpServletRequest, final ResponseWrapper responseWrapper) throws IOException,
-            ServletException {
-        final long start1 = System.currentTimeMillis();
-        filterChain.doFilter(httpServletRequest, responseWrapper);
-        final long end1 = System.currentTimeMillis();
-
-        final long start2 = System.currentTimeMillis();
-        writeResponse(filterChain, httpServletRequest, responseWrapper);
-        final long end2 = System.currentTimeMillis();
-
-        final long time1 = end1 - start1;
-        final long time2 = end2 - start2;
-        final long percent = time1 == 0 ? 0 : (100 * time2) / time1;
-        System.out.println("Actual response took: " + time1 + " ms. Parse and replace took: " + time2 + " ms. Performance loss: "
-                + percent + " %.");
+    private String computeSecret(HttpSession session) {
+        User user = Authenticate.getUser();
+        if (user != null) {
+            String secret = user.getUsername() + UUID.randomUUID().toString();
+            session.setAttribute(RENDERERS_SESSION_SECRET, secret);
+        }
+        // Logged-out users get no secret
+        return null;
     }
 
-    protected final void writeResponse(final FilterChain filterChain, final HttpServletRequest httpServletRequest,
-            final ResponseWrapper responseWrapper) throws IOException, ServletException {
-        responseWrapper.writeRealResponse(httpServletRequest, rewriters);
+    static String getSessionSecret() {
+        return currentSecret.get();
     }
 
 }

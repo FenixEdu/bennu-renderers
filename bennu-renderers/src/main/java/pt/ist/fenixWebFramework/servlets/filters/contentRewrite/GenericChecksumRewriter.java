@@ -34,7 +34,7 @@ public class GenericChecksumRewriter extends RequestRewriter {
             stringBuilder.append(string);
         }
 
-        final String digest = RequestChecksumFilter.getDigestSecret();
+        final String digest = RequestRewriterFilter.getSessionSecret();
         if (digest != null) {
             stringBuilder.append(digest);
         }
