@@ -31,8 +31,7 @@ import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
-
-import pt.utl.ist.fenix.tools.util.StringNormalizer;
+import org.fenixedu.commons.StringNormalizer;
 
 /**
  * 
@@ -45,9 +44,9 @@ public class UserAutoComplete implements AutoCompleteProvider<User> {
     @Override
     public Collection<User> getSearchResults(Map<String, String> argsMap, String value, int maxCount) {
         Set<User> users = new HashSet<User>();
-        String[] values = StringNormalizer.normalize(value).toLowerCase().split(" ");
+        String[] values = StringNormalizer.normalize(value).split(" ");
         for (User user : Bennu.getInstance().getUserSet()) {
-            final String normalizedUser = StringNormalizer.normalize(user.getPresentationName()).toLowerCase();
+            final String normalizedUser = StringNormalizer.normalize(user.getPresentationName());
 
             if (hasMatch(values, normalizedUser)) {
                 users.add(user);

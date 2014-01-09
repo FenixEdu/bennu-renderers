@@ -14,7 +14,10 @@
     <name>Bennu Renderers Framework</name>
 
     <properties>
-        <version.org.fenixedu.bennu>2.0.0-M6</version.org.fenixedu.bennu>
+        <version.org.fenixedu.bennu>2.0.0-RC1</version.org.fenixedu.bennu>
+        <version.org.fenixedu.fenixedu-commons>1.0.0</version.org.fenixedu.fenixedu-commons>
+        <version.com.google.guava.guava>15.0</version.com.google.guava.guava>
+        <version.pt.ist.fenix-legacy-tools>1.0.0</version.pt.ist.fenix-legacy-tools>
     </properties>
 
     <dependencies>
@@ -29,14 +32,19 @@
             <version>${version.org.fenixedu.bennu}</version>
         </dependency>
         <dependency>
+            <groupId>org.fenixedu</groupId>
+            <artifactId>fenixedu-commons</artifactId>
+            <version>${version.org.fenixedu.fenixedu-commons}</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>15.0</version>
+            <version>${version.com.google.guava.guava}</version>
         </dependency>
         <dependency>
             <groupId>pt.ist</groupId>
-            <artifactId>fenix-tools</artifactId>
-            <version>1.1.1</version>
+            <artifactId>fenix-legacy-tools</artifactId>
+            <version>${version.pt.ist.fenix-legacy-tools}</version>
         </dependency>
         <dependency>
             <groupId>org.jdom</groupId>
