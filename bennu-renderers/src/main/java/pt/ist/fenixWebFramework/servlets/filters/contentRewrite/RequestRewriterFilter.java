@@ -1,6 +1,7 @@
 package pt.ist.fenixWebFramework.servlets.filters.contentRewrite;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -21,7 +22,7 @@ import pt.ist.fenixWebFramework.RenderersConfigurationManager;
 
 public class RequestRewriterFilter implements Filter {
 
-    private static final String RENDERERS_SESSION_SECRET = "DIGEST_SECRET_ATTRIBUTE";
+    private static final String RENDERERS_SESSION_SECRET = "RENDERERS_SESSION_SECRET";
 
     public static interface RequestRewriterFactory {
         public RequestRewriter createRequestRewriter(HttpServletRequest request);
@@ -70,21 +71,26 @@ public class RequestRewriterFilter implements Filter {
         if (RenderersConfigurationManager.getConfiguration().filterRequestWithDigest()) {
             HttpSession session = request.getSession(false);
             if (session != null) {
-                String secret = (String) session.getAttribute(RENDERERS_SESSION_SECRET);
+                SessionSecretWrapper secret = (SessionSecretWrapper) session.getAttribute(RENDERERS_SESSION_SECRET);
                 if (secret == null) {
                     secret = computeSecret(session);
-
                 }
-                currentSecret.set(secret);
+                // If we got a secret from the session, or just computed one, set it
+                if (secret != null) {
+                    currentSecret.set(secret.secret);
+                } else {
+                    currentSecret.remove();
+                }
             }
         }
     }
 
-    private String computeSecret(HttpSession session) {
+    private SessionSecretWrapper computeSecret(HttpSession session) {
         User user = Authenticate.getUser();
         if (user != null) {
-            String secret = user.getUsername() + UUID.randomUUID().toString();
+            SessionSecretWrapper secret = new SessionSecretWrapper(user.getUsername() + UUID.randomUUID().toString());
             session.setAttribute(RENDERERS_SESSION_SECRET, secret);
+            return secret;
         }
         // Logged-out users get no secret
         return null;
@@ -92,6 +98,15 @@ public class RequestRewriterFilter implements Filter {
 
     static String getSessionSecret() {
         return currentSecret.get();
+    }
+
+    private static final class SessionSecretWrapper implements Serializable {
+        private static final long serialVersionUID = 828957763368790412L;
+        final String secret;
+
+        SessionSecretWrapper(String secret) {
+            this.secret = secret;
+        }
     }
 
 }
