@@ -17,8 +17,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
+import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.commons.i18n.I18N;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 /**
@@ -53,6 +56,11 @@ public class I18NFilter implements Filter {
 
             // And also inform Struts
             session.setAttribute(Globals.LOCALE_KEY, locale);
+
+            // And set the User's prefered locale
+            if (Authenticate.isLogged()) {
+                setPreferredLocale(locale);
+            }
         }
 
         try {
@@ -67,6 +75,11 @@ public class I18NFilter implements Filter {
         } finally {
             Language.setLocale(null);
         }
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private void setPreferredLocale(Locale locale) {
+        Authenticate.getUser().setPreferredLocale(locale);
     }
 
 }
