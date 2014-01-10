@@ -1,5 +1,0 @@
-pt.ist.fenixWebFramework.security.accessControl.CheckedAnnotationProcessor
-pt.ist.fenixWebFramework.servlets.functionalities.CreateNodeActionAnnotationProcessor
-pt.ist.fenixWebFramework.servlets.functionalities.FunctionalityAnnotationProcessor
-pt.ist.fenixWebFramework.servlets.rest.RestAnnotationProcessor
-pt.ist.fenixWebFramework.struts.annotations.ActionAnnotationProcessor

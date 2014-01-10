@@ -1,0 +1,50 @@
+package org.fenixedu.bennu.renderers.example.domain;
+
+class ShoppingList {
+    String name (REQUIRED);
+    DateTime creationDate;
+}
+
+class ShoppingListItem {
+    Integer amount (REQUIRED);
+}
+
+class Product {
+    String name (REQUIRED);
+}
+
+relation ShoppingLists {
+    .org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+        multiplicity 1..1;
+    }
+    ShoppingList playsRole shoppingList {
+        multiplicity *;
+    }
+}
+
+relation ShoppingListItems {
+    ShoppingList playsRole shoppingList {
+        multiplicity 1..1;
+    }
+    ShoppingListItem playsRole item {
+        multiplicity *;
+    }
+}
+
+relation ShoppingProducts {
+    .org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+        multiplicity 1..1;
+    }
+    Product playsRole product {
+        multiplicity *;
+    }
+}
+
+relation ShoppingListItemProduct {
+    ShoppingListItem playsRole item {
+        multiplicity *;
+    }
+    Product playsRole product {
+        multiplicity 1..1;
+    }
+}

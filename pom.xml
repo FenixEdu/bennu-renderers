@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.fenixedu</groupId>
+        <artifactId>fenix-framework-project</artifactId>
+        <version>1.3.0</version>
+    </parent>
+
+    <artifactId>bennu-renderers-aggregator</artifactId>
+    <name>Bennu Renderers Framework Aggregator</name>
+    <version>3.0.0</version>
+    <packaging>pom</packaging>
+
+    <scm>
+        <connection>scm:git:git@github.com:fenixedu/bennu-renderers.git</connection>
+        <developerConnection>scm:git:git@github.com:fenixedu/bennu-renderers.git</developerConnection>
+        <url>http://fenixedu.github.io/bennu-renderers</url>
+        <tag>v3.0.0</tag>
+    </scm>
+
+    <properties>
+        <version.javax.servlet.jsp.jsp.api>2.2.1-b03</version.javax.servlet.jsp.jsp.api>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>${version.javax.servlet.jsp.jsp.api}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <modules>
+        <module>bennu-renderers</module>
+        <module>example</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>fenix-ashes-maven-repository</id>
+            <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+        </repository>
+    </repositories>
+</project>
