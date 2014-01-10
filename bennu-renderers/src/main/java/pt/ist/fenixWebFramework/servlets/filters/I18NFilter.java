@@ -6,6 +6,7 @@ package pt.ist.fenixWebFramework.servlets.filters;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -49,13 +50,9 @@ public class I18NFilter implements Filter {
         if (request.getParameter("locale") != null) {
             String[] localeParts = request.getParameter("locale").split("_");
             Locale locale = localeParts.length == 1 ? new Locale(localeParts[0]) : new Locale(localeParts[0], localeParts[1]);
-            HttpSession session = request.getSession();
 
             // Tell I18N to use the new locale
-            I18N.setLocale(session, locale);
-
-            // And also inform Struts
-            session.setAttribute(Globals.LOCALE_KEY, locale);
+            I18N.setLocale(request.getSession(), locale);
 
             // And set the User's prefered locale
             if (Authenticate.isLogged()) {
@@ -67,7 +64,7 @@ public class I18NFilter implements Filter {
             // Fetch Locale from I18N
             Locale locale = I18N.getLocale();
             Language.setLocale(locale);
-            request.setAttribute(Globals.LOCALE_KEY, locale);
+            updateLocaleForStruts(request, locale);
 
             request.setAttribute("requestReconstructor", new RequestReconstructor(request));
 
@@ -75,6 +72,14 @@ public class I18NFilter implements Filter {
         } finally {
             Language.setLocale(null);
         }
+    }
+
+    private void updateLocaleForStruts(HttpServletRequest request, Locale locale) {
+        HttpSession session = request.getSession(false);
+        if (session != null && !Objects.equals(session.getAttribute(Globals.LOCALE_KEY), locale)) {
+            session.setAttribute(Globals.LOCALE_KEY, locale);
+        }
+        request.setAttribute(Globals.LOCALE_KEY, locale);
     }
 
     @Atomic(mode = TxMode.WRITE)
