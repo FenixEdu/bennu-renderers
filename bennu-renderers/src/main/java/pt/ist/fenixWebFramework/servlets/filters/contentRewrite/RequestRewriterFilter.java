@@ -11,9 +11,12 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionAttributeListener;
+import javax.servlet.http.HttpSessionBindingEvent;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.security.Authenticate;
@@ -72,10 +75,6 @@ public class RequestRewriterFilter implements Filter {
             HttpSession session = request.getSession(false);
             if (session != null) {
                 SessionSecretWrapper secret = (SessionSecretWrapper) session.getAttribute(RENDERERS_SESSION_SECRET);
-                if (secret == null) {
-                    secret = computeSecret(session);
-                }
-                // If we got a secret from the session, or just computed one, set it
                 if (secret != null) {
                     currentSecret.set(secret.secret);
                 } else {
@@ -85,19 +84,35 @@ public class RequestRewriterFilter implements Filter {
         }
     }
 
-    private SessionSecretWrapper computeSecret(HttpSession session) {
-        User user = Authenticate.getUser();
-        if (user != null) {
+    static String getSessionSecret() {
+        return currentSecret.get();
+    }
+
+    @WebListener
+    public static final class LoggedUserListener implements HttpSessionAttributeListener {
+
+        @Override
+        public void attributeAdded(HttpSessionBindingEvent event) {
+            if (event.getName().equals(Authenticate.LOGGED_USER_ATTRIBUTE)) {
+                currentSecret.set(computeSecret(event.getSession(), (User) event.getValue()).secret);
+            }
+        }
+
+        @Override
+        public void attributeRemoved(HttpSessionBindingEvent event) {
+        }
+
+        @Override
+        public void attributeReplaced(HttpSessionBindingEvent event) {
+
+        }
+
+        private SessionSecretWrapper computeSecret(HttpSession session, User user) {
             SessionSecretWrapper secret = new SessionSecretWrapper(user.getUsername() + UUID.randomUUID().toString());
             session.setAttribute(RENDERERS_SESSION_SECRET, secret);
             return secret;
         }
-        // Logged-out users get no secret
-        return null;
-    }
 
-    static String getSessionSecret() {
-        return currentSecret.get();
     }
 
     private static final class SessionSecretWrapper implements Serializable {
