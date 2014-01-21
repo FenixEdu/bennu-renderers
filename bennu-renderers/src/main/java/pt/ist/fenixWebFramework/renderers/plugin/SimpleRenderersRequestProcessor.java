@@ -13,7 +13,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.RequestProcessor;
+import org.fenixedu.bennu.portal.StrutsPortalBackend;
 
+import pt.ist.fenixWebFramework.RenderersConfigurationManager;
 import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.components.state.ComponentLifeCycle;
 import pt.ist.fenixWebFramework.renderers.components.state.EditRequest.ViewStateUserChangedException;
@@ -73,6 +75,9 @@ public class SimpleRenderersRequestProcessor extends RequestProcessor {
     @Override
     protected ActionForward processActionPerform(HttpServletRequest request, HttpServletResponse response, Action action,
             ActionForm form, ActionMapping mapping) throws IOException, ServletException {
+        if (!StrutsPortalBackend.chooseSelectedFunctionality(request, action.getClass())) {
+            return new ActionForward("unauthorized", "/bennu-renderers/unauthorized.jsp", false, "");
+        }
         RenderersRequestProcessorImpl.currentRequest.set(RenderersRequestProcessorImpl.parseMultipartRequest(request, form));
         HttpServletRequest initialRequest = RenderersRequestProcessorImpl.currentRequest.get();
 
@@ -87,7 +92,8 @@ public class SimpleRenderersRequestProcessor extends RequestProcessor {
 
                 return super.processActionPerform(request, response, action, form, mapping);
             } catch (ViewStateUserChangedException e) {
-                throw e;
+                response.sendRedirect(RenderersConfigurationManager.getConfiguration().tamperingRedirect());
+                return null;
             } catch (Exception e) {
                 if (LogLevel.WARN) {
                     System.out.println(SimpleDateFormat.getInstance().format(new Date()));

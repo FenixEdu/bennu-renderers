@@ -2,24 +2,39 @@ package pt.ist.fenixWebFramework.servlets.filters.contentRewrite;
 
 import java.util.TreeSet;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import com.google.common.hash.Hashing;
 
-public class GenericChecksumRewriter extends RequestRewriter {
+public final class GenericChecksumRewriter {
 
     public static final String CHECKSUM_ATTRIBUTE_NAME = "_request_checksum_";
 
     public static final String NO_CHECKSUM_PREFIX = "<!-- NO_CHECKSUM -->";
 
-    protected static final int LENGTH_OF_NO_CHECKSUM_PREFIX = NO_CHECKSUM_PREFIX.length();
+    private static final int LENGTH_OF_NO_CHECKSUM_PREFIX = NO_CHECKSUM_PREFIX.length();
 
-    public final static String NO_CHECKSUM_PREFIX_HAS_CONTEXT_PREFIX = NO_CHECKSUM_PREFIX + RequestRewriter.HAS_CONTEXT_PREFIX;
+    private static final char[] OPEN_A = "<a ".toCharArray();
+    private static final char[] OPEN_FORM = "<form ".toCharArray();
+    private static final char[] OPEN_IMG = "<img ".toCharArray();
+    private static final char[] OPEN_AREA = "<area ".toCharArray();
 
-    private static final int LENGTH_OF_NO_CHECKSUM_PREFIX_HAS_CONTEXT_PREFIX = NO_CHECKSUM_PREFIX_HAS_CONTEXT_PREFIX.length();
+    private static final char[] CLOSE = ">".toCharArray();
+    private static final char[] PREFIX_JAVASCRIPT = "javascript:".toCharArray();
+    private static final char[] PREFIX_MAILTO = "mailto:".toCharArray();
+    private static final char[] PREFIX_HTTP = "http://".toCharArray();
+    private static final char[] PREFIX_HTTPS = "https://".toCharArray();
+    private static final char[] CARDINAL = "#".toCharArray();
+    private static final char[] QUESTION_MARK = "?".toCharArray();
 
-    private static String calculateChecksum(final StringBuilder source, final int start, final int end) {
-        return calculateChecksum(source.substring(start, end));
+    private final String sessionSecret;
+
+    public GenericChecksumRewriter(HttpSession session) {
+        this.sessionSecret = RenderersSessionSecret.computeSecretFromSession(session);
+    }
+
+    private String calculateChecksum(final StringBuilder source, final int start, final int end) {
+        return calculateChecksum(source.substring(start, end), sessionSecret);
     }
 
     private static boolean isRelevantPart(final String part) {
@@ -28,15 +43,14 @@ public class GenericChecksumRewriter extends RequestRewriter {
                 && !part.startsWith("ok");
     }
 
-    private static String calculateChecksum(final TreeSet<String> strings) {
+    private static String calculateChecksum(final TreeSet<String> strings, String sessionSecret) {
         final StringBuilder stringBuilder = new StringBuilder();
         for (final String string : strings) {
             stringBuilder.append(string);
         }
 
-        final String digest = RequestRewriterFilter.getSessionSecret();
-        if (digest != null) {
-            stringBuilder.append(digest);
+        if (sessionSecret != null) {
+            stringBuilder.append(sessionSecret);
         }
         final String checksum = new String(Hashing.sha1().hashBytes(stringBuilder.toString().getBytes()).toString());
         // System.out.println("Generating checksum for: " +
@@ -44,7 +58,11 @@ public class GenericChecksumRewriter extends RequestRewriter {
         return checksum;
     }
 
-    public static String calculateChecksum(final String requestString) {
+    public static String calculateChecksum(final String requestString, HttpSession session) {
+        return calculateChecksum(requestString, RenderersSessionSecret.computeSecretFromSession(session));
+    }
+
+    private static String calculateChecksum(final String requestString, String sessionSecret) {
         final int indexLastCardinal = requestString.lastIndexOf('#');
         final String string = indexLastCardinal >= 0 ? requestString.substring(0, indexLastCardinal) : requestString;
         final String[] parts = string.split("\\?|&amp;|&");
@@ -61,26 +79,16 @@ public class GenericChecksumRewriter extends RequestRewriter {
                 }
             }
         }
-        return calculateChecksum(strings);
+        return calculateChecksum(strings, sessionSecret);
     }
 
-    public static String injectChecksumInUrl(final String contextPath, final String url) {
-        String checksum =
-                GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "="
-                        + GenericChecksumRewriter.calculateChecksum(contextPath + url);
+    public static String injectChecksumInUrl(final String contextPath, final String url, HttpSession session) {
+        String checksum = CHECKSUM_ATTRIBUTE_NAME + "=" + calculateChecksum(contextPath + url, session);
         return url + "&" + checksum;
     }
 
-    public GenericChecksumRewriter(HttpServletRequest httpServletRequest) {
-        super(httpServletRequest);
-    }
-
-    @Override
     public StringBuilder rewrite(StringBuilder source) {
         int iOffset = 0;
-        if (isRedirectRequest(httpServletRequest)) {
-            return source;
-        }
 
         final StringBuilder response = new StringBuilder();
 
@@ -298,21 +306,12 @@ public class GenericChecksumRewriter extends RequestRewriter {
         return result;
     }
 
-    private boolean isRedirectRequest(final HttpServletRequest request) {
-        return request.getRequestURI().endsWith("/redirect.do");
-    }
-
-    @Override
-    protected boolean isPrefixed(final StringBuilder source, final int indexOfTagOpen) {
+    private boolean isPrefixed(final StringBuilder source, final int indexOfTagOpen) {
         return (indexOfTagOpen >= LENGTH_OF_NO_CHECKSUM_PREFIX && match(source, indexOfTagOpen - LENGTH_OF_NO_CHECKSUM_PREFIX,
-                indexOfTagOpen, NO_CHECKSUM_PREFIX))
-                || (indexOfTagOpen >= LENGTH_OF_NO_CHECKSUM_PREFIX_HAS_CONTEXT_PREFIX && match(source, indexOfTagOpen
-                        - LENGTH_OF_NO_CHECKSUM_PREFIX_HAS_CONTEXT_PREFIX, indexOfTagOpen, NO_CHECKSUM_PREFIX_HAS_CONTEXT_PREFIX));
-
+                indexOfTagOpen, NO_CHECKSUM_PREFIX));
     }
 
-    @Override
-    protected boolean match(final StringBuilder source, final int iStart, int iEnd, final String string) {
+    private boolean match(final StringBuilder source, final int iStart, int iEnd, final String string) {
         if (iEnd - iStart != string.length()) {
             return false;
         }
@@ -324,22 +323,130 @@ public class GenericChecksumRewriter extends RequestRewriter {
         return true;
     }
 
-    @Override
-    protected int continueToNextToken(final StringBuilder response, final StringBuilder source, final int iOffset,
+    private int continueToNextToken(final StringBuilder response, final StringBuilder source, final int iOffset,
             final int indexOfTag) {
         final int nextOffset = indexOfTag + 1;
         response.append(source, iOffset, nextOffset);
         return nextOffset;
     }
 
-    @Override
-    protected String getContextPath(HttpServletRequest httpServletRequest) {
-        return null;
+    private static int indexOf(final StringBuilder source, final char[] target, final int fromIndex) {
+        // return source.indexOf(target, fromIndex);
+        return indexOf(source, 0, source.length(), target, 0, target.length, fromIndex);
     }
 
-    @Override
-    protected String getContextAttributeName() {
-        return null;
+    private static int indexOf(final StringBuilder source, final int sourceOffset, final int sourceCount, final char[] target,
+            final int targetOffset, final int targetCount, int fromIndex) {
+        if (fromIndex >= sourceCount) {
+            return (targetCount == 0 ? sourceCount : -1);
+        }
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+        if (targetCount == 0) {
+            return fromIndex;
+        }
+
+        char first = target[targetOffset];
+        int max = sourceOffset + (sourceCount - targetCount);
+
+        for (int i = sourceOffset + fromIndex; i <= max; i++) {
+            /* Look for first character. */
+            if (source.charAt(i) != first) {
+                while (++i <= max && source.charAt(i) != first) {
+                    ;
+                }
+            }
+
+            /* Found first character, now look at the rest of v2 */
+            if (i <= max) {
+                int j = i + 1;
+                int end = j + targetCount - 1;
+                for (int k = targetOffset + 1; j < end && source.charAt(j) == target[k]; j++, k++) {
+                    ;
+                }
+
+                if (j == end) {
+                    /* Found whole string. */
+                    return i - sourceOffset;
+                }
+            }
+        }
+        return -1;
+    }
+
+    private int findFormActionBodyEnd(final StringBuilder source, final int offset) {
+        int i = offset;
+        for (char c = source.charAt(i); c != '"' && c != '\'' && c != ' ' && c != '>'; c = source.charAt(i)) {
+            if (++i == source.length()) {
+                return -1;
+            }
+        }
+        return i;
+    }
+
+    private int findFormActionBodyStart(final StringBuilder source, final int offset, final int limit) {
+        final int indexOfHref = source.indexOf("action=", offset);
+        if (indexOfHref >= limit) {
+            return -1;
+        }
+        final int nextChar = indexOfHref + 7;
+        return source.charAt(nextChar) == '"' || source.charAt(nextChar) == '\'' ? nextChar + 1 : nextChar;
+    }
+
+    private int findHrefBodyEnd(final StringBuilder source, final int offset, final char hrefBodyStartChar) {
+        int i = offset;
+        if (hrefBodyStartChar == '=') {
+            for (char c = source.charAt(i); c != ' ' && c != '>'; c = source.charAt(i)) {
+                if (++i == source.length()) {
+                    return -1;
+                }
+            }
+        } else {
+            for (char c = source.charAt(i); c != hrefBodyStartChar; c = source.charAt(i)) {
+                if (++i == source.length()) {
+                    return -1;
+                }
+            }
+        }
+        return i;
+    }
+
+    private int findSrcBodyEnd(final StringBuilder source, final int offset) {
+        int i = offset;
+        char delimiter = source.charAt(offset - 1);
+        if (delimiter == '"' || delimiter == '\'') {
+            for (char c = source.charAt(i); c != delimiter; c = source.charAt(i)) {
+                if (++i == source.length()) {
+                    return -1;
+                }
+            }
+        } else {
+            for (char c = source.charAt(i); c != ' ' && c != '>'; c = source.charAt(i)) {
+                if (++i == source.length()) {
+                    return -1;
+                }
+            }
+        }
+        return i;
+    }
+
+    private int findHrefBodyStart(final StringBuilder source, final int offset, int limit) {
+        final int indexOfHref = source.indexOf("href=", offset);
+        if (indexOfHref >= limit) {
+            return -1;
+        }
+        final int nextChar = indexOfHref + 5;
+        return source.charAt(nextChar) == '"' || source.charAt(nextChar) == '\'' ? nextChar + 1 : nextChar;
+    }
+
+    private int findSrcBodyStart(final StringBuilder source, final int offset, int limit) {
+        final int indexOfHref = source.indexOf("src=", offset);
+        if (indexOfHref >= limit) {
+            return -1;
+        }
+        final int nextChar = indexOfHref + 5;
+        return source.charAt(nextChar) == '"' || source.charAt(nextChar) == '\'' ? nextChar + 1 : nextChar;
     }
 
 }

@@ -182,7 +182,9 @@ public class AjaxExpandableRenderer extends OutputRenderer {
                                 + getSmallSchema() + "&layout=" + getSmallLayout() + "&properties="
                                 + convertProperties(getSmallPropertiesMap());
 
-                String calculateChecksum = GenericChecksumRewriter.calculateChecksum(url);
+                String calculateChecksum =
+                        GenericChecksumRewriter
+                                .calculateChecksum(url, getContext().getViewState().getRequest().getSession(false));
                 return url + "&" + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "=" + calculateChecksum;
             }
 
@@ -193,7 +195,9 @@ public class AjaxExpandableRenderer extends OutputRenderer {
                                 + getExpandedSchema() + "&layout=" + getExpandedLayout() + "&properties="
                                 + convertProperties(getExpandedPropertiesMap());
 
-                String calculateChecksum = GenericChecksumRewriter.calculateChecksum(url);
+                String calculateChecksum =
+                        GenericChecksumRewriter
+                                .calculateChecksum(url, getContext().getViewState().getRequest().getSession(false));
                 return url + "&" + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "=" + calculateChecksum;
             }
 

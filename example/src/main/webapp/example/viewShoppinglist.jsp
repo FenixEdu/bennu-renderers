@@ -22,7 +22,7 @@
         <fr:hidden slot="shoppingList" name="list" />
         <fr:slot name="product" layout="menu-select" key="label.example.shoppinglist.product" required="true">
             <fr:property name="from" value="possibleProducts"></fr:property>
-            <fr:property name="format" value="${name}" />
+            <fr:property name="format" value="\${name}" />
         </fr:slot>
         <fr:slot name="amount" key="label.example.shoppinglist.amount" required="true" />
     </fr:schema>

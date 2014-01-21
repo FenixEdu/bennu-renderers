@@ -22,7 +22,7 @@ public @interface Forward {
 
     boolean redirect() default false;
 
-    boolean contextRelative() default false;
+    boolean contextRelative() default true;
 
     boolean useTile() default true;
 

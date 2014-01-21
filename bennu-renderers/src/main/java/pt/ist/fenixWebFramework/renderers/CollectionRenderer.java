@@ -18,7 +18,6 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink.Target;
-import pt.ist.fenixWebFramework.renderers.components.HtmlLinkWithPreprendedComment;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTable;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTableCell;
@@ -785,20 +784,6 @@ public class CollectionRenderer extends OutputRenderer {
      */
     public void setContextRelative(String name, String value) {
         getTableLink(name).setContextRelative(Boolean.parseBoolean(value));
-    }
-
-    public String getHasContext(String name) {
-        return Boolean.toString(getTableLink(name).getHasContext());
-    }
-
-    /**
-     * The hasContext property indicates if the specified link should use
-     * context information
-     * 
-     * @property
-     */
-    public void setHasContext(String name, String value) {
-        getTableLink(name).setHasContext(Boolean.parseBoolean(value));
     }
 
     /**
@@ -1597,7 +1582,7 @@ public class CollectionRenderer extends OutputRenderer {
 
         private Boolean contextRelative;
 
-        private Boolean hasContext = false;
+        private final Boolean hasContext = false;
 
         private String custom;
 
@@ -1756,14 +1741,6 @@ public class CollectionRenderer extends OutputRenderer {
             return this.contextRelative != null;
         }
 
-        public Boolean getHasContext() {
-            return hasContext;
-        }
-
-        public void setHasContext(Boolean hasContext) {
-            this.hasContext = hasContext;
-        }
-
         public String getCustom() {
             return this.custom;
         }
@@ -1861,9 +1838,7 @@ public class CollectionRenderer extends OutputRenderer {
             if (getCustom() != null) {
                 return new HtmlText(RenderUtils.getFormattedProperties(getCustom(), object), false);
             } else {
-                final HtmlLink link =
-                        getHasContext() ? new HtmlLinkWithPreprendedComment(
-                                pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX) : new HtmlLink();
+                final HtmlLink link = new HtmlLink();
 
                 if (isContextRelativeSet()) {
                     link.setContextRelative(isContextRelative());

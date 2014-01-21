@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,7 +48,6 @@ import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
-import pt.ist.fenixWebFramework.servlets.json.JsonObject;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
 
@@ -65,53 +63,39 @@ import pt.ist.fenixframework.FenixFramework;
  */
 public abstract class BaseAction extends DispatchAction {
 
-    public static final String USED_CHARSET = "UTF-8";
-
     @Override
     public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             final HttpServletResponse response) throws Exception {
-        final Bennu myOrg = getBennu();
-        request.setAttribute("myOrg", myOrg);
+        request.setAttribute("bennu", Bennu.getInstance());
         return super.execute(mapping, form, request, response);
     }
 
+    @SuppressWarnings("unchecked")
     protected <T> T getAttribute(final HttpServletRequest request, final String attributeName) {
         final T t = (T) request.getAttribute(attributeName);
         return t == null ? (T) request.getParameter(attributeName) : t;
     }
 
-    @SuppressWarnings("unchecked")
-    protected <T extends DomainObject> T getDomainObject(final String value) {
-        return (T) FenixFramework.getDomainObject(value);
-    }
-
-    @SuppressWarnings("unchecked")
     protected <T extends DomainObject> T getDomainObject(final HttpServletRequest request, final String attributeName) {
         String oid = request.getParameter(attributeName);
-        if (oid == null || oid.length() == 0) {
-            // This workaround must remain until there is at least one oid being
-            // passed as a long and not its external String format.
-            Object attribute = request.getAttribute(attributeName);
-            if (attribute instanceof Long) {
-                oid = attribute.toString();
-            } else {
-                oid = (String) attribute;
-            }
+        if (oid == null || oid.isEmpty()) {
+            oid = request.getAttribute(attributeName).toString();
         }
-        return (T) FenixFramework.getDomainObject(oid);
+        return FenixFramework.getDomainObject(oid);
     }
 
-    protected <T extends Object> T getRenderedObject() {
+    protected <T> T getRenderedObject() {
         final IViewState viewState = RenderUtils.getViewState();
-        return (T) getRenderedObject(viewState);
+        return getRenderedObject(viewState);
     }
 
-    protected <T extends Object> T getRenderedObject(final String id) {
+    protected <T> T getRenderedObject(final String id) {
         final IViewState viewState = RenderUtils.getViewState(id);
-        return (T) getRenderedObject(viewState);
+        return getRenderedObject(viewState);
     }
 
-    protected <T extends Object> T getRenderedObject(final IViewState viewState) {
+    @SuppressWarnings("unchecked")
+    protected <T> T getRenderedObject(final IViewState viewState) {
         if (viewState != null) {
             MetaObject metaObject = viewState.getMetaObject();
             if (metaObject != null) {
@@ -127,38 +111,28 @@ public abstract class BaseAction extends DispatchAction {
 
     protected ActionForward download(final HttpServletResponse response, final String filename, final byte[] bytes,
             final String contentType) throws IOException {
-        final OutputStream outputStream = response.getOutputStream();
-        response.setContentType(contentType);
-        response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
-        response.setContentLength(bytes.length);
-        if (bytes != null) {
+        try (final OutputStream outputStream = response.getOutputStream()) {
+            response.setContentType(contentType);
+            response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
+            response.setContentLength(bytes.length);
             outputStream.write(bytes);
+            outputStream.flush();
+            return null;
         }
-        outputStream.flush();
-        outputStream.close();
-
-        return null;
-
     }
 
     protected ActionForward download(final HttpServletResponse response, final String filename, InputStream stream,
             final String contentType) throws IOException {
-        final OutputStream outputStream = response.getOutputStream();
-        try {
+        try (OutputStream outputStream = response.getOutputStream()) {
             response.setContentType(contentType);
             response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
             int byteCount = InputStreamUtil.copyStream(stream, outputStream);
             response.setContentLength(byteCount);
             outputStream.flush();
+            return null;
         } finally {
-            outputStream.close();
             stream.close();
         }
-        return null;
-    }
-
-    protected Bennu getBennu() {
-        return Bennu.getInstance();
     }
 
     protected void addLocalizedMessage(final HttpServletRequest request, final String localizedMessage) {
@@ -198,33 +172,9 @@ public abstract class BaseAction extends DispatchAction {
         }
     }
 
-    protected void writeJsonReply(HttpServletResponse response, JsonObject jsonObject) throws IOException {
-        byte[] jsonReply = jsonObject.getJsonString().getBytes(USED_CHARSET);
-
-        final OutputStream outputStream = response.getOutputStream();
-
-        response.setContentType("text");
-        response.setContentLength(jsonReply.length);
-        outputStream.write(jsonReply);
-        outputStream.flush();
-        outputStream.close();
-    }
-
-    protected void writeJsonReply(HttpServletResponse response, List<JsonObject> jsonObject) throws IOException {
-
-        byte[] jsonReply = JsonObject.getJsonArrayString(jsonObject).getBytes(USED_CHARSET);
-
-        final OutputStream outputStream = response.getOutputStream();
-
-        response.setContentType("application/json");
-        response.setContentLength(jsonReply.length);
-        outputStream.write(jsonReply);
-        outputStream.flush();
-        outputStream.close();
-    }
-
     protected ActionForward redirect(final HttpServletRequest request, final String url) {
-        final String digest = GenericChecksumRewriter.calculateChecksum(request.getContextPath() + url);
+        final String digest =
+                GenericChecksumRewriter.calculateChecksum(request.getContextPath() + url, request.getSession(false));
         final char seperator = url.indexOf('?') >= 0 ? '&' : '?';
         final String urlWithChecksum = url + seperator + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + '=' + digest;
         return new ActionForward(urlWithChecksum, true);
@@ -237,6 +187,10 @@ public abstract class BaseAction extends DispatchAction {
             exc.printStackTrace();
             addLocalizedMessage(request, BundleUtil.getString("resources/MyorgResources", "error.ConsistencyException"));
         }
+    }
+
+    protected ActionForward forward(String path) {
+        return new ActionForward(path);
     }
 
 }

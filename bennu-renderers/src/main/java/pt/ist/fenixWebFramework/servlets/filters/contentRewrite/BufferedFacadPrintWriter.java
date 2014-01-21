@@ -1,11 +1,8 @@
 package pt.ist.fenixWebFramework.servlets.filters.contentRewrite;
 
 import java.io.PrintWriter;
-import java.util.Collection;
 
-import javax.servlet.http.HttpServletRequest;
-
-import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriterFilter.RequestRewriterFactory;
+import javax.servlet.http.HttpSession;
 
 public class BufferedFacadPrintWriter extends PrintWriter {
 
@@ -51,16 +48,14 @@ public class BufferedFacadPrintWriter extends PrintWriter {
     public void close() {
     }
 
-    public void writeRealResponse(final HttpServletRequest request, final Collection<RequestRewriterFactory> requestRewriters) {
-        StringBuilder stringBuilder = this.stringBuilder;
-        for (final RequestRewriterFactory requestRewriterFactory : requestRewriters) {
-            stringBuilder = requestRewriterFactory.createRequestRewriter(request).rewrite(stringBuilder);
-        }
+    public void writeRealResponse(HttpSession session) {
+        StringBuilder stringBuilder = new GenericChecksumRewriter(session).rewrite(this.stringBuilder);
         printWriter.write(stringBuilder.toString());
         printWriter.flush();
         printWriter.close();
     }
 
+    @Deprecated
     public String getContent() {
         return stringBuilder.toString();
     }
