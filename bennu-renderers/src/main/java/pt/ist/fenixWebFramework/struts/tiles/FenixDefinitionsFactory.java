@@ -14,8 +14,7 @@ import org.apache.struts.tiles.ComponentDefinition;
 import org.apache.struts.tiles.DefinitionsFactoryException;
 import org.apache.struts.tiles.NoSuchDefinitionException;
 import org.apache.struts.tiles.xmlDefinition.I18nFactorySet;
-
-import pt.utl.ist.fenix.tools.util.i18n.Language;
+import org.fenixedu.commons.i18n.I18N;
 
 /**
  * @author - Shezad Anavarali (shezad@ist.utl.pt)
@@ -56,7 +55,7 @@ public class FenixDefinitionsFactory extends I18nFactorySet {
     public ComponentDefinition getDefinition(String tileName, ServletRequest request, ServletContext servletContext)
             throws NoSuchDefinitionException, DefinitionsFactoryException {
 
-        Locale locale = Language.getLocale();
+        Locale locale = I18N.getLocale();
         if (caches.containsKey(locale)) {
             DefinitionsCache cache = caches.get(locale);
             if (cache.containsKey(tileName)) {

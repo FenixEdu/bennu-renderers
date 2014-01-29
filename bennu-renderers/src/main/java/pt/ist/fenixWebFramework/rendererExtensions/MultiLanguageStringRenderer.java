@@ -1,7 +1,9 @@
 package pt.ist.fenixWebFramework.rendererExtensions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Locale;
+import java.util.Locale.Builder;
+
+import org.fenixedu.commons.i18n.I18N;
 
 import pt.ist.fenixWebFramework.renderers.StringRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
@@ -10,7 +12,6 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
-import pt.utl.ist.fenix.tools.util.i18n.Language;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 /**
@@ -19,14 +20,12 @@ import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
  * is determined by the logic in {@link MultiLanguageString#getContent()}. Additionally you
  * can override the language in which the content is to be displayed with the {@link #setLanguage(String) language} property. In
  * this case the content to be presented
- * will be determined by {@link MultiLanguageString#getContent(Language)}
+ * will be determined by {@link MultiLanguageString#getContent(Locale)}
  * 
  * @author cfgi
  * @author cgmp
  */
 public class MultiLanguageStringRenderer extends StringRenderer {
-
-    private static final Logger logger = LoggerFactory.getLogger(MultiLanguageStringRenderer.class);
 
     private String language;
     private boolean forceShowLanguage;
@@ -124,13 +123,13 @@ public class MultiLanguageStringRenderer extends StringRenderer {
 
         HtmlComponent component = super.renderComponent(layout, value, type);
 
-        if (mlString.getAllLanguages().isEmpty()) {
+        if (mlString.getAllLocales().isEmpty()) {
             return component;
         }
 
-        component.setLanguage(getUsedLanguage(mlString).toString());
+        component.setLanguage(getUsedLanguage(mlString).toLanguageTag());
 
-        if (mlString.isRequestedLanguage() && !isShowLanguageForced()) {
+        if (I18N.getLocale().equals(mlString.getContentLocale()) && !isShowLanguageForced()) {
             return component;
         }
 
@@ -152,17 +151,16 @@ public class MultiLanguageStringRenderer extends StringRenderer {
         return container;
     }
 
-    private Language getUsedLanguage(MultiLanguageString mlString) {
+    private Locale getUsedLanguage(MultiLanguageString mlString) {
         if (getLanguage() != null) {
-            return Language.valueOf(getLanguage());
+            return new Builder().setLanguageTag(getLanguage()).build();
         } else {
-            return mlString.getContentLanguage();
+            return mlString.getContentLocale();
         }
     }
 
     protected String getRenderedText(MultiLanguageString mlString) {
-        Language language = getUsedLanguage(mlString);
-        return mlString.getContent(language);
+        return mlString.getContent(getUsedLanguage(mlString));
     }
 
 }

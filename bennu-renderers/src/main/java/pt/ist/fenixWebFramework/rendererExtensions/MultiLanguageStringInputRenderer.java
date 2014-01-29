@@ -7,9 +7,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
+import java.util.Locale.Builder;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+
+import org.fenixedu.commons.i18n.I18N;
 
 import pt.ist.fenixWebFramework.rendererExtensions.validators.MultiLanguageStringValidator;
 import pt.ist.fenixWebFramework.renderers.InputRenderer;
@@ -33,8 +37,9 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 import pt.utl.ist.fenix.tools.util.Pair;
-import pt.utl.ist.fenix.tools.util.i18n.Language;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
+
+import com.google.common.base.Strings;
 
 /**
  * This renderer provides a generic way of editing slots that contain a {@link MultiLanguageString}. The interface generated
@@ -99,10 +104,10 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
     }
 
     public static class LanguageBean implements Serializable {
-        public Language language;
+        public Locale language;
         public String value;
 
-        public LanguageBean(Language language, String value) {
+        public LanguageBean(Locale language, String value) {
             super();
 
             this.language = language;
@@ -113,7 +118,7 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
             StringBuilder builder = new StringBuilder();
 
             if (languageBean != null) {
-                builder.append(languageBean.language != null ? languageBean.language.toString() : "");
+                builder.append(languageBean.language != null ? languageBean.language.toLanguageTag() : "");
                 builder.append(":");
                 builder.append(languageBean.value != null ? languageBean.value : "");
             }
@@ -148,9 +153,9 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
             String language = value.substring(0, firstIndex);
             String message = value.substring(firstIndex + 1);
 
-            Language realLanguage = language.length() == 0 ? null : Language.valueOf(language);
+            Locale locale = language.length() == 0 ? null : new Builder().setLanguageTag(language).build();
 
-            return new LanguageBean(realLanguage, message);
+            return new LanguageBean(locale, message);
         }
 
         public static Collection<LanguageBean> importAllFromString(String value) {
@@ -284,8 +289,8 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
                 map = getLanguageMap(true);
 
                 int index = 0;
-                for (Language language : mls.getAllLanguages()) {
-                    map.put(index++, new LanguageBean(language, mls.getContent(language)));
+                for (Locale locale : mls.getAllLocales()) {
+                    map.put(index++, new LanguageBean(locale, mls.getContent(locale)));
                 }
             }
 
@@ -330,7 +335,7 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
             return container;
         }
 
-        private HtmlActionLink addLanguageInput(HtmlContainer container, Integer index, String value, Language language,
+        private HtmlActionLink addLanguageInput(HtmlContainer container, Integer index, String value, Locale locale,
                 boolean allowRemove) {
             // insert empty entry if not present
             Map<Integer, LanguageBean> map = getLanguageMap(true);
@@ -355,10 +360,10 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
             PresentationContext context = getInputContext().createSubContext(getInputContext().getMetaObject());
             context.setProperties(new Properties());
 
-            Language usedLanguage = language == null ? Language.getUserLanguage() : language;
+            Locale usedLocale = locale == null ? I18N.getLocale() : locale;
 
             HtmlSimpleValueComponent languageComponent =
-                    (HtmlSimpleValueComponent) RenderKit.getInstance().render(context, usedLanguage, Language.class);
+                    (HtmlSimpleValueComponent) RenderKit.getInstance().render(context, usedLocale, Locale.class);
             languageComponent.setController(new UpdateLanguageController(textInput, index));
             languageComponent.setTargetSlot(null);
             languageComponent.setName(getLocalName("language/" + index));
@@ -408,11 +413,11 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
                 HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getControlledComponent();
 
                 String value = this.input.getValue();
-                Language finalLanguage =
-                        component.getValue() == null || component.getValue().length() == 0 ? null : Language.valueOf(component
-                                .getValue());
+                Locale locale =
+                        Strings.isNullOrEmpty(component.getValue()) ? null : new Builder().setLanguageTag(component.getValue())
+                                .build();
 
-                map.put(this.index, new LanguageBean(finalLanguage, value));
+                map.put(this.index, new LanguageBean(locale, value));
             }
         }
 
@@ -487,7 +492,7 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
             Collection<LanguageBean> allLanguageBean = LanguageBean.importAllFromString(text);
             for (LanguageBean bean : allLanguageBean) {
                 if (bean.value != null && bean.value.trim().length() != 0) {
-                    mls.setContent(bean.language, bean.value);
+                    mls = mls.with(bean.language, bean.value);
                 }
             }
 
