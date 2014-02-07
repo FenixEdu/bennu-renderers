@@ -39,6 +39,7 @@ import java.util.Map;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionServlet;
@@ -63,7 +64,11 @@ import com.google.gson.Gson;
  * @author Luis Cruz
  * 
  */
+@WebServlet(urlPatterns = ActionServletWrapper.URL_PATTERN, name = ActionServletWrapper.SERVLET_NAME, loadOnStartup = 1)
 public class ActionServletWrapper extends ActionServlet {
+
+    static final String URL_PATTERN = "*.do";
+    static final String SERVLET_NAME = "ActionServlet";
 
     private static final long serialVersionUID = -6838259271932491702L;
 
@@ -127,6 +132,13 @@ public class ActionServletWrapper extends ActionServlet {
         initializeParameterMapDefaults();
         initializeConfigurations();
         super.init(new ServletConfigWrapper(config));
+    }
+
+    @Override
+    protected void initServlet() {
+        this.servletName = SERVLET_NAME;
+        this.servletMapping = URL_PATTERN;
+        getServletContext().setAttribute(Globals.SERVLET_KEY, this.servletMapping);
     }
 
     private void initializeParameterMapDefaults() {
