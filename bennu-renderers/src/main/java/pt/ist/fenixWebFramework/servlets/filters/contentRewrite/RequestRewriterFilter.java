@@ -22,6 +22,8 @@ import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.security.Authenticate;
 
 import pt.ist.fenixWebFramework.RenderersConfigurationManager;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 public class RequestRewriterFilter implements Filter {
 
@@ -107,6 +109,7 @@ public class RequestRewriterFilter implements Filter {
 
         }
 
+        @Atomic(mode = TxMode.READ)
         private SessionSecretWrapper computeSecret(HttpSession session, User user) {
             SessionSecretWrapper secret = new SessionSecretWrapper(user.getUsername() + UUID.randomUUID().toString());
             session.setAttribute(RENDERERS_SESSION_SECRET, secret);
