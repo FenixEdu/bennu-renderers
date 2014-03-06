@@ -14,18 +14,18 @@ public final class GenericChecksumRewriter {
 
     private static final int LENGTH_OF_NO_CHECKSUM_PREFIX = NO_CHECKSUM_PREFIX.length();
 
-    private static final char[] OPEN_A = "<a ".toCharArray();
-    private static final char[] OPEN_FORM = "<form ".toCharArray();
-    private static final char[] OPEN_IMG = "<img ".toCharArray();
-    private static final char[] OPEN_AREA = "<area ".toCharArray();
+    private static final String OPEN_A = "<a ";
+    private static final String OPEN_FORM = "<form ";
+    private static final String OPEN_IMG = "<img ";
 
-    private static final char[] CLOSE = ">".toCharArray();
-    private static final char[] PREFIX_JAVASCRIPT = "javascript:".toCharArray();
-    private static final char[] PREFIX_MAILTO = "mailto:".toCharArray();
-    private static final char[] PREFIX_HTTP = "http://".toCharArray();
-    private static final char[] PREFIX_HTTPS = "https://".toCharArray();
-    private static final char[] CARDINAL = "#".toCharArray();
-    private static final char[] QUESTION_MARK = "?".toCharArray();
+    private static final String PREFIX_JAVASCRIPT = "javascript:";
+    private static final String PREFIX_MAILTO = "mailto:";
+    private static final String PREFIX_HTTP = "http://";
+    private static final String PREFIX_HTTPS = "https://";
+
+    private static final char CLOSE = '>';
+    private static final char CARDINAL = '#';
+    private static final char QUESTION_MARK = '?';
 
     private final String sessionSecret;
 
@@ -33,7 +33,7 @@ public final class GenericChecksumRewriter {
         this.sessionSecret = RenderersSessionSecret.computeSecretFromSession(session);
     }
 
-    private String calculateChecksum(final StringBuilder source, final int start, final int end) {
+    private String calculateChecksum(final String source, final int start, final int end) {
         return calculateChecksum(source.substring(start, end), sessionSecret);
     }
 
@@ -87,22 +87,20 @@ public final class GenericChecksumRewriter {
         return url + "&" + checksum;
     }
 
-    public StringBuilder rewrite(StringBuilder source) {
+    public String rewrite(String source) {
         int iOffset = 0;
 
         final StringBuilder response = new StringBuilder();
 
         while (true) {
 
-            final int indexOfAopen = indexOf(source, OPEN_A, iOffset);
-            final int indexOfFormOpen = indexOf(source, OPEN_FORM, iOffset);
-            final int indexOfImgOpen = indexOf(source, OPEN_IMG, iOffset);
-            final int indexOfAreaOpen = indexOf(source, OPEN_AREA, iOffset);
+            final int indexOfAopen = source.indexOf(OPEN_A, iOffset);
+            final int indexOfFormOpen = source.indexOf(OPEN_FORM, iOffset);
+            final int indexOfImgOpen = source.indexOf(OPEN_IMG, iOffset);
             if (indexOfAopen >= 0 && (indexOfFormOpen < 0 || indexOfAopen < indexOfFormOpen)
-                    && (indexOfImgOpen < 0 || indexOfAopen < indexOfImgOpen)
-                    && (indexOfAreaOpen < 0 || indexOfAopen < indexOfAreaOpen)) {
+                    && (indexOfImgOpen < 0 || indexOfAopen < indexOfImgOpen)) {
                 if (!isPrefixed(source, indexOfAopen)) {
-                    final int indexOfAclose = indexOf(source, CLOSE, indexOfAopen);
+                    final int indexOfAclose = source.indexOf(CLOSE, indexOfAopen);
                     if (indexOfAclose >= 0) {
                         final int indexOfHrefBodyStart = findHrefBodyStart(source, indexOfAopen, indexOfAclose);
                         if (indexOfHrefBodyStart >= 0) {
@@ -110,16 +108,16 @@ public final class GenericChecksumRewriter {
                             final int indexOfHrefBodyEnd = findHrefBodyEnd(source, indexOfHrefBodyStart, hrefBodyStartChar);
                             if (indexOfHrefBodyEnd >= 0) {
 
-                                int indexOfJavaScript = indexOf(source, PREFIX_JAVASCRIPT, indexOfHrefBodyStart);
-                                int indexOfMailto = indexOf(source, PREFIX_MAILTO, indexOfHrefBodyStart);
-                                int indexOfHttp = indexOf(source, PREFIX_HTTP, indexOfHrefBodyStart);
-                                int indexOfHttps = indexOf(source, PREFIX_HTTPS, indexOfHrefBodyStart);
+                                int indexOfJavaScript = source.indexOf(PREFIX_JAVASCRIPT, indexOfHrefBodyStart);
+                                int indexOfMailto = source.indexOf(PREFIX_MAILTO, indexOfHrefBodyStart);
+                                int indexOfHttp = source.indexOf(PREFIX_HTTP, indexOfHrefBodyStart);
+                                int indexOfHttps = source.indexOf(PREFIX_HTTPS, indexOfHrefBodyStart);
                                 if ((indexOfJavaScript < 0 || indexOfJavaScript > indexOfHrefBodyEnd)
                                         && (indexOfMailto < 0 || indexOfMailto > indexOfHrefBodyEnd)
                                         && (indexOfHttp < 0 || indexOfHttp > indexOfHrefBodyEnd)
                                         && (indexOfHttps < 0 || indexOfHttps > indexOfHrefBodyEnd)) {
 
-                                    final int indexOfCardinal = indexOf(source, CARDINAL, indexOfHrefBodyStart);
+                                    final int indexOfCardinal = source.indexOf(CARDINAL, indexOfHrefBodyStart);
                                     boolean hasCardinal =
                                             indexOfCardinal > indexOfHrefBodyStart && indexOfCardinal < indexOfHrefBodyEnd;
                                     if (hasCardinal) {
@@ -129,7 +127,7 @@ public final class GenericChecksumRewriter {
                                     }
 
                                     final String checksum = calculateChecksum(source, indexOfHrefBodyStart, indexOfHrefBodyEnd);
-                                    final int indexOfQmark = indexOf(source, QUESTION_MARK, indexOfHrefBodyStart);
+                                    final int indexOfQmark = source.indexOf(QUESTION_MARK, indexOfHrefBodyStart);
                                     if (indexOfQmark == -1 || indexOfQmark > indexOfHrefBodyEnd) {
                                         response.append('?');
                                     } else {
@@ -165,7 +163,9 @@ public final class GenericChecksumRewriter {
                                         indexOfHttps = Integer.MAX_VALUE;
                                     }
 
-                                    nextIndex = min(indexOfJavaScript, indexOfMailto, indexOfHttp, indexOfHttps);
+                                    nextIndex =
+                                            Math.min(Math.min(indexOfJavaScript, indexOfMailto),
+                                                    Math.min(indexOfHttps, indexOfHttp));
 
                                     response.append(source, iOffset, nextIndex);
                                     iOffset = nextIndex;
@@ -181,10 +181,9 @@ public final class GenericChecksumRewriter {
                     iOffset = continueToNextToken(response, source, iOffset, indexOfAopen);
                     continue;
                 }
-            } else if (indexOfFormOpen >= 0 && (indexOfImgOpen < 0 || indexOfFormOpen < indexOfImgOpen)
-                    && (indexOfAreaOpen < 0 || indexOfFormOpen < indexOfAreaOpen)) {
+            } else if (indexOfFormOpen >= 0 && (indexOfImgOpen < 0 || indexOfFormOpen < indexOfImgOpen)) {
                 if (!isPrefixed(source, indexOfFormOpen)) {
-                    final int indexOfFormClose = indexOf(source, CLOSE, indexOfFormOpen);
+                    final int indexOfFormClose = source.indexOf(CLOSE, indexOfFormOpen);
                     if (indexOfFormClose >= 0) {
                         final int indexOfFormActionBodyStart = findFormActionBodyStart(source, indexOfFormOpen, indexOfFormClose);
                         if (indexOfFormActionBodyStart >= 0) {
@@ -204,15 +203,18 @@ public final class GenericChecksumRewriter {
                                 iOffset = nextChar;
                                 continue;
                             }
+                        } else {
+                            iOffset = continueToNextToken(response, source, iOffset, indexOfFormOpen);
+                            continue;
                         }
                     }
                 } else {
                     iOffset = continueToNextToken(response, source, iOffset, indexOfFormOpen);
                     continue;
                 }
-            } else if (indexOfImgOpen >= 0 && (indexOfAreaOpen < 0 || indexOfImgOpen < indexOfAreaOpen)) {
+            } else if (indexOfImgOpen >= 0) {
                 if (!isPrefixed(source, indexOfImgOpen)) {
-                    final int indexOfImgClose = indexOf(source, CLOSE, indexOfImgOpen);
+                    final int indexOfImgClose = source.indexOf(CLOSE, indexOfImgOpen);
                     if (indexOfImgClose >= 0) {
                         final int indexOfSrcBodyStart = findSrcBodyStart(source, indexOfImgOpen, indexOfImgClose);
                         if (indexOfSrcBodyStart >= 0) {
@@ -221,7 +223,7 @@ public final class GenericChecksumRewriter {
                                 response.append(source, iOffset, indexOfSrcBodyEnd);
 
                                 final String checksum = calculateChecksum(source, indexOfSrcBodyStart, indexOfSrcBodyEnd);
-                                final int indexOfQmark = indexOf(source, QUESTION_MARK, indexOfSrcBodyStart);
+                                final int indexOfQmark = source.indexOf(QUESTION_MARK, indexOfSrcBodyStart);
                                 if (indexOfQmark == -1 || indexOfQmark > indexOfSrcBodyEnd) {
                                     response.append('?');
                                 } else {
@@ -233,61 +235,16 @@ public final class GenericChecksumRewriter {
 
                                 final int nextChar = indexOfImgClose + 1;
                                 response.append(source, indexOfSrcBodyEnd, nextChar);
-                                // rewrite(response, source, nextChar);
-                                // return;
                                 iOffset = nextChar;
                                 continue;
                             }
+                        } else {
+                            iOffset = continueToNextToken(response, source, iOffset, indexOfImgOpen);
+                            continue;
                         }
                     }
                 } else {
                     iOffset = continueToNextToken(response, source, iOffset, indexOfImgOpen);
-                    continue;
-                }
-            } else if (indexOfAreaOpen >= 0) {
-                if (!isPrefixed(source, indexOfAreaOpen)) {
-                    final int indexOfAreaClose = indexOf(source, CLOSE, indexOfAreaOpen);
-                    if (indexOfAreaClose >= 0) {
-                        final int indexOfHrefBodyStart = findHrefBodyStart(source, indexOfAreaOpen, indexOfAreaClose);
-                        if (indexOfHrefBodyStart >= 0) {
-                            final char hrefBodyStartChar = source.charAt(indexOfHrefBodyStart - 1);
-                            final int indexOfHrefBodyEnd = findHrefBodyEnd(source, indexOfHrefBodyStart, hrefBodyStartChar);
-                            if (indexOfHrefBodyEnd >= 0) {
-                                final int indexOfCardinal = indexOf(source, CARDINAL, indexOfHrefBodyStart);
-                                boolean hasCardinal =
-                                        indexOfCardinal > indexOfHrefBodyStart && indexOfCardinal < indexOfHrefBodyEnd;
-                                if (hasCardinal) {
-                                    response.append(source, iOffset, indexOfCardinal);
-                                } else {
-                                    response.append(source, iOffset, indexOfHrefBodyEnd);
-                                }
-
-                                final String checksum = calculateChecksum(source, indexOfHrefBodyStart, indexOfHrefBodyEnd);
-                                final int indexOfQmark = indexOf(source, QUESTION_MARK, indexOfHrefBodyStart);
-                                if (indexOfQmark == -1 || indexOfQmark > indexOfHrefBodyEnd) {
-                                    response.append('?');
-                                } else {
-                                    response.append("&amp;");
-                                }
-                                response.append(CHECKSUM_ATTRIBUTE_NAME);
-                                response.append("=");
-                                response.append(checksum);
-
-                                if (hasCardinal) {
-                                    response.append(source, indexOfCardinal, indexOfHrefBodyEnd);
-                                }
-
-                                final int nextChar = indexOfAreaClose + 1;
-                                response.append(source, indexOfHrefBodyEnd, nextChar);
-                                // rewrite(response, source, nextChar);
-                                // return;
-                                iOffset = nextChar;
-                                continue;
-                            }
-                        }
-                    }
-                } else {
-                    iOffset = continueToNextToken(response, source, iOffset, indexOfAreaOpen);
                     continue;
                 }
             }
@@ -295,87 +252,21 @@ public final class GenericChecksumRewriter {
             break;
         }
 
-        return response;
+        return response.toString();
     }
 
-    private int min(final int... indexs) {
-        int result = Integer.MAX_VALUE;
-        for (int i : indexs) {
-            result = Math.min(result, i);
-        }
-        return result;
+    private boolean isPrefixed(final String source, final int indexOfTagOpen) {
+        return NO_CHECKSUM_PREFIX.regionMatches(0, source, indexOfTagOpen - LENGTH_OF_NO_CHECKSUM_PREFIX,
+                LENGTH_OF_NO_CHECKSUM_PREFIX);
     }
 
-    private boolean isPrefixed(final StringBuilder source, final int indexOfTagOpen) {
-        return (indexOfTagOpen >= LENGTH_OF_NO_CHECKSUM_PREFIX && match(source, indexOfTagOpen - LENGTH_OF_NO_CHECKSUM_PREFIX,
-                indexOfTagOpen, NO_CHECKSUM_PREFIX));
-    }
-
-    private boolean match(final StringBuilder source, final int iStart, int iEnd, final String string) {
-        if (iEnd - iStart != string.length()) {
-            return false;
-        }
-        for (int i = 0; i < string.length(); i++) {
-            if (source.charAt(iStart + i) != string.charAt(i)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private int continueToNextToken(final StringBuilder response, final StringBuilder source, final int iOffset,
-            final int indexOfTag) {
+    private int continueToNextToken(final StringBuilder response, final String source, final int iOffset, final int indexOfTag) {
         final int nextOffset = indexOfTag + 1;
         response.append(source, iOffset, nextOffset);
         return nextOffset;
     }
 
-    private static int indexOf(final StringBuilder source, final char[] target, final int fromIndex) {
-        // return source.indexOf(target, fromIndex);
-        return indexOf(source, 0, source.length(), target, 0, target.length, fromIndex);
-    }
-
-    private static int indexOf(final StringBuilder source, final int sourceOffset, final int sourceCount, final char[] target,
-            final int targetOffset, final int targetCount, int fromIndex) {
-        if (fromIndex >= sourceCount) {
-            return (targetCount == 0 ? sourceCount : -1);
-        }
-        if (fromIndex < 0) {
-            fromIndex = 0;
-        }
-        if (targetCount == 0) {
-            return fromIndex;
-        }
-
-        char first = target[targetOffset];
-        int max = sourceOffset + (sourceCount - targetCount);
-
-        for (int i = sourceOffset + fromIndex; i <= max; i++) {
-            /* Look for first character. */
-            if (source.charAt(i) != first) {
-                while (++i <= max && source.charAt(i) != first) {
-                    ;
-                }
-            }
-
-            /* Found first character, now look at the rest of v2 */
-            if (i <= max) {
-                int j = i + 1;
-                int end = j + targetCount - 1;
-                for (int k = targetOffset + 1; j < end && source.charAt(j) == target[k]; j++, k++) {
-                    ;
-                }
-
-                if (j == end) {
-                    /* Found whole string. */
-                    return i - sourceOffset;
-                }
-            }
-        }
-        return -1;
-    }
-
-    private int findFormActionBodyEnd(final StringBuilder source, final int offset) {
+    private int findFormActionBodyEnd(final String source, final int offset) {
         int i = offset;
         for (char c = source.charAt(i); c != '"' && c != '\'' && c != ' ' && c != '>'; c = source.charAt(i)) {
             if (++i == source.length()) {
@@ -385,16 +276,16 @@ public final class GenericChecksumRewriter {
         return i;
     }
 
-    private int findFormActionBodyStart(final StringBuilder source, final int offset, final int limit) {
+    private int findFormActionBodyStart(final String source, final int offset, final int limit) {
         final int indexOfHref = source.indexOf("action=", offset);
-        if (indexOfHref >= limit) {
+        if (indexOfHref < 0 || indexOfHref >= limit) {
             return -1;
         }
         final int nextChar = indexOfHref + 7;
         return source.charAt(nextChar) == '"' || source.charAt(nextChar) == '\'' ? nextChar + 1 : nextChar;
     }
 
-    private int findHrefBodyEnd(final StringBuilder source, final int offset, final char hrefBodyStartChar) {
+    private int findHrefBodyEnd(final String source, final int offset, final char hrefBodyStartChar) {
         int i = offset;
         if (hrefBodyStartChar == '=') {
             for (char c = source.charAt(i); c != ' ' && c != '>'; c = source.charAt(i)) {
@@ -412,7 +303,7 @@ public final class GenericChecksumRewriter {
         return i;
     }
 
-    private int findSrcBodyEnd(final StringBuilder source, final int offset) {
+    private int findSrcBodyEnd(final String source, final int offset) {
         int i = offset;
         char delimiter = source.charAt(offset - 1);
         if (delimiter == '"' || delimiter == '\'') {
@@ -431,18 +322,18 @@ public final class GenericChecksumRewriter {
         return i;
     }
 
-    private int findHrefBodyStart(final StringBuilder source, final int offset, int limit) {
+    private int findHrefBodyStart(final String source, final int offset, int limit) {
         final int indexOfHref = source.indexOf("href=", offset);
-        if (indexOfHref >= limit) {
+        if (indexOfHref < 0 || indexOfHref >= limit) {
             return -1;
         }
         final int nextChar = indexOfHref + 5;
         return source.charAt(nextChar) == '"' || source.charAt(nextChar) == '\'' ? nextChar + 1 : nextChar;
     }
 
-    private int findSrcBodyStart(final StringBuilder source, final int offset, int limit) {
+    private int findSrcBodyStart(final String source, final int offset, int limit) {
         final int indexOfHref = source.indexOf("src=", offset);
-        if (indexOfHref >= limit) {
+        if (indexOfHref < 0 || indexOfHref >= limit) {
             return -1;
         }
         final int nextChar = indexOfHref + 5;

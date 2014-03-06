@@ -49,8 +49,7 @@ public class BufferedFacadPrintWriter extends PrintWriter {
     }
 
     public void writeRealResponse(HttpSession session) {
-        StringBuilder stringBuilder = new GenericChecksumRewriter(session).rewrite(this.stringBuilder);
-        printWriter.write(stringBuilder.toString());
+        printWriter.write(new GenericChecksumRewriter(session).rewrite(this.stringBuilder.toString()));
         printWriter.flush();
         printWriter.close();
     }
