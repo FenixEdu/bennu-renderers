@@ -64,8 +64,13 @@ public abstract class HtmlComponent implements Serializable {
         this.custom = new HashMap<String, String>();
         this.visible = true;
         this.indented = true;
+        
     }
 
+    {
+        this.addClass("fenix-rendered");   
+    }
+    
     public String getClasses() {
         return classes;
     }
