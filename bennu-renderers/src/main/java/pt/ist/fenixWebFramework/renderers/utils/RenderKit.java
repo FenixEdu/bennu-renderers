@@ -24,9 +24,9 @@ public class RenderKit {
 
     private static RenderKit instance = new RenderKit();
 
-    private Map<RenderMode, RendererRegistry> registryMap;
+    private final Map<RenderMode, RendererRegistry> registryMap;
 
-    private SchemaRegistry schemaRegistry;
+    private final SchemaRegistry schemaRegistry;
 
     //
     // construct
@@ -71,7 +71,7 @@ public class RenderKit {
      * <p>
      * An instace of the renderer can be retrieved with {@link #getRenderer(RenderMode, Class, String)}.
      */
-    public void registerRenderer(RenderMode mode, Class type, String layout, Class<? extends Renderer> renderer,
+    public void registerRenderer(RenderMode mode, Class<?> type, String layout, Class<? extends Renderer> renderer,
             Properties defaultProperties) {
         registryMap.get(mode).registerRenderer(type, layout, renderer, defaultProperties);
     }
@@ -96,6 +96,10 @@ public class RenderKit {
      */
     public Schema findSchema(String schemaName) {
         return schemaRegistry.getSchema(schemaName);
+    }
+
+    public boolean hasSchema(String schemaName) {
+        return schemaRegistry.hasSchema(schemaName);
     }
 
     /**

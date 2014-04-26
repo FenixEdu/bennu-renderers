@@ -12,7 +12,6 @@ import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextArea;
@@ -152,17 +151,12 @@ public class TinyMceEditor extends HtmlTextArea {
             InputStream stream = servletContext.getResourceAsStream(CONFIG_PATH + getConfig() + ".properties");
 
             if (stream == null) {
-                if (LogLevel.WARN) {
-                    logger.warn("could not read TinyMCE configuration named '" + getConfig() + "'");
-                }
+                logger.warn("Could not read TinyMCE configuration file named '{}'", getConfig());
             } else {
                 properties.load(stream);
             }
         } catch (IOException e) {
-            if (LogLevel.WARN) {
-                logger.warn("exception thrown when reading TinyMCE configuration '" + getConfig() + "'" + e);
-            }
-            e.printStackTrace();
+            logger.warn("exception thrown when reading TinyMCE configuration '" + getConfig() + "'", e);
         }
     }
 

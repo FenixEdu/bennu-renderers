@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import pt.ist.fenixWebFramework.renderers.model.DefaultSchemaFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import pt.ist.fenixWebFramework.renderers.model.SchemaFactory;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
 import pt.ist.fenixframework.DomainObject;
@@ -13,20 +16,23 @@ import pt.ist.fenixframework.dml.DomainClass;
 import pt.ist.fenixframework.dml.Role;
 import pt.ist.fenixframework.dml.Slot;
 
-public class FenixSchemaFactory extends DefaultSchemaFactory {
+public class FenixSchemaFactory extends SchemaFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(FenixSchemaFactory.class);
+
     @Override
     public Schema createSchema(Object object) {
         if (object instanceof DomainObject) {
             try {
                 return FenixSchemaFactory.getSchemaForDomainObject(object.getClass().getName());
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         } else if (object instanceof DomainClass) {
             try {
                 return FenixSchemaFactory.getSchemaForDomainObject(((DomainClass) object).getFullName());
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
 
@@ -34,12 +40,12 @@ public class FenixSchemaFactory extends DefaultSchemaFactory {
     }
 
     @Override
-    public Schema createSchema(Class type) {
+    public Schema createSchema(Class<?> type) {
         if (DomainObject.class.isAssignableFrom(type)) {
             try {
                 return FenixSchemaFactory.getSchemaForDomainObject(type.getName());
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
 
@@ -48,25 +54,11 @@ public class FenixSchemaFactory extends DefaultSchemaFactory {
 
     public static List<Slot> getDomainClassSlots(DomainClass domainClass) {
         List<Slot> slots = new ArrayList<Slot>();
-        String[] slotsToIgnore = new String[] { ".*Key$", "^chave.*", "^idInternal$", "^ackOptLock$" };
 
         while (domainClass != null) {
-            outter: for (Iterator<Slot> iter = domainClass.getSlots(); iter.hasNext();) {
-                Slot slot = iter.next();
-
-                String slotName = slot.getName();
-
-                // Ignore some slots that only exist to support the persistance
-                // framework
-                for (int i = 0; i < slotsToIgnore.length; i++) {
-                    if (slotName.matches(slotsToIgnore[i])) {
-                        continue outter;
-                    }
-                }
-
-                slots.add(slot);
+            for (Iterator<Slot> iter = domainClass.getSlots(); iter.hasNext();) {
+                slots.add(iter.next());
             }
-
             domainClass = (DomainClass) domainClass.getSuperclass();
         }
 

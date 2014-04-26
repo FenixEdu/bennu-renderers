@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.fenixedu.bennu.core.domain.User;
 
 import pt.ist.fenixWebFramework.rendererExtensions.validators.RequiredAutoCompleteSelectionValidator;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
@@ -25,9 +26,9 @@ import pt.utl.ist.fenix.tools.util.Pair;
  */
 public class MetaSlot extends MetaObject {
 
-    private MetaObject metaObject;
+    private final MetaObject metaObject;
 
-    private String name;
+    private final String name;
 
     private String bundle;
     private String labelKey;
@@ -263,11 +264,11 @@ public class MetaSlot extends MetaObject {
     }
 
     @Override
-    public void setUser(UserIdentity user) {
+    public void setUser(User user) {
         // When we are using a slot directly instead of accessing it though the
         // base meta object
         if (getMetaObject() != null) {
-            UserIdentity metaObjetUser = getMetaObject().getUser();
+            User metaObjetUser = getMetaObject().getUser();
 
             if (metaObjetUser == null || !metaObjetUser.equals(user)) { // avoid
                 // recursion
@@ -281,7 +282,7 @@ public class MetaSlot extends MetaObject {
     }
 
     @Override
-    public UserIdentity getUser() {
+    public User getUser() {
         if (getMetaObject() != null) {
             return getMetaObject().getUser();
         } else {

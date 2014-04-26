@@ -10,17 +10,17 @@ import com.google.common.base.Predicate;
 
 public class HtmlRadioButtonList extends HtmlRadioButtonGroup {
 
-    private HtmlList list;
+    private final HtmlList list = new HtmlList();
 
     public HtmlRadioButtonList() {
         super();
-
-        this.list = new HtmlList();
     }
 
     @Override
     public void addClass(String newClass) {
-        this.list.addClass(newClass);
+        if (list != null) {
+            this.list.addClass(newClass);
+        }
     }
 
     public HtmlListItem createItem() {

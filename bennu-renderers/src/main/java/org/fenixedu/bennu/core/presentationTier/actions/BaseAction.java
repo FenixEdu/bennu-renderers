@@ -42,7 +42,6 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
-import org.fenixedu.bennu.core.util.InputStreamUtil;
 
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
@@ -50,6 +49,8 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
+
+import com.google.common.io.ByteStreams;
 
 /**
  * 
@@ -105,8 +106,8 @@ public abstract class BaseAction extends DispatchAction {
         return null;
     }
 
-    protected byte[] consumeInputStream(final InputStream inputStream) {
-        return InputStreamUtil.consumeInputStream(inputStream);
+    protected byte[] consumeInputStream(final InputStream inputStream) throws IOException {
+        return ByteStreams.toByteArray(inputStream);
     }
 
     protected ActionForward download(final HttpServletResponse response, final String filename, final byte[] bytes,
@@ -126,7 +127,7 @@ public abstract class BaseAction extends DispatchAction {
         try (OutputStream outputStream = response.getOutputStream()) {
             response.setContentType(contentType);
             response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
-            int byteCount = InputStreamUtil.copyStream(stream, outputStream);
+            int byteCount = (int) ByteStreams.copy(stream, outputStream);
             response.setContentLength(byteCount);
             outputStream.flush();
             return null;

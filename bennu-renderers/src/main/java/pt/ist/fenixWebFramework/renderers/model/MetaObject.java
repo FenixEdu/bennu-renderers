@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.fenixedu.bennu.core.domain.User;
+
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 
@@ -21,10 +23,10 @@ public abstract class MetaObject implements Serializable {
 
     private Properties properties;
 
-    private transient UserIdentity user;
+    private transient User user;
 
-    private List<MetaSlot> slots;
-    private List<MetaSlot> hiddenSlots;
+    private final List<MetaSlot> slots;
+    private final List<MetaSlot> hiddenSlots;
 
     private InstanceCreator creator;
 
@@ -91,11 +93,11 @@ public abstract class MetaObject implements Serializable {
      */
     public abstract MetaObjectKey getKey();
 
-    public UserIdentity getUser() {
+    public User getUser() {
         return this.user;
     }
 
-    public void setUser(UserIdentity user) {
+    public void setUser(User user) {
         if (this.user != null && this.user.equals(user)) {
             return;
         }

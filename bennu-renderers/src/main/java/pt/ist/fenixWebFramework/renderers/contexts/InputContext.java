@@ -1,12 +1,13 @@
 package pt.ist.fenixWebFramework.renderers.contexts;
 
+import org.fenixedu.bennu.core.domain.User;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlForm;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.components.state.ViewStateWrapper;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectKey;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
-import pt.ist.fenixWebFramework.renderers.model.UserIdentity;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 
 public class InputContext extends PresentationContext {
@@ -52,7 +53,7 @@ public class InputContext extends PresentationContext {
         }
     }
 
-    protected UserIdentity getUser() {
+    protected User getUser() {
         return getViewState().getUser();
     }
 

@@ -6,8 +6,6 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixWebFramework._development.LogLevel;
-
 public class EditLinkTag extends TagSupport {
 
     private static final Logger logger = LoggerFactory.getLogger(EditLinkTag.class);
@@ -71,9 +69,7 @@ public class EditLinkTag extends TagSupport {
         BaseRenderObjectTag tag = (BaseRenderObjectTag) findAncestorWithClass(this, BaseRenderObjectTag.class);
 
         if (tag == null) {
-            if (LogLevel.WARN) {
-                logger.warn("destination " + getName() + " specified but no parent tag supports destinations");
-            }
+            logger.warn("Destination {} specified but no parent tag supports destinations", getName());
         } else {
             setDestination(tag, getPath(), getModule(), redirectToBoolean(getRedirect()));
         }

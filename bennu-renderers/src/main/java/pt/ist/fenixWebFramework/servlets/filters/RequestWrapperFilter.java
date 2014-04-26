@@ -29,7 +29,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.struts.Globals;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.Group;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.commons.i18n.I18N;
 

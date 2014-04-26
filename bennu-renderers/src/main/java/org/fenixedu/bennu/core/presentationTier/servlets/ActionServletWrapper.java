@@ -53,6 +53,8 @@ import org.fenixedu.bennu.core.presentationTier.servlets.ActionServletConfigurat
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.fenixWebFramework.renderers.plugin.ConfigurationReader;
+import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.Project;
 
@@ -129,6 +131,11 @@ public class ActionServletWrapper extends ActionServlet {
 
     @Override
     public void init(final ServletConfig config) throws ServletException {
+        // Initializing Renderers
+        ConfigurationReader.readAll(config.getServletContext());
+        RenderKit.getInstance();
+
+        // Initializing Struts
         initializeParameterMapDefaults();
         initializeConfigurations();
         super.init(new ServletConfigWrapper(config));
