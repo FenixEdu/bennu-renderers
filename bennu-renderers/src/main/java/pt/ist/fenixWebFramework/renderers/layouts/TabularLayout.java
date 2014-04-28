@@ -3,7 +3,6 @@ package pt.ist.fenixWebFramework.renderers.layouts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTable;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTableCell;
@@ -153,10 +152,7 @@ public abstract class TabularLayout extends Layout {
                     cell.setBody(getComponent(rowIndex, columnIndex));
                 }
             } catch (Exception e) {
-                if (LogLevel.WARN) {
-                    logger.warn("while generating table row " + rowIndex + " catched exception " + e);
-                }
-                e.printStackTrace();
+                logger.warn("while generating table row " + rowIndex + " catched exception ", e);
                 table.removeRow(row);
             }
         }

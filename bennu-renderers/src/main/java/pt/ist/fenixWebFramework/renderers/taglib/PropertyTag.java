@@ -6,8 +6,6 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixWebFramework._development.LogLevel;
-
 public class PropertyTag extends BodyTagSupport {
     private static final Logger logger = LoggerFactory.getLogger(PropertyTag.class);
 
@@ -62,10 +60,8 @@ public class PropertyTag extends BodyTagSupport {
                 parent.addProperty(getName(), getBodyContent().getString());
             }
         } else {
-            if (LogLevel.WARN) {
-                logger.warn("property tag was using inside an invalid container");
-                logger.warn("could not set property: " + getName() + "=" + getValue());
-            }
+            logger.warn("property tag was using inside an invalid container\ncould not set property: " + getName() + "="
+                    + getValue());
         }
 
         return super.doEndTag();

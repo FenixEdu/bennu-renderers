@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>bennu-renderers-aggregator</artifactId>
-        <version>3.0.2</version>
+        <version>4.0.0</version>
     </parent>
 
     <artifactId>bennu-renderers</artifactId>
@@ -13,10 +13,10 @@
     <name>Bennu Renderers Framework</name>
 
     <properties>
-        <version.org.fenixedu.bennu>2.0.0</version.org.fenixedu.bennu>
-        <version.org.fenixedu.fenixedu-commons>1.0.0</version.org.fenixedu.fenixedu-commons>
-        <version.com.google.guava.guava>15.0</version.com.google.guava.guava>
-        <version.pt.ist.fenix-legacy-tools>1.0.0</version.pt.ist.fenix-legacy-tools>
+        <version.org.fenixedu.bennu>3.0.0</version.org.fenixedu.bennu>
+        <version.org.fenixedu.fenixedu-commons>1.0.1</version.org.fenixedu.fenixedu-commons>
+        <version.com.google.guava.guava>17.0</version.com.google.guava.guava>
+        <version.pt.ist.fenix-legacy-tools>2.0.0</version.pt.ist.fenix-legacy-tools>
     </properties>
 
     <dependencies>
@@ -80,6 +80,12 @@
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>1.6.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-collections</groupId>
+                    <artifactId>commons-collections</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <!-- jsoup HTML parser library @ http://jsoup.org/ -->

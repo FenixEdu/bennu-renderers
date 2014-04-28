@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import javax.servlet.jsp.PageContext;
 
 import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
-import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 import com.google.common.base.Predicate;
 
@@ -58,14 +57,19 @@ public abstract class HtmlComponent implements Serializable {
     private String onKeyUp;
 
     // custom
-    private Map<String, String> custom;
+    private final Map<String, String> custom;
 
     public HtmlComponent() {
         this.custom = new HashMap<String, String>();
         this.visible = true;
         this.indented = true;
+        
     }
 
+    {
+        this.addClass("fenix-rendered");   
+    }
+    
     public String getClasses() {
         return classes;
     }
@@ -342,14 +346,6 @@ public abstract class HtmlComponent implements Serializable {
         } else {
             return component.getChildren(predicate);
         }
-    }
-
-    public void register() {
-        RenderUtils.registerComponent(getId(), this);
-    }
-
-    public void register(String id) {
-        RenderUtils.registerComponent(id, this);
     }
 
     //

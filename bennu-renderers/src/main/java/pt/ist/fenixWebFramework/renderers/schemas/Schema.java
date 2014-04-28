@@ -6,13 +6,13 @@ import java.util.List;
 
 public class Schema {
 
-    private String name;
+    private final String name;
     private Class type;
 
-    private List<SchemaSlotDescription> slotDescriptions;
+    private final List<SchemaSlotDescription> slotDescriptions;
 
     private Signature constructor;
-    private List<Signature> setters;
+    private final List<Signature> setters;
 
     public Schema(String name, Class type) {
         this.name = name;
@@ -43,7 +43,7 @@ public class Schema {
         return name;
     }
 
-    public Class getType() {
+    public Class<?> getType() {
         return type;
     }
 

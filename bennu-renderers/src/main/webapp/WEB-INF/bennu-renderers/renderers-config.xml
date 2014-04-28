@@ -577,4 +577,6 @@
         	<property name="linkGroupSeparator" value=", "/>
 			<property name="renderCompliantTable" value="true" />        	
     </renderer>
+    
+    <renderer mode="input" type="java.util.Locale" class="pt.ist.fenixWebFramework.rendererExtensions.LocaleInputRenderer" />
 </renderers-config>

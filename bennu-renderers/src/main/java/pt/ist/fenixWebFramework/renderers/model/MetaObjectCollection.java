@@ -3,6 +3,8 @@ package pt.ist.fenixWebFramework.renderers.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fenixedu.bennu.core.domain.User;
+
 /**
  * The MetaObjectCollection provides a wrapper for several meta objects.
  * It's purpose, besides behaving like a collection of objects or better a list,
@@ -13,7 +15,7 @@ import java.util.List;
  */
 public class MetaObjectCollection extends MetaObject {
 
-    private List<MetaObject> metaObjects;
+    private final List<MetaObject> metaObjects;
 
     public MetaObjectCollection() {
         super();
@@ -34,7 +36,7 @@ public class MetaObjectCollection extends MetaObject {
     }
 
     @Override
-    public void setUser(UserIdentity user) {
+    public void setUser(User user) {
         super.setUser(user);
 
         for (MetaObject metaObject : getAllMetaObjects()) {

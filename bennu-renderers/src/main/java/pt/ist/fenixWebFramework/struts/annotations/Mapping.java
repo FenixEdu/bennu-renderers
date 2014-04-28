@@ -35,4 +35,6 @@ public @interface Mapping {
     boolean validate() default true;
 
     String parameter() default "method";
+
+    Class<?> functionality() default Object.class;
 }

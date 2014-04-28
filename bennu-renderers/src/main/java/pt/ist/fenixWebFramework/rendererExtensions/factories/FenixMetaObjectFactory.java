@@ -1,15 +1,15 @@
 package pt.ist.fenixWebFramework.rendererExtensions.factories;
 
-import pt.ist.fenixWebFramework.renderers.model.DefaultMetaObjectFactory;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectCollection;
+import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixframework.DomainObject;
 
-public class FenixMetaObjectFactory extends DefaultMetaObjectFactory {
+public class FenixMetaObjectFactory extends MetaObjectFactory {
 
     @Override
     public MetaObjectCollection createMetaObjectCollection() {

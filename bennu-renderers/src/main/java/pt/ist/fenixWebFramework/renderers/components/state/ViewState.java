@@ -15,10 +15,11 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.fenixedu.bennu.core.domain.User;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
-import pt.ist.fenixWebFramework.renderers.model.UserIdentity;
 
 import com.google.common.io.BaseEncoding;
 
@@ -52,7 +53,7 @@ public class ViewState implements IViewState {
 
     // Properties set after each deserialization 
 
-    private UserIdentity user;
+    private User user;
 
     transient private HtmlComponent component;
 
@@ -245,12 +246,12 @@ public class ViewState implements IViewState {
     }
 
     @Override
-    public UserIdentity getUser() {
+    public User getUser() {
         return user;
     }
 
     @Override
-    public void setUser(UserIdentity user) {
+    public void setUser(User user) {
         this.user = user;
 
         if (getMetaObject() != null) {

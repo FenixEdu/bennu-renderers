@@ -434,8 +434,11 @@ public class AutoCompleteInputRenderer extends InputRenderer {
                 urlParametersBoundaryCharacter = "?";
             }
             return calculatedUrl
-                    + String.format(urlParametersBoundaryCharacter + "%s=%s", GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME,
-                            GenericChecksumRewriter.calculateChecksum(checkSumString));
+                    + String.format(
+                            urlParametersBoundaryCharacter + "%s=%s",
+                            GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME,
+                            GenericChecksumRewriter.calculateChecksum(checkSumString, getContext().getViewState().getRequest()
+                                    .getSession(false)));
         }
 
         protected String escapeId(String textFieldId) {

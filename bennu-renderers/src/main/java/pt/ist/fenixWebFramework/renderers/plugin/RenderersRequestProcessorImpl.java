@@ -1,19 +1,10 @@
 package pt.ist.fenixWebFramework.renderers.plugin;
 
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.upload.FormFile;
-
 import pt.ist.fenixWebFramework.renderers.components.state.LifeCycleConstants;
-import pt.ist.fenixWebFramework.renderers.plugin.upload.RenderersRequestWrapper;
-import pt.ist.fenixWebFramework.renderers.plugin.upload.StrutsFile;
 import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
 import pt.ist.fenixWebFramework.servlets.filters.RequestWrapperFilter.FenixHttpServletRequestWrapper;
 
@@ -34,34 +25,25 @@ import pt.ist.fenixWebFramework.servlets.filters.RequestWrapperFilter.FenixHttpS
  * allow any renderer to retrieve on uploaded file with {@link #getUploadedFile(String)}.
  * 
  * <p>
- * This processor extends the tiles processor to easily integrate in an application that uses the tiles plugin.
  * 
  * @author cfgi
  */
 public class RenderersRequestProcessorImpl {
 
-    static ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<HttpServletRequest>();
-    static ThreadLocal<ServletContext> currentContext = new ThreadLocal<ServletContext>();
-
-    static ThreadLocal<Map<String, UploadedFile>> fileItems = new ThreadLocal<Map<String, UploadedFile>>();
+    static final ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<>();
 
     public static HttpServletRequest getCurrentRequest() {
-        return RenderersRequestProcessorImpl.currentRequest.get();
-    }
-
-    public static ServletContext getCurrentContext() {
-        return RenderersRequestProcessorImpl.currentContext.get();
+        return currentRequest.get();
     }
 
     /**
      * @return the form file associated with the given field name or <code>null</code> if no file exists
      */
+    @SuppressWarnings("unchecked")
     public static UploadedFile getUploadedFile(String fieldName) {
-        return RenderersRequestProcessorImpl.fileItems.get().get(fieldName);
-    }
-
-    public static Collection<UploadedFile> getAllUploadedFiles() {
-        return RenderersRequestProcessorImpl.fileItems.get().values();
+        Map<String, UploadedFile> map =
+                (Map<String, UploadedFile>) getCurrentRequest().getAttribute(FenixHttpServletRequestWrapper.ITEM_MAP_ATTRIBUTE);
+        return map == null ? null : map.get(fieldName);
     }
 
     public static String getCurrentEncoding() {
@@ -69,75 +51,9 @@ public class RenderersRequestProcessorImpl {
         return currentRequest != null ? currentRequest.getCharacterEncoding() : null;
     }
 
-    protected static HttpServletRequest parseMultipartRequest(HttpServletRequest request, ActionForm form) {
-        Hashtable<String, UploadedFile> itemsMap = getNewFileItemsMap(request);
-
-        if (form == null) {
-            return request;
-        } else {
-            if (form.getMultipartRequestHandler() != null) {
-                return createWrapperFromActionForm(request, itemsMap, form);
-            } else {
-                return request;
-            }
-        }
-    }
-
-    protected static Hashtable<String, UploadedFile> getNewFileItemsMap(final HttpServletRequest request) {
-        Hashtable<String, UploadedFile> itemsMap =
-                (Hashtable<String, UploadedFile>) request.getAttribute(FenixHttpServletRequestWrapper.ITEM_MAP_ATTRIBUTE);
-        if (itemsMap == null) {
-            itemsMap = new Hashtable<String, UploadedFile>();
-        }
-        RenderersRequestProcessorImpl.fileItems.set(itemsMap);
-        return itemsMap;
-    }
-
-    protected static HttpServletRequest createWrapperFromActionForm(HttpServletRequest request,
-            Hashtable<String, UploadedFile> itemsMap, ActionForm form) {
-        RenderersRequestWrapper wrapper = new RenderersRequestWrapper(request);
-
-        Hashtable<String, String[]> textElements = form.getMultipartRequestHandler().getTextElements();
-        for (String name : textElements.keySet()) {
-            String[] values = textElements.get(name);
-
-            for (String value : values) {
-                wrapper.addParameter(name, value);
-            }
-        }
-
-        Hashtable<String, FormFile> fileElements = form.getMultipartRequestHandler().getFileElements();
-        for (String name : fileElements.keySet()) {
-            UploadedFile uploadedFile = new StrutsFile(fileElements.get(name));
-
-            if (uploadedFile.getName() != null && uploadedFile.getName().length() > 0) {
-                itemsMap.put(name, uploadedFile);
-            }
-
-            wrapper.addParameter(name, uploadedFile.getName());
-        }
-
-        Map<String, String[]> existingParameters = request.getParameterMap();
-        for (String name : existingParameters.keySet()) {
-            String[] values = existingParameters.get(name);
-            for (String value : values) {
-                wrapper.addParameter(name, value);
-            }
-        }
-
-        Enumeration enumaration = request.getAttributeNames();
-        while (enumaration.hasMoreElements()) {
-            String name = (String) enumaration.nextElement();
-            wrapper.setAttribute(name, request.getAttribute(name));
-        }
-        return wrapper;
-    }
-
     protected static boolean hasViewState(HttpServletRequest request) {
         return viewStateNotProcessed(request)
-                &&
-
-                (request.getParameterValues(LifeCycleConstants.VIEWSTATE_PARAM_NAME) != null || request
+                && (request.getParameterValues(LifeCycleConstants.VIEWSTATE_PARAM_NAME) != null || request
                         .getParameterValues(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME) != null);
     }
 

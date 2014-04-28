@@ -6,10 +6,11 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.fenixedu.bennu.core.domain.User;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
-import pt.ist.fenixWebFramework.renderers.model.UserIdentity;
 
 public interface IViewState extends Serializable {
 
@@ -69,9 +70,9 @@ public interface IViewState extends Serializable {
 
     public void setRequest(HttpServletRequest request);
 
-    public UserIdentity getUser();
+    public User getUser();
 
-    public void setUser(UserIdentity user);
+    public void setUser(User user);
 
     public String getLayout();
 

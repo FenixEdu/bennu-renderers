@@ -1,9 +1,10 @@
 package pt.ist.fenixWebFramework.rendererExtensions;
 
+import java.util.Locale;
+
 import pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringInputRenderer.MultiLanguageStringConverter;
 import pt.ist.fenixWebFramework.rendererExtensions.htmlEditor.JsoupSafeHtmlConverter;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
-import pt.utl.ist.fenix.tools.util.i18n.Language;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class MultiLanguageStringSafeHtmlConverter extends Converter {
@@ -26,17 +27,17 @@ public class MultiLanguageStringSafeHtmlConverter extends Converter {
             return null;
         }
 
-        if (mls.getAllLanguages().isEmpty()) {
+        if (mls.getAllLocales().isEmpty()) {
             return null;
         }
 
-        for (Language language : mls.getAllLanguages()) {
-            String text = (String) safeConverter.convert(String.class, mls.getContent(language));
+        for (Locale locale : mls.getAllLocales()) {
+            String text = (String) safeConverter.convert(String.class, mls.getContent(locale));
 
             if (text == null) {
-                mls.removeContent(language);
+                mls = mls.without(locale);
             } else {
-                mls.setContent(language, text);
+                mls = mls.with(locale, text);
             }
         }
 

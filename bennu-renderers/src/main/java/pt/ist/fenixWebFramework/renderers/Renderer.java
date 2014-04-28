@@ -2,6 +2,8 @@ package pt.ist.fenixWebFramework.renderers;
 
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -44,6 +46,10 @@ public abstract class Renderer {
 
     public void setContext(PresentationContext context) {
         this.context = context;
+    }
+
+    public HttpServletRequest getRequest() {
+        return context.getViewState().getRequest();
     }
 
     /**

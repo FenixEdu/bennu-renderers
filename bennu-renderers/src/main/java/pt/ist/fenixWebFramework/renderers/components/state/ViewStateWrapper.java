@@ -5,16 +5,17 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.fenixedu.bennu.core.domain.User;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
-import pt.ist.fenixWebFramework.renderers.model.UserIdentity;
 
 public class ViewStateWrapper implements IViewState {
 
-    private IViewState viewState;
+    private final IViewState viewState;
 
-    private String attributesPrefix;
+    private final String attributesPrefix;
 
     public ViewStateWrapper(IViewState viewState, String attributesPrefix) {
         this.viewState = viewState;
@@ -190,12 +191,12 @@ public class ViewStateWrapper implements IViewState {
     }
 
     @Override
-    public UserIdentity getUser() {
+    public User getUser() {
         return viewState.getUser();
     }
 
     @Override
-    public void setUser(UserIdentity user) {
+    public void setUser(User user) {
         viewState.setUser(user);
     }
 

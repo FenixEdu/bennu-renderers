@@ -1,8 +1,6 @@
 package pt.ist.fenixWebFramework.renderers.plugin;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,8 +11,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.RequestProcessor;
+import org.fenixedu.bennu.portal.StrutsPortalBackend;
 
-import pt.ist.fenixWebFramework._development.LogLevel;
+import pt.ist.fenixWebFramework.RenderersConfigurationManager;
 import pt.ist.fenixWebFramework.renderers.components.state.ComponentLifeCycle;
 import pt.ist.fenixWebFramework.renderers.components.state.EditRequest.ViewStateUserChangedException;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
@@ -47,14 +46,10 @@ public class SimpleRenderersRequestProcessor extends RequestProcessor {
     @Override
     public void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         RenderersRequestProcessorImpl.currentRequest.set(request);
-        RenderersRequestProcessorImpl.currentContext.set(getServletContext());
-
         try {
             super.process(request, response);
         } finally {
             RenderersRequestProcessorImpl.currentRequest.set(null);
-            RenderersRequestProcessorImpl.currentContext.set(null);
-            RenderersRequestProcessorImpl.fileItems.set(null);
         }
     }
 
@@ -62,38 +57,30 @@ public class SimpleRenderersRequestProcessor extends RequestProcessor {
     protected Action processActionCreate(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping)
             throws IOException {
         Action action = super.processActionCreate(request, response, mapping);
-
-        if (action == null) {
-            return new VoidAction();
-        }
-
-        return action;
+        return action == null ? new Action() : action;
     }
 
     @Override
     protected ActionForward processActionPerform(HttpServletRequest request, HttpServletResponse response, Action action,
             ActionForm form, ActionMapping mapping) throws IOException, ServletException {
-        RenderersRequestProcessorImpl.currentRequest.set(RenderersRequestProcessorImpl.parseMultipartRequest(request, form));
-        HttpServletRequest initialRequest = RenderersRequestProcessorImpl.currentRequest.get();
+        if (!StrutsPortalBackend.chooseSelectedFunctionality(request, action.getClass())) {
+            return new ActionForward("unauthorized", "/bennu-renderers/unauthorized.jsp", false, "");
+        }
 
-        if (RenderersRequestProcessorImpl.hasViewState(initialRequest)) {
+        if (RenderersRequestProcessorImpl.hasViewState(request)) {
             try {
                 RenderersRequestProcessorImpl.setViewStateProcessed(request);
 
-                ActionForward forward = ComponentLifeCycle.execute(initialRequest);
+                ActionForward forward = ComponentLifeCycle.execute(request);
                 if (forward != null) {
                     return forward;
                 }
 
                 return super.processActionPerform(request, response, action, form, mapping);
             } catch (ViewStateUserChangedException e) {
-                throw e;
+                response.sendRedirect(RenderersConfigurationManager.getConfiguration().tamperingRedirect());
+                return null;
             } catch (Exception e) {
-                if (LogLevel.WARN) {
-                    System.out.println(SimpleDateFormat.getInstance().format(new Date()));
-                }
-                e.printStackTrace();
-
                 if (action instanceof ExceptionHandler) {
                     ExceptionHandler handler = (ExceptionHandler) action;
 

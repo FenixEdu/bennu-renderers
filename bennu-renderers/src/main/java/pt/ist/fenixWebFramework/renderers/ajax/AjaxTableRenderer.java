@@ -21,7 +21,7 @@ public class AjaxTableRenderer extends CollectionRenderer {
 
     private String ajaxSourceUrl;
 
-    private java.util.Map<String, String> extraParameter = new java.util.HashMap<String, String>();
+    private final java.util.Map<String, String> extraParameter = new java.util.HashMap<String, String>();
 
     public AjaxTableRenderer() {
         super();
@@ -369,8 +369,11 @@ public class AjaxTableRenderer extends CollectionRenderer {
         }
 
         return link.calculateUrl()
-                + String.format(urlParametersBoundaryCharacter + "%s=%s", GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME,
-                        GenericChecksumRewriter.calculateChecksum(link.calculateUrl()));
+                + String.format(
+                        urlParametersBoundaryCharacter + "%s=%s",
+                        GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME,
+                        GenericChecksumRewriter.calculateChecksum(link.calculateUrl(), getContext().getViewState().getRequest()
+                                .getSession(false)));
     }
 
     public java.util.Map<String, String> getExtraParameter() {

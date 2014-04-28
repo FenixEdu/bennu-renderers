@@ -11,8 +11,6 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixWebFramework._development.LogLevel;
-
 public class LinkFormatTag extends TagSupport {
 
     static private final long serialVersionUID = 1L;
@@ -149,13 +147,9 @@ public class LinkFormatTag extends TagSupport {
         PropertyContainerTag parent = (PropertyContainerTag) findAncestorWithClass(this, PropertyContainerTag.class);
 
         if (parent != null) {
-
             setProperties(parent);
-
         } else {
-            if (LogLevel.WARN) {
-                logger.warn("property tag was using inside an invalid container");
-            }
+            logger.warn("LinkFormatTag tag was used inside an invalid container (It requires a PropertyContainer)");
         }
 
         return super.doEndTag();

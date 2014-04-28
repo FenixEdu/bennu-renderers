@@ -16,12 +16,12 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.taglib.TagUtils;
+import org.fenixedu.bennu.core.security.Authenticate;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.components.state.ViewDestination;
 import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
-import pt.ist.fenixWebFramework.renderers.model.UserIdentityFactory;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
@@ -224,7 +224,7 @@ public abstract class BaseRenderObjectTag extends TagSupport {
         Properties properties = getRenderProperties();
 
         PresentationContext context = createPresentationContext(object, layout, getRealSchema(), properties);
-        context.getViewState().setUser(UserIdentityFactory.create((HttpServletRequest) this.pageContext.getRequest()));
+        context.getViewState().setUser(Authenticate.getUser());
 
         HtmlComponent component = renderObject(context, object);
 

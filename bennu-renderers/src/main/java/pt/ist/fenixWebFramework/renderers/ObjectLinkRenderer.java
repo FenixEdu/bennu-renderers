@@ -13,7 +13,6 @@ import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
-import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter;
 
 /**
  * This render is used to create a link out of an object. You choose the link
@@ -56,7 +55,7 @@ public class ObjectLinkRenderer extends OutputRenderer {
 
     private boolean indentation = false;
 
-    private boolean hasContext = false;
+    private final boolean hasContext = false;
 
     private boolean hasChecksum = true;
 
@@ -274,14 +273,6 @@ public class ObjectLinkRenderer extends OutputRenderer {
         return this.indentation;
     }
 
-    public boolean getHasContext() {
-        return hasContext;
-    }
-
-    public void setHasContext(boolean hasContext) {
-        this.hasContext = hasContext;
-    }
-
     public boolean getHasChecksum() {
         return hasChecksum;
     }
@@ -361,16 +352,8 @@ public class ObjectLinkRenderer extends OutputRenderer {
             }
 
             private HtmlLink getLink(Object usedObject) {
-                HtmlLink link = new HtmlLink();
-
-                if (getHasContext()) {
-                    link =
-                            new HtmlLinkWithPreprendedComment(
-                                    !getHasChecksum() ? GenericChecksumRewriter.NO_CHECKSUM_PREFIX_HAS_CONTEXT_PREFIX : RequestRewriter.HAS_CONTEXT_PREFIX);
-                } else {
-                    link =
-                            !getHasChecksum() ? new HtmlLinkWithPreprendedComment(GenericChecksumRewriter.NO_CHECKSUM_PREFIX) : new HtmlLink();
-                }
+                HtmlLink link =
+                        !getHasChecksum() ? new HtmlLinkWithPreprendedComment(GenericChecksumRewriter.NO_CHECKSUM_PREFIX) : new HtmlLink();
 
                 String url;
 

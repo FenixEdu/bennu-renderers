@@ -8,14 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework.RenderersConfigurationManager;
-import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 public abstract class Layout {
-    private static Logger logger = LoggerFactory.getLogger(Layout.class);
+    private static final Logger logger = LoggerFactory.getLogger(Layout.class);
 
     private String classes;
 
@@ -87,9 +86,7 @@ public abstract class Layout {
             String name = name2;
 
             if (!PropertyUtils.isWriteable(this, name)) {
-                if (LogLevel.WARN) {
-                    logger.warn("Layout " + this + " specified a non-writeable property: " + name);
-                }
+                logger.warn("Layout {} specified a non-writeable property: {}", this, name);
             } else {
                 finalNames.add(name);
             }

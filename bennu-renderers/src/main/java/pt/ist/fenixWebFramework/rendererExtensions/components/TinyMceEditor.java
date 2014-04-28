@@ -2,20 +2,20 @@ package pt.ist.fenixWebFramework.rendererExtensions.components;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.PageContext;
 
+import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixWebFramework._development.LogLevel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlLink;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextArea;
 import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
-import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 public class TinyMceEditor extends HtmlTextArea {
 
@@ -108,8 +108,8 @@ public class TinyMceEditor extends HtmlTextArea {
         properties.setProperty("convert_fonts_to_spans", "true");
         properties.setProperty("fix_list_elements", "true");
 
-        Language language = Language.getLanguage();
-        properties.setProperty("language", language.toString());
+        Locale locale = I18N.getLocale();
+        properties.setProperty("language", locale.getLanguage());
         properties.setProperty("docs_language", "en"); // hardcoded because pt
         // is not supported
 
@@ -151,17 +151,12 @@ public class TinyMceEditor extends HtmlTextArea {
             InputStream stream = servletContext.getResourceAsStream(CONFIG_PATH + getConfig() + ".properties");
 
             if (stream == null) {
-                if (LogLevel.WARN) {
-                    logger.warn("could not read TinyMCE configuration named '" + getConfig() + "'");
-                }
+                logger.warn("Could not read TinyMCE configuration file named '{}'", getConfig());
             } else {
                 properties.load(stream);
             }
         } catch (IOException e) {
-            if (LogLevel.WARN) {
-                logger.warn("exception thrown when reading TinyMCE configuration '" + getConfig() + "'" + e);
-            }
-            e.printStackTrace();
+            logger.warn("exception thrown when reading TinyMCE configuration '" + getConfig() + "'", e);
         }
     }
 
