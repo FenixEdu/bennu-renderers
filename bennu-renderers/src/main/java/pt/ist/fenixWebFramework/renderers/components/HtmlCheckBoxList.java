@@ -12,11 +12,11 @@ import com.google.common.base.Predicate;
 
 public class HtmlCheckBoxList extends HtmlMultipleValueComponent {
 
-    private HtmlList list;
+    private final HtmlList list;
 
-    private List<HtmlCheckBox> checkBoxes;
+    private final List<HtmlCheckBox> checkBoxes;
 
-    private List<HtmlHiddenField> hiddenFields;
+    private final List<HtmlHiddenField> hiddenFields;
 
     private boolean selectAllShown;
 
@@ -30,7 +30,9 @@ public class HtmlCheckBoxList extends HtmlMultipleValueComponent {
 
     @Override
     public void addClass(String newClass) {
-        this.list.addClass(newClass);
+        if (list != null) {
+            this.list.addClass(newClass);
+        }
     }
 
     public HtmlListItem createItem() {
