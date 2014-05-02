@@ -160,7 +160,8 @@ public class MultiLanguageStringRenderer extends StringRenderer {
     }
 
     protected String getRenderedText(MultiLanguageString mlString) {
-        return mlString.getContent(getUsedLanguage(mlString));
+        Locale locale = getUsedLanguage(mlString);
+        return locale == null ? null : mlString.getContent(locale);
     }
 
 }
