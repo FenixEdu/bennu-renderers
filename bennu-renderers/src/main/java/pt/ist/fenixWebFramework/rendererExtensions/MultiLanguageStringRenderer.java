@@ -141,7 +141,9 @@ public class MultiLanguageStringRenderer extends StringRenderer {
         container.addChild(component);
         container.setIndented(false);
 
-        HtmlComponent languageComponent = renderValue(getUsedLanguage(mlString), null, null);
+        Locale locale = getUsedLanguage(mlString);
+
+        HtmlComponent languageComponent = locale == null ? new HtmlText() : new HtmlText(locale.getDisplayName());
         languageComponent.setClasses(getLanguageClasses());
 
         container.addChild(new HtmlText(" (", false));
