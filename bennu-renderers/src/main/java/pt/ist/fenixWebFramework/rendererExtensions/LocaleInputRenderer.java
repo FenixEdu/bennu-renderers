@@ -45,7 +45,7 @@ public class LocaleInputRenderer extends InputRenderer {
 
     /**
      * The bundle used if <code>key</code> is <code>true</code>
-     * 
+     *
      * @property
      */
     public void setBundle(String bundle) {
@@ -58,7 +58,7 @@ public class LocaleInputRenderer extends InputRenderer {
 
     /**
      * The text or key of the default menu title.
-     * 
+     *
      * @property
      */
     public void setDefaultText(String defaultText) {
@@ -72,7 +72,7 @@ public class LocaleInputRenderer extends InputRenderer {
     /**
      * Don't show the default option, that is, the options meaning no value
      * selected.
-     * 
+     *
      * @property
      */
     public void setDefaultOptionHidden(boolean defaultOptionHidden) {
@@ -85,7 +85,7 @@ public class LocaleInputRenderer extends InputRenderer {
 
     /**
      * Indicates the the default text is a key to a resource bundle.
-     * 
+     *
      * @property
      */
     public void setKey(boolean key) {
@@ -93,7 +93,7 @@ public class LocaleInputRenderer extends InputRenderer {
     }
 
     /**
-     * 
+     *
      * @return Javascript code to be executed when the value is changed.
      */
     public String getOnChange() {
@@ -165,12 +165,16 @@ public class LocaleInputRenderer extends InputRenderer {
                     menu.setOnChange(getOnChange());
                 }
 
+                boolean supported = CoreConfiguration.supportedLocales().contains(selected);
+
                 for (Locale locale : CoreConfiguration.supportedLocales()) {
-                    HtmlMenuOption option = menu.createOption(locale.getDisplayLanguage(I18N.getLocale()));
+                    HtmlMenuOption option = menu.createOption(locale.getDisplayName(I18N.getLocale()));
                     option.setValue(locale.toLanguageTag());
 
-                    if (selected != null && locale.equals(selected)) {
-                        option.setSelected(true);
+                    if (selected != null) {
+                        if (selected.equals(locale) || (!supported && selected.getLanguage().equals(locale.getLanguage()))) {
+                            option.setSelected(true);
+                        }
                     }
                 }
 
