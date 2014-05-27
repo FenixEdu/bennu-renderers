@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>fenix-framework-project</artifactId>
-        <version>1.3.0</version>
+        <version>1.3.2</version>
     </parent>
 
     <artifactId>bennu-renderers-aggregator</artifactId>
@@ -19,6 +19,24 @@
         <url>http://fenixedu.github.io/bennu-renderers</url>
         <tag>HEAD</tag>
     </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/FenixEdu/bennu-renderers/issues/</url>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License v3.0</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/FenixEdu/bennu-renderers</url>
+    </ciManagement>
 
     <properties>
         <version.javax.servlet.jsp.jsp.api>2.2.1-b03</version.javax.servlet.jsp.jsp.api>

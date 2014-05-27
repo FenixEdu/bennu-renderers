@@ -11,6 +11,7 @@
     <artifactId>bennu-renderers-example</artifactId>
     <packaging>jar</packaging>
     <name>Renderers Example</name>
+    <inceptionYear>2014</inceptionYear>
 
     <dependencies>
         <dependency>
