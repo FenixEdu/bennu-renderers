@@ -49,6 +49,11 @@ public class RenderersSessionSecret {
         SessionSecretWrapper(String secret) {
             this.secret = secret;
         }
+
+        @Override
+        public String toString() {
+            return "!!HIDDEN!!";
+        }
     }
 
     public static final class RenderersUserAuthenticationListener implements UserAuthenticationListener {
