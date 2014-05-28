@@ -62,9 +62,13 @@ import javax.servlet.http.HttpServletRequest;
  * @author João Figueiredo
  * @author Luis Cruz
  * 
+ * @deprecated
+ *             Use Bennu's ExceptionHandlerFilter instead
  */
+@Deprecated
 public class ExceptionHandlerFilter implements Filter {
 
+    @Deprecated
     public static interface CustomHandler {
 
         public boolean isCustomizedFor(final Throwable t);
