@@ -5,19 +5,35 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>bennu-renderers-aggregator</artifactId>
-        <version>4.0.2</version>
+        <version>4.0.3</version>
     </parent>
 
     <artifactId>bennu-renderers</artifactId>
     <packaging>jar</packaging>
     <name>Bennu Renderers Framework</name>
+    <inceptionYear>2008</inceptionYear>
 
     <properties>
-        <version.org.fenixedu.bennu>3.0.1</version.org.fenixedu.bennu>
+        <version.org.fenixedu.bennu>3.1.0</version.org.fenixedu.bennu>
         <version.org.fenixedu.fenixedu-commons>1.0.1</version.org.fenixedu.fenixedu-commons>
         <version.com.google.guava.guava>17.0</version.com.google.guava.guava>
         <version.pt.ist.fenix-legacy-tools>2.0.0</version.pt.ist.fenix-legacy-tools>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*.properties</exclude>
+                        <exclude>src/main/java/org/apache/commons/**/*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>

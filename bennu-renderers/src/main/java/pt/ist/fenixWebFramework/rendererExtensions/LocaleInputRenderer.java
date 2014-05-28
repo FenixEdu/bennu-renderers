@@ -1,3 +1,21 @@
+/**
+ * Copyright © 2008 Instituto Superior Técnico
+ *
+ * This file is part of Bennu Renderers Framework.
+ *
+ * Bennu Renderers Framework is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Bennu Renderers Framework is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Bennu Renderers Framework.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package pt.ist.fenixWebFramework.rendererExtensions;
 
 import java.util.Locale;
@@ -45,7 +63,7 @@ public class LocaleInputRenderer extends InputRenderer {
 
     /**
      * The bundle used if <code>key</code> is <code>true</code>
-     * 
+     *
      * @property
      */
     public void setBundle(String bundle) {
@@ -58,7 +76,7 @@ public class LocaleInputRenderer extends InputRenderer {
 
     /**
      * The text or key of the default menu title.
-     * 
+     *
      * @property
      */
     public void setDefaultText(String defaultText) {
@@ -72,7 +90,7 @@ public class LocaleInputRenderer extends InputRenderer {
     /**
      * Don't show the default option, that is, the options meaning no value
      * selected.
-     * 
+     *
      * @property
      */
     public void setDefaultOptionHidden(boolean defaultOptionHidden) {
@@ -85,7 +103,7 @@ public class LocaleInputRenderer extends InputRenderer {
 
     /**
      * Indicates the the default text is a key to a resource bundle.
-     * 
+     *
      * @property
      */
     public void setKey(boolean key) {
@@ -93,7 +111,7 @@ public class LocaleInputRenderer extends InputRenderer {
     }
 
     /**
-     * 
+     *
      * @return Javascript code to be executed when the value is changed.
      */
     public String getOnChange() {
@@ -165,12 +183,16 @@ public class LocaleInputRenderer extends InputRenderer {
                     menu.setOnChange(getOnChange());
                 }
 
+                boolean supported = CoreConfiguration.supportedLocales().contains(selected);
+
                 for (Locale locale : CoreConfiguration.supportedLocales()) {
-                    HtmlMenuOption option = menu.createOption(locale.getDisplayLanguage(I18N.getLocale()));
+                    HtmlMenuOption option = menu.createOption(locale.getDisplayName(I18N.getLocale()));
                     option.setValue(locale.toLanguageTag());
 
-                    if (selected != null && locale.equals(selected)) {
-                        option.setSelected(true);
+                    if (selected != null) {
+                        if (selected.equals(locale) || (!supported && selected.getLanguage().equals(locale.getLanguage()))) {
+                            option.setSelected(true);
+                        }
                     }
                 }
 

@@ -5,12 +5,13 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>bennu-renderers-aggregator</artifactId>
-        <version>4.0.2</version>
+        <version>4.0.3</version>
     </parent>
 
     <artifactId>bennu-renderers-example</artifactId>
     <packaging>jar</packaging>
     <name>Renderers Example</name>
+    <inceptionYear>2014</inceptionYear>
 
     <dependencies>
         <dependency>
