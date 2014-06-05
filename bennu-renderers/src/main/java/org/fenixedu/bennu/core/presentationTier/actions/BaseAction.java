@@ -95,12 +95,9 @@ public abstract class BaseAction extends DispatchAction {
         return t == null ? (T) request.getParameter(attributeName) : t;
     }
 
-    protected <T extends DomainObject> T getDomainObject(final HttpServletRequest request, final String attributeName) {
-        String oid = request.getParameter(attributeName);
-        if (oid == null || oid.isEmpty()) {
-            oid = request.getAttribute(attributeName).toString();
-        }
-        return FenixFramework.getDomainObject(oid);
+    protected <T extends DomainObject> T getDomainObject(final HttpServletRequest request, final String name) {
+        final String parameter = request.getParameter(name);
+        return FenixFramework.getDomainObject(parameter != null ? parameter : (String) request.getAttribute(name));
     }
 
     protected <T> T getRenderedObject() {
