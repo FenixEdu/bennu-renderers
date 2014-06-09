@@ -32,6 +32,8 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
+import com.google.common.base.Strings;
+
 /**
  * This renderer provides a standard way of presenting a {@link MultiLanguageString}. The <tt>MultiLanguageString</tt> is
  * presented as a simple string. The string to be presented
@@ -172,11 +174,26 @@ public class MultiLanguageStringRenderer extends StringRenderer {
     }
 
     private Locale getUsedLanguage(MultiLanguageString mlString) {
-        if (getLanguage() != null) {
-            return new Builder().setLanguageTag(getLanguage()).build();
-        } else {
-            return mlString.getContentLocale();
+        final Locale locale = getLanguage() != null ? new Builder().setLanguageTag(getLanguage()).build() : I18N.getLocale();
+        return getAvailableLocaleFromMls(mlString, locale);
+    }
+
+    private Locale getAvailableLocaleFromMls(final MultiLanguageString mlString, final Locale locale) {
+        if (mlString.getContent(locale) != null) {
+            return locale;
         }
+        final Locale lessSpecific = generifyLocale(locale);
+        return lessSpecific != null ? getAvailableLocaleFromMls(mlString, lessSpecific) : null;
+    }
+
+    private Locale generifyLocale(Locale locale) {
+        if (Strings.isNullOrEmpty(locale.getVariant())) {
+            if (Strings.isNullOrEmpty(locale.getCountry())) {
+                return null;
+            }
+            return new Locale(locale.getLanguage());
+        }
+        return new Locale(locale.getLanguage(), locale.getCountry());
     }
 
     protected String getRenderedText(MultiLanguageString mlString) {
