@@ -138,32 +138,25 @@ public class MultiLanguageStringRenderer extends StringRenderer {
             return super.renderComponent(layout, null, type);
         }
 
-        MultiLanguageString mlString = (MultiLanguageString) object;
-        String value = getRenderedText(mlString);
+        final MultiLanguageString mlString = (MultiLanguageString) object;
+        final String value = getRenderedText(mlString);
 
-        HtmlComponent component = super.renderComponent(layout, value, type);
+        final HtmlComponent component = super.renderComponent(layout, value, type);
 
-        if (mlString.getAllLocales().isEmpty()) {
+        final Locale contentLocale = getUsedLanguage(mlString);
+        final String language = contentLocale.getLanguage();
+
+        if (language.equals(I18N.getLocale().getLanguage()) && !isShowLanguageForced() && !isLanguageShown()) {
             return component;
         }
 
-        component.setLanguage(getUsedLanguage(mlString).toLanguageTag());
-
-        if (I18N.getLocale().equals(mlString.getContentLocale()) && !isShowLanguageForced()) {
-            return component;
-        }
-
-        if (!isLanguageShown() && !isShowLanguageForced()) {
-            return component;
-        }
+        component.setLanguage(contentLocale.toLanguageTag());
 
         HtmlContainer container = isInline() ? new HtmlInlineContainer() : new HtmlBlockContainer();
         container.addChild(component);
         container.setIndented(false);
 
-        Locale locale = getUsedLanguage(mlString);
-
-        HtmlComponent languageComponent = locale == null ? new HtmlText() : new HtmlText(locale.getDisplayName());
+        HtmlComponent languageComponent = contentLocale == null ? new HtmlText() : new HtmlText(contentLocale.getDisplayName(I18N.getLocale()));
         languageComponent.setClasses(getLanguageClasses());
 
         container.addChild(new HtmlText(" (", false));
@@ -183,7 +176,7 @@ public class MultiLanguageStringRenderer extends StringRenderer {
             return locale;
         }
         final Locale lessSpecific = generifyLocale(locale);
-        return lessSpecific != null ? getAvailableLocaleFromMls(mlString, lessSpecific) : null;
+        return lessSpecific != null ? getAvailableLocaleFromMls(mlString, lessSpecific) : mlString.getContentLocale();
     }
 
     private Locale generifyLocale(Locale locale) {
