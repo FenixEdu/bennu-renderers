@@ -142,6 +142,9 @@ public class MultiLanguageStringRenderer extends StringRenderer {
         final String value = getRenderedText(mlString);
 
         final HtmlComponent component = super.renderComponent(layout, value, type);
+        if (mlString.isEmpty()) {
+            return component;
+        }
 
         final Locale contentLocale = getUsedLanguage(mlString);
         final String language = contentLocale.getLanguage();
@@ -156,14 +159,18 @@ public class MultiLanguageStringRenderer extends StringRenderer {
         container.addChild(component);
         container.setIndented(false);
 
-        HtmlComponent languageComponent = contentLocale == null ? new HtmlText() : new HtmlText(contentLocale.getDisplayName(I18N.getLocale()));
+        HtmlComponent languageComponent = contentLocale == null ? new HtmlText() : new HtmlText("(" + simpleLocaleName(contentLocale) + ")");
         languageComponent.setClasses(getLanguageClasses());
+        languageComponent.addClass("otherLanguage");
 
-        container.addChild(new HtmlText(" (", false));
         container.addChild(languageComponent);
-        container.addChild(new HtmlText(")", false));
 
         return container;
+    }
+
+    private String simpleLocaleName(final Locale locale) {
+        final Locale result = locale.getCountry() == null ? locale : new Locale(locale.getLanguage());
+        return result.getDisplayName(I18N.getLocale());
     }
 
     private Locale getUsedLanguage(MultiLanguageString mlString) {

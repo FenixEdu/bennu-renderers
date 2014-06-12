@@ -10,7 +10,7 @@
 
     <artifactId>bennu-renderers-aggregator</artifactId>
     <name>Bennu Renderers Framework Aggregator</name>
-    <version>4.0.5</version>
+    <version>4.0.6</version>
     <packaging>pom</packaging>
 
     <scm>
