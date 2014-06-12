@@ -146,7 +146,8 @@ public class MultiLanguageStringRenderer extends StringRenderer {
         final Locale contentLocale = getUsedLanguage(mlString);
         final String language = contentLocale.getLanguage();
 
-        if (language.equals(I18N.getLocale().getLanguage()) && !isShowLanguageForced() && !isLanguageShown()) {
+        if ((language.equals(I18N.getLocale().getLanguage()) && !isShowLanguageForced() && !isLanguageShown())
+                || mlString.isEmpty()) {
             return component;
         }
 
