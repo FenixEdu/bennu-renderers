@@ -142,6 +142,9 @@ public class MultiLanguageStringRenderer extends StringRenderer {
         final String value = getRenderedText(mlString);
 
         final HtmlComponent component = super.renderComponent(layout, value, type);
+        if (mlString.isEmpty()) {
+            return component;
+        }
 
         final Locale contentLocale = getUsedLanguage(mlString);
         final String language = contentLocale.getLanguage();
