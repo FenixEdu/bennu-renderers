@@ -142,13 +142,13 @@ public class FormTag extends ContextTag {
             String path = ((HttpServletRequest) pageContext.getRequest()).getContextPath();
             formHead.append("<script type=\"text/javascript\" src=\"");
             formHead.append(path);
-            formHead.append("/javaScript/jquery.ui.draggable.js\"></script>\n");
+            formHead.append("/bennu-renderers/js/jquery.ui.draggable.js\"></script>\n");
             formHead.append("<script type=\"text/javascript\" src=\"");
             formHead.append(path);
-            formHead.append("/javaScript/jquery.alerts.js\"></script>\n");
+            formHead.append("/bennu-renderers/js/jquery.alerts.js\"></script>\n");
             formHead.append("<script type=\"text/javascript\" src=\"");
             formHead.append(path);
-            formHead.append("/javaScript/alertHandlers.js\"></script>\n");
+            formHead.append("/bennu-renderers/js/alertHandlers.js\"></script>\n");
         }
 
         formHead.append("<form ");
@@ -173,7 +173,6 @@ public class FormTag extends ContextTag {
         if (getStyle() != null) {
             formHead.append("style=\"" + getStyle() + "\" ");
         }
-
 
         formHead.append("method=\"post\" class='fenix-rendered'>\n");
         try {
