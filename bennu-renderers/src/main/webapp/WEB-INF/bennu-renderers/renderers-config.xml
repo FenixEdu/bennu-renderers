@@ -134,6 +134,14 @@
        	<property name="languageShown" value="false"/>
     </renderer>
 
+    <renderer type="org.fenixedu.commons.i18n.LocalizedString" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringRenderer">
+    	<property name="languageShown" value="false"/>
+    </renderer>
+    <renderer type="org.fenixedu.commons.i18n.LocalizedString" layout="short" class="pt.ist.fenixWebFramework.rendererExtensions.ShortMultiLanguageStringRenderer">
+       	<property name="length" value="40"/>
+       	<property name="languageShown" value="false"/>
+    </renderer>
+
     <!-- <renderer type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="short-html" class="pt.ist.fenixWebFramework.rendererExtensions.ShortMultiLanguageStringRenderer">  -->
 	<renderer type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="short-html" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringRenderer">
     	<property name="escaped" value="false"/>
@@ -337,6 +345,10 @@
     <renderer mode="input" type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringInputRenderer"/>
     <renderer mode="input" type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="area" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageTextInputRenderer"/>
     <renderer mode="input" type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="rich-text" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageRichTextInputRenderer"/>
+
+    <renderer mode="input" type="org.fenixedu.commons.i18n.LocalizedString" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringInputRenderer"/>
+    <renderer mode="input" type="org.fenixedu.commons.i18n.LocalizedString" layout="area" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageTextInputRenderer"/>
+    <renderer mode="input" type="org.fenixedu.commons.i18n.LocalizedString" layout="rich-text" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageRichTextInputRenderer"/>
 	    
     <renderer mode="input" type="java.lang.Number" class="pt.ist.fenixWebFramework.renderers.IntegerInputRenderer"/>
 
