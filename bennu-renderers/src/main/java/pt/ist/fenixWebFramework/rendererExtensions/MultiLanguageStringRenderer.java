@@ -139,7 +139,7 @@ public class MultiLanguageStringRenderer extends StringRenderer {
             return super.renderComponent(layout, null, type);
         }
 
-        final LocalizedString mlString = (LocalizedString) object;
+        final LocalizedString mlString = getLocalized(object);
         final String value = getRenderedText(mlString);
 
         final HtmlComponent component = super.renderComponent(layout, value, type);
