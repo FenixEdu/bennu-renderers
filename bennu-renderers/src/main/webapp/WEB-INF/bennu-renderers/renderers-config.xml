@@ -513,7 +513,7 @@
     <!--@ Presents a list were each object is presented with it's own layout and schema in a list item. Each item has
           an checkbox associated. This layout allows to choose several objects from a list. Only the choosen object will
           be part o the list that is created and used as the slot's value.  -->
-    <renderer mode="input" type="java.util.List" layout="option-select" class="pt.ist.fenixWebFramework.rendererExtensions.InputCheckBoxListRenderer">
+    <renderer mode="input" type="java.util.Collection" layout="option-select" class="pt.ist.fenixWebFramework.rendererExtensions.InputCheckBoxListRenderer">
     	<property name="eachClasses" value="dinline" />
     </renderer>
     
