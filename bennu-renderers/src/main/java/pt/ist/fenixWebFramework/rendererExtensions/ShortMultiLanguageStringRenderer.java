@@ -18,10 +18,11 @@
  */
 package pt.ist.fenixWebFramework.rendererExtensions;
 
+import org.fenixedu.commons.i18n.LocalizedString;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
-import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 /**
  * This renderer has the same behaviour as the
@@ -72,7 +73,7 @@ public class ShortMultiLanguageStringRenderer extends MultiLanguageStringRendere
     }
 
     @Override
-    protected String getRenderedText(MultiLanguageString mlString) {
+    protected String getRenderedText(LocalizedString mlString) {
         String content = super.getRenderedText(mlString);
 
         if (content != null && getLength() != null) {
@@ -88,7 +89,7 @@ public class ShortMultiLanguageStringRenderer extends MultiLanguageStringRendere
     protected HtmlComponent renderComponent(Layout layout, Object object, Class type) {
         HtmlComponent component = super.renderComponent(layout, object, type);
 
-        MultiLanguageString mlString = (MultiLanguageString) object;
+        LocalizedString mlString = getLocalized(object);
 
         String previous = super.getRenderedText(mlString);
         String current = getRenderedText(mlString);

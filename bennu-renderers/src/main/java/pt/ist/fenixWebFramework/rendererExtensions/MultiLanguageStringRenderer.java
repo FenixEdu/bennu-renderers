@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Locale.Builder;
 
 import org.fenixedu.commons.i18n.I18N;
+import org.fenixedu.commons.i18n.LocalizedString;
 
 import pt.ist.fenixWebFramework.renderers.StringRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
@@ -138,7 +139,7 @@ public class MultiLanguageStringRenderer extends StringRenderer {
             return super.renderComponent(layout, null, type);
         }
 
-        final MultiLanguageString mlString = (MultiLanguageString) object;
+        final LocalizedString mlString = getLocalized(object);
         final String value = getRenderedText(mlString);
 
         final HtmlComponent component = super.renderComponent(layout, value, type);
@@ -159,7 +160,9 @@ public class MultiLanguageStringRenderer extends StringRenderer {
         container.addChild(component);
         container.setIndented(false);
 
-        HtmlComponent languageComponent = contentLocale == null ? new HtmlText() : new HtmlText("(" + simpleLocaleName(contentLocale) + ")");
+        HtmlComponent languageComponent =
+                contentLocale == null ? new HtmlText() : new HtmlText(" (" + contentLocale.getDisplayLanguage(I18N.getLocale())
+                        + ")");
         languageComponent.setClasses(getLanguageClasses());
         languageComponent.addClass("otherLanguage");
 
@@ -168,22 +171,21 @@ public class MultiLanguageStringRenderer extends StringRenderer {
         return container;
     }
 
-    private String simpleLocaleName(final Locale locale) {
-        final Locale result = locale.getCountry() == null ? locale : new Locale(locale.getLanguage());
-        return result.getDisplayName(I18N.getLocale());
-    }
-
-    private Locale getUsedLanguage(MultiLanguageString mlString) {
+    private Locale getUsedLanguage(LocalizedString mlString) {
         final Locale locale = getLanguage() != null ? new Builder().setLanguageTag(getLanguage()).build() : I18N.getLocale();
         return getAvailableLocaleFromMls(mlString, locale);
     }
 
-    private Locale getAvailableLocaleFromMls(final MultiLanguageString mlString, final Locale locale) {
+    private Locale getAvailableLocaleFromMls(final LocalizedString mlString, final Locale locale) {
         if (mlString.getContent(locale) != null) {
             return locale;
         }
         final Locale lessSpecific = generifyLocale(locale);
-        return lessSpecific != null ? getAvailableLocaleFromMls(mlString, lessSpecific) : mlString.getContentLocale();
+        if (lessSpecific != null) {
+            return getAvailableLocaleFromMls(mlString, lessSpecific);
+        } else {
+            return mlString.getLocales().isEmpty() ? null : mlString.getLocales().iterator().next();
+        }
     }
 
     private Locale generifyLocale(Locale locale) {
@@ -196,9 +198,19 @@ public class MultiLanguageStringRenderer extends StringRenderer {
         return new Locale(locale.getLanguage(), locale.getCountry());
     }
 
-    protected String getRenderedText(MultiLanguageString mlString) {
+    protected String getRenderedText(LocalizedString mlString) {
         Locale locale = getUsedLanguage(mlString);
         return locale == null ? null : mlString.getContent(locale);
+    }
+
+    protected LocalizedString getLocalized(Object object) {
+        if (object instanceof LocalizedString) {
+            return (LocalizedString) object;
+        } else if (object instanceof MultiLanguageString) {
+            return ((MultiLanguageString) object).toLocalizedString();
+        } else {
+            return null;
+        }
     }
 
 }

@@ -134,6 +134,14 @@
        	<property name="languageShown" value="false"/>
     </renderer>
 
+    <renderer type="org.fenixedu.commons.i18n.LocalizedString" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringRenderer">
+    	<property name="languageShown" value="false"/>
+    </renderer>
+    <renderer type="org.fenixedu.commons.i18n.LocalizedString" layout="short" class="pt.ist.fenixWebFramework.rendererExtensions.ShortMultiLanguageStringRenderer">
+       	<property name="length" value="40"/>
+       	<property name="languageShown" value="false"/>
+    </renderer>
+
     <!-- <renderer type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="short-html" class="pt.ist.fenixWebFramework.rendererExtensions.ShortMultiLanguageStringRenderer">  -->
 	<renderer type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="short-html" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringRenderer">
     	<property name="escaped" value="false"/>
@@ -337,6 +345,10 @@
     <renderer mode="input" type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringInputRenderer"/>
     <renderer mode="input" type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="area" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageTextInputRenderer"/>
     <renderer mode="input" type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="rich-text" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageRichTextInputRenderer"/>
+
+    <renderer mode="input" type="org.fenixedu.commons.i18n.LocalizedString" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringInputRenderer"/>
+    <renderer mode="input" type="org.fenixedu.commons.i18n.LocalizedString" layout="area" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageTextInputRenderer"/>
+    <renderer mode="input" type="org.fenixedu.commons.i18n.LocalizedString" layout="rich-text" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageRichTextInputRenderer"/>
 	    
     <renderer mode="input" type="java.lang.Number" class="pt.ist.fenixWebFramework.renderers.IntegerInputRenderer"/>
 
@@ -501,7 +513,7 @@
     <!--@ Presents a list were each object is presented with it's own layout and schema in a list item. Each item has
           an checkbox associated. This layout allows to choose several objects from a list. Only the choosen object will
           be part o the list that is created and used as the slot's value.  -->
-    <renderer mode="input" type="java.util.List" layout="option-select" class="pt.ist.fenixWebFramework.rendererExtensions.InputCheckBoxListRenderer">
+    <renderer mode="input" type="java.util.Collection" layout="option-select" class="pt.ist.fenixWebFramework.rendererExtensions.InputCheckBoxListRenderer">
     	<property name="eachClasses" value="dinline" />
     </renderer>
     

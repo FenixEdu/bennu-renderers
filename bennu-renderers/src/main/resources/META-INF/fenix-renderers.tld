@@ -1339,4 +1339,30 @@
     
   </tag>
 
+  <function>
+    <name>checksum</name>
+    <function-class>pt.ist.fenixWebFramework.servlets.RenderersELFunctions</function-class>
+    <function-signature>java.lang.String checksumForRequest(java.lang.String)</function-signature>
+    <description>
+        Injects the required Request Checksum in the given URL. It also takes care of
+        properly injecting the context path into the requested.
+    </description>
+    <example>
+        <a href="${fr:checksum('/shopping.do?method=create')}">Create</a>
+    </example>
+  </function>
+
+  <function>
+    <name>message</name>
+    <function-class>pt.ist.fenixWebFramework.servlets.RenderersELFunctions</function-class>
+    <function-signature>java.lang.String message(java.lang.String, java.lang.String)</function-signature>
+    <description>
+        Presents the requested message from the given resource bundle. This function is equivalent
+        of invoking BundleUtil.getString
+    </description>
+    <example>
+        ${fr:message('resources.ExampleResources', 'label.example.shoppinglist.create')}
+    </example>
+  </function>
+
 </taglib>

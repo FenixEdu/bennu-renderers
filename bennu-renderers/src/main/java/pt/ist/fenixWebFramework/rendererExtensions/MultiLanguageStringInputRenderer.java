@@ -32,6 +32,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.fenixedu.commons.i18n.I18N;
+import org.fenixedu.commons.i18n.LocalizedString;
 
 import pt.ist.fenixWebFramework.rendererExtensions.validators.MultiLanguageStringValidator;
 import pt.ist.fenixWebFramework.renderers.InputRenderer;
@@ -285,7 +286,7 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
 
         @Override
         public HtmlComponent createComponent(Object object, Class type) {
-            MultiLanguageString mls = (MultiLanguageString) object;
+            LocalizedString mls = getLocalized(object);
 
             MetaSlotKey key = ((MetaSlot) getInputContext().getMetaObject()).getKey();
             HtmlBlockContainer container = getTopContainer();
@@ -307,7 +308,7 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
                 map = getLanguageMap(true);
 
                 int index = 0;
-                for (Locale locale : mls.getAllLocales()) {
+                for (Locale locale : mls.getLocales()) {
                     map.put(index++, new LanguageBean(locale, mls.getContent(locale)));
                 }
             }
@@ -499,13 +500,23 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
 
     }
 
+    protected LocalizedString getLocalized(Object object) {
+        if (object instanceof LocalizedString) {
+            return (LocalizedString) object;
+        } else if (object instanceof MultiLanguageString) {
+            return ((MultiLanguageString) object).toLocalizedString();
+        } else {
+            return null;
+        }
+    }
+
     public static class MultiLanguageStringConverter extends Converter {
 
         @Override
         public Object convert(Class type, Object value) {
             String text = (String) value;
 
-            MultiLanguageString mls = new MultiLanguageString();
+            LocalizedString mls = new LocalizedString();
 
             Collection<LanguageBean> allLanguageBean = LanguageBean.importAllFromString(text);
             for (LanguageBean bean : allLanguageBean) {
@@ -514,7 +525,7 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
                 }
             }
 
-            return mls;
+            return type == MultiLanguageString.class ? MultiLanguageString.fromLocalizedString(mls) : mls;
         }
 
     }

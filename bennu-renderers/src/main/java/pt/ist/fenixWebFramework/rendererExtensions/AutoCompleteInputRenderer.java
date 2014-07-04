@@ -377,7 +377,7 @@ public class AutoCompleteInputRenderer extends InputRenderer {
         }
 
         protected void addSingleScript(HtmlContainer container, HtmlLink link, String scriptName) {
-            link.setUrl("/javaScript/" + scriptName);
+            link.setUrl("/bennu-renderers/js/" + scriptName);
             HtmlScript script = new HtmlScript("text/javascript", link.calculateUrl(), true);
             container.addChild(script);
         }
