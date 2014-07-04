@@ -19,9 +19,6 @@
 
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html"%>
-<%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean"%>
-<%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic"%>
 <%@ taglib uri="http://fenix-ashes.ist.utl.pt/fenix-renderers" prefix="fr"%>
 
 <fr:view name="list">
@@ -42,6 +39,6 @@
     </fr:layout>
 </fr:view>
 
-<html:link action="shopping.do?method=create">
-    <bean:message bundle="EXAMPLE_RESOURCES" key="label.example.shoppinglist.create" />
-</html:link>
+<a href="${fr:checksum('/shopping.do?method=create')}">
+    ${fr:message('resources.ExampleResources', 'label.example.shoppinglist.create')}
+</a>
