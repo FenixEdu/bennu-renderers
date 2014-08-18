@@ -18,25 +18,52 @@
     along with Bennu Renderers Framework.  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+<%@ taglib uri="http://fenix-ashes.ist.utl.pt/fenix-renderers" prefix="fr"%>
 <%
 response.setStatus(403);
 %>
 <!DOCTYPE html>
-<html lang="en">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unauthorized</title>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/js/jquery.min.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/portal.js"></script>
+    <title>
+        ${fr:message('resources.RendererResources', 'title.not.authorized')}
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+        body {
+            font: 16px 'Roboto', sans-serif;
+            background-color: #F1F1F1;
+            font-weight:100;
+            color: #617383;
+        }
+        .container {
+            margin: 120px auto 0 auto;
+            width: 700px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 7px;
+        }
+        .content { margin-top: 25px; }
+        .right { float: right; }
+        .title {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            font-size: 22px;
+            min-height: 35px;
+        }
+    </style>
 </head>
-<body style="display: none">
-	<div id="portal-container">
-		<div class="container">
-			<div class="text-center">
-				<h1>Unauthorized</h1>
-				<br />
-				<p>This is not the page you're looking for!</p>
-			</div>
-		</div>
-	</div>
+
+<body>
+    <div class="container">
+        <div class="title">
+            ${fr:message('resources.RendererResources', 'title.not.authorized')}
+            <span class="right">
+                <img src="${pageContext.request.contextPath}/api/bennu-portal/configuration/logo"/>
+            </span>
+        </div>
+        <div class="content">
+            ${fr:message('resources.RendererResources', 'message.not.authorized')}
+        </div>
+    </div>
 </body>
