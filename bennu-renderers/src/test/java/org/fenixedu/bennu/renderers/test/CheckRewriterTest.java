@@ -104,6 +104,15 @@ public class CheckRewriterTest {
         checkNoChange("<!-- NO_CHECKSUM --><a href=\"xpto\">x</a>");
     }
 
+    @Test
+    public void testNoChecksumOnHashTagLink() {
+        checkNoChange("<a href=\"#xpto\">xpto</a>");
+
+        checkNoChange("<a href=\"#\">xpto</a>");
+
+        checkNoChange("<a href=\"#/system/info\">xpto</a>");
+    }
+
     private void checkNoChange(String value) {
         assertThat(EMPTY_REWRITER.rewrite(value), is(value));
     }
