@@ -42,7 +42,20 @@ public class RenderersELFunctions {
      *         The final URL, with the context path and request checksum.
      */
     public static String checksumForRequest(String targetUrl) {
-        HttpServletRequest request = RenderersRequestProcessorImpl.getCurrentRequest();
+        return checksumForRequest(RenderersRequestProcessorImpl.getCurrentRequest(), targetUrl);
+    }
+
+    /**
+     * Injects the context path and request checksum in the given path.
+     * 
+     * @param request
+     *            The request
+     * @param targetUrl
+     *            The URL to point to. Must not include the context path
+     * @return
+     *         The final URL, with the context path and request checksum.
+     */
+    public static String checksumForRequest(HttpServletRequest request, String targetUrl) {
         String ctxPath = request.getContextPath();
         return ctxPath + GenericChecksumRewriter.injectChecksumInUrl(ctxPath, targetUrl, request.getSession(false));
     }

@@ -136,6 +136,13 @@ public final class GenericChecksumRewriter {
                                         && (indexOfHttps < 0 || indexOfHttps > indexOfHrefBodyEnd)) {
 
                                     final int indexOfCardinal = source.indexOf(CARDINAL, indexOfHrefBodyStart);
+
+                                    // For hash-based URLs
+                                    if (indexOfCardinal == indexOfHrefBodyStart) {
+                                        iOffset = continueToNextToken(response, source, iOffset, indexOfAclose);
+                                        continue;
+                                    }
+
                                     boolean hasCardinal =
                                             indexOfCardinal > indexOfHrefBodyStart && indexOfCardinal < indexOfHrefBodyEnd;
                                     if (hasCardinal) {

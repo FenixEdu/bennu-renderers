@@ -1353,6 +1353,19 @@
   </function>
 
   <function>
+    <name>checksumLink</name>
+    <function-class>pt.ist.fenixWebFramework.servlets.RenderersELFunctions</function-class>
+    <function-signature>java.lang.String checksumForRequest(javax.servlet.http.HttpServletRequest, java.lang.String)</function-signature>
+    <description>
+        Injects the required Request Checksum in the given URL, with the given request.
+        It also takes care of properly injecting the context path into the requested.
+    </description>
+    <example>
+        <a href="${fr:checksumLink(pageContext.request, '/shopping.do?method=create')}">Create</a>
+    </example>
+  </function>
+
+  <function>
     <name>message</name>
     <function-class>pt.ist.fenixWebFramework.servlets.RenderersELFunctions</function-class>
     <function-signature>java.lang.String message(java.lang.String, java.lang.String)</function-signature>
