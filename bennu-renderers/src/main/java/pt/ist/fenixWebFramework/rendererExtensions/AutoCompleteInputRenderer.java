@@ -174,7 +174,8 @@ public class AutoCompleteInputRenderer extends InputRenderer {
     /**
      * Allows you select the presentation format. If not set the value of the
      * field given by {@link #setLabelField(String) labelField} is used. See
-     * {@link pt.ist.fenixWebFramework.renderers.utils.RenderUtils#getFormattedProperties(String, Object)} to see the accepted
+     * {@link pt.ist.fenixWebFramework.renderers.utils.RenderUtils#getFormattedProperties(String, Object)} to
+     * see the accepted
      * format syntax.
      * 
      * @property
@@ -390,7 +391,9 @@ public class AutoCompleteInputRenderer extends InputRenderer {
 
             link.setUrl(SERVLET_URI);
             link.setParameter("args", getFormatedArgs());
-            link.setParameter("labelField", getLabelField());
+            if (getLabelField() != null) {
+                link.setParameter("labelField", getLabelField());
+            }
             link.setParameter("valueField", getValueField()); // TODO: allow
             // configuration,1
             // needs also
