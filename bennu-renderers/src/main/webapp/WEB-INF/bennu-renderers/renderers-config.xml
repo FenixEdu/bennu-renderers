@@ -19,7 +19,6 @@
     along with Bennu Renderers Framework.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<!DOCTYPE renderers-config SYSTEM "../fenix-renderers-config.dtd" []>
 <renderers-config>
 	<renderer type="pt.ist.fenixWebFramework.renderers.components.HtmlComponent" class="pt.ist.fenixWebFramework.renderers.StandardComponentRenderer"/>
   
