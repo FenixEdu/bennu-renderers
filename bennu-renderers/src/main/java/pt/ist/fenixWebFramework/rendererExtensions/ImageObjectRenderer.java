@@ -23,6 +23,7 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlImage;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 
 public class ImageObjectRenderer extends OutputRenderer {
 
@@ -81,6 +82,12 @@ public class ImageObjectRenderer extends OutputRenderer {
                 link = RenderUtils.getModuleRelativePath("") + link;
             } else if (isContextRelative()) {
                 link = RenderUtils.getContextRelativePath("") + link;
+            }
+            if (link.contains(".do")) {
+                String checksum =
+                        GenericChecksumRewriter.calculateChecksum(link, getContext().getViewState().getRequest()
+                                .getSession(false));
+                link = link + (link.contains("?") ? '&' : '?') + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "=" + checksum;
             }
             image.setSource(link);
             return image;

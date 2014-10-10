@@ -34,7 +34,6 @@ public final class GenericChecksumRewriter {
 
     private static final String OPEN_A = "<a ";
     private static final String OPEN_FORM = "<form ";
-    private static final String OPEN_IMG = "<img ";
 
     private static final String PREFIX_JAVASCRIPT = "javascript:";
     private static final String PREFIX_MAILTO = "mailto:";
@@ -114,9 +113,7 @@ public final class GenericChecksumRewriter {
 
             final int indexOfAopen = source.indexOf(OPEN_A, iOffset);
             final int indexOfFormOpen = source.indexOf(OPEN_FORM, iOffset);
-            final int indexOfImgOpen = source.indexOf(OPEN_IMG, iOffset);
-            if (indexOfAopen >= 0 && (indexOfFormOpen < 0 || indexOfAopen < indexOfFormOpen)
-                    && (indexOfImgOpen < 0 || indexOfAopen < indexOfImgOpen)) {
+            if (indexOfAopen >= 0 && (indexOfFormOpen < 0 || indexOfAopen < indexOfFormOpen)) {
                 if (!isPrefixed(source, indexOfAopen)) {
                     final int indexOfAclose = source.indexOf(CLOSE, indexOfAopen);
                     if (indexOfAclose >= 0) {
@@ -206,7 +203,7 @@ public final class GenericChecksumRewriter {
                     iOffset = continueToNextToken(response, source, iOffset, indexOfAopen);
                     continue;
                 }
-            } else if (indexOfFormOpen >= 0 && (indexOfImgOpen < 0 || indexOfFormOpen < indexOfImgOpen)) {
+            } else if (indexOfFormOpen >= 0) {
                 if (!isPrefixed(source, indexOfFormOpen)) {
                     final int indexOfFormClose = source.indexOf(CLOSE, indexOfFormOpen);
                     if (indexOfFormClose >= 0) {
@@ -235,41 +232,6 @@ public final class GenericChecksumRewriter {
                     }
                 } else {
                     iOffset = continueToNextToken(response, source, iOffset, indexOfFormOpen);
-                    continue;
-                }
-            } else if (indexOfImgOpen >= 0) {
-                if (!isPrefixed(source, indexOfImgOpen)) {
-                    final int indexOfImgClose = source.indexOf(CLOSE, indexOfImgOpen);
-                    if (indexOfImgClose >= 0) {
-                        final int indexOfSrcBodyStart = findSrcBodyStart(source, indexOfImgOpen, indexOfImgClose);
-                        if (indexOfSrcBodyStart >= 0) {
-                            final int indexOfSrcBodyEnd = findSrcBodyEnd(source, indexOfSrcBodyStart);
-                            if (indexOfSrcBodyEnd >= 0) {
-                                response.append(source, iOffset, indexOfSrcBodyEnd);
-
-                                final String checksum = calculateChecksum(source, indexOfSrcBodyStart, indexOfSrcBodyEnd);
-                                final int indexOfQmark = source.indexOf(QUESTION_MARK, indexOfSrcBodyStart);
-                                if (indexOfQmark == -1 || indexOfQmark > indexOfSrcBodyEnd) {
-                                    response.append('?');
-                                } else {
-                                    response.append("&amp;");
-                                }
-                                response.append(CHECKSUM_ATTRIBUTE_NAME);
-                                response.append("=");
-                                response.append(checksum);
-
-                                final int nextChar = indexOfImgClose + 1;
-                                response.append(source, indexOfSrcBodyEnd, nextChar);
-                                iOffset = nextChar;
-                                continue;
-                            }
-                        } else {
-                            iOffset = continueToNextToken(response, source, iOffset, indexOfImgOpen);
-                            continue;
-                        }
-                    }
-                } else {
-                    iOffset = continueToNextToken(response, source, iOffset, indexOfImgOpen);
                     continue;
                 }
             }
@@ -328,36 +290,8 @@ public final class GenericChecksumRewriter {
         return i;
     }
 
-    private int findSrcBodyEnd(final String source, final int offset) {
-        int i = offset;
-        char delimiter = source.charAt(offset - 1);
-        if (delimiter == '"' || delimiter == '\'') {
-            for (char c = source.charAt(i); c != delimiter; c = source.charAt(i)) {
-                if (++i == source.length()) {
-                    return -1;
-                }
-            }
-        } else {
-            for (char c = source.charAt(i); c != ' ' && c != '>'; c = source.charAt(i)) {
-                if (++i == source.length()) {
-                    return -1;
-                }
-            }
-        }
-        return i;
-    }
-
     private int findHrefBodyStart(final String source, final int offset, int limit) {
         final int indexOfHref = source.indexOf("href=", offset);
-        if (indexOfHref < 0 || indexOfHref >= limit) {
-            return -1;
-        }
-        final int nextChar = indexOfHref + 5;
-        return source.charAt(nextChar) == '"' || source.charAt(nextChar) == '\'' ? nextChar + 1 : nextChar;
-    }
-
-    private int findSrcBodyStart(final String source, final int offset, int limit) {
-        final int indexOfHref = source.indexOf("src=", offset);
         if (indexOfHref < 0 || indexOfHref >= limit) {
             return -1;
         }

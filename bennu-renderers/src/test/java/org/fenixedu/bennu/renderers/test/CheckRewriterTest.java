@@ -75,6 +75,11 @@ public class CheckRewriterTest {
     }
 
     @Test
+    public void imageTagDoesNotGetRewritten() {
+        checkNoChange("<img src=\"xpto\" />");
+    }
+
+    @Test
     public void imgTagWithoutSrcDoesntPreventFurtherInjection() {
         assertThat(EMPTY_REWRITER.rewrite("<img alt=\"\" /> <a href=\"xpto\">x</a>"),
                 is("<img alt=\"\" /> <a href=\"xpto?_request_checksum_=7788b911f74d17e780634c375a45a007beaeae27\">x</a>"));
