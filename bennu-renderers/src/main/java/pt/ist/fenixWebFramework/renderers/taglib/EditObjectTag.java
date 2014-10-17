@@ -20,17 +20,17 @@ package pt.ist.fenixWebFramework.renderers.taglib;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
-
-import org.apache.struts.taglib.TagUtils;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
@@ -50,11 +50,22 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
+import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 import pt.ist.fenixWebFramework.renderers.validators.RequiredValidator;
 import pt.utl.ist.fenix.tools.util.Pair;
 
 public class EditObjectTag extends BaseRenderObjectTag implements ValidatorContainerTag {
+
+    private static final Collection<Class<?>> formTagTypes = new ConcurrentLinkedQueue<>();
+
+    static {
+        formTagTypes.add(FormTag.class);
+    }
+
+    public static void registerFormTagType(Class<?> type) {
+        formTagTypes.add(type);
+    }
 
     private boolean nested;
 
@@ -282,12 +293,10 @@ public class EditObjectTag extends BaseRenderObjectTag implements ValidatorConta
     }
 
     private boolean hasFormParent() {
-        if (findAncestorWithClass(this, org.apache.struts.taglib.html.FormTag.class) != null) {
-            return true;
-        }
-
-        if (findAncestorWithClass(this, pt.ist.fenixWebFramework.renderers.taglib.FormTag.class) != null) {
-            return true;
+        for (Class<?> type : formTagTypes) {
+            if (findAncestorWithClass(this, type) != null) {
+                return true;
+            }
         }
 
         return false;
@@ -310,7 +319,7 @@ public class EditObjectTag extends BaseRenderObjectTag implements ValidatorConta
             action = getCurrentPath();
         }
 
-        String actionMappingURL = TagUtils.getInstance().getActionMappingURL(action, this.pageContext);
+        String actionMappingURL = RenderUtils.getActionMappingURL(action, pageContext);
         return response.encodeURL(actionMappingURL);
     }
 

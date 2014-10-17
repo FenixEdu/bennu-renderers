@@ -27,13 +27,10 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.config.ModuleConfig;
-import org.apache.struts.taglib.TagUtils;
 import org.fenixedu.bennu.core.security.Authenticate;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
@@ -184,8 +181,19 @@ public abstract class BaseRenderObjectTag extends TagSupport {
         getRenderProperties().setProperty(name, value);
     }
 
-    protected int getScopeByName(String scope) throws JspException {
-        return TagUtils.getInstance().getScope(scope);
+    public static int getScopeByName(String scope) throws JspException {
+        switch (scope.toLowerCase()) {
+        case "request":
+            return PageContext.REQUEST_SCOPE;
+        case "page":
+            return PageContext.PAGE_SCOPE;
+        case "session":
+            return PageContext.SESSION_SCOPE;
+        case "application":
+            return PageContext.APPLICATION_SCOPE;
+        default:
+            throw new IllegalArgumentException("Cannot find page scope: " + scope);
+        }
     }
 
     protected Object getTargetObject() throws JspException {
@@ -307,30 +315,30 @@ public abstract class BaseRenderObjectTag extends TagSupport {
         viewState.setInputDestination(getInputDestination());
 
         String currentPath = getCurrentPath();
-        ModuleConfig module = TagUtils.getInstance().getModuleConfig(pageContext);
+        String module = RenderUtils.getModule((HttpServletRequest) pageContext.getRequest());
 
         for (String name : getDestinations().keySet()) {
             ViewDestination destination = getDestinations().get(name);
 
-            viewState.addDestination(name, normalizeDestination(destination, currentPath, module.getPrefix()));
+            viewState.addDestination(name, normalizeDestination(destination, currentPath, module));
         }
     }
 
     protected ViewDestination getInputDestination() {
         String currentPath = getCurrentPath();
-        ModuleConfig module = TagUtils.getInstance().getModuleConfig(pageContext);
+        String module = RenderUtils.getModule((HttpServletRequest) pageContext.getRequest());
 
-        return new ViewDestination(currentPath, module.getPrefix(), false);
+        return new ViewDestination(currentPath, module, false);
     }
 
     protected String getCurrentPath() {
-        ActionMapping mapping = (ActionMapping) pageContext.findAttribute(Globals.MAPPING_KEY);
+        String mapping = RenderUtils.getCurrentActionMappingURL(pageContext);
 
         String currentPath;
         String contextPath = ((HttpServletRequest) pageContext.getRequest()).getContextPath();
 
         if (mapping != null) {
-            currentPath = TagUtils.getInstance().getActionMappingURL(mapping.getPath(), pageContext);
+            currentPath = mapping;
         } else {
             currentPath = ((HttpServletRequest) pageContext.getRequest()).getServletPath();
         }
@@ -339,9 +347,9 @@ public abstract class BaseRenderObjectTag extends TagSupport {
             currentPath = currentPath.substring(contextPath.length());
         }
 
-        ModuleConfig module = TagUtils.getInstance().getModuleConfig(pageContext);
-        if (module != null && currentPath.startsWith(module.getPrefix())) {
-            currentPath = currentPath.substring(module.getPrefix().length());
+        String module = RenderUtils.getModule((HttpServletRequest) pageContext.getRequest());
+        if (module != null && currentPath.startsWith(module)) {
+            currentPath = currentPath.substring(module.length());
         }
 
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
@@ -350,7 +358,18 @@ public abstract class BaseRenderObjectTag extends TagSupport {
         }
 
         return currentPath;
+    }
 
+    public static Object lookup(PageContext pageContext, String name, String property, String scope) throws JspException {
+        Object bean = scope == null ? pageContext.findAttribute(name) : pageContext.getAttribute(name, getScopeByName(scope));
+        if (bean == null || property == null) {
+            return bean;
+        }
+        try {
+            return PropertyUtils.getProperty(bean, property);
+        } catch (Exception e) {
+            throw new JspException("Error while getting property '" + property + "' of " + bean, e);
+        }
     }
 
 }

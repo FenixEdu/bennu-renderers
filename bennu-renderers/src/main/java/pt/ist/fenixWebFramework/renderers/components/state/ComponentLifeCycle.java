@@ -25,11 +25,10 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.taglib.html.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.fenixWebFramework.renderers.components.Constants;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlHiddenField;
@@ -60,9 +59,9 @@ public class ComponentLifeCycle {
 
     private class ComponentCollector {
 
-        private List<HtmlFormComponent> formComponents;
+        private final List<HtmlFormComponent> formComponents;
 
-        private List<HtmlController> controllers;
+        private final List<HtmlController> controllers;
 
         public ComponentCollector(IViewState viewState, HtmlComponent component) {
             this.formComponents = new ArrayList<HtmlFormComponent>();
@@ -158,11 +157,11 @@ public class ComponentLifeCycle {
         return ComponentLifeCycle.instance;
     }
 
-    public static ActionForward execute(HttpServletRequest request) throws Exception {
+    public static ViewDestination execute(HttpServletRequest request) throws Exception {
         return instance.doLifeCycle(request);
     }
 
-    public ActionForward doLifeCycle(HttpServletRequest request) throws Exception {
+    public ViewDestination doLifeCycle(HttpServletRequest request) throws Exception {
 
         EditRequest editRequest = new EditRequest(request);
         List<IViewState> viewStates = editRequest.getAllViewStates();
@@ -243,7 +242,7 @@ public class ComponentLifeCycle {
             prepareDestination(viewStates, editRequest);
         }
 
-        return buildForward(destination);
+        return destination;
     }
 
     public static void doCancel(IViewState viewState) {
@@ -252,8 +251,7 @@ public class ComponentLifeCycle {
     }
 
     private boolean cancelRequested(EditRequest editRequest) {
-        return editRequest.getParameter(Constants.CANCEL_PROPERTY) != null
-                || editRequest.getParameter(Constants.CANCEL_PROPERTY_X) != null;
+        return editRequest.getParameter(Constants.CANCEL_PROPERTY) != null;
     }
 
     private boolean isHiddenSlot(IViewState viewState) {
@@ -544,14 +542,6 @@ public class ComponentLifeCycle {
 
     private void addConvertError(IViewState viewState, MetaSlot metaSlot, Exception exception) {
         viewState.addMessage(new ConversionMessage(metaSlot, exception.getLocalizedMessage()));
-    }
-
-    private ActionForward buildForward(ViewDestination destination) {
-        if (destination == null) {
-            return null;
-        }
-
-        return destination.getActionForward();
     }
 
     private static class ViewStateHolder {

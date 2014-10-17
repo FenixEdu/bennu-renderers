@@ -24,9 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts.util.RequestUtils;
+import org.fenixedu.commons.i18n.I18N;
 import org.joda.time.DateTime;
 
 import pt.ist.fenixWebFramework.renderers.InputRenderer;
@@ -154,8 +152,7 @@ public class DateTimeInputRenderer extends InputRenderer {
     }
 
     protected Locale getLocale() {
-        HttpServletRequest request = getInputContext().getViewState().getRequest();
-        return RequestUtils.getUserLocale(request, null);
+        return I18N.getLocale();
     }
 
     @Override
@@ -245,11 +242,11 @@ public class DateTimeInputRenderer extends InputRenderer {
 
     private class DateTimeController extends HtmlController {
 
-        private HtmlHiddenField valueField;
-        private DateFormat dateFormat;
-        private HtmlTextInput dateField;
-        private HtmlTextInput hoursField;
-        private HtmlTextInput minutesField;
+        private final HtmlHiddenField valueField;
+        private final DateFormat dateFormat;
+        private final HtmlTextInput dateField;
+        private final HtmlTextInput hoursField;
+        private final HtmlTextInput minutesField;
 
         public DateTimeController(HtmlHiddenField hiddenField, DateFormat dateFormat, HtmlTextInput dateField,
                 HtmlTextInput hoursField, HtmlTextInput minutesField) {
@@ -295,9 +292,9 @@ public class DateTimeInputRenderer extends InputRenderer {
         public static final String INVALID = "invalid";
         public static final String INCOMPLETE = "incomplete";
 
-        private HtmlTextInput dateField;
-        private HtmlTextInput hoursField;
-        private HtmlTextInput minutesField;
+        private final HtmlTextInput dateField;
+        private final HtmlTextInput hoursField;
+        private final HtmlTextInput minutesField;
 
         public DateTimeConverter(HtmlTextInput dateField, HtmlTextInput hoursField, HtmlTextInput minutesField) {
             this.dateField = dateField;

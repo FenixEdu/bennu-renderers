@@ -24,12 +24,13 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.apache.struts.util.MessageResources;
+import org.fenixedu.commons.i18n.I18N;
 
 import pt.ist.fenixWebFramework.renderers.components.Constants;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+import pt.ist.fenixWebFramework.renderers.utils.RenderersMessageSource;
 
 public class LabelTag extends BodyTagSupport {
 
@@ -101,8 +102,8 @@ public class LabelTag extends BodyTagSupport {
                 write(RenderUtils.getSlotLabel(object.getType(), getProperty(), getBundle(), getKey()));
             }
         } else if (getKey() != null) {
-            MessageResources resources = RenderUtils.getMessageResources(getBundle());
-            write(resources.getMessage(getKey()));
+            RenderersMessageSource resources = RenderUtils.getMessageResources(getBundle());
+            write(resources.getMessage(I18N.getLocale(), getKey()).orElse("!" + getKey() + "!"));
         } else {
             throw new JspException("must specify a property or a key");
         }

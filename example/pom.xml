@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>org.fenixedu</groupId>
-            <artifactId>bennu-renderers</artifactId>
+            <artifactId>bennu-struts</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

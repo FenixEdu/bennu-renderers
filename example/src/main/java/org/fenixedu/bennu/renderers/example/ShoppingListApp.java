@@ -25,15 +25,15 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.fenixedu.bennu.core.domain.Bennu;
-import org.fenixedu.bennu.core.presentationTier.actions.BaseAction;
-import org.fenixedu.bennu.portal.EntryPoint;
-import org.fenixedu.bennu.portal.StrutsApplication;
-import org.fenixedu.bennu.portal.StrutsFunctionality;
 import org.fenixedu.bennu.renderers.example.domain.ShoppingList;
 import org.fenixedu.bennu.renderers.example.domain.ShoppingListItem;
+import org.fenixedu.bennu.struts.annotations.Mapping;
+import org.fenixedu.bennu.struts.base.BaseAction;
+import org.fenixedu.bennu.struts.portal.EntryPoint;
+import org.fenixedu.bennu.struts.portal.StrutsApplication;
+import org.fenixedu.bennu.struts.portal.StrutsFunctionality;
 
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
-import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 
 @Mapping(path = "/shopping")
 @StrutsApplication(path = "shopping", bundle = "ExampleResources", descriptionKey = "title.example.shoppinglist.description",
