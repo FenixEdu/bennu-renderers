@@ -31,4 +31,9 @@ public class HtmlCancelButton extends HtmlSubmitButton {
 
         setText(text);
     }
+
+    @Override
+    public String getStyleClass() {
+        return "btn-default";
+    }
 }

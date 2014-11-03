@@ -18,6 +18,10 @@
  */
 package pt.ist.fenixWebFramework.renderers.components;
 
+import javax.servlet.jsp.PageContext;
+
+import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
+
 public class HtmlSubmitButton extends HtmlInputButton {
 
     public HtmlSubmitButton() {
@@ -28,5 +32,35 @@ public class HtmlSubmitButton extends HtmlInputButton {
         this();
 
         setText(text);
+    }
+
+    public String getStyleClass() {
+        return "btn-primary";
+    }
+
+    @Override
+    public HtmlTag getOwnTag(PageContext context) {
+        HtmlTag tag = super.getOwnTag(context);
+
+        tag.setName("button");
+
+        tag.setAttribute("type", getType());
+
+        if (isDisabled()) {
+            tag.setAttribute("disabled", true);
+        }
+
+        tag.setAttribute("class", "btn " + getStyleClass());
+        tag.setAttribute("alt", getAlternateText());
+        tag.setAttribute("tabindex", getTabIndex());
+        tag.setAttribute("accesskey", getAccessKey());
+        tag.setAttribute("size", getSize());
+        tag.setAttribute("onchange", getOnChange());
+        tag.setAttribute("onfocus", getOnFocus());
+        tag.setAttribute("onblur", getOnBlur());
+
+        tag.setText(getText());
+
+        return tag;
     }
 }

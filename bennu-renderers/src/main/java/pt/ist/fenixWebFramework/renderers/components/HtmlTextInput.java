@@ -25,6 +25,7 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 public class HtmlTextInput extends HtmlInputComponent {
 
     private boolean readOnly;
+    private String placeholder;
 
     private Integer maxLength;
 
@@ -52,11 +53,21 @@ public class HtmlTextInput extends HtmlInputComponent {
         this.readOnly = readOnly;
     }
 
+    public String getPlaceholder() {
+        return placeholder;
+    }
+
+    public void setPlaceholder(String placeholder) {
+        this.placeholder = placeholder;
+    }
+
     @Override
     public HtmlTag getOwnTag(PageContext context) {
+        addClass("form-control");
         HtmlTag tag = super.getOwnTag(context);
 
         tag.setAttribute("maxlength", this.maxLength);
+        tag.setAttribute("placeholder", getPlaceholder());
 
         if (getReadOnly()) {
             tag.setAttribute("readonly", "readonly");
@@ -64,4 +75,5 @@ public class HtmlTextInput extends HtmlInputComponent {
 
         return tag;
     }
+
 }

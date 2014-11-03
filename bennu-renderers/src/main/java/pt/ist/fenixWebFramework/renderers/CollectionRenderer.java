@@ -170,8 +170,6 @@ public class CollectionRenderer extends OutputRenderer {
 
     private boolean rowForLinks;
 
-    private Boolean renderCompliantTable = Boolean.FALSE;
-
     private Boolean pagedLayout = Boolean.FALSE;
 
     private int pageSize;
@@ -942,14 +940,6 @@ public class CollectionRenderer extends OutputRenderer {
         return getColumnCss(name).getStyleClass();
     }
 
-    public Boolean getRenderCompliantTable() {
-        return renderCompliantTable;
-    }
-
-    public void setRenderCompliantTable(Boolean renderCompliantTable) {
-        this.renderCompliantTable = renderCompliantTable;
-    }
-
     public int getPageSize() {
         return pageSize;
     }
@@ -1095,12 +1085,6 @@ public class CollectionRenderer extends OutputRenderer {
         public HtmlComponent createLayout(Object object, Class type) {
             HtmlComponent component = super.createLayout(object, type);
 
-            setExtraComponentOptions(object, component, type);
-
-            if (component instanceof HtmlTable) {
-                ((HtmlTable) component).setRenderCompliantTable(getRenderCompliantTable());
-            }
-
             if (isConfirmationUsed()) {
                 HtmlBlockContainer container = new HtmlBlockContainer();
                 addScripts(container);
@@ -1128,12 +1112,6 @@ public class CollectionRenderer extends OutputRenderer {
                 return container;
             } else {
                 return component;
-            }
-        }
-
-        protected void setExtraComponentOptions(Object object, HtmlComponent component, Class type) {
-            if (component instanceof HtmlTable) {
-                ((HtmlTable) component).setRenderCompliantTable(getRenderCompliantTable());
             }
         }
 

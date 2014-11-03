@@ -30,17 +30,17 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 public class HtmlForm extends HtmlComponent implements Controllable {
 
-    public static String POST = "post";
-    public static String GET = "get";
+    public static final String POST = "post";
+    public static final String GET = "get";
 
-    public static String URL_ENCODED = "application/x-www-form-urlencoded";
-    public static String FORM_DATA = "multipart/form-data";
+    public static final String URL_ENCODED = "application/x-www-form-urlencoded";
+    public static final String FORM_DATA = "multipart/form-data";
 
     private String action;
     private String method;
     private String encoding;
     private HtmlComponent body;
-    private List<HtmlHiddenField> hiddenFields;
+    private final List<HtmlHiddenField> hiddenFields;
     private HtmlSubmitButton submitButton;
     private HtmlCancelButton cancelButton;
 
@@ -142,9 +142,12 @@ public class HtmlForm extends HtmlComponent implements Controllable {
 
     @Override
     public HtmlTag getOwnTag(PageContext context) {
+        addClass("form-horizontal");
         HtmlTag tag = super.getOwnTag(context);
 
         tag.setName("form");
+
+        tag.setAttribute("role", "form");
 
         tag.setAttribute("action", this.action);
         tag.setAttribute("method", this.method);
@@ -158,13 +161,21 @@ public class HtmlForm extends HtmlComponent implements Controllable {
             tag.addChild(this.body.getOwnTag(context));
         }
 
+        HtmlBlockContainer formGroup = new HtmlBlockContainer();
+        formGroup.setClasses("form-group");
+        HtmlBlockContainer buttonContainer = new HtmlBlockContainer();
+        formGroup.addChild(buttonContainer);
+        buttonContainer.setClasses("col-sm-offset-2 col-sm-10");
+
         if (this.submitButton != null) {
-            tag.addChild(this.submitButton.getOwnTag(context));
+            buttonContainer.addChild(this.submitButton);
         }
 
         if (this.cancelButton != null) {
-            tag.addChild(this.cancelButton.getOwnTag(context));
+            buttonContainer.addChild(this.cancelButton);
         }
+
+        tag.addChild(formGroup.getOwnTag(context));
 
         return tag;
     }

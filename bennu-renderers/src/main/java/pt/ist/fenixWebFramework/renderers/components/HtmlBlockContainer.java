@@ -18,17 +18,29 @@
  */
 package pt.ist.fenixWebFramework.renderers.components;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiConsumer;
+
 import javax.servlet.jsp.PageContext;
 
 import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlBlockContainer extends HtmlContainer {
 
+    private final List<BiConsumer<HtmlTag, PageContext>> blocks = new ArrayList<>();
+
+    public void addBlock(BiConsumer<HtmlTag, PageContext> block) {
+        blocks.add(block);
+    }
+
     @Override
     public HtmlTag getOwnTag(PageContext context) {
         HtmlTag tag = super.getOwnTag(context);
 
         tag.setName("div");
+
+        blocks.forEach(block -> block.accept(tag, context));
 
         return tag;
     }

@@ -28,7 +28,7 @@
 <fr:view name="list" property="itemSet">
     <fr:schema bundle="EXAMPLE_RESOURCES" type="org.fenixedu.bennu.renderers.example.domain.ShoppingListItem">
         <fr:slot name="product.name" key="label.example.shoppinglist.product" />
-        <fr:slot name="amount" key="label.example.shoppinglist.amount" />
+        <fr:slot name="amount" key="label.example.shoppinglist.amount" help="help.example.shoppinglist.amount" />
     </fr:schema>
     <fr:layout name="tabular"></fr:layout>
 </fr:view>

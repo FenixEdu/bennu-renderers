@@ -147,7 +147,9 @@ public abstract class Layout {
     public abstract HtmlComponent createComponent(Object object, Class type);
 
     public void applyStyle(HtmlComponent component) {
-        component.setClasses(getClasses());
+        if (getClasses() != null) {
+            component.setClasses(getClasses());
+        }
         component.setStyle(getStyle());
         component.setTitle(getTitle());
     }

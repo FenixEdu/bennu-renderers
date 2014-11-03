@@ -31,7 +31,7 @@ public class HtmlMenu extends HtmlSimpleValueComponent {
     private Integer tabIndex;
     private String onChange;
 
-    private List<HtmlMenuEntry> entries;
+    private final List<HtmlMenuEntry> entries;
 
     public HtmlMenu() {
         super();
@@ -111,6 +111,7 @@ public class HtmlMenu extends HtmlSimpleValueComponent {
 
     @Override
     public HtmlTag getOwnTag(PageContext context) {
+        addClass("form-control");
         HtmlTag tag = super.getOwnTag(context);
 
         tag.setName("select");

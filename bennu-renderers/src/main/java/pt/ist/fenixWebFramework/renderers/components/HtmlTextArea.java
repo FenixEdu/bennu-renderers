@@ -91,6 +91,7 @@ public class HtmlTextArea extends HtmlSimpleValueComponent {
 
     @Override
     public HtmlTag getOwnTag(PageContext context) {
+        addClass("form-control");
         HtmlTag tag = super.getOwnTag(context);
 
         tag.setName("textarea");

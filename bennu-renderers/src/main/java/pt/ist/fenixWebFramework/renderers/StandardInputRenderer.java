@@ -20,30 +20,26 @@ package pt.ist.fenixWebFramework.renderers;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import pt.ist.fenixWebFramework.RenderersConfigurationManager;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlImage;
-import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
-import pt.ist.fenixWebFramework.renderers.components.HtmlLabel;
 import pt.ist.fenixWebFramework.renderers.components.HtmlScript;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTable;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTableCell;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTableRow;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.Validatable;
+import pt.ist.fenixWebFramework.renderers.layouts.FormLayout;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
-import pt.ist.fenixWebFramework.renderers.layouts.TabularLayout;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
-import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 
 /**
  * This renderer provides a simple way of editing objects. A table is used to
@@ -190,167 +186,86 @@ public class StandardInputRenderer extends InputRenderer {
 
     @Override
     protected Layout getLayout(Object object, Class type) {
-        return new ObjectInputTabularLayout(getContext().getMetaObject());
+        return new ObjectInputFormLayout(getContext().getMetaObject());
     }
 
-    class ObjectInputTabularLayout extends TabularLayout {
-        public Logger logger = LoggerFactory.getLogger(ObjectInputTabularLayout.class);
+    class ObjectInputFormLayout extends FormLayout {
+        private final MetaObject object;
+        private final Map<Integer, Validatable> inputComponents;
 
-        protected Map<Integer, Validatable> inputComponents;
-
-        protected MetaObject object;
-
-        public ObjectInputTabularLayout(MetaObject object) {
+        public ObjectInputFormLayout(MetaObject object) {
             this.object = object;
             this.inputComponents = new HashMap<Integer, Validatable>();
         }
 
         @Override
-        protected int getNumberOfColumns() {
-            return 3;
+        public int getNumberOfRows() {
+            return object.getSlots().size();
         }
 
         @Override
-        protected int getNumberOfRows() {
-            return this.object.getSlots().size();
+        public String getLabelText(int rowIndex) {
+            MetaSlot slot = this.object.getSlots().get(rowIndex);
+            return slot.getLabel();
         }
 
         @Override
-        protected HtmlComponent getHeaderComponent(int columnIndex) {
-            return new HtmlText();
-        }
+        public HtmlComponent getRenderedSlot(int rowIndex) {
+            MetaSlot slot = this.object.getSlots().get(rowIndex);
+            HtmlComponent renderedSlot = renderSlot(slot);
 
-        @Override
-        protected boolean isHeader(int rowIndex, int columnIndex) {
-            return columnIndex == 0;
-        }
-
-        @Override
-        protected HtmlComponent getComponent(int rowIndex, int columnIndex) {
-            HtmlComponent component;
-
-            switch (columnIndex) {
-            case 0:
-                MetaSlot slot = this.object.getSlots().get(rowIndex);
-                if (displayLabel) {
-
-                    if (slot.isReadOnly()) {
-                        component = new HtmlText(addLabelTerminator(slot.getLabel()), false);
-                    } else {
-                        HtmlLabel label = new HtmlLabel();
-                        label.setFor(slot.getKey().toString());
-                        StringBuilder buffer = new StringBuilder();
-
-                        if (slot.isRequired()) {
-                            if (isRequiredMarkShown()) {
-                                buffer.append(RenderUtils.getResourceString("RENDERER_RESOURCES",
-                                        "renderers.validator.required.mark"));
-                                buffer.append(" ");
-                            }
-                        }
-
-                        buffer.append(slot.getLabel());
-
-                        if (!slot.isRequired() && isOptionalMarkShown()) {
-                            buffer.append(" ");
-                            buffer.append(RenderUtils
-                                    .getResourceString("RENDERER_RESOURCES", "renderers.validator.optional.mark"));
-                        }
-
-                        label.setText(addLabelTerminator(buffer.toString()));
-                        label.setTitle(slot.getTitle());
-
-                        component = label;
+            if (!slot.isReadOnly()) {
+                Validatable validatable = findValidatableComponent(renderedSlot);
+                if (validatable != null) {
+                    HtmlFormComponent formComponent = (HtmlFormComponent) validatable;
+                    if (formComponent.getId() == null) {
+                        formComponent.setId(slot.getKey().toString());
                     }
-                } else {
-                    component = null;
+                    inputComponents.put(rowIndex, validatable);
                 }
-                break;
-            case 1:
-                slot = this.object.getSlots().get(rowIndex);
+            }
 
-                HtmlComponent renderedSlot = renderSlot(slot);
+            return renderedSlot;
+        }
 
-                if (!slot.isReadOnly()) {
-                    Validatable validatable = findValidatableComponent(renderedSlot);
+        @Override
+        public Supplier<Optional<String>> getValidationError(int rowIndex) {
+            if (isHideValidators()) {
+                return Optional::empty;
+            }
 
-                    if (validatable != null) {
-                        HtmlFormComponent formComponent = (HtmlFormComponent) validatable;
-                        if (formComponent.getId() == null) {
-                            formComponent.setId(slot.getKey().toString());
-                        }
-                        if (RenderersConfigurationManager.getConfiguration().javascriptValidationEnabled() && !isHideValidators()) {
-                            HtmlChainValidator chainValidator = getChainValidator(formComponent, slot);
-                            for (HtmlValidator validator : chainValidator.getSupportedJavascriptValidators()) {
-                                HtmlInlineContainer container = new HtmlInlineContainer();
-                                container.addChild(renderedSlot);
-                                container.addChild(validator.bindJavascript(formComponent));
-                                renderedSlot = container;
-                            }
-                        }
-                        inputComponents.put(rowIndex, validatable);
-                    }
-                }
+            Validatable inputComponent = inputComponents.get(rowIndex);
 
-                component =
-                        slot.hasHelp() ? renderHelpOnComponent(renderedSlot, slot.getBundle(), slot.getHelpLabel(),
-                                slot.getName()) : renderedSlot;
-
-                break;
-            case 2:
-                if (isHideValidators()) {
-                    component = new HtmlText();
-                } else {
-                    Validatable inputComponent = inputComponents.get(rowIndex);
-
-                    if (inputComponent != null) {
-                        HtmlChainValidator chainValidator =
-                                getChainValidator(inputComponent, this.object.getSlots().get(rowIndex));
-
-                        if (chainValidator != null && !chainValidator.isEmpty()) {
-                            chainValidator.setClasses(getValidatorClasses());
-                            component = chainValidator;
+            if (inputComponent != null) {
+                HtmlChainValidator chainValidator = getChainValidator(inputComponent, this.object.getSlots().get(rowIndex));
+                if (chainValidator != null && !chainValidator.isEmpty()) {
+                    return () -> {
+                        if (chainValidator.isValid()) {
+                            return Optional.empty();
                         } else {
-                            component = new HtmlText();
+                            return Optional.of(chainValidator.getErrorMessage());
                         }
-                    } else {
-                        component = new HtmlText();
-                    }
+                    };
                 }
-
-                break;
-            default:
-                component = new HtmlText();
-                break;
             }
-
-            return component;
+            return Optional::empty;
         }
 
         @Override
-        protected void costumizeCell(HtmlTableCell cell, int rowIndex, int columnIndex) {
-            super.costumizeCell(cell, rowIndex, columnIndex);
-
-            if (columnIndex == 0) {
-                cell.setScope("row");
+        public Optional<String> getHelpLabel(int rowIndex) {
+            MetaSlot slot = this.object.getSlots().get(rowIndex);
+            if (!slot.hasHelp()) {
+                return Optional.empty();
+            } else {
+                String value = RenderUtils.getResourceString(slot.getBundle(), slot.getHelpLabel());
+                return value == null ? Optional.of("!" + slot.getHelpLabel() + "!") : Optional.of(value);
             }
         }
+    }
 
-        // duplicated code id=standard-renderer.label.addTerminator
-        protected String addLabelTerminator(String label) {
-            if (getLabelTerminator() == null) {
-                return label;
-            }
+    class ObjectInputTabularLayout {
 
-            if (label == null) {
-                return null;
-            }
-
-            if (label.endsWith(getLabelTerminator())) {
-                return label;
-            }
-
-            return label + getLabelTerminator();
+        public ObjectInputTabularLayout(MetaObject object) {
         }
 
         protected HtmlComponent renderHelpOnComponent(HtmlComponent renderedSlot, String bundle, String helpLabel, String slotName) {

@@ -27,7 +27,7 @@ import pt.ist.fenixWebFramework.renderers.components.tags.HtmlTag;
 
 public class HtmlTable extends HtmlComponent {
 
-    private List<HtmlTableRow> rows;
+    private final List<HtmlTableRow> rows;
 
     private HtmlTableHeader header;
 
@@ -37,8 +37,6 @@ public class HtmlTable extends HtmlComponent {
     private String cellSpacing;
     private String cellPadding;
     private String caption;
-
-    private Boolean renderCompliantTable = Boolean.FALSE;
 
     // frame and rules were ignored
 
@@ -120,14 +118,6 @@ public class HtmlTable extends HtmlComponent {
         return header;
     }
 
-    public Boolean getRenderCompliantTable() {
-        return renderCompliantTable;
-    }
-
-    public void setRenderCompliantTable(Boolean renderCompliantTable) {
-        this.renderCompliantTable = renderCompliantTable;
-    }
-
     @Override
     public List<HtmlComponent> getChildren() {
         List<HtmlComponent> children = new ArrayList<HtmlComponent>(super.getChildren());
@@ -148,6 +138,7 @@ public class HtmlTable extends HtmlComponent {
 
         tag.setName("table");
 
+        tag.setAttribute("class", getClasses() == null ? "table" : getClasses() + " table");
         tag.setAttribute("summary", summary);
         tag.setAttribute("width", width);
         tag.setAttribute("border", border);
@@ -159,30 +150,16 @@ public class HtmlTable extends HtmlComponent {
         }
 
         if (this.header != null) {
-            if (this.getRenderCompliantTable()) {
-                HtmlTag headerTag = header.getOwnTag(context);
-                tag.addChild(headerTag);
-            } else {
-                for (HtmlTableRow row : header.getRows()) {
-                    tag.addChild(row.getOwnTag(context));
-                }
-
-                // tag.addChild(header.getOwnTag(context));
-            }
+            HtmlTag headerTag = header.getOwnTag(context);
+            tag.addChild(headerTag);
         }
 
         if (this.rows.size() >= 0) {
-            if (this.getRenderCompliantTable()) {
-                HtmlTag innerTag = new HtmlTag("tbody");
-                for (HtmlTableRow row : this.rows) {
-                    innerTag.addChild(row.getOwnTag(context));
-                }
-                tag.addChild(innerTag);
-            } else {
-                for (HtmlTableRow row : this.rows) {
-                    tag.addChild(row.getOwnTag(context));
-                }
+            HtmlTag innerTag = new HtmlTag("tbody");
+            for (HtmlTableRow row : this.rows) {
+                innerTag.addChild(row.getOwnTag(context));
             }
+            tag.addChild(innerTag);
         } else {
             HtmlTag innerTag = new HtmlTag("tbody");
             tag.addChild(innerTag);

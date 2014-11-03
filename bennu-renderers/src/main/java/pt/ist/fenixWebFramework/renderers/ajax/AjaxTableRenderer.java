@@ -357,14 +357,6 @@ public class AjaxTableRenderer extends CollectionRenderer {
             }
         }
 
-        @Override
-        protected void setExtraComponentOptions(Object object, HtmlComponent component, Class type) {
-            HtmlInlineContainer container = (HtmlInlineContainer) component;
-            HtmlTable table = (HtmlTable) container.getChildren().get(2);
-
-            table.setRenderCompliantTable(getRenderCompliantTable());
-        }
-
     }
 
     public String getAjaxSourceUrl() {

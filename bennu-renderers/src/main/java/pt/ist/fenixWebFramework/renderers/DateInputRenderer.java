@@ -24,9 +24,9 @@ import java.util.Locale;
 
 import org.fenixedu.commons.i18n.I18N;
 
+import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
-import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextInput;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
@@ -89,10 +89,14 @@ public class DateInputRenderer extends TextFieldRenderer {
         }
 
         dateInput.setConverter(getDateConverter(dateFormat));
+        dateInput.setPlaceholder(getFormatLabel());
 
-        HtmlContainer container = new HtmlInlineContainer();
+        HtmlBlockContainer container = new HtmlBlockContainer();
+        container.setClasses("input-group");
         container.addChild(dateInput);
-        container.addChild(new HtmlText(getFormatLabel()));
+        HtmlText text = new HtmlText(getFormatLabel());
+        text.setClasses("input-group-addon");
+        container.addChild(text);
 
         return container;
     }

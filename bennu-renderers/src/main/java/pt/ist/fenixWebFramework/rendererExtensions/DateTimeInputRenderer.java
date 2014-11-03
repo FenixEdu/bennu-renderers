@@ -177,6 +177,7 @@ public class DateTimeInputRenderer extends InputRenderer {
             MetaSlotKey key = (MetaSlotKey) getInputContext().getMetaObject().getKey();
 
             HtmlInlineContainer container = new HtmlInlineContainer();
+            container.addClass("form-inline");
 
             HtmlHiddenField hiddenField = new HtmlHiddenField();
             hiddenField.setTargetSlot(key);

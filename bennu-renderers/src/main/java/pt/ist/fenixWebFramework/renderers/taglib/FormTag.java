@@ -174,7 +174,7 @@ public class FormTag extends ContextTag {
             formHead.append("style=\"" + getStyle() + "\" ");
         }
 
-        formHead.append("method=\"post\" class='fenix-rendered'>\n");
+        formHead.append("method=\"post\" class='form-horizontal'>\n");
         try {
             pageContext.getOut().write(formHead.toString());
         } catch (IOException e) {

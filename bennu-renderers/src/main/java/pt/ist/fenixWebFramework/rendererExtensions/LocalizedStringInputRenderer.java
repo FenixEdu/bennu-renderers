@@ -364,6 +364,7 @@ public class LocalizedStringInputRenderer extends InputRenderer {
             // create component line
             HtmlContainer inputContainer = new HtmlBlockContainer();
             inputContainer.setClasses(getEachClasses());
+            inputContainer.addClass("form-inline");
 
             HtmlSimpleValueComponent textInput = getInputComponent();
             textInput.setClasses(getInputClasses());
