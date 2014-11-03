@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.fenixedu.bennu.core.domain.User;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
-import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
+import pt.ist.fenixWebFramework.renderers.contexts.InputContext;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 
 public interface IViewState extends Serializable {
@@ -100,13 +100,9 @@ public interface IViewState extends Serializable {
 
     public void setProperties(Properties properties);
 
-    public void setContext(PresentationContext context);
+    public void setContext(InputContext context);
 
-    public PresentationContext getContext();
-
-    public Class getContextClass();
-
-    public void setContextClass(Class contextClass);
+    public InputContext getContext();
 
     public void setLocalAttribute(String name, Object value);
 

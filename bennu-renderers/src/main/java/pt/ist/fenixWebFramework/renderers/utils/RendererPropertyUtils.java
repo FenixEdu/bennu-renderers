@@ -21,25 +21,10 @@ package pt.ist.fenixWebFramework.renderers.utils;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
 public class RendererPropertyUtils {
-
-    private static Map<Class, PropertyDescriptor[]> propertyDescriptorsCache = null;
-    private static Map<String, Class> propertyTypeCache = null;
-
-    public static void initCache() {
-        propertyDescriptorsCache = new HashMap<Class, PropertyDescriptor[]>();
-        propertyTypeCache = new HashMap<String, Class>();
-    }
-
-    public static void destroyCache() {
-        propertyDescriptorsCache = null;
-        propertyTypeCache = null;
-    }
 
     /**
      * Provides an alternative to the bean utils {@link PropertyUtils#getPropertyDescriptor(java.lang.Object, java.lang.String)} .
@@ -47,17 +32,8 @@ public class RendererPropertyUtils {
      * 
      * TODO: cfgi, support complex properties
      */
-    public static Class<?> getPropertyDescriptor(Class type, String name) {
-        PropertyDescriptor[] descriptors;
-        if (propertyDescriptorsCache != null) {
-            descriptors = propertyDescriptorsCache.get(type);
-            if (descriptors == null) {
-                descriptors = PropertyUtils.getPropertyDescriptors(type);
-                propertyDescriptorsCache.put(type, descriptors);
-            }
-        } else {
-            descriptors = PropertyUtils.getPropertyDescriptors(type);
-        }
+    private static Class<?> getPropertyDescriptor(Class type, String name) {
+        PropertyDescriptor[] descriptors = PropertyUtils.getPropertyDescriptors(type);
 
         for (PropertyDescriptor descriptor : descriptors) {
             if (descriptor.getName().equals(name)) {
@@ -88,16 +64,6 @@ public class RendererPropertyUtils {
      * @return
      */
     static public Class getPropertyType(Class type, String name) {
-        final String propertyTypeId;
-        if (propertyTypeCache != null) {
-            propertyTypeId = name + type.getName();
-            if (propertyTypeCache.containsKey(propertyTypeId)) {
-                return propertyTypeCache.get(propertyTypeId);
-            }
-        } else {
-            propertyTypeId = null;
-        }
-
         String firstPart;
         String remaining;
 
@@ -116,9 +82,6 @@ public class RendererPropertyUtils {
         }
 
         final Class<?> result = remaining == null ? clazz : getPropertyType(clazz, remaining);
-        if (propertyTypeId != null) {
-            propertyTypeCache.put(propertyTypeId, result);
-        }
         return result;
     }
 

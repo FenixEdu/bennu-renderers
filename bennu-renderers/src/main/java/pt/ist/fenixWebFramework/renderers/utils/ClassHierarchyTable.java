@@ -19,16 +19,15 @@
 package pt.ist.fenixWebFramework.renderers.utils;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
-public class ClassHierarchyTable<T> extends Hashtable<Class, T> {
+public class ClassHierarchyTable<T> extends ConcurrentHashMap<Class, T> {
 
-    private List<Class> classSort;
+    private final List<Class> classSort;
 
     public ClassHierarchyTable() {
         super();
@@ -37,11 +36,11 @@ public class ClassHierarchyTable<T> extends Hashtable<Class, T> {
     }
 
     @Override
-    public synchronized T get(Object key) {
-        return get(key, Predicates.<T> alwaysTrue());
+    public T get(Object key) {
+        return get(key, t -> true);
     }
 
-    public synchronized T get(Object key, Predicate<T> predicate) {
+    public T get(Object key, Predicate<T> predicate) {
         Class objectType = (Class) key;
 
         for (Class<? extends Object> type : this.classSort) {
@@ -53,12 +52,12 @@ public class ClassHierarchyTable<T> extends Hashtable<Class, T> {
         return null;
     }
 
-    public synchronized T getUnspecific(Class key) {
+    public T getUnspecific(Class key) {
         return super.get(key);
     }
 
     @Override
-    public synchronized T put(Class key, T value) {
+    public T put(Class key, T value) {
         addType(key);
 
         return super.put(key, value);

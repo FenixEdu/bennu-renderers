@@ -218,7 +218,7 @@ public class BooleanRadioInputRenderer extends InputRenderer {
                 Boolean booleanTrue = Boolean.TRUE;
                 MetaObject booleanMetaObject = MetaObjectFactory.createObject(booleanTrue, null);
                 PresentationContext newContext = getContext().createSubContext(booleanMetaObject);
-                newContext.setRenderMode(RenderMode.getMode("output"));
+                newContext.setRenderMode(RenderMode.OUTPUT);
                 HtmlComponent component = getBooleanComponent(booleanTrue, newContext);
 
                 HtmlLabel trueLabel = new HtmlLabel();
@@ -229,7 +229,7 @@ public class BooleanRadioInputRenderer extends InputRenderer {
                 Boolean booleanFalse = Boolean.FALSE;
                 booleanMetaObject = MetaObjectFactory.createObject(booleanFalse, null);
                 newContext = getContext().createSubContext(booleanMetaObject);
-                newContext.setRenderMode(RenderMode.getMode("output"));
+                newContext.setRenderMode(RenderMode.OUTPUT);
                 component = getBooleanComponent(booleanFalse, newContext);
 
                 HtmlLabel falseLabel = new HtmlLabel();

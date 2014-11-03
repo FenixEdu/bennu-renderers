@@ -24,20 +24,16 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import pt.ist.fenixWebFramework.rendererExtensions.factories.FenixMetaObjectFactory;
+import pt.ist.fenixWebFramework.rendererExtensions.factories.CreationDomainMetaObject;
+import pt.ist.fenixWebFramework.rendererExtensions.factories.DomainMetaObject;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
 import pt.ist.fenixWebFramework.renderers.schemas.Signature;
 import pt.ist.fenixWebFramework.renderers.schemas.SignatureParameter;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
+import pt.ist.fenixframework.DomainObject;
 
-public abstract class MetaObjectFactory {
-
-    private static final MetaObjectFactory currentFactory = new FenixMetaObjectFactory();
-
-    public static MetaObjectCollection createObjectCollection() {
-        return currentFactory.createMetaObjectCollection();
-    }
+public final class MetaObjectFactory {
 
     public static MetaObject createObject(Object object, Schema schema) {
         Schema usedSchema = schema;
@@ -54,7 +50,7 @@ public abstract class MetaObjectFactory {
             }
         }
 
-        return currentFactory.createMetaObject(object, usedSchema);
+        return createMetaObject(object, usedSchema);
     }
 
     public static MetaObject createObject(Class type, Schema schema) {
@@ -64,20 +60,16 @@ public abstract class MetaObjectFactory {
             usedSchema = SchemaFactory.create(type);
         }
 
-        return currentFactory.createMetaObject(type, usedSchema);
+        return createMetaObject(type, usedSchema);
     }
 
     public static MetaSlot createSlot(MetaObject metaObject, SchemaSlotDescription slotDescription) {
-        return currentFactory.createMetaSlot(metaObject, slotDescription);
+        return createMetaSlot(metaObject, slotDescription);
     }
 
-    public MetaObjectCollection createMetaObjectCollection() {
-        return new MetaObjectCollection();
-    }
-
-    public MetaObject createMetaObject(Object object, Schema schema) {
+    private static MetaObject createMetaObject(Object object, Schema schema) {
         if (object instanceof Collection) {
-            MetaObjectCollection multipleMetaObject = createMetaObjectCollection();
+            MetaObjectCollection multipleMetaObject = new MetaObjectCollection();
 
             for (Iterator iter = ((Collection) object).iterator(); iter.hasNext();) {
                 Object element = iter.next();
@@ -91,7 +83,10 @@ public abstract class MetaObjectFactory {
         }
     }
 
-    public MetaObject createMetaObject(Class type, Schema schema) {
+    private static MetaObject createMetaObject(Class type, Schema schema) {
+        if (DomainObject.class.isAssignableFrom(type)) {
+            return createCreationMetaObject(type, schema);
+        }
         CreationMetaObject metaObject;
 
         try {
@@ -109,7 +104,19 @@ public abstract class MetaObjectFactory {
         return metaObject;
     }
 
-    protected void setInstanceCreator(Class type, Schema schema, MetaObject metaObject) {
+    private static MetaObject createCreationMetaObject(Class type, Schema schema) {
+        CreationDomainMetaObject metaObject = new CreationDomainMetaObject(type);
+
+        metaObject.setSchema(schema);
+
+        addSlotDescriptions(schema, metaObject);
+        setInstanceCreator(schema.getType(), schema, metaObject);
+        addCompositeSlotSetters(schema, metaObject);
+
+        return metaObject;
+    }
+
+    private static void setInstanceCreator(Class type, Schema schema, MetaObject metaObject) {
         Signature signature = schema.getConstructor();
 
         if (signature != null) {
@@ -129,7 +136,7 @@ public abstract class MetaObjectFactory {
         }
     }
 
-    protected void addSlotDescriptions(Schema schema, MetaObject metaObject) {
+    private static void addSlotDescriptions(Schema schema, MetaObject metaObject) {
         List<SchemaSlotDescription> slotDescriptions = schema.getSlotDescriptions();
         for (SchemaSlotDescription description : slotDescriptions) {
             MetaSlot metaSlot = createMetaSlot(metaObject, description);
@@ -142,7 +149,7 @@ public abstract class MetaObjectFactory {
         }
     }
 
-    protected void addCompositeSlotSetters(Schema schema, SimpleMetaObject metaObject) {
+    private static void addCompositeSlotSetters(Schema schema, SimpleMetaObject metaObject) {
         for (Signature setterSignature : schema.getSpecialSetters()) {
             CompositeSlotSetter compositeSlotSetter = new CompositeSlotSetter(metaObject, setterSignature.getName());
 
@@ -160,7 +167,11 @@ public abstract class MetaObjectFactory {
         }
     }
 
-    protected MetaObject createOneMetaObject(Object object, Schema schema) {
+    private static MetaObject createOneMetaObject(Object object, Schema schema) {
+        if (object instanceof DomainObject) {
+            // persistent object
+            return createDomainMetaObject(object, schema);
+        }
         MetaObject result;
 
         if (isPrimitiveObject(object)) {
@@ -182,11 +193,21 @@ public abstract class MetaObjectFactory {
         return result;
     }
 
-    private boolean isPrimitiveObject(Object object) {
-        Class[] primitiveTypes =
-                new Class[] { String.class, Number.class, Integer.TYPE, Long.TYPE, Short.TYPE, Character.TYPE, Float.TYPE,
-                        Double.TYPE, Date.class, Enum.class };
+    private static MetaObject createDomainMetaObject(Object object, Schema schema) {
+        DomainMetaObject metaObject = new DomainMetaObject((DomainObject) object);
 
+        metaObject.setSchema(schema);
+
+        addSlotDescriptions(schema, metaObject);
+        addCompositeSlotSetters(schema, metaObject);
+
+        return metaObject;
+    }
+
+    private static final Class<?>[] primitiveTypes = new Class[] { String.class, Number.class, Integer.TYPE, Long.TYPE,
+            Short.TYPE, Character.TYPE, Float.TYPE, Double.TYPE, Date.class, Enum.class };
+
+    private static boolean isPrimitiveObject(Object object) {
         if (object == null) {
             return true;
         }
@@ -200,11 +221,13 @@ public abstract class MetaObjectFactory {
         return false;
     }
 
-    public MetaSlot createMetaSlot(MetaObject metaObject, SchemaSlotDescription slotDescription) {
+    private static MetaSlot createMetaSlot(MetaObject metaObject, SchemaSlotDescription slotDescription) {
         MetaSlot metaSlot;
 
-        if (metaObject instanceof CreationMetaObject) {
+        if (metaObject instanceof CreationMetaObject || metaObject instanceof CreationDomainMetaObject) {
             metaSlot = new MetaSlotWithDefault(metaObject, slotDescription.getSlotName());
+        } else if (metaObject instanceof DomainMetaObject) {
+            metaSlot = new MetaSlot(metaObject, slotDescription.getSlotName());
         } else {
             metaSlot = new MetaSlot(metaObject, slotDescription.getSlotName());
         }
@@ -222,7 +245,6 @@ public abstract class MetaObjectFactory {
         metaSlot.setHelpLabel(slotDescription.getHelpLabel());
         metaSlot.setDescription(slotDescription.getDescription());
         metaSlot.setDescriptionFormat(slotDescription.getDescriptionFormat());
-        // metaSlot.setSetterIgnored(slotDescription.isSetterIgnored());
 
         return metaSlot;
     }

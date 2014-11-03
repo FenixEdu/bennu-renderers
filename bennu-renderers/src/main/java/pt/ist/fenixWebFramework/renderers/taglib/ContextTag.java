@@ -59,7 +59,7 @@ public class ContextTag extends TagSupport {
     public int doEndTag() throws JspException {
         try {
             if (!this.viewStates.isEmpty()) {
-                HtmlHiddenField hidden = new HtmlHiddenField(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME, encodeViewStates());
+                HtmlHiddenField hidden = new HtmlHiddenField(LifeCycleConstants.VIEWSTATE_PARAM_NAME, encodeViewStates());
 
                 hidden.draw(this.pageContext);
             }
@@ -72,7 +72,7 @@ public class ContextTag extends TagSupport {
     }
 
     private String encodeViewStates() throws IOException {
-        return ViewState.encodeListToBase64(this.viewStates);
+        return ViewState.encodeToBase64(this.viewStates);
     }
 
     public void addViewState(IViewState viewState) {

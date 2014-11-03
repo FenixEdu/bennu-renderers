@@ -66,7 +66,6 @@ public class ViewObjectTag extends BaseRenderObjectTag {
 
         viewState.setLayout(getLayout());
         viewState.setProperties(getRenderProperties());
-        viewState.setContextClass(context.getClass());
         viewState.setRequest((HttpServletRequest) pageContext.getRequest());
 
         setViewStateDestinations(viewState);

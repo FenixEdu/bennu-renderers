@@ -263,7 +263,7 @@ public class CheckBoxOptionListRenderer extends SelectionRenderer {
 
                 PresentationContext newContext = getContext().createSubContext(metaObject);
                 newContext.setLayout(layout);
-                newContext.setRenderMode(RenderMode.getMode("output"));
+                newContext.setRenderMode(RenderMode.OUTPUT);
 
                 RenderKit kit = RenderKit.getInstance();
                 HtmlComponent component = kit.render(newContext, obj);

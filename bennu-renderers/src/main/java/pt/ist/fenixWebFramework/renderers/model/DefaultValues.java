@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixWebFramework.renderers.utils.ClassHierarchyTable;
+import pt.ist.fenixframework.DomainObject;
 
 // TODO: This needs revision. It IS an horrible way of creating default values for types
 public class DefaultValues {
@@ -203,6 +204,10 @@ public class DefaultValues {
             }
         }
 
+        return null;
+    }
+
+    public DomainObject createValue(DomainObject o, Class type, String defaultValue) {
         return null;
     }
 }

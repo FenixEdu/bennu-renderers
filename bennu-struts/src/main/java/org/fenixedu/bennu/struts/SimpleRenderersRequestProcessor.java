@@ -70,6 +70,8 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
  */
 public class SimpleRenderersRequestProcessor extends RequestProcessor {
 
+    private static final String PROCESSED_PARAM_NAME = SimpleRenderersRequestProcessor.class.getName() + ".PROCESSED";
+
     @Override
     public void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         RenderersRequestProcessorImpl.currentRequest.set(request);
@@ -92,6 +94,10 @@ public class SimpleRenderersRequestProcessor extends RequestProcessor {
             ActionForm form, ActionMapping mapping) throws IOException, ServletException {
         if (!StrutsPortalBackend.chooseSelectedFunctionality(request, action.getClass())) {
             return new ActionForward("unauthorized", "/bennu-renderers/unauthorized.jsp", false, "");
+        }
+
+        if (request.getParameter(org.apache.struts.taglib.html.Constants.CANCEL_PROPERTY) != null) {
+            request.setAttribute(Constants.CANCEL_PROPERTY, Boolean.TRUE);
         }
 
         updateLocaleForStruts(request);
@@ -148,17 +154,15 @@ public class SimpleRenderersRequestProcessor extends RequestProcessor {
     }
 
     private static boolean hasViewState(HttpServletRequest request) {
-        return viewStateNotProcessed(request)
-                && (request.getParameterValues(LifeCycleConstants.VIEWSTATE_PARAM_NAME) != null || request
-                        .getParameterValues(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME) != null);
+        return viewStateNotProcessed(request) && request.getParameterValues(LifeCycleConstants.VIEWSTATE_PARAM_NAME) != null;
     }
 
     private static boolean viewStateNotProcessed(HttpServletRequest request) {
-        return request.getAttribute(LifeCycleConstants.PROCESSED_PARAM_NAME) == null;
+        return request.getAttribute(PROCESSED_PARAM_NAME) == null;
     }
 
     private static void setViewStateProcessed(HttpServletRequest request) {
-        request.setAttribute(LifeCycleConstants.PROCESSED_PARAM_NAME, true);
+        request.setAttribute(PROCESSED_PARAM_NAME, Boolean.TRUE);
     }
 
     private static void updateLocaleForStruts(HttpServletRequest request) {

@@ -24,11 +24,9 @@ import java.util.Properties;
 
 import pt.ist.fenixWebFramework.renderers.exceptions.NoRendererException;
 
-import com.google.common.base.Predicate;
-
 public class RendererRegistry {
 
-    private ClassHierarchyTable<Map<String, RendererDescription>> renderersTable;
+    private final ClassHierarchyTable<Map<String, RendererDescription>> renderersTable;
 
     public RendererRegistry() {
         super();
@@ -48,13 +46,7 @@ public class RendererRegistry {
     }
 
     public RendererDescription getRenderDescription(Class objectType, final String layout) {
-        Map<String, RendererDescription> layoutsTable =
-                renderersTable.get(objectType, new Predicate<Map<String, RendererDescription>>() {
-                    @Override
-                    public boolean apply(Map<String, RendererDescription> table) {
-                        return table.get(layout) != null;
-                    }
-                });
+        Map<String, RendererDescription> layoutsTable = renderersTable.get(objectType, table -> table.get(layout) != null);
 
         if (layoutsTable == null) {
             throw new NoRendererException(objectType, layout);

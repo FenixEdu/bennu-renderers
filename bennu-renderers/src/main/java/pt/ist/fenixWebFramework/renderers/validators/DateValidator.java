@@ -18,6 +18,9 @@
  */
 package pt.ist.fenixWebFramework.renderers.validators;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import com.google.common.base.Strings;
 
 public class DateValidator extends HtmlValidator {
@@ -59,11 +62,28 @@ public class DateValidator extends HtmlValidator {
         String text = getComponent().getValue();
 
         if (!Strings.isNullOrEmpty(text)) {
-            setValid(org.apache.commons.validator.DateValidator.getInstance().isValid(text, getDateFormat(), true));
+            setValid(isValid(text, getDateFormat()));
         }
 
         if (!isValid()) {
             setMessage("renderers.validator.date");
         }
+    }
+
+    public boolean isValid(String value, String datePattern) {
+        if (value == null || datePattern == null || datePattern.length() <= 0) {
+            return false;
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat(datePattern);
+        formatter.setLenient(false);
+
+        try {
+            formatter.parse(value);
+        } catch (ParseException e) {
+            return false;
+        }
+
+        return datePattern.length() == value.length();
     }
 }

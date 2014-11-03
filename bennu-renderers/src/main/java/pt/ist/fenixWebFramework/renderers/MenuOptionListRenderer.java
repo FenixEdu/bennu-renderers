@@ -242,7 +242,7 @@ public class MenuOptionListRenderer extends SelectionRenderer {
         private void fillBodyWithRenderKit(RenderKit kit, MetaObject metaObject, Object obj, HtmlMenuOption option) {
             PresentationContext newContext = getContext().createSubContext(metaObject);
             newContext.setLayout(getEachLayout());
-            newContext.setRenderMode(RenderMode.getMode("output"));
+            newContext.setRenderMode(RenderMode.OUTPUT);
 
             HtmlComponent component = kit.render(newContext, obj);
             option.setBody(component);

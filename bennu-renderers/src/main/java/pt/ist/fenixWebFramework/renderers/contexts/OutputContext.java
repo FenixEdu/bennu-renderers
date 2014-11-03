@@ -21,12 +21,12 @@ package pt.ist.fenixWebFramework.renderers.contexts;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 
-public class OutputContext extends PresentationContext {
+public final class OutputContext extends PresentationContext {
 
     public OutputContext() {
         super();
 
-        setRenderMode(RenderMode.getMode("output"));
+        setRenderMode(RenderMode.OUTPUT);
     }
 
     protected OutputContext(OutputContext parent) {

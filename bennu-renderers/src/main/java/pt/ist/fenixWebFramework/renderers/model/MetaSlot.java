@@ -371,7 +371,7 @@ public class MetaSlot extends MetaObject {
     }
 
     @Override
-    public void commit() {
+    protected void commit() {
         // delegate to parent meta object
         getMetaObject().commit();
     }

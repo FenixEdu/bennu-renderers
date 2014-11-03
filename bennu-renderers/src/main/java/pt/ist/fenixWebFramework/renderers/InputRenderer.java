@@ -97,7 +97,7 @@ public abstract class InputRenderer extends Renderer {
         newContext.setProperties(slot.getProperties());
 
         if (slot.isReadOnly()) {
-            newContext.setRenderMode(RenderMode.getMode("output"));
+            newContext.setRenderMode(RenderMode.OUTPUT);
         }
 
         Object value = slot.getObject();

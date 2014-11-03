@@ -40,7 +40,7 @@ public class CreationMetaObject extends SimpleMetaObject {
     }
 
     @Override
-    public void commit() {
+    protected void commit() {
         if (getInstanceCreator() != null) {
             setObject(getInstanceCreator().createInstance());
         } else {

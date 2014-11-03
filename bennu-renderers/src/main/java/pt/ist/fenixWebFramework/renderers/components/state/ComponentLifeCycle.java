@@ -70,7 +70,7 @@ public class ComponentLifeCycle {
             if (component != null) {
                 collect(component);
 
-                InputContext context = (InputContext) viewState.getContext();
+                InputContext context = viewState.getContext();
                 if (context != null) {
                     collect(context.getForm().getSubmitButton());
                     collect(context.getForm().getCancelButton());
@@ -251,7 +251,8 @@ public class ComponentLifeCycle {
     }
 
     private boolean cancelRequested(EditRequest editRequest) {
-        return editRequest.getParameter(Constants.CANCEL_PROPERTY) != null;
+        return editRequest.getParameter(Constants.CANCEL_PROPERTY) != null
+                || editRequest.getAttribute(Constants.CANCEL_PROPERTY) != null;
     }
 
     private boolean isHiddenSlot(IViewState viewState) {
@@ -403,28 +404,25 @@ public class ComponentLifeCycle {
 
         metaObject.setUser(viewState.getUser());
 
-        Class contextClass = viewState.getContextClass();
-        if (contextClass != null) {
-            String layout = viewState.getLayout();
-            Properties properties = viewState.getProperties();
+        String layout = viewState.getLayout();
+        Properties properties = viewState.getProperties();
 
-            InputContext context = (InputContext) contextClass.newInstance();
-            context.setLayout(layout);
-            context.setProperties(properties);
+        InputContext context = new InputContext();
+        context.setLayout(layout);
+        context.setProperties(properties);
 
-            context.setViewState(viewState);
-            viewState.setContext(context);
+        context.setViewState(viewState);
+        viewState.setContext(context);
 
-            if (!viewState.isVisible()) {
-                return new HtmlText();
-            }
+        if (!viewState.isVisible()) {
+            return new HtmlText();
+        }
 
-            if (isHiddenSlot(viewState)) {
-                viewState.setComponent(new HtmlText());
-            } else {
-                Object object = metaObject.getObject();
-                viewState.setComponent(RenderKit.getInstance().render(context, object, metaObject.getType()));
-            }
+        if (isHiddenSlot(viewState)) {
+            viewState.setComponent(new HtmlText());
+        } else {
+            Object object = metaObject.getObject();
+            viewState.setComponent(RenderKit.getInstance().render(context, object, metaObject.getType()));
         }
 
         HtmlComponent component = viewState.getComponent();
@@ -455,7 +453,7 @@ public class ComponentLifeCycle {
 
     private void updateDomain(List<IViewState> viewStates) {
         List<MetaObject> metaObjectsToCommit = new ArrayList<MetaObject>();
-        MetaObjectCollection metaObjectCollection = MetaObjectFactory.createObjectCollection();
+        MetaObjectCollection metaObjectCollection = new MetaObjectCollection();
 
         // TODO: check if should update viewstates that are not visible
         for (IViewState state : viewStates) {
@@ -476,7 +474,7 @@ public class ComponentLifeCycle {
             metaObjectCollection.add(object);
         }
 
-        metaObjectCollection.commit();
+        metaObjectCollection.commitChanges();
     }
 
     /**

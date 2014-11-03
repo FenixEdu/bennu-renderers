@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.fenixedu.bennu.core.domain.User;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
-import pt.ist.fenixWebFramework.renderers.contexts.PresentationContext;
+import pt.ist.fenixWebFramework.renderers.contexts.InputContext;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 
 public class ViewStateWrapper implements IViewState {
@@ -239,16 +239,6 @@ public class ViewStateWrapper implements IViewState {
     }
 
     @Override
-    public Class getContextClass() {
-        return viewState.getContextClass();
-    }
-
-    @Override
-    public void setContextClass(Class contextClass) {
-        viewState.setContextClass(contextClass);
-    }
-
-    @Override
     public void setMetaObject(MetaObject object) {
         viewState.setMetaObject(object);
     }
@@ -259,12 +249,12 @@ public class ViewStateWrapper implements IViewState {
     }
 
     @Override
-    public void setContext(PresentationContext context) {
+    public void setContext(InputContext context) {
         this.viewState.setContext(context);
     }
 
     @Override
-    public PresentationContext getContext() {
+    public InputContext getContext() {
         return this.viewState.getContext();
     }
 

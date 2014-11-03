@@ -97,7 +97,7 @@ import com.google.gson.Gson;
  * @author Luis Cruz
  * 
  */
-@WebServlet(urlPatterns = ActionServletWrapper.URL_PATTERN, name = ActionServletWrapper.SERVLET_NAME, loadOnStartup = 1)
+@WebServlet(urlPatterns = ActionServletWrapper.URL_PATTERN, name = ActionServletWrapper.SERVLET_NAME)
 public class ActionServletWrapper extends ActionServlet {
 
     static final String URL_PATTERN = "*.do";
@@ -239,7 +239,6 @@ public class ActionServletWrapper extends ActionServlet {
 
     private void initializeParameterMapDefaults() {
         parameterMap.put("config", "/WEB-INF/conf/struts-default.xml");
-        //  parameterMap.put("application", "resources.ApplicationResources");
 
         parameterMap.put("debug", "3");
         parameterMap.put("detail", "3");

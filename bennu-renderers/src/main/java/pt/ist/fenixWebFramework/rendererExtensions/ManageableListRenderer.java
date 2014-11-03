@@ -232,7 +232,7 @@ public class ManageableListRenderer extends InputRenderer {
 
                 PresentationContext newContext = getContext().createSubContext(metaObject);
                 newContext.setLayout(layout);
-                newContext.setRenderMode(RenderMode.getMode("output"));
+                newContext.setRenderMode(RenderMode.OUTPUT);
 
                 RenderKit kit = RenderKit.getInstance();
                 return kit.render(newContext, object);

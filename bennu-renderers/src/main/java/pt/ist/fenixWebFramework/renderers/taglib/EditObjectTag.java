@@ -21,6 +21,7 @@ package pt.ist.fenixWebFramework.renderers.taglib;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -179,7 +180,6 @@ public class EditObjectTag extends BaseRenderObjectTag implements ValidatorConta
             context.setLayout(layout);
             context.setProperties(properties);
 
-            viewState.setContextClass(context.getClass());
             viewState.setContext(context);
 
             context.setViewState(viewState);
@@ -253,7 +253,8 @@ public class EditObjectTag extends BaseRenderObjectTag implements ValidatorConta
             addViewStateToParentForm(viewState);
         } else {
             HtmlHiddenField htmlViewStateField =
-                    new HtmlHiddenField(LifeCycleConstants.VIEWSTATE_PARAM_NAME, ViewState.encodeToBase64(viewState));
+                    new HtmlHiddenField(LifeCycleConstants.VIEWSTATE_PARAM_NAME, ViewState.encodeToBase64(Collections
+                            .singletonList(viewState)));
             hiddenFields.add(htmlViewStateField);
         }
 

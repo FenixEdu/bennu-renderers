@@ -26,27 +26,29 @@ import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
-import pt.ist.fenixWebFramework.rendererExtensions.factories.FenixSchemaFactory;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
+import pt.ist.fenixframework.DomainModelUtil;
+import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.dml.DomainClass;
+import pt.ist.fenixframework.dml.Slot;
 
-public abstract class SchemaFactory {
-
-    private static final SchemaFactory currentFactory = new FenixSchemaFactory();
+public final class SchemaFactory {
 
     public static Schema create(Object object) {
-        return currentFactory.createSchema(object);
+        if (object instanceof DomainObject) {
+            return getSchemaForDomainObject(object.getClass());
+        } else if (object instanceof DomainClass) {
+            return getSchemaForDomainObject(((DomainClass) object).getFullName());
+        }
+        return create(object == null ? Object.class : object.getClass());
     }
 
     public static Schema create(Class<?> type) {
-        return currentFactory.createSchema(type);
-    }
+        if (DomainObject.class.isAssignableFrom(type)) {
+            return getSchemaForDomainObject(type);
+        }
 
-    public Schema createSchema(Object object) {
-        return createSchema(object == null ? Object.class : object.getClass());
-    }
-
-    public Schema createSchema(Class<?> type) {
         Schema schema = new Schema(type);
 
         if (Collection.class.isAssignableFrom(type)) {
@@ -65,4 +67,28 @@ public abstract class SchemaFactory {
 
         return schema;
     }
+
+    private static Schema getSchemaForDomainObject(String name) {
+        try {
+            return getSchemaForDomainObject(Class.forName(name));
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Cannot create schema for unknown class: " + name, e);
+        }
+    }
+
+    private static Schema getSchemaForDomainObject(Class<?> type) {
+        DomainClass domainClass = DomainModelUtil.getDomainClassFor((Class<? extends DomainObject>) type);
+
+        Schema schema = new Schema(type);
+
+        while (domainClass != null) {
+            for (Slot slot : domainClass.getSlotsList()) {
+                schema.addSlotDescription(new SchemaSlotDescription(slot.getName()));
+            }
+            domainClass = (DomainClass) domainClass.getSuperclass();
+        }
+
+        return schema;
+    }
+
 }

@@ -67,7 +67,7 @@ public class SimpleMetaObject extends MetaObject {
     }
 
     @Override
-    public void commit() {
+    protected void commit() {
         for (MetaSlot slot : getAllSlots()) {
             if (slot.isSetterIgnored()) {
                 continue;

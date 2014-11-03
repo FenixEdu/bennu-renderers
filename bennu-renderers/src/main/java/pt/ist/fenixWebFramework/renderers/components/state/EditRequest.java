@@ -19,7 +19,6 @@
 package pt.ist.fenixWebFramework.renderers.components.state;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,17 +39,7 @@ public class EditRequest extends HttpServletRequestWrapper {
 
     public List<IViewState> getAllViewStates() throws IOException, ClassNotFoundException {
         if (this.viewStates == null) {
-            String[] encodedViewStates = getParameterValues(LifeCycleConstants.VIEWSTATE_PARAM_NAME);
-            if (encodedViewStates != null) {
-                this.viewStates = new ArrayList<IViewState>();
-
-                for (String encodedSingleViewState : encodedViewStates) {
-                    IViewState viewState = ViewState.decodeFromBase64(encodedSingleViewState);
-                    this.viewStates.add(viewState);
-                }
-            } else {
-                this.viewStates = ViewState.decodeListFromBase64(getParameter(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME));
-            }
+            this.viewStates = ViewState.decodeFromBase64(getParameter(LifeCycleConstants.VIEWSTATE_PARAM_NAME));
         }
 
         String contextPath = ((HttpServletRequest) getRequest()).getContextPath();

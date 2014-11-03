@@ -202,5 +202,5 @@ public abstract class MetaObject implements Serializable {
      * <p>
      * This method is called at the end of the renderers' lifecycle when the domain should be updated.
      */
-    public abstract void commit();
+    protected abstract void commit();
 }

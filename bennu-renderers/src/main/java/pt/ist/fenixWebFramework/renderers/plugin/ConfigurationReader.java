@@ -407,7 +407,7 @@ public class ConfigurationReader {
                         modeName = "output";
                     }
 
-                    RenderMode mode = RenderMode.getMode(modeName);
+                    RenderMode mode = RenderMode.valueOf(modeName.toUpperCase());
 
                     if (hasRenderer(layout, objectClass, mode)) {
                         logger.warn("[{}] Duplicated renderer definition for type {} and layout '{}'", modeName, objectClass,
@@ -491,8 +491,6 @@ public class ConfigurationReader {
     public static void readAll(ServletContext context) throws ServletException {
         RenderKit.reset();
 
-        RendererPropertyUtils.initCache();
-
         try {
             for (Project project : FenixFramework.getProject().getProjects()) {
                 URL renderConfig = context.getResource("/WEB-INF/" + project.getName() + "/renderers-config.xml");
@@ -508,6 +506,5 @@ public class ConfigurationReader {
             throw new ServletException(e);
         }
 
-        RendererPropertyUtils.destroyCache();
     }
 }

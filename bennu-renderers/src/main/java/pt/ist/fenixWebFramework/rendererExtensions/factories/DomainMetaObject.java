@@ -92,7 +92,7 @@ public class DomainMetaObject extends SimpleMetaObject {
     }
 
     @Override
-    public void commit() {
+    protected void commit() {
         List<ObjectChange> changes = new ArrayList<ObjectChange>();
 
         ObjectKey key = new ObjectKey(getExternalId(), getType());
@@ -130,9 +130,7 @@ public class DomainMetaObject extends SimpleMetaObject {
             this.changes = changes;
         }
 
-        public void execute() {
-            beforeRun(changes);
-
+        public Object execute() {
             Hashtable<ObjectKey, Object> objects = new Hashtable<ObjectKey, Object>();
 
             for (ObjectChange change : changes) {
@@ -156,12 +154,7 @@ public class DomainMetaObject extends SimpleMetaObject {
                 }
             }
 
-            afterRun(objects.values());
-            result = objects.values();
-        }
-
-        public Object getResult() {
-            return result;
+            return objects.values();
         }
 
         protected void processChange(ObjectChange change, Object object) throws IllegalAccessException,
@@ -188,27 +181,6 @@ public class DomainMetaObject extends SimpleMetaObject {
             } catch (Exception e) {
                 throw new RuntimeException("error while invoking specialized setter", e);
             }
-        }
-
-        /**
-         * Executed before any change is made to the domain.
-         * 
-         * @param changes
-         *            the list of changes planed for the domain
-         */
-        protected void beforeRun(List<ObjectChange> changes) {
-            // nothing
-        }
-
-        /**
-         * Executed after all changes are made to the domain. This includes the
-         * creation of new objects.
-         * 
-         * @param touchedObjects
-         *            the objects that were edited in the interface or created
-         */
-        protected void afterRun(Collection<Object> touchedObjects) {
-            // nothing
         }
 
         protected void setProperty(Object object, String slot, Object value) throws IllegalAccessException,
@@ -294,14 +266,7 @@ public class DomainMetaObject extends SimpleMetaObject {
 
     @Atomic
     protected Object callService(final List<ObjectChange> changes) {
-        final ServicePredicateWithResult servicePredicate = getServiceToCall(changes);
-        servicePredicate.execute();
-        final Object result = servicePredicate.getResult();
-        return result;
-    }
-
-    protected Object[] getServiceArguments(List<ObjectChange> changes) {
-        return new Object[] { changes };
+        return getServiceToCall(changes).execute();
     }
 
 }

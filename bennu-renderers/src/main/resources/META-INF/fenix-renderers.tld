@@ -37,7 +37,7 @@
   
   <tag>
     <name>create</name>
-    <tag-class>pt.ist.fenixWebFramework.rendererExtensions.taglib.FenixCreateObjectTag</tag-class>
+    <tag-class>pt.ist.fenixWebFramework.renderers.taglib.CreateObjectTag</tag-class>
     <body-content>JSP</body-content>
     <description>
       Renders a generic input presentation suitable for creating a new object.
@@ -1024,7 +1024,7 @@
   
   <tag>
     <name>default</name>
-    <tag-class>pt.ist.fenixWebFramework.rendererExtensions.taglib.FenixDefaultValueTag</tag-class>
+    <tag-class>pt.ist.fenixWebFramework.renderers.taglib.DefaultValueTag</tag-class>
     <body-content>JSP</body-content>
 
     <attribute>

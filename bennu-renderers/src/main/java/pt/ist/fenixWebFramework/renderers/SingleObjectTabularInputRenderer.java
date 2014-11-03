@@ -45,7 +45,7 @@ public class SingleObjectTabularInputRenderer extends TabularInputRenderer {
             List list = new ArrayList();
             list.add(object);
 
-            MetaObjectCollection multipleMetaObject = MetaObjectFactory.createObjectCollection();
+            MetaObjectCollection multipleMetaObject = new MetaObjectCollection();
             multipleMetaObject.add(getInputContext().getMetaObject());
 
             getInputContext().setMetaObject(multipleMetaObject);
