@@ -22,16 +22,15 @@ import java.util.Locale;
 
 import org.fenixedu.commons.i18n.LocalizedString;
 
-import pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringInputRenderer.MultiLanguageStringConverter;
+import pt.ist.fenixWebFramework.rendererExtensions.LocalizedStringInputRenderer.LocalizedStringConverter;
 import pt.ist.fenixWebFramework.rendererExtensions.htmlEditor.JsoupSafeHtmlConverter;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
-import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
-public class MultiLanguageStringSafeHtmlConverter extends Converter {
+public class LocalizedStringSafeHtmlConverter extends Converter {
 
     private final boolean mathJaxEnabled;
 
-    public MultiLanguageStringSafeHtmlConverter(final boolean mathJaxEnabled) {
+    public LocalizedStringSafeHtmlConverter(final boolean mathJaxEnabled) {
         this.mathJaxEnabled = mathJaxEnabled;
     }
 
@@ -39,7 +38,7 @@ public class MultiLanguageStringSafeHtmlConverter extends Converter {
     public Object convert(Class type, Object value) {
         // SafeHtmlConverter safeConverter = new SafeHtmlConverter();
         Converter safeConverter = new JsoupSafeHtmlConverter(mathJaxEnabled);
-        MultiLanguageStringConverter mlsConverter = new MultiLanguageStringConverter();
+        LocalizedStringConverter mlsConverter = new LocalizedStringConverter();
 
         LocalizedString mls = getLocalized(mlsConverter.convert(type, value));
 
@@ -61,14 +60,16 @@ public class MultiLanguageStringSafeHtmlConverter extends Converter {
             }
         }
 
-        return type == MultiLanguageString.class ? MultiLanguageString.fromLocalizedString(mls) : mls;
+        return processLocalized(mls);
+    }
+
+    public Object processLocalized(LocalizedString object) {
+        return object;
     }
 
     protected LocalizedString getLocalized(Object object) {
         if (object instanceof LocalizedString) {
             return (LocalizedString) object;
-        } else if (object instanceof MultiLanguageString) {
-            return ((MultiLanguageString) object).toLocalizedString();
         } else {
             return null;
         }

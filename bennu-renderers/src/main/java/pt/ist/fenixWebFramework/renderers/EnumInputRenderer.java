@@ -18,6 +18,7 @@
  */
 package pt.ist.fenixWebFramework.renderers;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,7 +41,6 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
-import pt.utl.ist.fenix.tools.util.Pair;
 
 import com.google.common.base.Predicate;
 
@@ -223,28 +223,28 @@ public class EnumInputRenderer extends InputRenderer {
                 final Object bean = getRenderedObject();
                 Collection<Object> constants = getIncludedEnumValues(type, bean);
                 Collection<Object> excludedValues = getExcludedEnumValues(type, bean);
-                List<Pair<Enum, String>> pairList = new ArrayList<Pair<Enum, String>>();
+                List<EnumValues> pairList = new ArrayList<>();
 
                 for (Object object : constants) {
                     Enum oneEnum = (Enum) object;
-                    pairList.add(new Pair<Enum, String>(oneEnum, RenderUtils.getEnumString(oneEnum, getBundle())));
+                    pairList.add(new EnumValues(oneEnum, RenderUtils.getEnumString(oneEnum, getBundle())));
                 }
 
                 if (isSort()) {
-                    Collections.sort(pairList, new Comparator<Pair<Enum, String>>() {
+                    Collections.sort(pairList, new Comparator<EnumValues>() {
                         @Override
-                        public int compare(Pair<Enum, String> o1, Pair<Enum, String> o2) {
-                            return o1.getValue().compareTo(o2.getValue());
+                        public int compare(EnumValues o1, EnumValues o2) {
+                            return o1.value.compareTo(o2.value);
                         }
                     });
                 }
 
                 HtmlSimpleValueComponent holderComponent = createInputContainerComponent(enumerate);
 
-                for (Pair<Enum, String> pair : pairList) {
+                for (EnumValues pair : pairList) {
 
-                    Enum oneEnum = pair.getKey();
-                    String description = pair.getValue();
+                    Enum oneEnum = pair.obj;
+                    String description = pair.value;
 
                     if (excludedValues.contains(oneEnum)) {
                         continue;
@@ -257,6 +257,17 @@ public class EnumInputRenderer extends InputRenderer {
                 holderComponent.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
 
                 return holderComponent;
+            }
+
+            class EnumValues implements Serializable {
+                private final Enum obj;
+                private final String value;
+
+                public EnumValues(Enum obj, String value) {
+                    super();
+                    this.obj = obj;
+                    this.value = value;
+                }
             }
 
             private Object getRenderedObject() {

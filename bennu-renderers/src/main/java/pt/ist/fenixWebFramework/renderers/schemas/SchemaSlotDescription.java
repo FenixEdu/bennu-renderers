@@ -22,8 +22,7 @@ import java.util.List;
 import java.util.Properties;
 
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
-import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
-import pt.utl.ist.fenix.tools.util.Pair;
+import pt.ist.fenixWebFramework.renderers.validators.ValidatorProperties;
 
 public class SchemaSlotDescription {
 
@@ -39,7 +38,7 @@ public class SchemaSlotDescription {
 
     private Class<Converter> converter;
 
-    private List<Pair<Class<HtmlValidator>, Properties>> validators;
+    private List<ValidatorProperties> validators;
 
     private String defaultValue;
 
@@ -152,11 +151,11 @@ public class SchemaSlotDescription {
         this.setterIgnored = setterIgnored;
     }
 
-    public List<Pair<Class<HtmlValidator>, Properties>> getValidators() {
+    public List<ValidatorProperties> getValidators() {
         return validators;
     }
 
-    public void setValidators(List<Pair<Class<HtmlValidator>, Properties>> validators) {
+    public void setValidators(List<ValidatorProperties> validators) {
         this.validators = validators;
     }
 

@@ -47,9 +47,9 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObjectCollection;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.schemas.Schema;
+import pt.ist.fenixWebFramework.renderers.utils.CollectionPager;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
-import pt.utl.ist.fenix.tools.util.CollectionPager;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
@@ -1015,12 +1015,12 @@ public class CollectionRenderer extends OutputRenderer {
         return new CollectionTabularLayout(sortedCollection);
     }
 
-    protected Collection checkForPager(Collection sortedCollection) {
-        Collection result = null;
+    protected <T> Collection<T> checkForPager(Collection<T> sortedCollection) {
+        Collection<T> result = null;
         if (pagedLayout) {
-            pager = new CollectionPager(sortedCollection, pageSize);
+            pager = new CollectionPager<T>(sortedCollection, pageSize);
             numberOfPages = pager.getNumberOfPages();
-            final Integer page = actualPage == 0 ? Integer.valueOf(1) : Integer.valueOf(actualPage);
+            int page = actualPage == 0 ? 1 : actualPage;
             result = pager.getPage(page);
         }
         return result;

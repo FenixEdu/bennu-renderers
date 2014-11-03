@@ -34,7 +34,7 @@ import java.util.Properties;
 import org.fenixedu.commons.i18n.I18N;
 import org.fenixedu.commons.i18n.LocalizedString;
 
-import pt.ist.fenixWebFramework.rendererExtensions.validators.MultiLanguageStringValidator;
+import pt.ist.fenixWebFramework.rendererExtensions.validators.LocalizedStringValidator;
 import pt.ist.fenixWebFramework.renderers.InputRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlActionLink;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
@@ -54,9 +54,7 @@ import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlotKey;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
-import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
-import pt.utl.ist.fenix.tools.util.Pair;
-import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
+import pt.ist.fenixWebFramework.renderers.validators.ValidatorProperties;
 
 import com.google.common.base.Strings;
 
@@ -75,7 +73,7 @@ import com.google.common.base.Strings;
  * 
  * @author cfgi
  */
-public class MultiLanguageStringInputRenderer extends InputRenderer {
+public class LocalizedStringInputRenderer extends InputRenderer {
 
     private Integer size;
 
@@ -229,7 +227,7 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
     }
 
     protected Converter getConverter() {
-        return new MultiLanguageStringConverter();
+        return new LocalizedStringConverter();
     }
 
     @Override
@@ -240,9 +238,8 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
             MetaSlot metaSlot = (MetaSlot) metaObject;
 
             if (!metaSlot.hasValidator()) {
-                Class defaultValidator = MultiLanguageStringValidator.class;
-                metaSlot.setValidators(Collections.singletonList(new Pair<Class<HtmlValidator>, Properties>(defaultValidator,
-                        new Properties())));
+                Class defaultValidator = LocalizedStringValidator.class;
+                metaSlot.setValidators(Collections.singletonList(new ValidatorProperties(defaultValidator, new Properties())));
             }
         }
 
@@ -503,14 +500,12 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
     protected LocalizedString getLocalized(Object object) {
         if (object instanceof LocalizedString) {
             return (LocalizedString) object;
-        } else if (object instanceof MultiLanguageString) {
-            return ((MultiLanguageString) object).toLocalizedString();
         } else {
             return null;
         }
     }
 
-    public static class MultiLanguageStringConverter extends Converter {
+    public static class LocalizedStringConverter extends Converter {
 
         @Override
         public Object convert(Class type, Object value) {
@@ -525,7 +520,11 @@ public class MultiLanguageStringInputRenderer extends InputRenderer {
                 }
             }
 
-            return type == MultiLanguageString.class ? MultiLanguageString.fromLocalizedString(mls) : mls;
+            return processLocalized(mls);
+        }
+
+        protected Object processLocalized(LocalizedString mls) {
+            return mls;
         }
 
     }

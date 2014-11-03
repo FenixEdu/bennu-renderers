@@ -21,7 +21,6 @@ package pt.ist.fenixWebFramework.renderers.model;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.fenixedu.bennu.core.domain.User;
@@ -32,7 +31,7 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 import pt.ist.fenixWebFramework.renderers.validators.RequiredValidator;
-import pt.utl.ist.fenix.tools.util.Pair;
+import pt.ist.fenixWebFramework.renderers.validators.ValidatorProperties;
 
 /**
  * A MetaSlot is an abstraction of a slot's value of a concrete domain object.
@@ -54,7 +53,7 @@ public class MetaSlot extends MetaObject {
 
     private String layout;
 
-    private List<Pair<Class<HtmlValidator>, Properties>> validators = new ArrayList<Pair<Class<HtmlValidator>, Properties>>();
+    private List<ValidatorProperties> validators = new ArrayList<>();
 
     private Class<Converter> converter;
 
@@ -376,23 +375,23 @@ public class MetaSlot extends MetaObject {
         getMetaObject().commit();
     }
 
-    public List<Pair<Class<HtmlValidator>, Properties>> getValidators() {
+    public List<ValidatorProperties> getValidators() {
         return validators;
     }
 
     public List<HtmlValidator> getValidatorsList() {
         List<HtmlValidator> validators = new ArrayList<HtmlValidator>();
-        for (Pair<Class<HtmlValidator>, Properties> validatorPair : this.validators) {
+        for (ValidatorProperties validatorPair : this.validators) {
             Constructor<HtmlValidator> constructor;
             try {
-                constructor = validatorPair.getKey().getConstructor(new Class[] {});
+                constructor = validatorPair.getType().getConstructor(new Class[] {});
 
                 HtmlValidator validator = constructor.newInstance();
-                RenderUtils.setProperties(validator, validatorPair.getValue());
+                RenderUtils.setProperties(validator, validatorPair.getProperties());
 
                 validators.add(validator);
             } catch (Exception e) {
-                throw new RuntimeException("could not create validator '" + validatorPair.getKey().getName() + "' for slot '"
+                throw new RuntimeException("could not create validator '" + validatorPair.getType().getName() + "' for slot '"
                         + getName() + "': ", e);
             }
         }
@@ -400,16 +399,16 @@ public class MetaSlot extends MetaObject {
         return validators;
     }
 
-    public void setValidators(List<Pair<Class<HtmlValidator>, Properties>> validators) {
+    public void setValidators(List<ValidatorProperties> validators) {
         if (validators != null) {
             this.validators = validators;
         }
     }
 
     public boolean isRequired() {
-        for (Pair<Class<pt.ist.fenixWebFramework.renderers.validators.HtmlValidator>, Properties> validator : getValidators()) {
-            if (RequiredAutoCompleteSelectionValidator.class.isAssignableFrom(validator.getKey())
-                    || RequiredValidator.class.isAssignableFrom(validator.getKey())) {
+        for (ValidatorProperties validator : getValidators()) {
+            if (RequiredAutoCompleteSelectionValidator.class.isAssignableFrom(validator.getType())
+                    || RequiredValidator.class.isAssignableFrom(validator.getType())) {
                 return true;
             }
         }

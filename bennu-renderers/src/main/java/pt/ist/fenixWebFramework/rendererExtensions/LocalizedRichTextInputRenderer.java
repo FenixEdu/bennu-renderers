@@ -42,13 +42,13 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 /**
  * This renderer has the same behaviour than
- * {@link net.sourceforge.fenixedu.presentationTier.renderers.MultiLanguageTextInputRenderer} but uses a rich-text editor in place
+ * {@link LocalizedTextInputRenderer.sourceforge.fenixedu.presentationTier.renderers.MultiLanguageTextInputRenderer} but uses a rich-text editor in place
  * of a textarea for browsers that support
  * it.
  * 
  * @author cfgi
  */
-public class MultiLanguageRichTextInputRenderer extends MultiLanguageTextInputRenderer {
+public class LocalizedRichTextInputRenderer extends LocalizedTextInputRenderer {
 
     private String config;
     private boolean safe;
@@ -191,7 +191,7 @@ public class MultiLanguageRichTextInputRenderer extends MultiLanguageTextInputRe
     @Override
     protected Converter getConverter() {
         if (isSafe()) {
-            return new MultiLanguageStringSafeHtmlConverter(getMathJaxEnabled());
+            return new LocalizedStringSafeHtmlConverter(getMathJaxEnabled());
         } else {
             return super.getConverter();
         }

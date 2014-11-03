@@ -20,6 +20,9 @@ package pt.ist.fenixWebFramework.renderers;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
+
+import org.fenixedu.commons.i18n.LocalizedString;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
@@ -27,7 +30,6 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 import pt.ist.fenixWebFramework.renderers.layouts.TabularLayout;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
-import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class TabularNonNullValuesRenderer extends OutputRenderer {
 
@@ -77,8 +79,8 @@ public class TabularNonNullValuesRenderer extends OutputRenderer {
 
     protected class TabularNonNullValuesLayout extends TabularLayout {
 
-        private MetaObject metaObject;
-        private List<MetaSlot> slots;
+        private final MetaObject metaObject;
+        private final List<MetaSlot> slots;
         private int indexSkipped = 0;
 
         public TabularNonNullValuesLayout() {
@@ -134,12 +136,12 @@ public class TabularNonNullValuesRenderer extends OutputRenderer {
 
         private boolean isValidObject(Object object) {
             return !(object == null || (object instanceof String && ((String) object).length() == 0)
-                    || (object instanceof Collection && ((Collection) object).size() == 0) || (object instanceof MultiLanguageString && !validMultiLanguage((MultiLanguageString) object)));
+                    || (object instanceof Collection && ((Collection) object).size() == 0) || (object instanceof LocalizedString && !validMultiLanguage((LocalizedString) object)));
         }
 
-        private boolean validMultiLanguage(MultiLanguageString multiLanguageString) {
-            for (String content : multiLanguageString.getAllContents()) {
-                if (content.trim().length() > 0) {
+        private boolean validMultiLanguage(LocalizedString localizedString) {
+            for (Locale locale : localizedString.getLocales()) {
+                if (localizedString.getContent(locale).trim().length() > 0) {
                     return true;
                 }
             }

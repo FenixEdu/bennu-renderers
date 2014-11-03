@@ -31,7 +31,6 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlInlineContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
-import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 import com.google.common.base.Strings;
 
@@ -46,7 +45,7 @@ import com.google.common.base.Strings;
  * @author cfgi
  * @author cgmp
  */
-public class MultiLanguageStringRenderer extends StringRenderer {
+public class LocalizedStringRenderer extends StringRenderer {
 
     private String language;
     private boolean forceShowLanguage;
@@ -54,7 +53,7 @@ public class MultiLanguageStringRenderer extends StringRenderer {
     private boolean inline;
     private String languageClasses;
 
-    public MultiLanguageStringRenderer() {
+    public LocalizedStringRenderer() {
         super();
 
         setLanguageShown(true);
@@ -206,8 +205,6 @@ public class MultiLanguageStringRenderer extends StringRenderer {
     protected LocalizedString getLocalized(Object object) {
         if (object instanceof LocalizedString) {
             return (LocalizedString) object;
-        } else if (object instanceof MultiLanguageString) {
-            return ((MultiLanguageString) object).toLocalizedString();
         } else {
             return null;
         }

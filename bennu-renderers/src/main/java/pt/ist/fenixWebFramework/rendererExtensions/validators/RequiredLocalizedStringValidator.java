@@ -20,18 +20,18 @@ package pt.ist.fenixWebFramework.rendererExtensions.validators;
 
 import java.util.Collection;
 
-import pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringInputRenderer.LanguageBean;
+import pt.ist.fenixWebFramework.rendererExtensions.LocalizedStringInputRenderer.LanguageBean;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 
-public class RequiredMultiLanguageStringValidator extends MultiLanguageStringValidator {
+public class RequiredLocalizedStringValidator extends LocalizedStringValidator {
 
-    public RequiredMultiLanguageStringValidator() {
+    public RequiredLocalizedStringValidator() {
         super();
         setMessage("renderers.validator.language.required");
     }
 
-    public RequiredMultiLanguageStringValidator(HtmlChainValidator htmlChainValidator) {
+    public RequiredLocalizedStringValidator(HtmlChainValidator htmlChainValidator) {
         super(htmlChainValidator);
 
         setMessage("renderers.validator.language.required");

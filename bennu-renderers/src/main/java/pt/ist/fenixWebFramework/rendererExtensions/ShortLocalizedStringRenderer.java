@@ -25,18 +25,17 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 
 /**
- * This renderer has the same behaviour as the
- * {@link net.sourceforge.fenixedu.presentationTier.renderers.MultiLanguageStringRenderer} but the context is limited to a certain
+ * This renderer has the same behaviour as the {@link LocalizedStringRenderer} but the context is limited to a certain
  * number of characters.
  * 
  * @author cfgi
  */
-public class ShortMultiLanguageStringRenderer extends MultiLanguageStringRenderer {
+public class ShortLocalizedStringRenderer extends LocalizedStringRenderer {
 
     private Integer length;
     private boolean tooltipShown;
 
-    public ShortMultiLanguageStringRenderer() {
+    public ShortLocalizedStringRenderer() {
         super();
 
         this.tooltipShown = true;

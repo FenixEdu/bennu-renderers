@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixWebFramework.renderers.schemas.SchemaSlotDescription;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 import pt.ist.fenixWebFramework.renderers.validators.RequiredValidator;
-import pt.utl.ist.fenix.tools.util.Pair;
+import pt.ist.fenixWebFramework.renderers.validators.ValidatorProperties;
 
 public class SchemaSlotConfigTag extends BodyTagSupport implements PropertyContainerTag, ValidatorContainerTag {
 
@@ -186,13 +186,13 @@ public class SchemaSlotConfigTag extends BodyTagSupport implements PropertyConta
         this.validators.get(validatorClassName).setProperty(propertyName, propertyValue);
     }
 
-    protected List<Pair<Class<HtmlValidator>, Properties>> getValidatorsClass() {
-        List<Pair<Class<HtmlValidator>, Properties>> res = new ArrayList<Pair<Class<HtmlValidator>, Properties>>();
+    protected List<ValidatorProperties> getValidatorsClass() {
+        List<ValidatorProperties> res = new ArrayList<>();
 
         for (Entry<String, Properties> entry : this.validators.entrySet()) {
             try {
                 Class<HtmlValidator> validatorClass = (Class<HtmlValidator>) Class.forName(entry.getKey());
-                res.add(new Pair<Class<HtmlValidator>, Properties>(validatorClass, entry.getValue()));
+                res.add(new ValidatorProperties(validatorClass, entry.getValue()));
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException("specified validator does not exist: " + entry.getKey(), e);
             }

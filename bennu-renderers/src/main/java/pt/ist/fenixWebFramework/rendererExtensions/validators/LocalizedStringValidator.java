@@ -23,18 +23,18 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-import pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringInputRenderer.LanguageBean;
+import pt.ist.fenixWebFramework.rendererExtensions.LocalizedStringInputRenderer.LanguageBean;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 
-public class MultiLanguageStringValidator extends HtmlValidator {
+public class LocalizedStringValidator extends HtmlValidator {
 
-    public MultiLanguageStringValidator() {
+    public LocalizedStringValidator() {
         super();
     }
 
-    public MultiLanguageStringValidator(HtmlChainValidator htmlChainValidator) {
+    public LocalizedStringValidator(HtmlChainValidator htmlChainValidator) {
         super(htmlChainValidator);
     }
 

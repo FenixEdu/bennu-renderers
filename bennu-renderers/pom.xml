@@ -17,7 +17,6 @@
         <version.org.fenixedu.bennu>3.3.0</version.org.fenixedu.bennu>
         <version.org.fenixedu.fenixedu-commons>1.0.1</version.org.fenixedu.fenixedu-commons>
         <version.com.google.guava.guava>17.0</version.com.google.guava.guava>
-        <version.pt.ist.fenix-legacy-tools>2.0.0</version.pt.ist.fenix-legacy-tools>
     </properties>
 
     <build>
@@ -50,17 +49,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${version.com.google.guava.guava}</version>
-        </dependency>
-        <dependency>
-            <groupId>pt.ist</groupId>
-            <artifactId>fenix-legacy-tools</artifactId>
-            <version>${version.pt.ist.fenix-legacy-tools}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>xml-apis</artifactId>
-                    <groupId>xml-apis</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>

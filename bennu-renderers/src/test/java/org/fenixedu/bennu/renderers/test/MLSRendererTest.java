@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringRenderer;
+import pt.ist.fenixWebFramework.rendererExtensions.LocalizedStringRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
 
@@ -25,14 +25,14 @@ public class MLSRendererTest {
 
     private static final Locale ptBasic = new Builder().setLanguage("pt").build();
 
-    private MultiLanguageStringRenderer renderer;
+    private LocalizedStringRenderer renderer;
 
     private static final LocalizedString str = new LocalizedString(pt, "Olá").with(en, "Hello");
     private static final LocalizedString englishStr = new LocalizedString(en, "Hello");
 
     @Before
     public void setup() {
-        renderer = new MultiLanguageStringRenderer();
+        renderer = new LocalizedStringRenderer();
         renderer.setLanguageShown(false);
     }
 

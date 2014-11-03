@@ -24,14 +24,14 @@ import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextArea;
 
 /**
- * This renderer extends the {@link MultiLanguageStringInputRenderer}. The only difference
+ * This renderer extends the {@link LocalizedStringInputRenderer}. The only difference
  * is that the input is done in an text area instead of a text field. Because of that, this
  * renderer ignores the {@link #setSize(Integer) size} property and provides additional
  * properties to configure the {@link #setColumns(Integer) columns} and {@link #setRows(Integer) rows} of each text area.
  * 
  * @author cfgi
  */
-public class MultiLanguageTextInputRenderer extends MultiLanguageStringInputRenderer {
+public class LocalizedTextInputRenderer extends LocalizedStringInputRenderer {
 
     public Integer rows;
     public Integer columns;

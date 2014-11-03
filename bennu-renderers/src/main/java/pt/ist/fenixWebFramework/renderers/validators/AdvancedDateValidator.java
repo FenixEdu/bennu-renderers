@@ -22,11 +22,10 @@
 package pt.ist.fenixWebFramework.renderers.validators;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-
-import pt.utl.ist.fenix.tools.util.DateFormatUtil;
 
 import com.google.common.base.Predicate;
 
@@ -56,7 +55,8 @@ public class AdvancedDateValidator extends DateValidator {
 
         if (isValid()) {
             try {
-                DateTime dateTime = new DateTime(DateFormatUtil.parse(getDateFormat(), getComponent().getValue()).getTime());
+                DateTime dateTime =
+                        new DateTime(new SimpleDateFormat(getDateFormat()).parse(getComponent().getValue()).getTime());
                 setValid(getValidationPeriodType().evaluateDate(dateTime));
             } catch (ParseException e) {
                 setValid(false);

@@ -51,9 +51,9 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
 import pt.ist.fenixWebFramework.renderers.validators.RequiredValidator;
+import pt.ist.fenixWebFramework.renderers.validators.ValidatorProperties;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.Project;
-import pt.utl.ist.fenix.tools.util.Pair;
 
 public class ConfigurationReader {
     private static final Logger logger = LoggerFactory.getLogger(ConfigurationReader.class);
@@ -168,12 +168,11 @@ public class ConfigurationReader {
                     Properties properties = getPropertiesFromElement(slotElement);
 
                     // Validators
-                    List<Pair<Class<HtmlValidator>, Properties>> validators =
-                            new ArrayList<Pair<Class<HtmlValidator>, Properties>>();
+                    List<ValidatorProperties> validators = new ArrayList<>();
                     if (validatorName != null) {
                         try {
                             Class<HtmlValidator> validator = getClassForType(validatorName, true);
-                            validators.add(new Pair<Class<HtmlValidator>, Properties>(validator, new Properties()));
+                            validators.add(new ValidatorProperties(validator, new Properties()));
                         } catch (ClassNotFoundException e) {
                             logger.error("in schema '" + schemaName + "': validator '" + validatorName
                                     + "' was not found. Ignoring slot declaration.", e);
@@ -185,7 +184,7 @@ public class ConfigurationReader {
                     boolean required = requiredValue == null ? false : Boolean.parseBoolean(requiredValue);
                     if (required) {
                         Class validator = RequiredValidator.class;
-                        validators.add(new Pair<Class<HtmlValidator>, Properties>(validator, new Properties()));
+                        validators.add(new ValidatorProperties(validator, new Properties()));
                     }
 
                     for (Element validatorElement : iterable(slotElement.getElementsByTagName("validator"))) {
@@ -205,7 +204,7 @@ public class ConfigurationReader {
                             }
                         }
 
-                        validators.add(new Pair<Class<HtmlValidator>, Properties>(validator, validatorProperties));
+                        validators.add(new ValidatorProperties(validator, validatorProperties));
                     }
 
                     Class converter = null;

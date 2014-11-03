@@ -125,32 +125,14 @@
     
     <renderer type="java.lang.String" layout="code-block" class="pt.ist.fenixWebFramework.renderers.CodeRenderer"/>
 
-    <renderer type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringRenderer">
+    <renderer type="org.fenixedu.commons.i18n.LocalizedString" class="pt.ist.fenixWebFramework.rendererExtensions.LocalizedStringRenderer">
     	<property name="languageShown" value="false"/>
     </renderer>
-    <renderer type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="short" class="pt.ist.fenixWebFramework.rendererExtensions.ShortMultiLanguageStringRenderer">
+    <renderer type="org.fenixedu.commons.i18n.LocalizedString" layout="short" class="pt.ist.fenixWebFramework.rendererExtensions.ShortLocalizedStringRenderer">
        	<property name="length" value="40"/>
        	<property name="languageShown" value="false"/>
     </renderer>
 
-    <renderer type="org.fenixedu.commons.i18n.LocalizedString" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringRenderer">
-    	<property name="languageShown" value="false"/>
-    </renderer>
-    <renderer type="org.fenixedu.commons.i18n.LocalizedString" layout="short" class="pt.ist.fenixWebFramework.rendererExtensions.ShortMultiLanguageStringRenderer">
-       	<property name="length" value="40"/>
-       	<property name="languageShown" value="false"/>
-    </renderer>
-
-    <!-- <renderer type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="short-html" class="pt.ist.fenixWebFramework.rendererExtensions.ShortMultiLanguageStringRenderer">  -->
-	<renderer type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="short-html" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringRenderer">
-    	<property name="escaped" value="false"/>
-<!--     	<property name="languageShown" value="false"/> -->
-    </renderer>
-    <renderer type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="html" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringRenderer">
-    	<property name="escaped" value="false"/>
-    	<property name="languageShown" value="false"/>
-    </renderer>
-    
     <renderer type="java.lang.Number" class="pt.ist.fenixWebFramework.renderers.IntegerRenderer"/>
     <renderer type="java.lang.Number" layout="fileSize" class="pt.ist.fenixWebFramework.rendererExtensions.FileSizeRenderer">
     	   <property name="shortUnit" value="true"/>
@@ -251,13 +233,6 @@
     	<property name="eachSchema" value="site.functions.personFunction.person"/>
     </renderer>
     
-    <!--@ LabelFormatter output. -->
-    <renderer type="pt.utl.ist.fenix.tools.resources.LabelFormatter" class="pt.ist.fenixWebFramework.rendererExtensions.LabelFormatterRenderer">
-    		<property name="bundleName(application)" value="APPLICATION_RESOURCES"/>
-    		<property name="bundleName(enum)" value="ENUMERATION_RESOURCES"/>
-    		<property name="bundleName(default)" value="APPLICATION_RESOURCES"/>
-    </renderer>
-    
 	<!--@ Decimal output. -->
     <renderer type="java.math.BigDecimal" class="pt.ist.fenixWebFramework.renderers.DecimalRenderer" layout="decimal-format"/>
     <renderer type="java.lang.Double" class="pt.ist.fenixWebFramework.renderers.DecimalRenderer" layout="decimal-format"/>
@@ -339,15 +314,9 @@
     <!--@ This layout allows a string to be edited with the password field -->
     <renderer mode="input" type="java.lang.String" layout="password" class="pt.ist.fenixWebFramework.renderers.PasswordInputRenderer"/>
     
-    <renderer mode="input" type="pt.utl.ist.fenix.tools.util.Strings" class="pt.ist.fenixWebFramework.rendererExtensions.StringsInputRenderer"/>
-    
-    <renderer mode="input" type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringInputRenderer"/>
-    <renderer mode="input" type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="area" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageTextInputRenderer"/>
-    <renderer mode="input" type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="rich-text" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageRichTextInputRenderer"/>
-
-    <renderer mode="input" type="org.fenixedu.commons.i18n.LocalizedString" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringInputRenderer"/>
-    <renderer mode="input" type="org.fenixedu.commons.i18n.LocalizedString" layout="area" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageTextInputRenderer"/>
-    <renderer mode="input" type="org.fenixedu.commons.i18n.LocalizedString" layout="rich-text" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageRichTextInputRenderer"/>
+    <renderer mode="input" type="org.fenixedu.commons.i18n.LocalizedString" class="pt.ist.fenixWebFramework.rendererExtensions.LocalizedStringInputRenderer"/>
+    <renderer mode="input" type="org.fenixedu.commons.i18n.LocalizedString" layout="area" class="pt.ist.fenixWebFramework.rendererExtensions.LocalizedTextInputRenderer"/>
+    <renderer mode="input" type="org.fenixedu.commons.i18n.LocalizedString" layout="rich-text" class="pt.ist.fenixWebFramework.rendererExtensions.LocalizedRichTextInputRenderer"/>
 	    
     <renderer mode="input" type="java.lang.Number" class="pt.ist.fenixWebFramework.renderers.IntegerInputRenderer"/>
 
