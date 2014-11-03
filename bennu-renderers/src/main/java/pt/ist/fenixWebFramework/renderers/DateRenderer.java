@@ -21,11 +21,8 @@ package pt.ist.fenixWebFramework.renderers;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts.util.RequestUtils;
+import org.fenixedu.commons.i18n.I18N;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlText;
@@ -75,9 +72,7 @@ public class DateRenderer extends OutputRenderer {
                     return new HtmlText();
                 }
 
-                HttpServletRequest request = getContext().getViewState().getRequest();
-                Locale locale = RequestUtils.getUserLocale(request, null);
-                DateFormat dateFormat = new SimpleDateFormat(getFormat(), locale);
+                DateFormat dateFormat = new SimpleDateFormat(getFormat(), I18N.getLocale());
 
                 return new HtmlText(dateFormat.format(date));
             }

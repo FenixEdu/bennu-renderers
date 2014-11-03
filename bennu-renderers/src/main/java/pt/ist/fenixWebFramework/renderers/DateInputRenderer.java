@@ -22,9 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts.util.RequestUtils;
+import org.fenixedu.commons.i18n.I18N;
 
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
@@ -74,8 +72,7 @@ public class DateInputRenderer extends TextFieldRenderer {
     }
 
     protected Locale getLocale() {
-        HttpServletRequest request = getInputContext().getViewState().getRequest();
-        return RequestUtils.getUserLocale(request, null);
+        return I18N.getLocale();
     }
 
     @Override

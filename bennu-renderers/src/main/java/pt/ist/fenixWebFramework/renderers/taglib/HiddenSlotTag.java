@@ -22,7 +22,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.struts.taglib.TagUtils;
 
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
@@ -165,7 +164,7 @@ public class HiddenSlotTag extends TagSupport {
     }
 
     protected Object findObject() throws JspException {
-        return TagUtils.getInstance().lookup(pageContext, getName(), getProperty(), getScope());
+        return BaseRenderObjectTag.lookup(pageContext, getName(), getProperty(), getScope());
     }
 
     protected void addHiddenSlot(String slot, Object value, String converterName) throws JspException {

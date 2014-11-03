@@ -20,4 +20,7 @@ package pt.ist.fenixWebFramework.renderers.components;
 
 public class Constants {
     public static final String TEMPLATE_OBJECT_NAME = "pt.ist.fenixWebFramework.renderers.OBJECT";
+
+    public static final String CANCEL_PROPERTY = "pt.ist.fenixWebFramework.renderers.CANCEL";
+
 }

@@ -5,19 +5,19 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>fenix-framework-project</artifactId>
-        <version>2.1.0</version>
+        <version>2.2.0</version>
     </parent>
 
     <artifactId>bennu-renderers-aggregator</artifactId>
     <name>Bennu Renderers Framework Aggregator</name>
-    <version>4.2.1</version>
+    <version>5.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <scm>
         <connection>scm:git:git@github.com:fenixedu/bennu-renderers.git</connection>
         <developerConnection>scm:git:git@github.com:fenixedu/bennu-renderers.git</developerConnection>
         <url>http://fenixedu.github.io/bennu-renderers</url>
-        <tag>v4.2.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
@@ -53,13 +53,14 @@
 
     <modules>
         <module>bennu-renderers</module>
+        <module>bennu-struts</module>
         <module>example</module>
     </modules>
 
     <repositories>
         <repository>
-            <id>fenix-ashes-maven-repository</id>
-            <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+            <id>fenixedu-maven-repository</id>
+            <url>https://repo.fenixedu.org/fenixedu-maven-repository</url>
         </repository>
     </repositories>
 </project>

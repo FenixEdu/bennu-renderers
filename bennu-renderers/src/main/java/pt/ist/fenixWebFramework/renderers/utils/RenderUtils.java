@@ -30,19 +30,18 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.regex.Matcher;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.struts.Globals;
-import org.apache.struts.config.ModuleConfig;
-import org.apache.struts.util.MessageResources;
-import org.apache.struts.util.ModuleUtils;
-import org.apache.struts.util.RequestUtils;
+import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +54,29 @@ import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessorImpl;
 // TODO Review much of this class
 public class RenderUtils {
     private static final Logger logger = LoggerFactory.getLogger(RenderUtils.class);
+
+    private static RenderersBundleResolver resolver = ResourceBundleMessageSource::new;
+
+    private static ModuleResolver moduleResolver = new ModuleResolver() {
+
+        @Override
+        public String maybeResolveModule(HttpServletRequest request) {
+            return null;
+        }
+
+        @Override
+        public String maybeResolveActionMapping(String mapping, PageContext pageCtx) {
+            return ((HttpServletRequest) pageCtx.getRequest()).getServletPath();
+        }
+    };
+
+    public static void setModuleResolver(ModuleResolver res) {
+        moduleResolver = Objects.requireNonNull(res);
+    }
+
+    public static void setBundleResolver(RenderersBundleResolver res) {
+        resolver = Objects.requireNonNull(res);
+    }
 
     public static String RESOURCE_LABEL_PREFIX = "label";
 
@@ -202,73 +224,45 @@ public class RenderUtils {
     }
 
     public static String getResourceString(String bundle, String key, Object[] args) {
-        MessageResources resources = getMessageResources(bundle);
+        {
+            RenderersMessageSource resources = getMessageResources(bundle);
 
-        Locale locale = getLocale();
-
-        if (resources.isPresent(locale, key)) {
-            return resources.getMessage(locale, key, args);
+            Optional<String> message = resources.getMessage(I18N.getLocale(), key);
+            if (message.isPresent()) {
+                return formatMessage(message.get(), args);
+            }
         }
 
-        // TODO: allow the name to be configured or fetch the resources in other
-        // way
-        MessageResources rendererResources = getMessageResources("RENDERER_RESOURCES");
+        {
+            RenderersMessageSource rendererResources = getMessageResources("resources.RendererResources");
 
-        if (rendererResources.isPresent(locale, key)) {
-            return rendererResources.getMessage(locale, key, args);
+            Optional<String> message = rendererResources.getMessage(I18N.getLocale(), key);
+            if (message.isPresent()) {
+                return formatMessage(message.get(), args);
+            }
         }
 
         return null;
     }
 
+    private static final String formatMessage(String message, Object[] args) {
+        if (args == null) {
+            return message;
+        }
+        for (int i = 0; i < args.length; i++) {
+            message =
+                    message.replaceAll("\\{" + i + "\\}",
+                            args[i] == null ? "" : Matcher.quoteReplacement(Objects.toString(args[i])));
+        }
+        return message;
+    }
+
     private static Locale getLocale() {
-        HttpServletRequest currentRequest = RenderersRequestProcessorImpl.getCurrentRequest();
-
-        if (currentRequest == null) { // no in renderers context
-            return Locale.getDefault();
-        }
-
-        Locale locale = RequestUtils.getUserLocale(currentRequest, null);
-        if (locale != null) {
-            return locale;
-        }
-
-        return Locale.getDefault();
+        return I18N.getLocale();
     }
 
-    public static MessageResources getMessageResources() {
-        return getMessageResources(null);
-    }
-
-    public static MessageResources getMessageResources(String bundle) {
-        HttpServletRequest request = RenderersRequestProcessorImpl.getCurrentRequest();
-        ServletContext context = request.getServletContext();
-
-        MessageResources resources = null;
-
-        if (bundle == null) {
-            bundle = Globals.MESSAGES_KEY;
-        }
-
-        if (resources == null) {
-            resources = (MessageResources) request.getAttribute(bundle);
-        }
-
-        if (resources == null) {
-            ModuleConfig moduleConfig = ModuleUtils.getInstance().getModuleConfig(request, context);
-            resources = (MessageResources) context.getAttribute(bundle + moduleConfig.getPrefix());
-        }
-
-        if (resources == null) {
-            resources = (MessageResources) context.getAttribute(bundle);
-        }
-
-        if (resources == null) {
-            // TODO: make a more specific exception
-            throw new RuntimeException("could not find message resources: " + bundle);
-        }
-
-        return resources;
+    public static RenderersMessageSource getMessageResources(String bundle) {
+        return resolver.resolveBundle(bundle);
     }
 
     public static String getFormatedResourceString(String key, Object... args) {
@@ -416,12 +410,12 @@ public class RenderUtils {
     }
 
     public static String getModuleRelativePath(HttpServletRequest request, String path) {
-        ModuleConfig module = ModuleUtils.getInstance().getModuleConfig(request);
+        String module = moduleResolver.maybeResolveModule(request);
 
         String returnPath;
 
         if (module != null) {
-            returnPath = module.getPrefix() + path;
+            returnPath = module + path;
         } else {
             returnPath = path;
         }
@@ -666,5 +660,17 @@ public class RenderUtils {
 
     public static String escapeId(String id) {
         return id.replace(".", "\\\\.").replaceAll(":", "\\\\\\\\:");
+    }
+
+    public static String getModule(HttpServletRequest request) {
+        return moduleResolver.maybeResolveModule(request);
+    }
+
+    public static String getActionMappingURL(String mapping, PageContext pageCtx) {
+        return moduleResolver.maybeResolveActionMapping(mapping, pageCtx);
+    }
+
+    public static String getCurrentActionMappingURL(PageContext pageCtx) {
+        return moduleResolver.maybeResolveActionMapping(null, pageCtx);
     }
 }

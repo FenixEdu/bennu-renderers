@@ -18,8 +18,6 @@
  */
 package pt.ist.fenixWebFramework.renderers.components;
 
-import org.apache.struts.taglib.html.Constants;
-
 public class HtmlCancelButton extends HtmlSubmitButton {
 
     public HtmlCancelButton() {

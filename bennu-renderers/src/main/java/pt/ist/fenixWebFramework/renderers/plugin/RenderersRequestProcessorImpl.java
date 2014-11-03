@@ -22,9 +22,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import pt.ist.fenixWebFramework.renderers.components.state.LifeCycleConstants;
 import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
-import pt.ist.fenixWebFramework.servlets.filters.RequestWrapperFilter.FenixHttpServletRequestWrapper;
 
 /**
  * The standard renderers request processor. This processor is responsible for
@@ -48,7 +46,9 @@ import pt.ist.fenixWebFramework.servlets.filters.RequestWrapperFilter.FenixHttpS
  */
 public class RenderersRequestProcessorImpl {
 
-    static final ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<>();
+    public static final String ITEM_MAP_ATTRIBUTE = "$BENNU_RENDERERS$_ITEM_MAP";
+
+    public static final ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<>();
 
     public static HttpServletRequest getCurrentRequest() {
         return currentRequest.get();
@@ -59,8 +59,7 @@ public class RenderersRequestProcessorImpl {
      */
     @SuppressWarnings("unchecked")
     public static UploadedFile getUploadedFile(String fieldName) {
-        Map<String, UploadedFile> map =
-                (Map<String, UploadedFile>) getCurrentRequest().getAttribute(FenixHttpServletRequestWrapper.ITEM_MAP_ATTRIBUTE);
+        Map<String, UploadedFile> map = (Map<String, UploadedFile>) getCurrentRequest().getAttribute(ITEM_MAP_ATTRIBUTE);
         return map == null ? null : map.get(fieldName);
     }
 
@@ -69,17 +68,4 @@ public class RenderersRequestProcessorImpl {
         return currentRequest != null ? currentRequest.getCharacterEncoding() : null;
     }
 
-    protected static boolean hasViewState(HttpServletRequest request) {
-        return viewStateNotProcessed(request)
-                && (request.getParameterValues(LifeCycleConstants.VIEWSTATE_PARAM_NAME) != null || request
-                        .getParameterValues(LifeCycleConstants.VIEWSTATE_LIST_PARAM_NAME) != null);
-    }
-
-    protected static boolean viewStateNotProcessed(HttpServletRequest request) {
-        return request.getAttribute(LifeCycleConstants.PROCESSED_PARAM_NAME) == null;
-    }
-
-    protected static void setViewStateProcessed(HttpServletRequest request) {
-        request.setAttribute(LifeCycleConstants.PROCESSED_PARAM_NAME, true);
-    }
 }
