@@ -18,6 +18,7 @@
  */
 package pt.ist.fenixWebFramework.renderers.utils;
 
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.text.Collator;
 import java.text.MessageFormat;
@@ -389,18 +390,19 @@ public class RenderUtils {
             try {
                 propertyName = (String) property;
 
-                if (PropertyUtils.isWriteable(target, propertyName)) {
-                    BeanUtils.copyProperty(target, propertyName, properties.getProperty(propertyName));
-                } else {
-                    // even so try to write it because
-                    // PropertyUtils.isWriteable() does not work for mapped
-                    // items
-                    try {
+                PropertyDescriptor desc = PropertyUtils.getPropertyDescriptor(target, propertyName);
+
+                if (desc != null) {
+                    if (desc.getWriteMethod() != null) {
+                        BeanUtils.copyProperty(target, propertyName, properties.getProperty(propertyName));
+                    } else {
+                        // even so try to write it because
+                        // PropertyUtils.isWriteable() does not work for mapped
+                        // items
                         PropertyUtils.setProperty(target, propertyName, properties.getProperty(propertyName));
-                    } catch (Exception e) {
-                        logger.trace(
-                                "The object " + target + " does not support property '" + propertyName + "': Not writeable!", e);
                     }
+                } else {
+                    logger.debug("Object {} does not support property '{}'. Descriptor not found.", target, propertyName);
                 }
             } catch (Exception e) {
                 logger.warn("The object " + target + " does not support property '" + propertyName + "'", e);
