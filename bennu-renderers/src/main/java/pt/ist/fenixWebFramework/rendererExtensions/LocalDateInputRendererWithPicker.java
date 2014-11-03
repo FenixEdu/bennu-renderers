@@ -19,9 +19,7 @@
 package pt.ist.fenixWebFramework.rendererExtensions;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import org.joda.time.LocalDate;
 
@@ -56,26 +54,6 @@ public class LocalDateInputRendererWithPicker extends DateInputRendererWithPicke
             }
 
         };
-    }
-
-    @Override
-    protected String getInputFormatForCalendar() {
-        Locale locale = getLocale();
-        SimpleDateFormat format = new SimpleDateFormat(getFormat(), locale);
-
-        Calendar c = Calendar.getInstance();
-
-        c.set(Calendar.YEAR, 1999);
-        c.set(Calendar.MONTH, 11);
-        c.set(Calendar.DAY_OF_MONTH, 24);
-
-        String dateStringFormatted = format.format(c.getTime());
-        dateStringFormatted = dateStringFormatted.replace("1999", "yy");
-        dateStringFormatted = dateStringFormatted.replace("99", "y");
-        dateStringFormatted = dateStringFormatted.replace("12", "mm");
-        dateStringFormatted = dateStringFormatted.replace("24", "dd");
-
-        return dateStringFormatted;
     }
 
 }
