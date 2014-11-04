@@ -25,11 +25,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixWebFramework.RenderersConfigurationManager;
-import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
-import pt.ist.fenixWebFramework.renderers.components.HtmlText;
-import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 
 public abstract class Layout {
     private static final Logger logger = LoggerFactory.getLogger(Layout.class);
@@ -40,21 +36,11 @@ public abstract class Layout {
 
     private String title;
 
-    private boolean requiredMarkShown = RenderersConfigurationManager.getConfiguration().requiredMarkShown();
-
     private boolean requiredMessageShown;
 
     private boolean optionalMarkShown;
 
     private static final String REQUIRED_EXPLANATION_CLASS = "requiredMessage";
-
-    public boolean isRequiredMarkShown() {
-        return requiredMarkShown;
-    }
-
-    public void setRequiredMarkShown(boolean requiredMarkShown) {
-        this.requiredMarkShown = requiredMarkShown;
-    }
 
     public boolean isRequiredMessageShown() {
         return requiredMessageShown;
@@ -131,16 +117,6 @@ public abstract class Layout {
         HtmlComponent component = createComponent(object, type);
         applyStyle(component);
 
-        if (isRequiredMarkShown() && isRequiredMessageShown()) {
-            HtmlBlockContainer container = new HtmlBlockContainer();
-            container.addChild(component);
-            HtmlText requiredMessage =
-                    new HtmlText(RenderUtils.getResourceString("RENDERER_RESOURCES",
-                            "renderers.validator.required.mark.explanation"), false);
-            requiredMessage.setClasses(REQUIRED_EXPLANATION_CLASS);
-            container.addChild(requiredMessage);
-            component = container;
-        }
         return component;
     }
 

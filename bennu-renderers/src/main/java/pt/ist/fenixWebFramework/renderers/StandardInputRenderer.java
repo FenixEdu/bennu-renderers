@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import pt.ist.fenixWebFramework.RenderersConfigurationManager;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlFormComponent;
@@ -82,8 +81,6 @@ public class StandardInputRenderer extends InputRenderer {
     private String labelTerminator;
 
     private boolean displayLabel = Boolean.TRUE;
-
-    private boolean requiredMarkShown = RenderersConfigurationManager.getConfiguration().requiredMarkShown();
 
     private boolean requiredMessageShown = true;
 
@@ -317,14 +314,6 @@ public class StandardInputRenderer extends InputRenderer {
 
     public void setOptionalMarkShown(boolean optionalMarkShown) {
         this.optionalMarkShown = optionalMarkShown;
-    }
-
-    public boolean isRequiredMarkShown() {
-        return requiredMarkShown;
-    }
-
-    public void setRequiredMarkShown(boolean requiredMarkShown) {
-        this.requiredMarkShown = requiredMarkShown;
     }
 
     public boolean isRequiredMessageShown() {

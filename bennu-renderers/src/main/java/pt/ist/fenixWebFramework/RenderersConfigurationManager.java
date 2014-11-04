@@ -35,15 +35,6 @@ public class RenderersConfigurationManager {
                 description = "Redirect link to use when a URL tampering is detected. Required when 'filterRequestWithDigest' is true",
                 defaultValue = "/")
         public String tamperingRedirect();
-
-        @ConfigurationProperty(key = "javascriptValidationEnabled",
-                description = "Renderer validators to generate JQuery javascript to also validate user input at client side.",
-                defaultValue = "false")
-        public Boolean javascriptValidationEnabled();
-
-        @ConfigurationProperty(key = "requiredMarkShown",
-                description = "Determines when the StandardInputRenderer shows the required (*) mark.", defaultValue = "false")
-        public Boolean requiredMarkShown();
     }
 
     public static ConfigurationProperties getConfiguration() {
