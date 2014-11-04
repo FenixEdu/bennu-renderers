@@ -18,11 +18,16 @@
  */
 package pt.ist.fenixWebFramework.rendererExtensions.validators;
 
-import java.util.Collection;
+import java.util.Locale;
 
-import pt.ist.fenixWebFramework.rendererExtensions.LocalizedStringInputRenderer.LanguageBean;
+import org.fenixedu.commons.i18n.LocalizedString;
+
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
+
+import com.google.common.base.Strings;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 public class RequiredLocalizedStringValidator extends LocalizedStringValidator {
 
@@ -46,10 +51,16 @@ public class RequiredLocalizedStringValidator extends LocalizedStringValidator {
         }
 
         HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getComponent();
-        Collection<LanguageBean> beans = LanguageBean.importAllFromString(component.getValue());
+        if (Strings.isNullOrEmpty(component.getValue())) {
+            setValid(false);
+            return;
+        }
+        JsonElement json = new JsonParser().parse(component.getValue());
 
-        for (LanguageBean bean : beans) {
-            if (bean.value != null && bean.value.length() > 0) {
+        LocalizedString string = LocalizedString.fromJson(json);
+
+        for (Locale locale : string.getLocales()) {
+            if (!string.getContent(locale).isEmpty()) {
                 setValid(true);
                 return;
             }

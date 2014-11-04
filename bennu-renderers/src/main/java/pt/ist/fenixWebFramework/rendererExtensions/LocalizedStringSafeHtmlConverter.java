@@ -28,16 +28,12 @@ import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
 public class LocalizedStringSafeHtmlConverter extends Converter {
 
-    private final boolean mathJaxEnabled;
-
-    public LocalizedStringSafeHtmlConverter(final boolean mathJaxEnabled) {
-        this.mathJaxEnabled = mathJaxEnabled;
+    public LocalizedStringSafeHtmlConverter() {
     }
 
     @Override
     public Object convert(Class type, Object value) {
-        // SafeHtmlConverter safeConverter = new SafeHtmlConverter();
-        Converter safeConverter = new JsoupSafeHtmlConverter(mathJaxEnabled);
+        Converter safeConverter = new JsoupSafeHtmlConverter();
         LocalizedStringConverter mlsConverter = new LocalizedStringConverter();
 
         LocalizedString mls = getLocalized(mlsConverter.convert(type, value));

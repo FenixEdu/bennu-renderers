@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 
+import pt.ist.fenixWebFramework.renderers.components.Constants;
 import pt.ist.fenixWebFramework.renderers.components.HtmlBlockContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlForm;
@@ -291,6 +292,16 @@ public class EditObjectTag extends BaseRenderObjectTag implements ValidatorConta
         }
 
         componentToDraw.draw(pageContext);
+
+        if (inputContext.isToolkitRequired() && pageContext.findAttribute(Constants.TOOLKIT_INCLUDED_PROPERTY) == null) {
+            pageContext.getOut().write(
+                    "<script type=\"text/javascript\" src=\"" + pageContext.getRequest().getServletContext().getContextPath()
+                            + "/bennu-toolkit/js/toolkit.js\" defer></script>");
+            pageContext.getOut().write(
+                    "<link href=\"" + pageContext.getRequest().getServletContext().getContextPath()
+                            + "/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\">");
+            pageContext.setAttribute(Constants.TOOLKIT_INCLUDED_PROPERTY, Boolean.TRUE);
+        }
     }
 
     private boolean hasFormParent() {

@@ -23,4 +23,6 @@ public class Constants {
 
     public static final String CANCEL_PROPERTY = "pt.ist.fenixWebFramework.renderers.CANCEL";
 
+    public static final String TOOLKIT_INCLUDED_PROPERTY = "org.fenixedu.bennu.renderers.TOOLKIT";
+
 }

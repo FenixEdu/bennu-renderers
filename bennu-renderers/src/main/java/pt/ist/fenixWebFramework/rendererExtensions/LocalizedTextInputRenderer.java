@@ -18,8 +18,6 @@
  */
 package pt.ist.fenixWebFramework.rendererExtensions;
 
-import pt.ist.fenixWebFramework.renderers.components.HtmlActionLink;
-import pt.ist.fenixWebFramework.renderers.components.HtmlContainer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextArea;
 
@@ -60,16 +58,6 @@ public class LocalizedTextInputRenderer extends LocalizedStringInputRenderer {
 
     public Integer getRows() {
         return this.rows;
-    }
-
-    @Override
-    protected void configureLanguageContainer(HtmlContainer languageContainer, HtmlSimpleValueComponent input,
-            HtmlSimpleValueComponent languageComponent, HtmlActionLink removeLink) {
-        languageComponent.setStyle("display: block;");
-
-        languageContainer.addChild(languageComponent);
-        languageContainer.addChild(input);
-        languageContainer.addChild(removeLink);
     }
 
     @Override

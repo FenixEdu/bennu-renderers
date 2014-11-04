@@ -31,6 +31,7 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 public final class InputContext extends PresentationContext {
 
     private HtmlForm form;
+    private boolean toolkitRequired = false;
 
     public InputContext() {
         super();
@@ -99,5 +100,17 @@ public final class InputContext extends PresentationContext {
         context.setRenderMode(getRenderMode());
 
         return context;
+    }
+
+    public void requireToolkit() {
+        if (getParentContext() == null || !(getParentContext() instanceof InputContext)) {
+            this.toolkitRequired = true;
+        } else {
+            ((InputContext) getParentContext()).requireToolkit();
+        }
+    }
+
+    public boolean isToolkitRequired() {
+        return toolkitRequired;
     }
 }

@@ -18,15 +18,13 @@
  */
 package pt.ist.fenixWebFramework.rendererExtensions.validators;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-
-import pt.ist.fenixWebFramework.rendererExtensions.LocalizedStringInputRenderer.LanguageBean;
 import pt.ist.fenixWebFramework.renderers.components.HtmlSimpleValueComponent;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlChainValidator;
 import pt.ist.fenixWebFramework.renderers.validators.HtmlValidator;
+
+import com.google.common.base.Strings;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 public class LocalizedStringValidator extends HtmlValidator {
 
@@ -42,42 +40,19 @@ public class LocalizedStringValidator extends HtmlValidator {
     public void performValidation() {
         HtmlSimpleValueComponent component = (HtmlSimpleValueComponent) getComponent();
 
-        Collection<LanguageBean> beans = LanguageBean.importAllFromString(component.getValue());
-
-        boolean hasRepeatedLanguage = false;
-        boolean hasNullLanguage = false;
-
-        List<Locale> languages = new ArrayList<Locale>();
-
-        for (LanguageBean bean : beans) {
-            // only consider fields not empty
-            if (bean.value != null && bean.value.trim().length() > 0) {
-                if (bean.language == null) {
-                    hasNullLanguage = true;
-                } else if (languages.contains(bean.language)) {
-                    hasRepeatedLanguage = true;
-                } else {
-                    languages.add(bean.language);
-                }
-            }
-        }
-
-        if (hasRepeatedLanguage) {
-            invalidate("renderers.validator.language.repeated");
+        if (Strings.isNullOrEmpty(component.getValue())) {
+            setValid(true);
             return;
         }
 
-        if (hasNullLanguage) {
-            invalidate("renderers.validator.language.null");
-            return;
+        try {
+            new JsonParser().parse(component.getValue()).getAsJsonObject();
+            setValid(true);
+        } catch (JsonSyntaxException | IllegalStateException e) {
+            setValid(false);
+            setMessage("renderers.validator.invalid.json");
         }
 
-        setValid(true);
-    }
-
-    private void invalidate(String message) {
-        setValid(false);
-        setMessage(message);
     }
 
 }
