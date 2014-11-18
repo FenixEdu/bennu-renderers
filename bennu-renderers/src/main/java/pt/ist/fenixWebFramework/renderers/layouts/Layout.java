@@ -100,7 +100,7 @@ public abstract class Layout {
     }
 
     public String[] getPropertyNames() {
-        return new String[] { "classes", "style", "title", "requiredMarkShown", "requiredMessageShown", "optionalMarkShown" };
+        return new String[] { "classes", "style", "title", "requiredMessageShown", "optionalMarkShown" };
     }
 
     protected String[] mergePropertyNames(String[] parentNames, String[] ownNames) {
