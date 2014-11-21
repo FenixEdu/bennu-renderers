@@ -258,6 +258,11 @@ public class StandardInputRenderer extends InputRenderer {
                 return value == null ? Optional.of("!" + slot.getHelpLabel() + "!") : Optional.of(value);
             }
         }
+
+        @Override
+        public boolean displayLabel() {
+            return isDisplayLabel();
+        }
     }
 
     class ObjectInputTabularLayout {
