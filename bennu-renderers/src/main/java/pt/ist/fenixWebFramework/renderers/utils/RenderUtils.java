@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -51,6 +50,8 @@ import pt.ist.fenixWebFramework.renderers.components.state.ComponentLifeCycle;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.components.state.LifeCycleConstants;
 import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessorImpl;
+
+import com.google.common.collect.ImmutableList;
 
 // TODO Review much of this class
 public class RenderUtils {
@@ -644,20 +645,26 @@ public class RenderUtils {
                 (List<IViewState>) RenderersRequestProcessorImpl.getCurrentRequest().getAttribute(
                         LifeCycleConstants.VIEWSTATE_PARAM_NAME);
 
-        if (viewStates == null) {
+        if (viewStates == null || viewStates.isEmpty()) {
             return false;
         }
 
-        for (Iterator<IViewState> iter = viewStates.iterator(); iter.hasNext();) {
-            IViewState viewState = iter.next();
+        if (viewStates.size() == 1 && id.equals(viewStates.get(0).getId())) {
+            invalidateViewState();
+            return true;
+        }
 
-            if (id.equals(viewState.getId())) {
-                iter.remove();
-                return true;
+        ImmutableList.Builder<IViewState> builder = ImmutableList.builder();
+
+        for (IViewState viewState : viewStates) {
+            if (!id.equals(viewState.getId())) {
+                builder.add(viewState);
             }
         }
 
-        return false;
+        RenderersRequestProcessorImpl.getCurrentRequest().setAttribute(LifeCycleConstants.VIEWSTATE_PARAM_NAME, builder.build());
+
+        return true;
     }
 
     public static String escapeId(String id) {
