@@ -25,6 +25,12 @@
     <name>${artifactId}</name>
     <description>${name}</description>
 
+    <ordering>
+        <before>
+            <name>bennu-renderers</name>
+        </before>
+    </ordering>
+
     <filter>
         <filter-name>RequestWrapperFilter</filter-name>
         <filter-class>org.fenixedu.bennu.struts.servlet.RequestWrapperFilter</filter-class>
