@@ -240,7 +240,7 @@ public class StandardInputRenderer extends InputRenderer {
                         if (chainValidator.isValid()) {
                             return Optional.empty();
                         } else {
-                            return Optional.of(chainValidator.getErrorMessage());
+                            return Optional.ofNullable(chainValidator.getErrorMessage());
                         }
                     };
                 }
