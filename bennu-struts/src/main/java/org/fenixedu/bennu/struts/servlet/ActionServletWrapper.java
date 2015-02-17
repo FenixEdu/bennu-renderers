@@ -16,30 +16,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Bennu Renderers Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* 
-* @(#)ActionServletWrapper.java 
-* 
-* Copyright 2009 Instituto Superior Tecnico 
-* Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes 
-*  
-*      https://fenix-ashes.ist.utl.pt/ 
-*  
-*   This file is part of the Bennu Web Application Infrastructure. 
-* 
-*   The Bennu Web Application Infrastructure is free software: you can 
-*   redistribute it and/or modify it under the terms of the GNU Lesser General 
-*   Public License as published by the Free Software Foundation, either version  
-*   3 of the License, or (at your option) any later version. 
-* 
-*   Bennu is distributed in the hope that it will be useful, 
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of 
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-*   GNU Lesser General Public License for more details. 
-* 
-*   You should have received a copy of the GNU Lesser General Public License 
-*   along with Bennu. If not, see <http://www.gnu.org/licenses/>. 
-*  
-*/
 package org.fenixedu.bennu.struts.servlet;
 
 import java.io.IOException;
@@ -52,8 +28,11 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -72,6 +51,7 @@ import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.taglib.html.FormTag;
 import org.apache.struts.util.MessageResources;
 import org.apache.struts.util.ModuleUtils;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.struts.servlet.ActionServletConfiguration.ExceptionHandler;
 import org.fenixedu.bennu.struts.servlet.ActionServletConfiguration.ExceptionHandlerMapping;
 import org.fenixedu.bennu.struts.servlet.ActionServletConfiguration.ModuleConfiguration;
@@ -326,14 +306,27 @@ public class ActionServletWrapper extends ActionServlet {
     }
 
     private void createMessageResourcesConfig(final String key, final String parameter) {
-        logger.debug("Adding Message Resource Config with key: {}, parameter: {}", key, parameter);
-        final MessageResourcesConfig messageResourcesConfig = new MessageResourcesConfig();
-        messageResourcesConfig.setFactory("org.apache.struts.util.PropertyMessageResourcesFactory");
-        messageResourcesConfig.setKey(key);
-        messageResourcesConfig.setNull(false);
-        messageResourcesConfig.setParameter(parameter);
+        if (bundleExists(parameter)) {
+            logger.debug("Adding Message Resource Config with key: {}, parameter: {}", key, parameter);
+            final MessageResourcesConfig messageResourcesConfig = new MessageResourcesConfig();
+            messageResourcesConfig.setFactory("org.apache.struts.util.PropertyMessageResourcesFactory");
+            messageResourcesConfig.setKey(key);
+            messageResourcesConfig.setNull(false);
+            messageResourcesConfig.setParameter(parameter);
 
-        this.resourcesConfigurations.put(key, messageResourcesConfig);
+            this.resourcesConfigurations.put(key, messageResourcesConfig);
+        }
+    }
+
+    private boolean bundleExists(String parameter) {
+        for (Locale locale : CoreConfiguration.supportedLocales()) {
+            try {
+                return ResourceBundle.getBundle(parameter, locale) != null;
+            } catch (MissingResourceException | NullPointerException e) {
+                // Bundle not found for this locale. Trying other locales...
+            }
+        }
+        return false;
     }
 
     private String capitalizeArtifactId(String name) {
