@@ -30,11 +30,14 @@ public class RenderersConfigurationManager {
                 defaultValue = "true")
         public Boolean filterRequestWithDigest();
 
-        @ConfigurationProperty(
-                key = "tamperingRedirect",
+        @ConfigurationProperty(key = "tamperingRedirect",
                 description = "Redirect link to use when a URL tampering is detected. Required when 'filterRequestWithDigest' is true",
                 defaultValue = "/")
         public String tamperingRedirect();
+
+        @ConfigurationProperty(key = "viewstate.signature.key",
+                description = "The HMAC Signature used to validate View State Integrity", defaultValue = "somerandomstring")
+        public String viewStateSignatureKey();
     }
 
     public static ConfigurationProperties getConfiguration() {

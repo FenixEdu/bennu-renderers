@@ -23,7 +23,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Hashtable;
 import java.util.List;
@@ -32,10 +36,13 @@ import java.util.Properties;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 
 import org.fenixedu.bennu.core.domain.User;
 
+import pt.ist.fenixWebFramework.RenderersConfigurationManager;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.contexts.InputContext;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
@@ -345,15 +352,47 @@ public class ViewState implements IViewState {
         try (ObjectOutputStream stream = new ObjectOutputStream(new GZIPOutputStream(baos))) {
             stream.writeObject(viewStates);
         }
-        return Base64.getEncoder().encodeToString(baos.toByteArray());
+        byte[] bytes = baos.toByteArray();
+        return Base64.getEncoder().encodeToString(bytes) + "_" + Base64.getEncoder().encodeToString(sign(bytes));
+    }
+
+    private static final String ALGORITHM = "HmacSHA256";
+    private static final SecretKeySpec key = new SecretKeySpec(
+            RenderersConfigurationManager.getConfiguration().viewStateSignatureKey().getBytes(StandardCharsets.UTF_8), ALGORITHM);
+
+    private static byte[] sign(byte[] payload) {
+        try {
+            Mac mac = Mac.getInstance(ALGORITHM);
+            mac.init(key);
+            return mac.doFinal(payload);
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new RuntimeException("Could not sign view state!", e);
+        }
+    }
+
+    private static void validate(byte[] decodedForm, byte[] signature) {
+        byte[] expected = sign(decodedForm);
+        if (!Arrays.equals(expected, signature)) {
+            throw invalidViewState();
+        }
     }
 
     private static Object decodeObjectFromBase64(String encodedState) throws IOException, ClassNotFoundException {
-        byte[] decodedForm = Base64.getDecoder().decode(encodedState);
+        String[] parts = encodedState.split("_", 2);
+        if (parts.length != 2) {
+            throw invalidViewState();
+        }
+        byte[] decodedForm = Base64.getDecoder().decode(parts[0]);
+        validate(decodedForm, Base64.getDecoder().decode(parts[1]));
         ObjectInputStream stream = new ObjectInputStream(new GZIPInputStream(new ByteArrayInputStream(decodedForm)));
         return stream.readObject();
     }
 
+    private static RuntimeException invalidViewState() {
+        return new IllegalArgumentException("Invalid ViewState provided");
+    }
+
+    @SuppressWarnings("unchecked")
     public static List<IViewState> decodeFromBase64(String encodedState) throws IOException, ClassNotFoundException {
         return (List<IViewState>) decodeObjectFromBase64(encodedState);
     }
