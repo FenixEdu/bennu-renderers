@@ -97,7 +97,7 @@ public class RenderUtils {
         if (label != null) {
             return label;
         } else if (key != null) {
-            logger.warn("Key specified for slot '{}' does not exist: {}", slotName, key);
+            logger.debug("Key specified for slot '{}' does not exist: {}", slotName, key);
         }
 
         label = readClassResourceString(bundle, objectType, slotName, args);
