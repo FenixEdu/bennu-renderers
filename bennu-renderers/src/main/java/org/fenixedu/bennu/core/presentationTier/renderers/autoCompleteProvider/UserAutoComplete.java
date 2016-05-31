@@ -64,10 +64,11 @@ public class UserAutoComplete implements AutoCompleteProvider<User> {
         Set<User> users = new HashSet<User>();
         String[] values = StringNormalizer.normalize(value).split(" ");
         for (User user : Bennu.getInstance().getUserSet()) {
-            final String normalizedUser = StringNormalizer.normalize(user.getPresentationName());
-
-            if (hasMatch(values, normalizedUser)) {
-                users.add(user);
+            if (user.getProfile() != null) {
+                final String normalizedUser = StringNormalizer.normalize(user.getDisplayName());
+                if (hasMatch(values, normalizedUser)) {
+                    users.add(user);
+                }
             }
         }
         return users;
