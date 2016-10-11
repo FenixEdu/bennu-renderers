@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>bennu-renderers-aggregator</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>5.1.0</version>
     </parent>
 
     <artifactId>bennu-struts</artifactId>
@@ -18,6 +18,27 @@
         <version.org.fenixedu.fenixedu-commons>1.0.1</version.org.fenixedu.fenixedu-commons>
         <version.com.google.guava.guava>17.0</version.com.google.guava.guava>
     </properties>
+
+<profiles>
+  <profile>
+    <id>doclint-java8-disable</id>
+    <activation>
+      <jdk>[1.8,)</jdk>
+    </activation>
+
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <configuration>
+            <additionalparam>-Xdoclint:none</additionalparam>
+          </configuration>
+        </plugin>
+      </plugins>
+    </build>
+  </profile>
+</profiles>
 
     <dependencies>
         <dependency>
