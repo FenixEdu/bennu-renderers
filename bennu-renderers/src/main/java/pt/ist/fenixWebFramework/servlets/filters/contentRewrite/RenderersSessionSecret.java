@@ -21,6 +21,8 @@ package pt.ist.fenixWebFramework.servlets.filters.contentRewrite;
 import java.io.Serializable;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.fenixedu.bennu.core.domain.User;
@@ -59,14 +61,18 @@ public class RenderersSessionSecret {
     public static final class RenderersUserAuthenticationListener implements UserAuthenticationListener {
 
         @Override
-        public void onLogin(HttpSession session, User user) {
+        public void onLogin(final HttpServletRequest request, final HttpServletResponse response, final User user) {
             SessionSecretWrapper secret = new SessionSecretWrapper(user.getUsername() + UUID.randomUUID().toString());
+            final HttpSession session = request.getSession();
             session.setAttribute(RENDERERS_SESSION_SECRET, secret);
         }
 
         @Override
-        public void onLogout(HttpSession session, User user) {
-            session.removeAttribute(RENDERERS_SESSION_SECRET);
+        public void onLogout(final HttpServletRequest request, final HttpServletResponse response, final User user) {
+            final HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.removeAttribute(RENDERERS_SESSION_SECRET);
+            }
         }
 
     }

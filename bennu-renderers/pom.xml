@@ -14,7 +14,7 @@
     <inceptionYear>2008</inceptionYear>
 
     <properties>
-        <version.org.fenixedu.bennu>4.0.0.RC2</version.org.fenixedu.bennu>
+        <version.org.fenixedu.bennu>4.0.1</version.org.fenixedu.bennu>
         <version.org.fenixedu.fenixedu-commons>1.0.1</version.org.fenixedu.fenixedu-commons>
         <version.com.google.guava.guava>17.0</version.com.google.guava.guava>
     </properties>
