@@ -43,9 +43,9 @@
 package org.fenixedu.bennu.core.presentationTier.renderers.autoCompleteProvider;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
@@ -61,26 +61,28 @@ public class UserAutoComplete implements AutoCompleteProvider<User> {
 
     @Override
     public Collection<User> getSearchResults(Map<String, String> argsMap, String value, int maxCount) {
-        Set<User> users = new HashSet<User>();
-        String[] values = StringNormalizer.normalize(value).split(" ");
-        for (User user : Bennu.getInstance().getUserSet()) {
-            if (user.getProfile() != null) {
-                final String normalizedUser = StringNormalizer.normalize(user.getDisplayName());
-                if (hasMatch(values, normalizedUser)) {
-                    users.add(user);
-                }
-            }
-        }
-        return users;
+
+        final Stream<User> users = Bennu.getInstance().getUserSet().stream();
+        String trimmedValue = value.trim();
+        final String[] input = StringNormalizer.normalize(trimmedValue).split(" ");
+        return users.filter(u -> match(input, u)).collect(Collectors.toSet());
+
     }
 
-    private boolean hasMatch(String[] input, String personNameParts) {
+    private boolean match(String[] values, User u) {
+
+        return (values.length == 1 && hasMatch(values, StringNormalizer.normalize(u.getUsername())))
+                || (u.getProfile() != null && hasMatch(values, StringNormalizer.normalize(u.getProfile().getFullName())
+                        .toLowerCase()));
+    }
+
+    private boolean hasMatch(final String[] input, final String string) {
+
         for (final String namePart : input) {
-            if (personNameParts.indexOf(namePart) == -1) {
+            if (string.indexOf(namePart) == -1) {
                 return false;
             }
         }
         return true;
     }
-
 }
