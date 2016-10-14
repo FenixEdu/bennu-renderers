@@ -71,15 +71,15 @@ public class UserAutoComplete implements AutoCompleteProvider<User> {
 
     private boolean match(String[] values, User u) {
 
-        return (values.length == 1 && u.getUsername().equalsIgnoreCase(values[0]))
+        return (values.length == 1 && hasMatch(values, StringNormalizer.normalize(u.getUsername())))
                 || (u.getProfile() != null && hasMatch(values, StringNormalizer.normalize(u.getProfile().getFullName())
                         .toLowerCase()));
     }
 
-    private boolean hasMatch(final String[] input, final String unitNameParts) {
+    private boolean hasMatch(final String[] input, final String string) {
 
         for (final String namePart : input) {
-            if (unitNameParts.indexOf(namePart) == -1) {
+            if (string.indexOf(namePart) == -1) {
                 return false;
             }
         }
