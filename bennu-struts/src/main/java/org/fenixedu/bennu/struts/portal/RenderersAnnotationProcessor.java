@@ -73,8 +73,9 @@ public class RenderersAnnotationProcessor implements ServletContainerInitializer
                     LocalizedString description =
                             functionality.descriptionKey().equals(DELEGATE) ? title : BundleUtil.getLocalizedString(bundle,
                                     functionality.descriptionKey());
-                    functionalityClasses.put(type, new Functionality(StrutsPortalBackend.BACKEND_KEY, computePath(type),
-                            functionality.path(), findGroupForFunctionality(type), title, description));
+                    functionalityClasses.put(type,
+                            new Functionality(StrutsPortalBackend.BACKEND_KEY, computePath(type), functionality.path(),
+                                    findGroupForFunctionality(type), title, description, functionality.documentationUrl()));
                 }
                 StrutsApplication application = type.getAnnotation(StrutsApplication.class);
                 if (application != null) {

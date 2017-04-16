@@ -39,4 +39,5 @@ public @interface StrutsFunctionality {
 
     String accessGroup() default RenderersAnnotationProcessor.DELEGATE;
 
+    String documentationUrl() default "";
 }
