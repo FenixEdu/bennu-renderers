@@ -22,6 +22,7 @@ import pt.ist.fenixWebFramework.renderers.InputRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlTextArea;
 import pt.ist.fenixWebFramework.renderers.layouts.Layout;
+import pt.ist.fenixWebFramework.renderers.model.MetaSlot;
 
 /**
  * Allows you to use the <a href="http://tinymce.moxiecode.com/">TinyMCE</a>
@@ -98,6 +99,7 @@ public class RichTextInputRenderer extends InputRenderer {
 
                 textArea.addClass("form-control");
                 textArea.setAttribute("bennu-html-editor", "true");
+                textArea.setTargetSlot(((MetaSlot) getInputContext().getMetaObject()).getKey());
 
                 if (isSafe()) {
                     textArea.setConverter(new JsoupSafeHtmlConverter());
