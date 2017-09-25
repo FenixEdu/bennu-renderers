@@ -128,6 +128,11 @@
     <renderer type="org.fenixedu.commons.i18n.LocalizedString" class="pt.ist.fenixWebFramework.rendererExtensions.LocalizedStringRenderer">
     	<property name="languageShown" value="false"/>
     </renderer>
+    <renderer type="org.fenixedu.commons.i18n.LocalizedString" layout="html" class="pt.ist.fenixWebFramework.rendererExtensions.LocalizedStringRenderer">
+        <property name="languageShown" value="false"/>
+        <property name="escaped" value="false"/>
+        <property name="newlineAware" value="false"/>
+    </renderer>
     <renderer type="org.fenixedu.commons.i18n.LocalizedString" layout="short" class="pt.ist.fenixWebFramework.rendererExtensions.ShortLocalizedStringRenderer">
        	<property name="length" value="40"/>
        	<property name="languageShown" value="false"/>
