@@ -18,7 +18,15 @@
  */
 package pt.ist.fenixWebFramework.rendererExtensions;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.function.Function;
+
+import javax.ws.rs.core.UriBuilder;
+
 import org.apache.commons.beanutils.PropertyUtils;
+
+import com.google.common.base.Strings;
 
 import pt.ist.fenixWebFramework.rendererExtensions.converters.DomainObjectKeyConverter;
 import pt.ist.fenixWebFramework.renderers.InputRenderer;
@@ -41,8 +49,6 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 import pt.ist.fenixWebFramework.servlets.ajax.AutoCompleteServlet;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
-
-import com.google.common.base.Strings;
 
 /**
  * This renderer allows you to search for a domain object by providing a list of
@@ -383,14 +389,13 @@ public class AutoCompleteInputRenderer extends InputRenderer {
             container.addChild(script);
         }
 
-        protected void addFinalScript(HtmlContainer container, String textFieldId) {
-
+        private HtmlLink getAutoCompleteLink(Function<String, String> encoder) {
             HtmlLink link = new HtmlLink();
             link.setModuleRelative(false);
             link.setContextRelative(true);
 
             link.setUrl(SERVLET_URI);
-            link.setParameter("args", getFormatedArgs());
+            link.setParameter("args", encoder.apply(getFormatedArgs()));
             if (getLabelField() != null) {
                 link.setParameter("labelField", getLabelField());
             }
@@ -402,14 +407,20 @@ public class AutoCompleteInputRenderer extends InputRenderer {
             link.setEscapeAmpersand(false);
 
             if (getFormat() != null) {
-                link.setParameter("format", getFormat());
+                link.setParameter("format", encoder.apply(getFormat()));
             }
 
             if (getMaxCount() != null) {
                 link.setParameter("maxCount", String.valueOf(getMaxCount()));
             }
+            return link;
+        }
 
-            String finalUri = calculateUriWithChecksum(link);
+        protected void addFinalScript(HtmlContainer container, String textFieldId) {
+            final HtmlLink link = getAutoCompleteLink(s -> s);
+            final String linkWithouthChechsum = link.calculateUrl();
+            final String linkWithChecksum = calculateUriWithChecksum( link );
+            final String finalUri = getAutoCompleteLink(s -> encode(s)).calculateUrl() + linkWithChecksum.substring(linkWithouthChechsum.length());
             String escapeId = escapeId(textFieldId);
             String scriptText =
                     "jQuery(\"input#"
@@ -436,6 +447,14 @@ public class AutoCompleteInputRenderer extends InputRenderer {
             script.setScript(scriptText);
 
             container.addChild(script);
+        }
+
+        private String encode(final String string) {
+            try {
+                return URLEncoder.encode(string, "UTF-8");
+            } catch (final UnsupportedEncodingException e) {
+                throw new Error(e);
+            }
         }
 
         private String calculateUriWithChecksum(final HtmlLink link) {
