@@ -81,6 +81,7 @@ public class AutoCompleteServlet extends HttpServlet {
             }
             response.setContentType("application/json; charset=" + JAVASCRIPT_LIBRARY_ENCODING);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
         }
 
         String value = new String(request.getParameter("value").getBytes(), JAVASCRIPT_LIBRARY_ENCODING);
