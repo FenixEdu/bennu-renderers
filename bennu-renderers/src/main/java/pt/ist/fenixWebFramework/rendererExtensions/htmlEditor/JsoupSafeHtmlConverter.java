@@ -18,19 +18,17 @@
  */
 package pt.ist.fenixWebFramework.rendererExtensions.htmlEditor;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-
+import com.google.common.base.Strings;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
-
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
-import com.google.common.base.Strings;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
 
 public class JsoupSafeHtmlConverter extends Converter {
 
@@ -78,19 +76,23 @@ public class JsoupSafeHtmlConverter extends Converter {
     private static final String[] URL_SCHEMES = new String[] { "http", "https" };
     private static final String[] URL_VALID_AUTHORITIES_REGEXPS = new String[] { ".*google.com" };
 
-    private static Whitelist whitelistSimple = Whitelist.relaxed().addTags("span").addAttributes(":all", "style");
+    private static Whitelist whitelistSimple;
 
     private static Whitelist whiteListMathJax;
 
     static {
-        whitelistSimple = whitelistSimple.addAttributes("iframe", IFRAME_ATTRS).addProtocols("iframe", "src", "http", "https");
-        whitelistSimple = whitelistSimple.addAttributes("table", TABLE_ATTRS);
-        whitelistSimple = whitelistSimple.addAttributes("tr", TBODY_TR_ATTRS).addAttributes("tbody", TBODY_TR_ATTRS);
-        whitelistSimple = whitelistSimple.addAttributes("th", TH_TD_ATTRS).addAttributes("td", TH_TD_ATTRS);
+        whitelistSimple = Whitelist.relaxed().addTags("span").addAttributes(":all", "style")
+        .addAttributes("iframe", IFRAME_ATTRS).addProtocols("iframe", "src", "http", "https")
+        .addAttributes("table", TABLE_ATTRS)
+        .addAttributes("tr", TBODY_TR_ATTRS).addAttributes("tbody", TBODY_TR_ATTRS)
+        .addAttributes("th", TH_TD_ATTRS).addAttributes("td", TH_TD_ATTRS)
+        .addProtocols("img", "src", "data")
+        .preserveRelativeLinks(true);
 
         whiteListMathJax = whitelistSimple.addTags(MATHJAX_TAGS);
+
         for (String elem : MATHJAX_TAGS) {
-            whiteListMathJax = whiteListMathJax.addAttributes(elem, MATHJAX_ATTRS);
+            whiteListMathJax.addAttributes(elem, MATHJAX_ATTRS);
         }
     }
 

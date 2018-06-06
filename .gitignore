@@ -5,12 +5,17 @@
 *.war
 *.ear
 
+# Eclipse #
 .settings/
 .project
 .classpath
-.serviceAnnotationLog
+output/
+
+# IntelliJ #
+
+.idea/
+*.iml
 
 # Maven #
 target/
 bin/
-
