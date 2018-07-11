@@ -10,14 +10,14 @@
 
     <artifactId>bennu-renderers-aggregator</artifactId>
     <name>Bennu Renderers Framework Aggregator</name>
-    <version>5.4.0-SNAPSHOT</version>
+    <version>5.3.1</version>
     <packaging>pom</packaging>
 
     <scm>
         <connection>scm:git:git@github.com:fenixedu/bennu-renderers.git</connection>
         <developerConnection>scm:git:git@github.com:fenixedu/bennu-renderers.git</developerConnection>
         <url>http://fenixedu.github.io/bennu-renderers</url>
-        <tag>HEAD</tag>
+        <tag>v5.3.1</tag>
     </scm>
 
     <issueManagement>
