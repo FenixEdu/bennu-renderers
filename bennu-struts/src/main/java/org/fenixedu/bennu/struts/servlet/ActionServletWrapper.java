@@ -52,6 +52,7 @@ import org.apache.struts.taglib.html.FormTag;
 import org.apache.struts.util.MessageResources;
 import org.apache.struts.util.ModuleUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.fenixedu.bennu.struts.extension.UTF8PropertyMessageResourcesFactory;
 import org.fenixedu.bennu.struts.servlet.ActionServletConfiguration.ExceptionHandler;
 import org.fenixedu.bennu.struts.servlet.ActionServletConfiguration.ExceptionHandlerMapping;
 import org.fenixedu.bennu.struts.servlet.ActionServletConfiguration.ModuleConfiguration;
@@ -309,7 +310,7 @@ public class ActionServletWrapper extends ActionServlet {
         if (bundleExists(parameter)) {
             logger.debug("Adding Message Resource Config with key: {}, parameter: {}", key, parameter);
             final MessageResourcesConfig messageResourcesConfig = new MessageResourcesConfig();
-            messageResourcesConfig.setFactory("org.apache.struts.util.PropertyMessageResourcesFactory");
+            messageResourcesConfig.setFactory(UTF8PropertyMessageResourcesFactory.class.getName());
             messageResourcesConfig.setKey(key);
             messageResourcesConfig.setNull(false);
             messageResourcesConfig.setParameter(parameter);
