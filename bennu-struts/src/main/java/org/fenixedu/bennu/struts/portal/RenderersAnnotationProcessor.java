@@ -38,6 +38,7 @@ import org.fenixedu.bennu.portal.model.ApplicationRegistry;
 import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.bennu.portal.servlet.PortalBackendRegistry;
 import org.fenixedu.bennu.struts.annotations.Mapping;
+import org.fenixedu.bennu.struts.extension.UTF8PropertyMessageResourcesFactory;
 import org.fenixedu.bennu.struts.plugin.StrutsAnnotationsPlugIn;
 import org.fenixedu.commons.i18n.LocalizedString;
 
@@ -52,6 +53,7 @@ public class RenderersAnnotationProcessor implements ServletContainerInitializer
 
     @Override
     public void onStartup(Set<Class<?>> classes, ServletContext context) throws ServletException {
+        UTF8PropertyMessageResourcesFactory.enforce();
         PortalBackendRegistry.registerPortalBackend(new StrutsPortalBackend());
         Authenticate.addUserAuthenticationListener(new RenderersUserAuthenticationListener());
 
