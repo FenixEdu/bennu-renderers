@@ -19,17 +19,8 @@
 
 package org.fenixedu.bennu.struts.extension;
 
-import org.apache.struts.config.MessageResourcesConfig;
 import org.apache.struts.util.MessageResources;
 import org.apache.struts.util.MessageResourcesFactory;
-import org.apache.struts.util.PropertyMessageResources;
-import org.apache.struts.util.PropertyMessageResourcesFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Iterator;
-import java.util.Properties;
 
 public class UTF8PropertyMessageResourcesFactory extends MessageResourcesFactory {
 
@@ -42,10 +33,4 @@ public class UTF8PropertyMessageResourcesFactory extends MessageResourcesFactory
         return new UTF8PropertyMessageResources(this, config, this.returnNull);
     }
 
-    @Override
-    public MessageResourcesConfig getConfig() {
-        MessageResourcesConfig messageResourcesConfig = new MessageResourcesConfig();
-        messageResourcesConfig.setFactory(this.getClass().getName());
-        return messageResourcesConfig;
-    }
 }
