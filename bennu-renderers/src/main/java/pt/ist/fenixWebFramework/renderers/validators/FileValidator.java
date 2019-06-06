@@ -23,6 +23,11 @@ import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessorImpl;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.servlets.commons.UploadedFile;
 
+import org.apache.tika.Tika;
+import org.apache.tika.metadata.Metadata;
+
+import java.io.IOException;
+
 /**
  * This validator can be used to validate uploaded files. It allows you to
  * restrict the file maximum size, extension, and type.
@@ -214,16 +219,22 @@ public class FileValidator extends HtmlValidator {
                     return;
                 } else {
                     setValid(true);
-                    return;
                 }
             }
         }
 
         if (getAcceptedTypes() != null) {
-            if (!matchesMimeType(file.getContentType().toLowerCase())) {
-                String typesFormated = getAcceptedTypes().replace(",", ", ");
-                setInvalid(getTypeMessage(), typesFormated, file.getContentType());
-                return;
+            Tika tika = new Tika();
+            String contentType;
+            try {
+                contentType = tika.detect(file.getInputStream(), Metadata.CONTENT_TYPE);
+                if (!matchesMimeType(contentType.toLowerCase())) {
+                    String typesFormated = getAcceptedTypes().replace(",", ", ");
+                    setInvalid(getTypeMessage(), typesFormated, file.getContentType());
+                    return;
+                }
+            } catch (IOException e) {
+                setValid(false);
             }
         }
 
