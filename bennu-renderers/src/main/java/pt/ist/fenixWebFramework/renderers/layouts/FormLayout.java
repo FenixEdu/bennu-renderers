@@ -53,14 +53,23 @@ public abstract class FormLayout extends Layout {
 
             Optional<String> helpLabel = getHelpLabel(rowIndex);
 
+            helpLabel.ifPresent(help -> {
+                slotContainer.setAttribute("style", "padding: 0 15px;");                
+                slotContainer.addClass("input-group");
+            });
             slotContainer.addBlock((tag, context) -> {
-                helpLabel.ifPresent(help -> {
-                    tag.setAttribute("data-toggle", "tooltip");
-                    tag.setAttribute("title", help);
-                    tag.setAttribute("data-placement", "bottom");
-
+                helpLabel.ifPresent(help -> {               
+                	HtmlText helpButton = new HtmlText(
+                	        "<span class=\"input-group-btn\">" +
+                    			"<button type=\"button\" class=\"btn btn-sm\" data-toggle=\"popover\" data-placement=\"left\" data-trigger=\"focus\" title=\"\" data-content=\""+ helpLabel.get() +"\">" + 
+                    					"<span class=\"glyphicon glyphicon-info-sign\" aria-hidden=\"true\"></span>" + 
+                    			"</button>" +
+                    		"</span>"
+                			);
+                	helpButton.setEscaped(false);
+                    tag.addChild(helpButton.getOwnTag(context));                    
                     HtmlScript script = new HtmlScript();
-                    script.setScript("$('[data-toggle=tooltip]').tooltip();");
+                    script.setScript("$('[data-toggle=popover]').popover();");
                     tag.addChild(script.getOwnTag(context));
                 });
             });
