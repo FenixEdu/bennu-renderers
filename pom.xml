@@ -33,11 +33,6 @@
         </license>
     </licenses>
 
-    <ciManagement>
-        <system>Travis CI</system>
-        <url>https://travis-ci.org/FenixEdu/bennu-renderers</url>
-    </ciManagement>
-
     <properties>
         <version.javax.servlet.jsp.jsp.api>2.2.1-b03</version.javax.servlet.jsp.jsp.api>
     </properties>
