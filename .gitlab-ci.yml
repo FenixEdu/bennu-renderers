@@ -9,6 +9,7 @@ stages:
   - Install and Lint
   # - Test
   - Release
+  - Notify
 
 Install and Lint:
   stage: Install and Lint
@@ -35,8 +36,8 @@ Release:
     - VERSION=$(echo '${project.version}' | mvn help:evaluate | grep -v '^[[]')
     - if [[ $VERSION != $CI_COMMIT_TAG ]]; then echo "Version $VERSION in pom.xml diferent from $CI_COMMIT_TAG tag" && exit 1; fi
   script:
-    - node release-army-knife/release.js $CI_PROJECT_ID $CI_COMMIT_TAG $REPO_API_ACCESS_TOKEN
     - mvn -s .m2/settings.xml --batch-mode deploy  -Dmaven.test.skip=true
+    - node release-army-knife/release.js $CI_PROJECT_ID $CI_COMMIT_TAG $REPO_API_ACCESS_TOKEN
   only:
     - tags
   
