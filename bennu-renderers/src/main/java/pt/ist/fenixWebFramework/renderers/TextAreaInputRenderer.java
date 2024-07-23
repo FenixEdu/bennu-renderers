@@ -36,6 +36,20 @@ public class TextAreaInputRenderer extends InputRenderer {
 
     private Integer columns;
     private Integer rows;
+    private Integer maxLength;
+
+    public Integer getMaxLength() {
+        return maxLength;
+    }
+
+    /**
+     * The max length of the field's input.
+     *
+     * @property
+     */
+    public void setMaxLength(Integer maxLength) {
+        this.maxLength = maxLength;
+    }
 
     public Integer getColumns() {
         return this.columns;
@@ -85,6 +99,7 @@ public class TextAreaInputRenderer extends InputRenderer {
 
                 textArea.setColumns(getColumns());
                 textArea.setRows(getRows());
+                textArea.setMaxLength(getMaxLength());
             }
         };
     }

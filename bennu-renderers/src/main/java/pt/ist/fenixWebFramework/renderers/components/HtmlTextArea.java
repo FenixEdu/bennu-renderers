@@ -26,12 +26,21 @@ public class HtmlTextArea extends HtmlSimpleValueComponent {
 
     private Integer rows;
     private Integer columns;
+    private Integer maxLength;
     private boolean readOnly;
 
     private String onFocus;
     private String onBlur;
     private String onSelect;
     private String onChange;
+
+    public int getMaxLength() {
+        return maxLength;
+    }
+
+    public void setMaxLength(Integer maxLength) {
+        this.maxLength = maxLength;
+    }
 
     public Integer getColumns() {
         return this.columns;
@@ -103,6 +112,7 @@ public class HtmlTextArea extends HtmlSimpleValueComponent {
         tag.setAttribute("onblur", getOnBlur());
         tag.setAttribute("onselect", getOnSelect());
         tag.setAttribute("onchange", getOnChange());
+        tag.setAttribute("maxlength", getMaxLength());
 
         if (isReadOnly()) {
             tag.setAttribute("readonly", "readonly");
