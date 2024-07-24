@@ -34,7 +34,7 @@ public class HtmlTextArea extends HtmlSimpleValueComponent {
     private String onSelect;
     private String onChange;
 
-    public int getMaxLength() {
+    public Integer getMaxLength() {
         return maxLength;
     }
 
