@@ -18,9 +18,7 @@
  */
 package pt.ist.fenixWebFramework.renderers;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.common.base.Strings;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenu;
 import pt.ist.fenixWebFramework.renderers.components.HtmlMenuOption;
@@ -34,8 +32,10 @@ import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.renderers.utils.RenderMode;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+import pt.ist.fenixWebFramework.renderers.utils.RendererPropertyUtils;
 
-import com.google.common.base.Strings;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This renderer as a purpose similar to {@link pt.ist.fenixWebFramework.renderers.CheckBoxOptionListRenderer} but is
@@ -65,6 +65,10 @@ public class MenuOptionListRenderer extends SelectionRenderer {
     private String defaultText;
     private String bundle;
     private boolean key;
+
+    private String readOnlyIf;
+    private String readOnlyIfNot;
+
 
     public String getFormat() {
         return this.format;
@@ -236,6 +240,30 @@ public class MenuOptionListRenderer extends SelectionRenderer {
             menu.setConverter(new SingleSelectOptionConverter(possibleMetaObjects, getConverter()));
 
             menu.setTargetSlot((MetaSlotKey) getInputContext().getMetaObject().getKey());
+
+            Object parentObject = null;
+            if (getContext().getParentContext() != null) {
+                parentObject = getContext().getParentContext().getMetaObject().getObject();
+            }
+
+            Boolean useReadOnlyIfResult = null;
+            Boolean useReadOnlyIfNotResult = null;
+            try {
+                if (getReadOnlyIf() != null) {
+                    useReadOnlyIfResult =
+                            (Boolean) RendererPropertyUtils.getProperty(parentObject, getReadOnlyIf(), false);
+                }
+                if (getReadOnlyIfNot() != null) {
+                    useReadOnlyIfNotResult =
+                            (Boolean) RendererPropertyUtils.getProperty(parentObject, getReadOnlyIfNot(), false);
+                }
+            } catch (ClassCastException e) {
+                e.printStackTrace();
+            }
+            final boolean disabled = (useReadOnlyIfNotResult != null || useReadOnlyIfResult != null)
+                && ((useReadOnlyIfNotResult != null && !useReadOnlyIfNotResult) || (useReadOnlyIfResult != null && useReadOnlyIfResult));
+            menu.setDisabled(disabled);
+
             return menu;
         }
 
@@ -278,4 +306,21 @@ public class MenuOptionListRenderer extends SelectionRenderer {
             return String.valueOf(object);
         }
     }
+
+    public String getReadOnlyIf() {
+        return readOnlyIf;
+    }
+
+    public void setReadOnlyIf(String readOnlyIf) {
+        this.readOnlyIf = readOnlyIf;
+    }
+
+    public String getReadOnlyIfNot() {
+        return readOnlyIfNot;
+    }
+
+    public void setReadOnlyIfNot(String readOnlyIfNot) {
+        this.readOnlyIfNot = readOnlyIfNot;
+    }
+
 }
