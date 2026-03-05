@@ -76,7 +76,7 @@ public class RenderersAnnotationProcessor implements ServletContainerInitializer
                             functionality.descriptionKey().equals(DELEGATE) ? title : BundleUtil.getLocalizedString(bundle,
                                     functionality.descriptionKey());
                     functionalityClasses.put(type, new Functionality(StrutsPortalBackend.BACKEND_KEY, computePath(type),
-                            functionality.path(), findGroupForFunctionality(type), title, description));
+                            functionality.path(), findGroupForFunctionality(type), title, description, false));
                 }
                 StrutsApplication application = type.getAnnotation(StrutsApplication.class);
                 if (application != null) {
@@ -127,7 +127,7 @@ public class RenderersAnnotationProcessor implements ServletContainerInitializer
         LocalizedString title = BundleUtil.getLocalizedString("resources.RendererResources", "label.start.page");
         final Functionality functionality =
                 new Functionality(StrutsPortalBackend.BACKEND_KEY, computePath(type), "start-page", app.getAccessGroup(), title,
-                        title, false);
+                        title, false, false);
         functionalityClasses.put(type, functionality);
     }
 
