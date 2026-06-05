@@ -18,15 +18,16 @@
  */
 package pt.ist.fenixWebFramework.renderers.model;
 
+import org.apache.commons.beanutils.PropertyUtils;
+import org.fenixedu.bennu.core.domain.User;
+import pt.ist.fenixWebFramework.renderers.schemas.Schema;
+import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
+
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import org.fenixedu.bennu.core.domain.User;
-
-import pt.ist.fenixWebFramework.renderers.schemas.Schema;
-import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 
 /**
  * A MetaObject is an abstraction of a real domain object. If provides a
@@ -124,11 +125,35 @@ public abstract class MetaObject implements Serializable {
     }
 
     public List<MetaSlot> getSlots() {
-        return this.slots;
+        return this.slots.stream()
+            .filter(s -> {
+                final String showIf = s.getProperties().getProperty("showIf");
+
+                if (showIf == null || showIf.trim().isEmpty()) {
+                    return true;
+                }
+
+                Object bean = s.getMetaObject().getObject();
+                Object value;
+                try {
+                    value = PropertyUtils.getProperty(bean, showIf);
+                } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+
+                if (value == null) {
+                    return false;
+                }
+
+                return value instanceof Boolean
+                    ? (Boolean) value
+                    : false;
+            })
+            .toList();
     }
 
     /**
-     * Conveniency method that allows you to obtain a particular {@link MetaSlotsssss} by it's name.
+     * Convenience method that allows you to obtain a particular {@link MetaSlot} by its name.
      * 
      * @param name the name of the meta slot
      * 
