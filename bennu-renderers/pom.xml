@@ -14,7 +14,7 @@
     <inceptionYear>2008</inceptionYear>
 
     <properties>
-        <version.org.fenixedu.bennu>9.2.0</version.org.fenixedu.bennu>
+        <version.org.fenixedu.bennu>9.11.0</version.org.fenixedu.bennu>
     </properties>
 
     <build>
