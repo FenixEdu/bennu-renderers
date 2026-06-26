@@ -127,6 +127,10 @@ public abstract class MetaObject implements Serializable {
     public List<MetaSlot> getSlots() {
         return this.slots.stream()
             .filter(s -> {
+                if (s.getProperties() == null || s.getProperties().isEmpty()) {
+                    return true;
+                }
+
                 final String showIf = s.getProperties().getProperty("showIf");
 
                 if (showIf == null || showIf.trim().isEmpty()) {
